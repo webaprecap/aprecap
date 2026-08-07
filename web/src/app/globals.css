@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-apre-blue: #002159;
+  --color-apre-blue-light: #29455b;
+  --color-apre-red: #ff1212;
+  --color-apre-red-dark: #cc0e0e;
+  --color-apre-pink: #f4035e;
+  --color-whatsapp: #25d366;
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+}

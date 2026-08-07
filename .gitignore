@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Builds
+.next/
+dist/
+out/
+
+# Entorno y secretos
+.env
+.env.local
+.env.*.local
+
+# Contenido rescatado y videos (respaldo local del cliente, no se sube)
+content/
+
+# Logo descargado en la raíz (se regenera con el script); el de web/ se sube
+/public/logo/
+
+# PDFs generados localmente
+*.pdf
+
+# SO / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

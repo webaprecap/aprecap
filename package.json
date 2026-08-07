@@ -1,0 +1,21 @@
+{
+  "name": "aprecap-web",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.17.0",
+  "type": "module",
+  "description": "Rediseño plataforma OTEC APRECAP - Digital Up SpA",
+  "scripts": {
+    "acuerdo": "node scripts/generar-acuerdo.mjs",
+    "scrape:wp": "node scripts/scrape-wp.mjs",
+    "scrape:logo": "node scripts/download-logo.mjs",
+    "scrape:moodle": "node scripts/scrape-moodle.mjs",
+    "scrape:all": "pnpm scrape:logo && pnpm scrape:wp && pnpm scrape:moodle"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.5.1",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.4.2",
+    "react": "^19.2.8"
+  }
+}
