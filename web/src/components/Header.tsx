@@ -3,10 +3,33 @@
 import Link from "next/link";
 import { useState } from "react";
 import { NAV_LINKS } from "@/data/site";
+import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "./Logo";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const { userData, loading } = useAuth();
+  const sesionActiva = !loading && !!userData;
+
+  const loginBtn = (
+    <>
+      {sesionActiva ? (
+        <Link
+          href="/panel"
+          className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white transition hover:bg-apre-blue-light"
+        >
+          Mi Panel {userData.nombre?.split(" ")[0] ? `· ${userData.nombre.split(" ")[0]}` : ""}
+        </Link>
+      ) : (
+        <Link
+          href="/login"
+          className="rounded-lg border-2 border-apre-blue px-4 py-2 text-sm font-bold text-apre-blue transition hover:bg-apre-blue hover:text-white"
+        >
+          Ingresar
+        </Link>
+      )}
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
@@ -29,6 +52,7 @@ export default function Header() {
           >
             Inscribirme
           </Link>
+          {loginBtn}
         </nav>
 
         <button
@@ -59,13 +83,32 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/contacto"
-            onClick={() => setOpen(false)}
-            className="mt-3 block rounded-lg bg-apre-red px-4 py-2 text-center text-sm font-bold text-white"
-          >
-            Inscribirme
-          </Link>
+          <div className="mt-3 grid gap-2">
+            <Link
+              href="/contacto"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg bg-apre-red px-4 py-2 text-center text-sm font-bold text-white"
+            >
+              Inscribirme
+            </Link>
+            {sesionActiva ? (
+              <Link
+                href="/panel"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg bg-apre-blue px-4 py-2 text-center text-sm font-bold text-white"
+              >
+                Mi Panel
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg border-2 border-apre-blue px-4 py-2 text-center text-sm font-bold text-apre-blue"
+              >
+                Ingresar
+              </Link>
+            )}
+          </div>
         </nav>
       )}
     </header>
