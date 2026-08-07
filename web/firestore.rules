@@ -73,6 +73,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ---- Clases en vivo: solo el admin las crea/inicia/finaliza; alumnos y profesores ven las activas ----
+    match /clases/{claseId} {
+      allow read: if isSignedIn() && (isAdmin() || isTeacher() || resource.data.estado == 'activa');
+      allow write: if isAdmin();
+    }
+
     // ---- Contacto público ----
     match /contact_submissions/{docId} {
       allow create: if true;

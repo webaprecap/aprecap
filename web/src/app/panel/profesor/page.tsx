@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { cursosLP } from "@/data/cursos";
@@ -99,6 +99,58 @@ export default function PanelProfesor() {
   );
 }
 
+/* ---------- Clase activa iniciada por el admin ---------- */
+function ClaseActivaProfesor() {
+  const db = getFirestoreDb();
+  const [clases, setClases] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "clases"), where("estado", "==", "activa"));
+    return onSnapshot(q, (snap) =>
+      setClases(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  if (clases.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-6 text-center">
+        <p className="text-gray-600">
+          No hay clases en vivo. Cuando el administrador inicie una clase,
+          aparecerá aquí con su enlace.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {clases.map((c) => (
+        <div
+          key={c.id}
+          className="relative rounded-2xl border-2 border-whatsapp bg-white p-5"
+        >
+          <span className="absolute -top-2 right-4 animate-pulse rounded-full bg-whatsapp px-2 py-0.5 text-xs font-bold text-white">
+            🔴 EN VIVO
+          </span>
+          <p className="font-extrabold text-apre-blue">{c.nombre}</p>
+          {c.descripcion && <p className="mt-1 text-sm text-gray-600">{c.descripcion}</p>}
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <a
+              href={c.joinUrl || "https://aprecap.cl/campus"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg bg-whatsapp px-4 py-2 text-sm font-bold text-white"
+            >
+              Unirse a la clase
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ---------- Reuniones Zoom ---------- */
 function ReunionesProfesor() {
   const [meetings, setMeetings] = useState<any[]>([]);
@@ -146,6 +198,7 @@ function ReunionesProfesor() {
 
   return (
     <div className="space-y-6">
+      <ClaseActivaProfesor />
       <div className="rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-xl font-extrabold text-apre-blue">Crear clase en vivo</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
