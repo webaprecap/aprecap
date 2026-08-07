@@ -9,9 +9,22 @@ export default function Footer() {
         <div>
           <Logo light />
           <p className="mt-4 text-sm leading-relaxed text-white/70">
-            Organismo Técnico de Capacitación acreditado por SENCE y la
+            Organismo Técnico de Capacitación acreditado por SENCE, la
+            Subsecretaría de Prevención del Delito (Ley N° 21.659) y la
             Prefectura de Seguridad Privada OS-10.
           </p>
+          <div className="mt-4 flex items-center gap-3">
+            <img
+              src="/logos/logo-spd-oficial.png"
+              alt="Subsecretaría de Prevención del Delito"
+              className="h-10 w-auto rounded bg-white p-0.5"
+            />
+            <img
+              src="/logos/os10-logo.webp"
+              alt="Prefectura de Seguridad Privada OS-10 Carabineros de Chile"
+              className="h-10 w-auto rounded bg-white p-0.5"
+            />
+          </div>
         </div>
 
         <div>

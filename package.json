@@ -10,7 +10,12 @@
     "scrape:wp": "node scripts/scrape-wp.mjs",
     "scrape:logo": "node scripts/download-logo.mjs",
     "scrape:moodle": "node scripts/scrape-moodle.mjs",
-    "scrape:all": "pnpm scrape:logo && pnpm scrape:wp && pnpm scrape:moodle"
+    "scrape:all": "pnpm scrape:logo && pnpm scrape:wp && pnpm scrape:moodle",
+    "build-data": "node scripts/build-data.mjs",
+    "dev": "pnpm --dir web dev --port 3000",
+    "build": "pnpm --dir web build",
+    "start": "pnpm --dir web start --port 3000",
+    "lint": "pnpm --dir web lint"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",

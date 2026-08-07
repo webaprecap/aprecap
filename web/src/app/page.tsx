@@ -22,8 +22,11 @@ export default function Home() {
               Capacitación · Asesoría · Seguridad
             </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl">
-              Acreditados por <span className="text-apre-red">SENCE</span> y la
-              Prefectura de Seguridad Privada{" "}
+              Autorizados por la{" "}
+              <span className="text-apre-red">
+                Subsecretaría de Prevención del Delito
+              </span>{" "}
+              y la Prefectura de Seguridad Privada{" "}
               <span className="text-apre-red">OS-10</span>
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-white/80">
@@ -50,26 +53,57 @@ export default function Home() {
       </section>
 
       <section className="border-b border-gray-100 bg-white">
-        <div className="mx-auto grid max-w-6xl grid-cols-3 gap-6 px-4 py-10 text-center">
-          {[
-            { n: "+200", l: "Cursos" },
-            { n: "+400", l: "Asesorías" },
-            { n: "+500", l: "Egresados" },
-          ].map((s) => (
-            <div key={s.l}>
-              <p className="text-4xl font-extrabold text-apre-red">{s.n}</p>
-              <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-apre-blue">
-                {s.l}
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-12 md:grid-cols-3">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
+            <img
+              src="/logos/logo-spd-oficial.png"
+              alt="Subsecretaría de Prevención del Delito"
+              className="h-12 w-auto object-contain"
+            />
+            <div>
+              <p className="font-extrabold text-apre-blue">
+                Autorizados por la Subsecretaría de Prevención del Delito
+              </p>
+              <p className="mt-1 text-sm text-gray-600">
+                Conforme a la Ley N° 21.659, que moderniza la seguridad
+                privada en Chile.
               </p>
             </div>
-          ))}
+          </div>
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
+            <img
+              src="/logos/os10-logo.webp"
+              alt="Prefectura de Seguridad Privada OS-10 Carabineros de Chile"
+              className="h-16 w-auto object-contain"
+            />
+            <div>
+              <p className="font-extrabold text-apre-blue">
+                Acreditados por Carabineros de Chile OS-10
+              </p>
+              <p className="mt-1 text-sm text-gray-600">
+                Prefectura de Seguridad Privada.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
+            <p className="text-4xl font-extrabold text-apre-red">SENCE</p>
+            <div>
+              <p className="font-extrabold text-apre-blue">
+                Organismo Técnico de Capacitación
+              </p>
+              <p className="mt-1 text-sm text-gray-600">
+                Certificado bajo NCH-2728:2015, dependiente del Ministerio del
+                Trabajo y Previsión Social.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-3xl font-extrabold text-apre-blue">
-            Nuestros Cursos de Seguridad Privada
+            Cursos de Seguridad Privada
           </h2>
           <p className="mt-2 text-gray-600">
             Formación presencial y en línea, financiada por SENCE para empresas.
@@ -92,6 +126,83 @@ export default function Home() {
             <Boton href="/cursos" variant="outline">
               Ver todos los cursos
             </Boton>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
+          <div>
+            <h2 className="text-3xl font-extrabold text-apre-blue">
+              Autorizados bajo la nueva Ley de Seguridad Privada
+            </h2>
+            <p className="mt-4 leading-relaxed text-gray-700">
+              La <strong>Ley N° 21.659</strong> (vigente desde noviembre de
+              2025) moderniza la seguridad privada en Chile. Ahora la{" "}
+              <strong>Subsecretaría de Prevención del Delito (SPD)</strong> es
+              la autoridad encargada de regular, fiscalizar y certificar a
+              todos los actores del sector.
+            </p>
+            <ul className="mt-6 space-y-4">
+              {[
+                {
+                  t: "Certificación vigente",
+                  d: "Somos un OTEC autorizado conforme a la Ley 21.659 y su reglamento (D.S. N° 209).",
+                },
+                {
+                  t: "Registro Nacional",
+                  d: "Nuestros alumnos egresan aptos para integrar el Registro Nacional de Seguridad Privada de la SPD.",
+                },
+                {
+                  t: "Respaldo del Gobierno",
+                  d: "La formación y certificación tienen validez legal en todo el territorio nacional.",
+                },
+              ].map((s) => (
+                <li key={s.t} className="flex gap-3">
+                  <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-whatsapp text-white">
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  <div>
+                    <p className="font-extrabold text-apre-blue">{s.t}</p>
+                    <p className="text-sm text-gray-600">{s.d}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-apre-blue p-6 text-white">
+              <img
+                src="/logos/logo-spd-oficial.png"
+                alt="Subsecretaría de Prevención del Delito"
+                className="h-14 w-auto rounded-lg bg-white object-contain p-1"
+              />
+              <div>
+                <p className="font-extrabold">Subsecretaría de Prevención del Delito</p>
+                <p className="text-sm text-white/70">Ley N° 21.659 · D.S. N° 209</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-apre-blue p-6 text-white">
+              <img
+                src="/logos/os10-logo.webp"
+                alt="Prefectura de Seguridad Privada OS-10"
+                className="h-14 w-auto rounded-lg bg-white object-contain p-1"
+              />
+              <div>
+                <p className="font-extrabold">Carabineros de Chile · OS-10</p>
+                <p className="text-sm text-white/70">Prefectura de Seguridad Privada</p>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+              <p className="font-extrabold text-apre-blue">SENCE</p>
+              <p className="mt-1 text-sm text-gray-600">
+                Organismo Técnico de Capacitación y Empleo certificado bajo
+                NCH-2728:2015, dependiente del Ministerio del Trabajo y
+                Previsión Social.
+              </p>
+            </div>
           </div>
         </div>
       </section>
