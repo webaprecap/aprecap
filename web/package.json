@@ -24,8 +24,12 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "firebase-tools": "^15.26.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@11.17.0"
+  "packageManager": "pnpm@11.17.0",
+  "pnpm": {
+    "onlyBuiltDependencies": ["re2"]
+  }
 }
