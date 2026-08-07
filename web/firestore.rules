@@ -6,55 +6,81 @@ service cloud.firestore {
     function isSignedIn() {
       return request.auth != null;
     }
+    function userDoc() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+    function userExists() {
+      return exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
     function isAdmin() {
-      return isSignedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return isSignedIn() && userExists() && userDoc().data.rol in ['admin', 'superadmin'];
+    }
+    function isSuperAdmin() {
+      return isSignedIn() && userExists() && userDoc().data.rol == 'superadmin';
     }
     function isOwner(uid) {
       return isSignedIn() && request.auth.uid == uid;
     }
 
-    // ---- Usuarios: cada uno solo su propio documento ----
-    match /users/{uid} {
-      allow read: if isSignedIn();
-      allow create: if isOwner(uid);
-      allow update: if isOwner(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']);
-      allow delete: if isOwner(uid);
+    // ---- Usuarios: cada uno su documento; admin gestiona todo ----
+    match /usuarios/{userId} {
+      allow get: if isSignedIn() && (userId == request.auth.uid ||
+                    resource.data.email == request.auth.token.email || isAdmin());
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && (
+        isAdmin() || (
+          userId == request.auth.uid && request.resource.data.email == request.auth.token.email &&
+          (request.resource.data.rol == 'alumno' ||
+            (request.resource.data.rol == 'admin' && request.auth.token.email == 'web.aprecap@gmail.com') ||
+            (request.resource.data.rol == 'superadmin' && request.auth.token.email == 'victechweb@gmail.com'))
+        ));
+      allow update: if isSignedIn() && (
+        isAdmin() || ( userId == request.auth.uid &&
+          request.resource.data.rol == resource.data.rol &&
+          request.resource.data.activo == resource.data.activo &&
+          request.resource.data.email == resource.data.email ) );
+      allow delete: if isAdmin() || (userId == request.auth.uid && resource.data.email == request.auth.token.email);
     }
 
-    // ---- Consentimientos: solo el dueño, inmutables ----
+    // ---- Solicitudes de acceso: dueño lee/crea; admin gestiona ----
+    match /solicitudes/{solicitudId} {
+      allow read: if isSignedIn() && (resource.data.email == request.auth.token.email || isAdmin());
+      allow create: if isSignedIn() && (request.resource.data.email == request.auth.token.email);
+      allow update, delete: if isAdmin();
+    }
+
+    // ---- Consentimientos: solo el dueño, inmutables (Ley 21.719) ----
     match /consents/{docId} {
-      allow read: if isOwner(resource.data.uid);
+      allow read: if isOwner(resource.data.uid) || isAdmin();
       allow create: if isOwner(request.resource.data.uid);
       allow update, delete: if false;
     }
 
-    // ---- Matrículas ----
+    // ---- Matrículas: alumno lee las suyas; admin gestiona ----
     match /enrollments/{docId} {
       allow read: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
-      allow create: if isOwner(request.resource.data.uid);
-      allow update: if isOwner(resource.data.uid) || isAdmin();
-      allow delete: if isOwner(resource.data.uid) || isAdmin();
+      allow create: if isAdmin() && request.resource.data.uid != null;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
-    // ---- Reuniones Zoom: alumnos solo lectura de las suyas, admin total ----
+    // ---- Reuniones Zoom: alumno lee las suyas; admin gestiona ----
     match /meetings/{docId} {
       allow read: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
       allow write: if isAdmin();
     }
 
-    // ---- Audit logs: SOLO escritura server-side (inmutable) ----
-    match /audit_logs/{docId} {
-      allow read: if isAdmin();
-      allow create: if isSignedIn();
-      allow update, delete: if false;
-    }
-
     // ---- Contacto público ----
     match /contact_submissions/{docId} {
-      allow create: if isSignedIn() || true; // spam controlado por rate limit en server
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ---- Audit logs: SOLO lectura admin; escritura server-side (inmutable, Ley 21.663) ----
+    match /audit_logs/{docId} {
       allow read: if isAdmin();
-      allow update, delete: if isAdmin();
+      allow create: if false;
+      allow update, delete: if false;
     }
 
     // ---- Denegar todo lo demás por defecto ----

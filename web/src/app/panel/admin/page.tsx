@@ -1,0 +1,489 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
+import { getFirestoreDb } from "@/lib/firebase";
+import { cursosMoodle } from "@/data/moodle";
+import { cursosLP } from "@/data/cursos";
+import { cursosOtec } from "@/data/cursos-otec";
+import ConsentModal from "@/components/ConsentModal";
+
+type Tab = "solicitudes" | "usuarios" | "reuniones" | "contacto" | "auditoria";
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: "solicitudes", label: "Solicitudes" },
+  { id: "usuarios", label: "Usuarios y Matrículas" },
+  { id: "reuniones", label: "Reuniones Zoom" },
+  { id: "contacto", label: "Contacto" },
+  { id: "auditoria", label: "Auditoría" },
+];
+
+export default function PanelAdmin() {
+  const { userData, loading, signOut } = useAuth();
+  const router = useRouter();
+  const [tab, setTab] = useState<Tab>("solicitudes");
+
+  useEffect(() => {
+    if (!loading && (!userData || (userData.rol !== "admin" && userData.rol !== "superadmin"))) {
+      router.push("/login");
+    }
+  }, [userData, loading, router]);
+
+  if (loading || !userData) return <p className="p-8 text-center text-gray-500">Cargando…</p>;
+
+  return (
+    <>
+      <section className="bg-apre-blue text-white">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-10">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-widest text-apre-red">
+              Panel de Administración
+            </p>
+            <h1 className="mt-2 text-3xl font-extrabold">
+              {userData.rol === "superadmin" ? "Superadmin" : "Admin"} · {userData.nombre}
+            </h1>
+          </div>
+          <button
+            onClick={() => signOut()}
+            className="rounded-xl bg-white/10 px-5 py-2.5 text-sm font-bold transition hover:bg-white/20"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-wrap gap-2 pb-4">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                  tab === t.id
+                    ? "bg-apre-red text-white"
+                    : "bg-white/10 text-white hover:bg-white/20"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gray-50 py-10">
+        <div className="mx-auto max-w-6xl px-4">
+          {tab === "solicitudes" && <SolicitudesTab />}
+          {tab === "usuarios" && <UsuariosTab />}
+          {tab === "reuniones" && <ReunionesTab />}
+          {tab === "contacto" && <ContactoTab />}
+          {tab === "auditoria" && <AuditoriaTab />}
+        </div>
+      </section>
+      <ConsentModal />
+    </>
+  );
+}
+
+/* ---------- Solicitudes ---------- */
+function SolicitudesTab() {
+  const db = getFirestoreDb();
+  const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "solicitudes"), where("estado", "==", "pendiente"));
+    return onSnapshot(q, (snap) =>
+      setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  const aprobar = async (s: any) => {
+    if (!db) return;
+    const uidTemp = s.email.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+    await setDoc(doc(db, "usuarios", uidTemp), {
+      uid: uidTemp,
+      email: s.email,
+      nombre: s.nombres,
+      rol: "alumno",
+      activo: true,
+      telefono: s.telefono || "",
+      fechaRegistro: serverTimestamp(),
+    });
+    await updateDoc(doc(db, "solicitudes", s.id), {
+      estado: "aprobada",
+      fechaRevision: serverTimestamp(),
+    });
+  };
+
+  const rechazar = async (s: any) => {
+    if (!db) return;
+    await updateDoc(doc(db, "solicitudes", s.id), {
+      estado: "rechazada",
+      fechaRevision: serverTimestamp(),
+    });
+  };
+
+  if (items.length === 0) {
+    return <p className="text-gray-500">No hay solicitudes pendientes.</p>;
+  }
+  return (
+    <div className="space-y-4">
+      {items.map((s) => (
+        <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5">
+          <p className="font-extrabold text-apre-blue">{s.nombres}</p>
+          <p className="text-sm text-gray-600">
+            {s.email} · {s.telefono}
+          </p>
+          {s.cursoDeseado && (
+            <p className="mt-1 text-sm text-gray-600">Curso: {s.cursoDeseado}</p>
+          )}
+          {s.mensaje && <p className="mt-1 text-sm text-gray-500">{s.mensaje}</p>}
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={() => aprobar(s)}
+              className="rounded-lg bg-whatsapp px-4 py-2 text-sm font-bold text-white hover:brightness-95"
+            >
+              Aprobar
+            </button>
+            <button
+              onClick={() => rechazar(s)}
+              className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-300"
+            >
+              Rechazar
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- Usuarios y Matrículas ---------- */
+function UsuariosTab() {
+  const db = getFirestoreDb();
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [enrolls, setEnrolls] = useState<any[]>([]);
+  const [selUid, setSelUid] = useState<string | null>(null);
+  const [selCurso, setSelCurso] = useState("");
+
+  useEffect(() => {
+    if (!db) return;
+    const un1 = onSnapshot(collection(db, "usuarios"), (snap) =>
+      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    const un2 = onSnapshot(collection(db, "enrollments"), (snap) =>
+      setEnrolls(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+    };
+  }, [db]);
+
+  const toggleActivo = async (u: any) => {
+    await updateDoc(doc(db!, "usuarios", u.id), { activo: !u.activo });
+  };
+
+  const eliminar = async (u: any) => {
+    if (!confirm(`¿Eliminar a ${u.nombre}?`)) return;
+    await deleteDoc(doc(db!, "usuarios", u.id));
+    for (const e of enrolls.filter((e) => e.uid === u.id)) {
+      await deleteDoc(doc(db!, "enrollments", e.id));
+    }
+  };
+
+  const matricular = async (u: any) => {
+    if (!selCurso) return;
+    const curso = [...cursosLP, ...cursosMoodle].find((c) => c.slug === selCurso);
+    await setDoc(doc(collection(db!, "enrollments"), `${u.id}_${selCurso}`), {
+      uid: u.id,
+      courseSlug: selCurso,
+      moodleCourseId: (curso as any)?.moodleId ? Number((curso as any).moodleId) : null,
+      fecha: serverTimestamp(),
+    });
+    setSelCurso("");
+    setSelUid(null);
+  };
+
+  const desmatricular = async (e: any) => {
+    await deleteDoc(doc(db!, "enrollments", e.id));
+  };
+
+  const cursoNombre = (slug: string) =>
+    [...cursosLP, ...cursosMoodle, ...cursosOtec].find((c) => c.slug === slug)?.title ?? slug;
+
+  return (
+    <div className="space-y-4">
+      {usuarios.map((u) => {
+        const susEnrolls = enrolls.filter((e) => e.uid === u.id);
+        return (
+          <div key={u.id} className="rounded-2xl border border-gray-200 bg-white p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="font-extrabold text-apre-blue">{u.nombre}</p>
+                <p className="text-sm text-gray-600">
+                  {u.email} ·{" "}
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                      u.rol === "alumno" ? "bg-apre-blue text-white" : "bg-apre-red text-white"
+                    }`}
+                  >
+                    {u.rol}
+                  </span>{" "}
+                  {u.activo ? (
+                    <span className="text-green-600">· activo</span>
+                  ) : (
+                    <span className="text-red-600">· desactivado</span>
+                  )}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => toggleActivo(u)}
+                  className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-200"
+                >
+                  {u.activo ? "Desactivar" : "Activar"}
+                </button>
+                <button
+                  onClick={() => eliminar(u)}
+                  className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-apre-red hover:bg-red-100"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+
+            {susEnrolls.length > 0 && (
+              <ul className="mt-3 space-y-1">
+                {susEnrolls.map((e) => (
+                  <li key={e.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-1.5 text-sm">
+                    <span>{cursoNombre(e.courseSlug)}</span>
+                    <button
+                      onClick={() => desmatricular(e)}
+                      className="text-xs font-bold text-apre-red hover:underline"
+                    >
+                      Quitar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {selUid === u.id ? (
+              <div className="mt-3 flex gap-2">
+                <select
+                  value={selCurso}
+                  onChange={(e) => setSelCurso(e.target.value)}
+                  className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                >
+                  <option value="">Selecciona un curso…</option>
+                  {[...cursosLP, ...cursosMoodle].map((c) => (
+                    <option key={c.slug} value={c.slug}>
+                      {c.title}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => matricular(u)}
+                  className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white"
+                >
+                  Matricular
+                </button>
+                <button
+                  onClick={() => setSelUid(null)}
+                  className="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-700"
+                >
+                  Cancelar
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setSelUid(u.id)}
+                className="mt-3 rounded-lg bg-apre-blue/10 px-3 py-1.5 text-xs font-bold text-apre-blue hover:bg-apre-blue/20"
+              >
+                + Matricular en curso
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------- Reuniones Zoom ---------- */
+function ReunionesTab() {
+  const [meetings, setMeetings] = useState<any[]>([]);
+  const [form, setForm] = useState({ topic: "", start_time: "", duration: "60" });
+  const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const cargar = useCallback(() => {
+    fetch("/api/zoom", { method: "GET" })
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (ok) setMeetings(data.meetings ?? []);
+        else setMsg(data.error || "Error al listar reuniones");
+      })
+      .catch(() => setMsg("Zoom no configurado aún (falta la app Server-to-Server)."));
+  }, []);
+
+  useEffect(() => {
+    cargar();
+  }, [cargar]);
+
+  const crear = async () => {
+    setBusy(true);
+    setMsg("");
+    try {
+      const res = await fetch("/api/zoom", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMsg(`Reunión creada: ${data.join_url}`);
+        setForm({ topic: "", start_time: "", duration: "60" });
+        cargar();
+      } else {
+        setMsg(data.error || "Error al crear reunión");
+      }
+    } catch {
+      setMsg("Zoom no configurado aún (falta la app Server-to-Server).");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+        <h2 className="text-xl font-extrabold text-apre-blue">Crear reunión Zoom</h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <input
+            value={form.topic}
+            onChange={(e) => setForm({ ...form, topic: e.target.value })}
+            placeholder="Tema de la reunión (ej. Clase Módulo 1)"
+            className="rounded-xl border border-gray-300 px-4 py-3 text-sm sm:col-span-2"
+          />
+          <input
+            type="datetime-local"
+            value={form.start_time}
+            onChange={(e) => setForm({ ...form, start_time: e.target.value })}
+            className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
+          />
+          <input
+            value={form.duration}
+            onChange={(e) => setForm({ ...form, duration: e.target.value })}
+            placeholder="Duración (min)"
+            className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
+          />
+        </div>
+        <button
+          onClick={crear}
+          disabled={busy}
+          className="mt-4 rounded-xl bg-apre-red px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+        >
+          {busy ? "Creando…" : "Crear reunión"}
+        </button>
+        {msg && <p className="mt-3 text-sm text-gray-600">{msg}</p>}
+      </div>
+
+      <div className="space-y-3">
+        {meetings.map((m) => (
+          <div key={m.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5">
+            <div>
+              <p className="font-extrabold text-apre-blue">{m.topic}</p>
+              <p className="text-sm text-gray-600">
+                {m.start_time ? new Date(m.start_time).toLocaleString("es-CL") : "Sin fecha"} ·{" "}
+                {m.duration} min
+              </p>
+            </div>
+            {m.join_url && (
+              <a
+                href={m.join_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg bg-whatsapp px-4 py-2 text-sm font-bold text-white"
+              >
+                Unirse
+              </a>
+            )}
+          </div>
+        ))}
+        {meetings.length === 0 && (
+          <p className="text-gray-500">Sin reuniones. (Requiere ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID y ZOOM_CLIENT_SECRET en .env)</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Contacto ---------- */
+function ContactoTab() {
+  const db = getFirestoreDb();
+  const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!db) return;
+    return onSnapshot(collection(db, "contact_submissions"), (snap) =>
+      setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  if (items.length === 0) return <p className="text-gray-500">Sin mensajes de contacto.</p>;
+  return (
+    <div className="space-y-3">
+      {items.map((m) => (
+        <div key={m.id} className="rounded-2xl border border-gray-200 bg-white p-5">
+          <p className="font-extrabold text-apre-blue">{m.nombre || "Anónimo"}</p>
+          <p className="text-sm text-gray-600">{m.email} · {m.telefono || "sin teléfono"}</p>
+          {m.mensaje && <p className="mt-2 text-sm text-gray-700">{m.mensaje}</p>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- Auditoría ---------- */
+function AuditoriaTab() {
+  const db = getFirestoreDb();
+  const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "audit_logs"));
+    return onSnapshot(q, (snap) =>
+      setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  if (items.length === 0)
+    return <p className="text-gray-500">Sin eventos registrados (solo lectura, escritura server-side).</p>;
+  return (
+    <div className="space-y-2">
+      {items.map((l) => (
+        <div key={l.id} className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm">
+          <span className="font-bold text-apre-blue">{l.accion}</span>
+          <span className="text-gray-500"> · {l.email || l.uid || "sistema"} · </span>
+          <span className="text-gray-400">
+            {l.fecha?.toDate ? l.fecha.toDate().toLocaleString("es-CL") : "—"}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}

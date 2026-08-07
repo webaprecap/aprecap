@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
+import ContactoForm from "@/components/ContactoForm";
 import { CONTACTO } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -64,16 +65,19 @@ export default function ContactoPage() {
               Escríbenos
             </h2>
             <p className="mt-2 text-gray-600">
-              Responde más rápido por WhatsApp, o escríbenos directamente a
-              nuestro correo.
+              Completa el formulario y te responderemos a la brevedad.
             </p>
-            <div className="mt-6 flex flex-col gap-4">
+            <div className="mt-6">
+              <ContactoForm />
+            </div>
+            <p className="mt-6 text-gray-600">
+              Prefieres otra vía? Responde más rápido por WhatsApp, o escríbenos
+              directamente a nuestro correo.
+            </p>
+            <div className="mt-4 flex flex-col gap-4">
               <WhatsAppButton texto="Hola, quiero información de OTEC APRECAP" />
-              <Boton href={`mailto:${CONTACTO.email}`} variant="primary">
+              <Boton href={`mailto:${CONTACTO.email}`} variant="outline">
                 Enviar correo
-              </Boton>
-              <Boton href="/campus" variant="outline">
-                Ir a Mi Campus
               </Boton>
             </div>
           </div>
