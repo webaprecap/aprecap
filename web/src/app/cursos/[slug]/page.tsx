@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
-import Markdown from "@/components/Markdown";
 import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
 import { CONTACTO } from "@/data/site";
@@ -216,12 +215,53 @@ export default async function CursoDetalle({ params }: Props) {
             </>
           )}
 
-          {c.curriculum && (
+          {c.curriculum.length > 0 && (
             <>
               <h2 className="mt-10 text-2xl font-extrabold text-apre-blue">
                 Contenido del curso
               </h2>
-              <Markdown className="mt-4">{c.curriculum}</Markdown>
+              <p className="mt-2 text-sm text-gray-600">
+                Esto es lo que verás en cada módulo. El material de estudio y las
+                evaluaciones se entregan dentro del Campus Virtual, disponible al
+                matricularte.
+              </p>
+              <div className="mt-6 space-y-4">
+                {(() => {
+                  const grupos = new Map<string, typeof c.curriculum>();
+                  for (const item of c.curriculum) {
+                    const key = item.seccion || "General";
+                    grupos.set(key, [...(grupos.get(key) ?? []), item]);
+                  }
+                  return [...grupos.entries()].map(([seccion, items]) => (
+                    <div
+                      key={seccion}
+                      className="rounded-2xl border border-gray-200 bg-white p-5"
+                    >
+                      <h3 className="font-extrabold text-apre-blue">{seccion}</h3>
+                      <ul className="mt-3 divide-y divide-gray-100">
+                        {items.map((item, i) => (
+                          <li key={i} className="flex items-center justify-between gap-3 py-2.5 text-sm">
+                            <span className="flex items-center gap-2 text-gray-800">
+                              <span
+                                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${
+                                  item.tipo === "evaluacion" ? "bg-apre-pink" : "bg-apre-blue"
+                                }`}
+                              >
+                                {item.tipo === "evaluacion" ? "📝" : "📘"}
+                              </span>
+                              {item.titulo}
+                            </span>
+                            <span className="shrink-0 text-xs font-bold text-gray-400">
+                              {item.minutos ? `⏱ ${item.minutos} min` : ""}
+                              {item.preguntas ? ` · ${item.preguntas} preguntas` : ""}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ));
+                })()}
+              </div>
             </>
           )}
 

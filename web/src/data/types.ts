@@ -16,6 +16,14 @@ export interface BlogPost {
   images: string[];
 }
 
+export interface CurriculumItem {
+  seccion: string;
+  titulo: string;
+  tipo: "leccion" | "evaluacion";
+  minutos?: number;
+  preguntas?: number;
+}
+
 export interface CursoLP {
   slug: string;
   title: string;
@@ -30,7 +38,7 @@ export interface CursoLP {
   requisitos: string[];
   caracteristicas: string[];
   audiencia: string[];
-  curriculum: string;
+  curriculum: CurriculumItem[];
   faq: { q: string; a: string }[];
 }
 

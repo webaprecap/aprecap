@@ -37,6 +37,11 @@ import {
 } from "@/lib/firebase";
 import { roleForEmail, type UserRole } from "@/lib/roles";
 
+/** MFA exigido solo si se activa el flag (por defecto desactivado para pruebas). */
+export function mfaRequired() {
+  return process.env.NEXT_PUBLIC_MFA_REQUIRED === "true";
+}
+
 export interface UserData {
   uid: string;
   email: string;
@@ -179,9 +184,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       const result = await signInWithPopup(auth, provider);
-      if (multiFactor(result.user).enrolledFactors.length === 0) {
+      if (mfaRequired() && multiFactor(result.user).enrolledFactors.length === 0) {
         const d = await findUserByEmail(result.user.email?.toLowerCase() ?? "");
-        if (d && (d.rol === "admin" || d.rol === "superadmin")) {
+        if (d && (d.rol === "admin" || d.rol === "superadmin" || d.rol === "profesor")) {
           setRequiresMfaEnrollment(true);
         }
       }

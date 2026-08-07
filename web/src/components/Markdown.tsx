@@ -76,7 +76,7 @@ export default function Markdown({ children, className = "" }: { children: strin
 
 function inline(text: string): ReactNode {
   const out: ReactNode[] = [];
-  const re = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  const re = /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)\s]+\))/g;
   let last = 0;
   let m: RegExpExecArray | null;
   let i = 0;
@@ -85,8 +85,23 @@ function inline(text: string): ReactNode {
     const token = m[0];
     if (token.startsWith("**")) {
       out.push(<strong key={i++}>{token.slice(2, -2)}</strong>);
-    } else {
+    } else if (token.startsWith("*")) {
       out.push(<em key={i++}>{token.slice(1, -1)}</em>);
+    } else {
+      const link = token.match(/\[([^\]]+)\]\(([^)\s]+)\)/);
+      if (link) {
+        out.push(
+          <a
+            key={i++}
+            href={link[2]}
+            target={link[2].startsWith("http") ? "_blank" : undefined}
+            rel="noopener noreferrer"
+            className="font-semibold text-apre-blue underline hover:text-apre-red"
+          >
+            {link[1]}
+          </a>
+        );
+      }
     }
     last = m.index + token.length;
   }

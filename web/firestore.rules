@@ -15,6 +15,9 @@ service cloud.firestore {
     function isAdmin() {
       return isSignedIn() && userExists() && userDoc().data.rol in ['admin', 'superadmin'];
     }
+    function isTeacher() {
+      return isSignedIn() && userExists() && userDoc().data.rol == 'profesor';
+    }
     function isSuperAdmin() {
       return isSignedIn() && userExists() && userDoc().data.rol == 'superadmin';
     }
@@ -30,9 +33,9 @@ service cloud.firestore {
       allow create: if isSignedIn() && (
         isAdmin() || (
           userId == request.auth.uid && request.resource.data.email == request.auth.token.email &&
-          (request.resource.data.rol == 'alumno' ||
+          (request.resource.data.rol == 'alumno' || request.resource.data.rol == 'profesor' ||
             (request.resource.data.rol == 'admin' && request.auth.token.email == 'web.aprecap@gmail.com') ||
-            (request.resource.data.rol == 'superadmin' && request.auth.token.email == 'victechweb@gmail.com'))
+            (request.resource.data.rol == 'superadmin' && request.auth.token.email == 'contacto.digitalup@gmail.com'))
         ));
       allow update: if isSignedIn() && (
         isAdmin() || ( userId == request.auth.uid &&
@@ -56,17 +59,17 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // ---- Matrículas: alumno lee las suyas; admin gestiona ----
+    // ---- Matrículas: alumno lee las suyas; profesor lee todas; admin gestiona ----
     match /enrollments/{docId} {
-      allow read: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow read: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin() || isTeacher());
       allow create: if isAdmin() && request.resource.data.uid != null;
       allow update: if isAdmin();
       allow delete: if isAdmin();
     }
 
-    // ---- Reuniones Zoom: alumno lee las suyas; admin gestiona ----
+    // ---- Reuniones Zoom: alumno lee las suyas; profesor lee todas; admin gestiona ----
     match /meetings/{docId} {
-      allow read: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
+      allow read: if isAdmin() || isTeacher() || (isSignedIn() && resource.data.uid == request.auth.uid);
       allow write: if isAdmin();
     }
 

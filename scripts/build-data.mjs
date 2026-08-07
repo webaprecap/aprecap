@@ -25,14 +25,21 @@ function readMd(file) {
 }
 
 function stripMeta(md) {
-  // Quita bloque de metadatos (> Fuente / > Rescatado / > URL / > ID Moodle)
-  const lines = md.split(/\r?\n/);
-  let i = 0;
-  while (i < lines.length && (lines[i].trim() === "" || lines[i].trim().startsWith(">"))) i++;
-  const body = lines.slice(i).join("\n");
+  // Quita líneas de metadatos (> Fuente / > Rescatado / > URL / > ID Moodle) donde sea que estén
+  const lines = md
+    .split(/\r?\n/)
+    .filter((l) => !/^\s*>\s*(Fuente|Rescatado|URL|ID Moodle):/i.test(l));
+  let body = lines.join("\n");
+  // Quita la primera línea H1 (título del scrape) y ruido de autor del blog ("/\n/ Por")
+  body = body.replace(/^#\s+.+$/m, "");
+  body = body.replace(/^[ \t]*\/\n[ \t]*\/[ \t]*Por[ \t]*$/m, "");
+  body = body.replace(/^[ \t]*\/[ \t]*$/m, "");
+  // Quita ítems de lista vacíos (menús de WordPress)
+  body = body.replace(/^[ \t]*[-•*][ \t]*$/gm, "");
   // Quita sección "## Enlaces encontrados" (todo lo que sigue)
   const idx = body.indexOf("## Enlaces encontrados");
-  return idx === -1 ? body : body.slice(0, idx);
+  if (idx !== -1) body = body.slice(0, idx);
+  return body.trim();
 }
 
 function imagesFrom(md) {
@@ -83,6 +90,40 @@ function cleanTitle(t) {
   return t.replace(/\s*[–-]\s*Otec\s*Aprecap\s*$/i, "").trim();
 }
 
+function parseCurriculum(raw) {
+  // Convierte el curriculum crudo de LearnPress (con ruido del scrape) en
+  // [{ seccion, titulo, tipo, minutos?, preguntas? }], sin URLs del WP.
+  const items = [];
+  const seen = new Set();
+  const re = /^\s*[-•*]\s*\[(.+?)\]\(([^)]+)\)\s*$/gm;
+  let m;
+  while ((m = re.exec(raw)) !== null) {
+    const label = m[1];
+    const url = m[2];
+    if (!/aprecap\.cl\/courses\//.test(url) || seen.has(url)) continue;
+    seen.add(url);
+    const tipo = /\/quizzes\//.test(url) ? "evaluacion" : "leccion";
+    let titulo = label;
+    const pm = titulo.match(/(\d{1,2})\s*preguntas?\s*$/);
+    const preguntas = pm ? parseInt(pm[1], 10) : undefined;
+    if (pm) titulo = titulo.slice(0, pm.index);
+    const mm = titulo.match(/(\d{1,2})\s*minutos?\s*$/);
+    const minutos = mm ? parseInt(mm[1], 10) : undefined;
+    if (mm) titulo = titulo.slice(0, mm.index);
+    const num = titulo.match(/^(\d+)\.(\d+)\s*/);
+    if (num) titulo = titulo.replace(/^\d+\.\d+\s*/, "");
+    const mod = titulo.match(/Módulo\s+(\d+)/i);
+    const seccion = mod ? `Módulo ${mod[1]}` : num ? `Módulo ${num[1]}` : "";
+    titulo = titulo.replace(/^Módulo\s+\d+\s*:\s*/i, "").trim();
+    if (!titulo) titulo = seccion || "Lección";
+    const item = { seccion, titulo, tipo };
+    if (minutos !== undefined) item.minutos = minutos;
+    if (preguntas !== undefined) item.preguntas = preguntas;
+    items.push(item);
+  }
+  return items;
+}
+
 /* ---------- Páginas (content/pages) ---------- */
 function parsePages() {
   const pages = [];
@@ -92,12 +133,20 @@ function parsePages() {
     const clean = stripMeta(md);
     const title = cleanTitle(firstMatch(md, /^#\s+(.+?)\s*$/m) || f.replace(/\.md$/, ""));
     const display = cleanTitle(firstMatch(clean, /^#\s+(.+?)\s*$/m) || title);
+    let body = clean.replace(/^#\s+.+$/m, "").trim();
+    // Quita enlaces de navegación del scrape (menús del WordPress que quedaron en el cuerpo)
+    body = body
+      .split(/\r?\n/)
+      .filter((l) => !/^\s*[-•*]\s*\[[^\]]*\]\(https:\/\/aprecap\.cl/i.test(l))
+      .join("\n")
+      .trim();
+    if (!body) continue; // páginas sin contenido real (p. ej. courses)
     pages.push({
       slug: f.replace(/\.md$/, ""),
       title,
       heading: display,
       source: firstMatch(md, /> Fuente: (.+)$/),
-      body: clean.replace(/^#\s+.+$/m, "").trim(),
+      body,
       images: imagesFrom(clean),
     });
   }
@@ -160,7 +209,7 @@ function parseCursos() {
       requisitos: listItems(get("Requisitos")),
       caracteristicas: listItems(get("Caracteristicas")),
       audiencia: listItems(get("Audiencia objetivo")),
-      curriculum: get("Currículum") || "",
+      curriculum: parseCurriculum(get("Currículum")),
       faq: secs.filter((x) => x.content.includes("¿")).map((x) => ({ q: x.title, a: x.content })),
     });
   }

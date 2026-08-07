@@ -29,7 +29,56 @@ export const cursosLP: CursoLP[] = [
       "Personas interesadas en adquirir conocimientos de Supervisión en el área de seguridad privada.",
       "Personal de seguridad con experiencia que busque formalizar y ampliar sus competencias"
     ],
-    "curriculum": "### Currículum\n\n- 4 secciones\n- 4 lecciones\n- Duración\n\nExpandir todas las secciones\nPlegar todas las secciones\n- [1.1Normativa laboral y prevención del riesgo](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-1/)\n- [1.1Normativa laboral y prevención del riesgo](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-1/)\n- [1.2Cuestionario módulo 160 minutos22 preguntas](https://aprecap.cl/courses/jefe-de-seguridad-privada/quizzes/cuestionario-modulo-1/)\n\n- [2.1Prevención de riesgos y control de emergencias](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-2/)\n- [2.1Prevención de riesgos y control de emergencias](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-2/)\n- [2.2Cuestionario módulo 260 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad-privada/quizzes/cuestionario-modulo-2/)\n\n- [3.1Procedimientos de gestión de seguridad privada](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-3/)\n- [3.1Procedimientos de gestión de seguridad privada](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-3/)\n- [3.2Cuestionario módulo 360 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad-privada/quizzes/cuestionario-modulo-3/)\n\n- [4.1Liderazgo y resolución de conflictos](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-4/)\n- [4.1Liderazgo y resolución de conflictos](https://aprecap.cl/courses/jefe-de-seguridad-privada/lessons/modulo-4/)\n- [4.2Cuestionario módulo 460 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad-privada/quizzes/2607-2/)\n\n\n![Avatar del usuario](https://secure.gravatar.com/avatar/69ec618bb1f6c3326c6d980f5dd56678de6a314bd6e67af79a6e4b725ba911ac?s=250&d=mm&r=g)",
+    "curriculum": [
+      {
+        "seccion": "Módulo 1",
+        "titulo": "Normativa laboral y prevención del riesgo",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 1",
+        "titulo": "Cuestionario módulo 1",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 22
+      },
+      {
+        "seccion": "Módulo 2",
+        "titulo": "Prevención de riesgos y control de emergencias",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 2",
+        "titulo": "Cuestionario módulo 2",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 3",
+        "titulo": "Procedimientos de gestión de seguridad privada",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 3",
+        "titulo": "Cuestionario módulo 3",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 4",
+        "titulo": "Liderazgo y resolución de conflictos",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 4",
+        "titulo": "Cuestionario módulo 4",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      }
+    ],
     "faq": [
       {
         "q": "aprecap",
@@ -67,7 +116,110 @@ export const cursosLP: CursoLP[] = [
       "Personas interesadas en profesionalizar su carrera en seguridad privada, que cumplan con los requisitos de ingreso y busquen desempeñarse en cargos de dirección y liderazgo.",
       "Personal ex fuerzas armadas, policiales y gendarmería."
     ],
-    "curriculum": "### Currículum\n\n- 9 secciones\n- 9 lecciones\n- Duración\n\nExpandir todas las secciones\nPlegar todas las secciones\n- [1.1Módulo 1: Legislación laboral y seguridad privada60 minutos](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-1-3/)\n- [1.1Módulo 1: Legislación laboral y seguridad privada60 minutos](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-1-3/)\n- [1.2Evaluación módulo 160 minutos15 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/cuestionario-modulo-1-3/)\n\n- [2.1Módulo 2: Prevención de riesgos](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-2-3/)\n- [2.1Módulo 2: Prevención de riesgos](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-2-3/)\n- [2.2Evaluación módulo 260 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/cuestionario-modulo-2-3/)\n\n- [3.1Módulo 3: Administración](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-3-3/)\n- [3.1Módulo 3: Administración](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-3-3/)\n- [3.2Evaluación módulo 360 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/evaluacion-modulo-3/)\n\n- [4.1Módulo 4: Planificación estratégica](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-4-2/)\n- [4.1Módulo 4: Planificación estratégica](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-4-2/)\n- [4.2Evaluación módulo 460 minutos10 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/evaluacion-modulo-4/)\n\n- [5.1Módulo 5: Gestión operativa](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-5/)\n- [5.1Módulo 5: Gestión operativa](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-5/)\n- [5.2Evaluación módulo 560 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/evaluacion-modulo-5/)\n\n- [6.1Módulo 6: Seguridad condominios](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-6/)\n- [6.1Módulo 6: Seguridad condominios](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-6/)\n- [6.2Evaluación módulo 660 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/evaluacion-modulo-6/)\n\n- [7.1Módulo 7: Psicología de la emergencia](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-7/)\n- [7.1Módulo 7: Psicología de la emergencia](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-7/)\n- [7.2Evaluación módulo 760 minutos20 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/evaluacion-modulo-7/)\n\n- [8.1Módulo 8: Seguridad electrónica](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-8/)\n- [8.1Módulo 8: Seguridad electrónica](https://aprecap.cl/courses/jefe-de-seguridad/lessons/modulo-8/)\n- [8.2Evaluación módulo 860 minutos19 preguntas](https://aprecap.cl/courses/jefe-de-seguridad/quizzes/evaluacion-modulo-8/)\n\n- [9.1Material adicional](https://aprecap.cl/courses/jefe-de-seguridad/lessons/material-adicional/)\n- [9.1Material adicional](https://aprecap.cl/courses/jefe-de-seguridad/lessons/material-adicional/)\n\n\n![Avatar del usuario](https://secure.gravatar.com/avatar/69ec618bb1f6c3326c6d980f5dd56678de6a314bd6e67af79a6e4b725ba911ac?s=250&d=mm&r=g)",
+    "curriculum": [
+      {
+        "seccion": "Módulo 1",
+        "titulo": "Legislación laboral y seguridad privada",
+        "tipo": "leccion",
+        "minutos": 60
+      },
+      {
+        "seccion": "Módulo 1",
+        "titulo": "Evaluación módulo 1",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 15
+      },
+      {
+        "seccion": "Módulo 2",
+        "titulo": "Prevención de riesgos",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 2",
+        "titulo": "Evaluación módulo 2",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 3",
+        "titulo": "Administración",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 3",
+        "titulo": "Evaluación módulo 3",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 4",
+        "titulo": "Planificación estratégica",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 4",
+        "titulo": "Evaluación módulo 4",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 10
+      },
+      {
+        "seccion": "Módulo 5",
+        "titulo": "Gestión operativa",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 5",
+        "titulo": "Evaluación módulo 5",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 6",
+        "titulo": "Seguridad condominios",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 6",
+        "titulo": "Evaluación módulo 6",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 7",
+        "titulo": "Psicología de la emergencia",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 7",
+        "titulo": "Evaluación módulo 7",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 8",
+        "titulo": "Seguridad electrónica",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 8",
+        "titulo": "Evaluación módulo 8",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 19
+      },
+      {
+        "seccion": "Módulo 9",
+        "titulo": "Material adicional",
+        "tipo": "leccion"
+      }
+    ],
     "faq": [
       {
         "q": "aprecap",
@@ -103,7 +255,44 @@ export const cursosLP: CursoLP[] = [
       "Trabajadores de instituciones públicas o privadas responsables de la protección de instalaciones críticas, retail, bancos, hospitales, colegios o industrias.",
       "Personas interesadas en ingresar al rubro de la seguridad electrónica, sin necesidad de experiencia previa, que busquen una capacitación práctica y certificada."
     ],
-    "curriculum": "### Currículum\n\n- 3 secciones\n- 3 lecciones\n- Duración\n\nExpandir todas las secciones\nPlegar todas las secciones\n- [1.1Módulo 1](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/lessons/modulo-1-2/)\n- [1.1Módulo 1](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/lessons/modulo-1-2/)\n- [1.2Evaluación módulo 160 minutos20 preguntas](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/quizzes/cuestionario-modulo-1-2/)\n\n- [2.1Módulo 2](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/lessons/modulo-2-2/)\n- [2.1Módulo 2](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/lessons/modulo-2-2/)\n- [2.2Evaluación módulo 260 minutos20 preguntas](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/quizzes/cuestionario-modulo-2-2/)\n\n- [3.1Módulo 3](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/lessons/modulo-3-2/)\n- [3.1Módulo 3](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/lessons/modulo-3-2/)\n- [3.2Evaluación módulo 360 minutos20 preguntas](https://aprecap.cl/courses/operador-cc-tv-y-alarmas/quizzes/cuestionario-modulo-3-2/)\n\n\n![Avatar del usuario](https://secure.gravatar.com/avatar/69ec618bb1f6c3326c6d980f5dd56678de6a314bd6e67af79a6e4b725ba911ac?s=250&d=mm&r=g)",
+    "curriculum": [
+      {
+        "seccion": "Módulo 1",
+        "titulo": "Módulo 1",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 1",
+        "titulo": "Evaluación módulo 1",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 2",
+        "titulo": "Módulo 2",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 2",
+        "titulo": "Evaluación módulo 2",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      },
+      {
+        "seccion": "Módulo 3",
+        "titulo": "Módulo 3",
+        "tipo": "leccion"
+      },
+      {
+        "seccion": "Módulo 3",
+        "titulo": "Evaluación módulo 3",
+        "tipo": "evaluacion",
+        "minutos": 60,
+        "preguntas": 20
+      }
+    ],
     "faq": [
       {
         "q": "aprecap",

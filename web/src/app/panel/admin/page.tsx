@@ -112,13 +112,18 @@ function SolicitudesTab() {
   const aprobar = async (s: any) => {
     if (!db) return;
     const uidTemp = s.email.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+    const nombreCompleto = [s.nombres, s.apellidoPaterno, s.apellidoMaterno]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
     await setDoc(doc(db, "usuarios", uidTemp), {
       uid: uidTemp,
       email: s.email,
-      nombre: s.nombres,
-      rol: "alumno",
+      nombre: nombreCompleto || s.nombres,
+      rol: s.tipoSolicitud || "alumno",
       activo: true,
       telefono: s.telefono || "",
+      solicitudId: s.id,
       fechaRegistro: serverTimestamp(),
     });
     await updateDoc(doc(db, "solicitudes", s.id), {
@@ -142,7 +147,18 @@ function SolicitudesTab() {
     <div className="space-y-4">
       {items.map((s) => (
         <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5">
-          <p className="font-extrabold text-apre-blue">{s.nombres}</p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="font-extrabold text-apre-blue">
+              {[s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ")}
+            </p>
+            <span
+              className={`rounded-full px-2 py-0.5 text-xs font-bold text-white ${
+                s.tipoSolicitud === "profesor" ? "bg-apre-pink" : "bg-apre-blue"
+              }`}
+            >
+              {s.tipoSolicitud === "profesor" ? "👨‍🏫 Profesor" : "👨‍🎓 Alumno"}
+            </span>
+          </div>
           <p className="text-sm text-gray-600">
             {s.email} · {s.telefono}
           </p>
@@ -236,8 +252,12 @@ function UsuariosTab() {
                 <p className="text-sm text-gray-600">
                   {u.email} ·{" "}
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                      u.rol === "alumno" ? "bg-apre-blue text-white" : "bg-apre-red text-white"
+                    className={`rounded-full px-2 py-0.5 text-xs font-bold text-white ${
+                      u.rol === "alumno"
+                        ? "bg-apre-blue"
+                        : u.rol === "profesor"
+                        ? "bg-apre-pink"
+                        : "bg-apre-red"
                     }`}
                   >
                     {u.rol}

@@ -14,6 +14,8 @@ export default function PanelRouter() {
         router.push("/login");
       } else if (userData.rol === "admin" || userData.rol === "superadmin") {
         router.push("/panel/admin");
+      } else if (userData.rol === "profesor") {
+        router.push("/panel/profesor");
       } else {
         router.push("/panel");
       }

@@ -19,7 +19,11 @@ export default function LoginPage() {
   useEffect(() => {
     if (!loading && userData) {
       const target =
-        userData.rol === "admin" || userData.rol === "superadmin" ? "/panel/admin" : "/panel";
+        userData.rol === "admin" || userData.rol === "superadmin"
+          ? "/panel/admin"
+          : userData.rol === "profesor"
+          ? "/panel/profesor"
+          : "/panel";
       router.push(target);
     }
   }, [userData, loading, router]);
