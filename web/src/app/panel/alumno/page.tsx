@@ -138,7 +138,7 @@ export default function PanelAlumno() {
                     {c.descripcion && (
                       <p className="mt-1 text-sm text-gray-600">{c.descripcion}</p>
                     )}
-                    {c.fechaInicio && (
+                    {c.fechaInicio ? (
                       <p className="mt-1 text-xs text-gray-400">
                         Iniciada a las{" "}
                         {new Date(
@@ -146,7 +146,7 @@ export default function PanelAlumno() {
                             ?? (c.fechaInicio as Date)
                         ).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })}
                       </p>
-                    )}
+                    ) : null}
                     <a
                       href={c.joinUrl || "https://aprecap.cl/campus"}
                       target="_blank"

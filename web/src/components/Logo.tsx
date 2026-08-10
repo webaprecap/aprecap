@@ -16,7 +16,7 @@ export function Logo({ light = false }: { light?: boolean }) {
       >
         OTEC APRECAP
         <span className="block text-xs font-medium uppercase tracking-widest text-apre-red">
-          Capacitación · Seguridad Privada
+          Capacitaciones y Asesorías
         </span>
       </span>
     </Link>

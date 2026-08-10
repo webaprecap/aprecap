@@ -63,7 +63,7 @@ interface AuthContextValue {
   error: string | null;
   requiresMfaEnrollment: boolean;
   mfaResolver: MultiFactorResolver | null;
-  signInGoogle: () => Promise<void>;
+  signInGoogle: () => Promise<User | null>;
   signOut: () => Promise<void>;
   acceptConsent: (version: string) => Promise<void>;
 }
@@ -75,7 +75,7 @@ const AuthContext = createContext<AuthContextValue>({
   error: null,
   requiresMfaEnrollment: false,
   mfaResolver: null,
-  signInGoogle: async () => {},
+  signInGoogle: async () => null,
   signOut: async () => {},
   acceptConsent: async () => {},
 });
@@ -139,10 +139,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             activo: true,
           };
         } else {
-          await firebaseSignOut(getFirebaseAuth()!);
-          setError("No tienes acceso al sistema. Solicita tu acceso.");
-          setUser(null);
+          // Alumno nuevo (sin doc en `usuarios` todavía): se mantiene la
+          // sesión con userData = null para poder completar /solicitar-acceso.
           setUserData(null);
+          setError(null);
           return;
         }
       } else if (found.uid !== u.uid) {
@@ -175,9 +175,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsub;
   }, [loadUser]);
 
-  const signInGoogle = useCallback(async () => {
+  const signInGoogle = useCallback(async (): Promise<User | null> => {
     const auth = getFirebaseAuth();
-    if (!auth) return;
+    if (!auth) return null;
     setError(null);
     setMfaResolver(null);
     try {
@@ -190,6 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setRequiresMfaEnrollment(true);
         }
       }
+      return result.user;
     } catch (e) {
       if ((e as { code?: string })?.code === "auth/multi-factor-auth-required") {
         setMfaResolver(getMultiFactorResolver(auth, e as never));
@@ -197,6 +198,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setError("No se pudo iniciar sesión.");
       }
+      return null;
     }
   }, [findUserByEmail]);
 

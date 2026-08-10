@@ -23,11 +23,19 @@ import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
 import ConsentModal from "@/components/ConsentModal";
 
-type Tab = "solicitudes" | "usuarios" | "reuniones" | "clases" | "contacto" | "auditoria";
+type Tab =
+  | "solicitudes"
+  | "usuarios"
+  | "reuniones"
+  | "clases"
+  | "contacto"
+  | "auditoria"
+  | "pagos";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "solicitudes", label: "Solicitudes" },
   { id: "usuarios", label: "Usuarios y Matrículas" },
+  { id: "pagos", label: "Pagos 💳" },
   { id: "reuniones", label: "Reuniones Zoom" },
   { id: "clases", label: "Clases en Vivo" },
   { id: "contacto", label: "Contacto" },
@@ -89,6 +97,7 @@ export default function PanelAdmin() {
         <div className="mx-auto max-w-6xl px-4">
           {tab === "solicitudes" && <SolicitudesTab />}
           {tab === "usuarios" && <UsuariosTab />}
+          {tab === "pagos" && <PagosTab />}
           {tab === "reuniones" && <ReunionesTab />}
           {tab === "clases" && <ClasesTab />}
           {tab === "contacto" && <ContactoTab />}
@@ -714,6 +723,167 @@ function ContactoTab() {
           {m.mensaje && <p className="mt-2 text-sm text-gray-700">{m.mensaje}</p>}
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ---------- Pagos WebPay ---------- */
+function PagosTab() {
+  const db = getFirestoreDb();
+  const [pagos, setPagos] = useState<any[]>([]);
+  const [filtroCurso, setFiltroCurso] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("");
+
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "pagos"), orderBy("fechaCreacion", "desc"));
+    return onSnapshot(q, (snap) =>
+      setPagos(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  const filtrados = pagos.filter(
+    (p) =>
+      (!filtroCurso || p.cursoSlug === filtroCurso) &&
+      (!filtroEstado || p.estado === filtroEstado)
+  );
+  const totalAprobado = filtrados
+    .filter((p) => p.estado === "aprobado")
+    .reduce((acc, p) => acc + (Number(p.monto) || 0), 0);
+  const totalTodos = filtrados.reduce((acc, p) => acc + (Number(p.monto) || 0), 0);
+
+  const exportarCsv = () => {
+    const filas = [
+      ["Fecha", "Orden", "Curso", "Email", "Nombre", "Monto", "Método", "Cuotas", "Monto cuota", "Estado", "Autorización", "Tarjeta"],
+      ...filtrados.map((p) => [
+        p.fechaCreacion?.toDate ? p.fechaCreacion.toDate().toISOString() : "",
+        p.buyOrder || p.id || "",
+        p.cursoNombre || p.cursoSlug || "",
+        p.email || "",
+        p.nombreUsuario || (p.uidUsuario || ""),
+        String(p.monto ?? ""),
+        p.metodo || "",
+        String(p.cuotas ?? ""),
+        String(p.montoCuota ?? ""),
+        p.estado || "",
+        p.authorizationCode || "",
+        p.cardNumber || "",
+      ]),
+    ];
+    const csv = "\uFEFF" + filas.map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `pagos-aprecap-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <select
+            value={filtroCurso}
+            onChange={(e) => setFiltroCurso(e.target.value)}
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          >
+            <option value="">Todos los cursos</option>
+            {[...new Set(pagos.map((p) => p.cursoSlug).filter(Boolean))].map((s) => (
+              <option key={String(s)} value={String(s)}>
+                {String(s)}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          >
+            <option value="">Todos los estados</option>
+            <option value="aprobado">Aprobados</option>
+            <option value="rechazado">Rechazados</option>
+            <option value="creado">Creados</option>
+            <option value="error">Errores</option>
+          </select>
+        </div>
+        <button
+          onClick={exportarCsv}
+          className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white hover:bg-apre-blue-light"
+        >
+          ⬇ Exportar a Excel (CSV)
+        </button>
+      </div>
+
+      <div className="flex flex-wrap gap-4">
+        <div className="rounded-2xl border border-gray-200 bg-whatsapp/10 px-5 py-3">
+          <p className="text-xs font-bold uppercase tracking-wide text-gray-500">
+            Total aprobado (filtro)
+          </p>
+          <p className="text-2xl font-extrabold text-green-700">
+            ${totalAprobado.toLocaleString("es-CL")}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-gray-200 bg-white px-5 py-3">
+          <p className="text-xs font-bold uppercase tracking-wide text-gray-500">
+            Total (todos los estados)
+          </p>
+          <p className="text-2xl font-extrabold text-apre-blue">
+            ${totalTodos.toLocaleString("es-CL")}
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-gray-200 text-xs font-bold uppercase tracking-wide text-gray-500">
+              <th className="px-4 py-3">Fecha</th>
+              <th className="px-4 py-3">Curso</th>
+              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3 text-right">Monto</th>
+              <th className="px-4 py-3">Método</th>
+              <th className="px-4 py-3">Cuotas</th>
+              <th className="px-4 py-3">Estado</th>
+              <th className="px-4 py-3">Orden</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtrados.map((p) => (
+              <tr key={p.id} className="border-b border-gray-100 last:border-0">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-600">
+                  {p.fechaCreacion?.toDate
+                    ? p.fechaCreacion.toDate().toLocaleString("es-CL")
+                    : String(p.fechaCreacion ?? "")}
+                </td>
+                <td className="px-4 py-3 font-semibold text-apre-blue">
+                  {p.cursoNombre || p.cursoSlug}
+                </td>
+                <td className="px-4 py-3 text-gray-600">{p.email}</td>
+                <td className="whitespace-nowrap px-4 py-3 text-right font-bold">
+                  ${Number(p.monto ?? 0).toLocaleString("es-CL")}
+                </td>
+                <td className="px-4 py-3 text-gray-600">{p.metodo ?? "—"}</td>
+                <td className="px-4 py-3 text-gray-600">
+                  {p.cuotas ? `${p.cuotas}${p.montoCuota ? ` · $${p.montoCuota.toLocaleString("es-CL")}` : ""}` : "—"}
+                </td>
+                <td className="px-4 py-3 text-gray-600">
+                  {p.estado === "aprobado" ? "✅ Aprobado" : p.estado === "rechazado" ? "❌ Rechazado" : p.estado}
+                </td>
+                <td className="whitespace-nowrap px-4 py-3 text-xs text-gray-400">{p.buyOrder || p.id}</td>
+              </tr>
+            ))}
+            {filtrados.length === 0 && (
+              <tr>
+                <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
+                  Sin pagos. Cuando un alumno pague por WebPay aparecerán aquí.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

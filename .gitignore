@@ -3,8 +3,18 @@ node_modules/
 
 # Builds
 .next/
+.open-next/
 dist/
 out/
+
+# OpenCode & Temp session files
+.opencode/
+session/
+shot-home.png
+scripts/_*
+scripts/*.php
+scripts/*.tar.gz
+scripts/*.json
 
 # Entorno y secretos
 .env

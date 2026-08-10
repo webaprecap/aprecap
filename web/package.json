@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:worker": "npx @opennextjs/cloudflare build",
+    "deploy": "npx @opennextjs/cloudflare build && npx wrangler deploy",
+    "dev:worker": "npx wrangler dev",
     "start": "next start",
     "lint": "eslint"
   },
@@ -15,9 +18,11 @@
     "next": "16.3.0",
     "next-sanity": "^13.3.1",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "transbank-sdk": "^6.1.1"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -26,10 +31,13 @@
     "eslint-config-next": "16.3.0",
     "firebase-tools": "^15.26.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.120.0"
   },
   "packageManager": "pnpm@11.17.0",
   "pnpm": {
-    "onlyBuiltDependencies": ["re2"]
+    "onlyBuiltDependencies": [
+      "re2"
+    ]
   }
 }

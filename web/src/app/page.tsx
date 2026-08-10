@@ -22,12 +22,8 @@ export default function Home() {
               Capacitación · Asesoría · Seguridad
             </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl">
-              Autorizados por la{" "}
-              <span className="text-apre-red">
-                Subsecretaría de Prevención del Delito
-              </span>{" "}
-              y la Prefectura de Seguridad Privada{" "}
-              <span className="text-apre-red">OS-10</span>
+              Autoridad Fiscalizadora:{" "}
+              <span className="text-apre-red">OS-10 de Carabineros de Chile</span>
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-white/80">
               Equipo de profesionales confiables y acreditados para brindar en
@@ -94,6 +90,21 @@ export default function Home() {
               <p className="mt-1 text-sm text-gray-600">
                 Certificado bajo NCH-2728:2015, dependiente del Ministerio del
                 Trabajo y Previsión Social.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
+            <img
+              src="/logos/icontec-logo.png"
+              alt="ICONTEC"
+              className="h-12 w-auto object-contain"
+            />
+            <div>
+              <p className="font-extrabold text-apre-blue">
+                Certificados por ICONTEC
+              </p>
+              <p className="mt-1 text-sm text-gray-600">
+                Organismo certificador de la norma NCh 2728:2015.
               </p>
             </div>
           </div>

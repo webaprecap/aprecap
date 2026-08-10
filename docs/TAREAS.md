@@ -1,16 +1,34 @@
 # TAREAS — OTEC APRECAP · Digital Up SpA
 
 > Checklist para ir marcando avance. Usa `- [x]` cuando la tarea esté terminada.
-> Última actualización: 2026-08-07 · Enfoque: **HÍBRIDO (Moodle backend)**
-> ⏭️ **Próxima sesión (mañana)**: credenciales Zoom del cliente → claves en `.env` · user/pass WordPress para rescatar lecciones · confirmar horas Jefe de Seguridad · ver detalles abajo.
+> Última actualización: 2026-08-08 · Enfoque: **HÍBRIDO (Moodle backend)** · Pack: textos + WebPay + Zoom (en curso)
+> ⏭️ **Próxima sesión**: verificación manual del pack (abajo) — reiniciar dev server antes, para cargar las claves Zoom.
 
-## 🔜 Próxima sesión — pendientes del cliente
+## 🔜 Próxima sesión — verificación manual del pack (web en `localhost:3000`)
 
-- [ ] **Zoom**: el cliente crea la app **Server-to-Server OAuth** en https://marketplace.zoom.us/develop/create (scopes `meeting:write:admin` + `meeting:read:admin`) y trae los 3 valores (Account ID, Client ID, Client Secret) → pegarlos en `web/.env` (`ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID`, `ZOOM_CLIENT_SECRET`). El código ya está listo (`lib/zoom.ts` + `/api/zoom` + pestaña "Reuniones Zoom" y generación automática en clases).
-- [ ] **WordPress user/pass**: entregar credenciales para rescatar el contenido real de las lecciones de los 3 cursos LearnPress → recrear en Moodle.
-- [ ] **Confirmar horas Jefe de Seguridad**: el sitio tiene 3 cifras distintas (420 LP, 140 jefe-seguridad-privada, 400 catálogo OTEC) — definir cuál es la correcta.
-- [ ] **PDF del acuerdo firmado** (entregado, falta firma).
-- [ ] Decidir si se usa **Sanity** (imágenes) o se deja el contenido estático actual.
+- [ ] **Reiniciar el dev server** (`pnpm --dir web dev`) para cargar `ZOOM_*` y `WEBPAY_*` recién escritos en `web/.env`
+- [ ] **Pago WebPay completo en navegador**: `/pago/{curso}` → monto libre (≥ $1.000) → consent → Pagar → en WebPay usar tarjeta de prueba VISA `4051 8856 0001 5322`, CVV `123`, RUT `11.111.111-1`, fecha futura → volver y ver `/pago/resultado` aprobado → ver el pago en panel admin > tab Pagos y exportar CSV
+- [ ] **Tab "Pagos 💳"** en `/panel/admin` con usuario admin: listado, filtros, subtotales, CSV con BOM UTF-8
+- [ ] **Zoom**: crear una reunión desde el panel admin (ya no falla env-gated: `ZOOM_ACCOUNT_ID/CLIENT_ID/CLIENT_SECRET` están en `web/.env` y la app fue verificada por API) y que aparezca en alumno/profesor
+- [ ] **WebPay producción**: pedir al cliente commerce code + API key reales de Transbank → `web/.env` (`WEBPAY_MODE=production`)
+
+## ✔️ Hecho el 2026-08-08 — Pack: textos cliente + WebPay + Zoom activada
+
+- [x] **Fix ruta alumno** ("Redirigiendo…"): `/panel`, `/login`, `/solicitar-acceso` → `/panel/alumno`
+- [x] **Textos del cliente aplicados**: hero "Autoridad Fiscalizadora: OS-10 de Carabineros"; tarjeta ICONTEC (NCh 2728:2015); quitado servicio "Guardias para eventos y empresas"; caption Logo "Capacitaciones y Asesorías"; **precios eliminados** del catálogo (types/cursos/[slug]); cursos OTEC renombrados: **Nochero, Portero y Rondín (32h)** y nuevo **Bastón y Esposas (8h)**
+- [x] **WebPay (Transbank) implementado**: `transbank-sdk@6.1.1`; `lib/webpay.ts` + `lib/admin-firebase.ts` (SDK Admin, `web/service-account.json`, gitignored); POST `/api/webpay` (crea tx, guarda pago + consentimiento Ley 21.719); `/api/webpay/return` (commit y redirect a resultado); páginas `/pago/[slug]` (monto libre, todos los cursos) y `/pago/resultado`; botón "Pagar por WebPay" en cursos OTEC y LP
+- [x] **Panel admin tab Pagos**: listado en vivo, filtros curso/estado, subtotales, **export CSV** (`pagos-aprecap-<fecha>.csv`)
+- [x] **Firestore rules**: colección `pagos` (lectura admin, escritura server-side) — **desplegadas** por CLI
+- [x] **Zoom**: app Server-to-Server OAuth **creada y activada por el cliente y verificada por API** (token 200, scopes `meeting:read:list_meetings:admin` + `meeting:write:meeting:admin`); 3 claves ya en `web/.env`
+- [x] Calidad: `tsc --noEmit` + `eslint` + `next build` (49 rutas) **OK**; smoke test `POST /api/webpay` (transacción creada en sandbox + docs `pagos`/`consents` en Firestore) y return con token inválido → redirect correcto
+
+## 🔜 Pendientes generales (sesiones anteriores, aún vivos)
+
+- [ ] **WordPress user/pass** (cliente): rescatar lecciones reales de los 3 cursos LearnPress → recrear en Moodle
+- [ ] **Confirmar horas Jefe de Seguridad**: 3 cifras distintas en el sitio (420 LP / 140 jefe-seguridad-privada / 400 catálogo OTEC) — definir cuál es la correcta
+- [ ] **PDF del acuerdo firmado** (entregado, falta firma)
+- [ ] Decidir si se usa **Sanity** o se deja el contenido estático
+- [ ] Verificación manual del pack (sección "Próxima sesión" arriba)
 
 ## Fase 0 — Acuerdo y preparación (completada)
 
@@ -87,10 +105,16 @@
 - [ ] Revisar archivos del servidor por si hay material adicional
 - [ ] Rescatar contenido de lecciones LearnPress (user/pass WP) → recrear en Moodle
 
-### Zoom (pendiente: el cliente crea la app)
-- [ ] Crear app Server-to-Server OAuth en marketplace.zoom.us con la cuenta Zoom del cliente
-- [ ] Claves en `web/.env` (ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET)
+### Zoom (hecho: app creada, activada y verificada por API)
+- [x] Crear app Server-to-Server OAuth en marketplace.zoom.us con la cuenta Zoom del cliente
+- [x] Claves en `web/.env` (ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET) y verificar token (`users/me/meetings` → 200)
 - [x] Código listo: `lib/zoom.ts`, `/api/zoom`, pestaña "Reuniones Zoom" en admin, botón Unirse en alumno (por ahora con link manual en clases en vivo)
+- [ ] Probar creación de reunión desde el panel admin (dev server reiniciado)
+
+### WebPay (implementado; verificación manual pendiente)
+- [x] Código completo (ver sección "Hecho el 2026-08-08" arriba)
+- [ ] Prueba real en navegador con tarjeta de prueba + revisar tab Pagos/CSV
+- [ ] Credenciales de **producción** de Transbank del cliente (commerce code + API key) → `web/.env`
 
 ### Otros
 - [ ] Backups programados de Firestore (Ley 21.663)

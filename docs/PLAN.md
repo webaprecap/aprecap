@@ -2,7 +2,23 @@
 
 > Proyecto: Rediseño integral de la plataforma web de **OTEC APRECAP** (`aprecap.cl`)
 > Empresa desarrolladora: **Digital Up SpA** — Víctor Manuel Aguilera Muñoz (dueño)
-> Última actualización: 2026-08-07
+> Última actualización: 2026-08-08
+
+---
+
+## ⚡ Pack 2026-08-08 — Textos del cliente + Pagos WebPay + Zoom (en verificación)
+
+### Hecho (código y config listos)
+- [x] Fix ruta alumno en `/panel`, `/login`, `/solicitar-acceso` → `/panel/alumno` (se acabó el bucle "Redirigiendo…")
+- [x] Textos: hero "Autoridad Fiscalizadora: OS-10 de Carabineros de Chile" · tarjeta **ICONTEC** (logo descargado, leyenda NCh 2728:2015) · sin servicio "Guardias para eventos y empresas" · **precios fuera del catálogo** · OTEC: **Nochero, Portero y Rondín (32h)** + **Bastón y Esposas (8h)** (ambos "Presencial con material en línea" + nota de contacto para matrícula)
+- [x] **Pagos WebPay**: `transbank-sdk@6.1.1` · `lib/webpay.ts` (env-gated, sandbox por defecto `597055555532`, límites $1.000–$5.000.000) · `lib/admin-firebase.ts` con `web/service-account.json` (gitignored) · `POST /api/webpay` (crea tx + guarda pago y consentimiento) · `/api/webpay/return` (commit → `/pago/resultado`) · `/pago/[slug]` (monto libre + consent Ley 21.719) · `/pago/resultado` · botón "Pagar por WebPay" en cursos OTEC y LP · **tab Pagos en panel admin** (filtros, subtotales, export CSV)
+- [x] Firestore rules: `pagos` (lectura admin, escritura server) — **desplegadas por CLI**
+- [x] **Zoom**: app Server-to-Server OAuth creada y **activada por el cliente**; verificada por API (token 200; scopes `meeting:read:list_meetings:admin` + `meeting:write:meeting:admin`); claves en `web/.env`
+- [x] Calidad: `tsc` + `eslint` + `next build` OK · smoke: creación de transacción + docs en Firestore + redirects
+
+### Pendiente de verificación (próxima sesión)
+- [ ] Reiniciar dev server para cargar envs · probar pago completo en navegador (tarjeta prueba VISA `4051 8856 0001 5322`, CVV `123`, RUT `11.111.111-1`) · ver tab Pagos/CSV · crear reunión Zoom desde el admin
+- [ ] **WebPay producción**: commerce code + API key reales de Transbank (cliente) → `WEBPAY_MODE=production`
 
 ---
 
@@ -49,7 +65,7 @@
 | Roles | `alumno` · `profesor` · `admin` · `superadmin` (`contacto.digitalup@gmail.com`) |
 | Imágenes | Contenido estático rescatado (Sanity opcional, desestimado por ahora) |
 | Videos | YouTube (se enlazan, no ocupan espacio local) |
-| Zoom | **API Server-to-Server OAuth** (app se crea con la cuenta Zoom del cliente — código listo) |
+| Zoom | **API Server-to-Server OAuth** (app creada, activada y verificada 2026-08-08; claves en `web/.env`) |
 | Moodle | Backend LMS del campus (REST API para consultas del sitio) |
 | Reglas Firestore | Publicadas por **CLI de Firebase (permanentes, sin expiración)** |
 | Repo | GitHub `webaprecap/aprecap` |
@@ -103,9 +119,10 @@
 |---|---|---|
 | 1 | **Host user/pass** | DNS `aprecap.cl` → Cloudflare · tema custom Moodle (boost child con colores) · Google OAuth2 SSO en Moodle · revisar archivos del servidor |
 | 2 | **WordPress user/pass** | Rescatar contenido de las lecciones de los 3 cursos LP → recrear en Moodle |
-| 3 | **Zoom: app Server-to-Server** | El cliente la crea en marketplace.zoom.us (scopes `meeting:write:admin`, `meeting:read:admin`) y entrega Account ID / Client ID / Client Secret → `web/.env` → generación automática de reuniones en clases en vivo |
+| 3 | ~~Zoom: app Server-to-Server~~ | ✅ **HECHO 2026-08-08**: app creada y activada por el cliente, verificada por API, claves en `web/.env`. Falta probar desde el panel admin |
 | 4 | **Horas Jefe de Seguridad** | Definir la cifra correcta (420 LP / 140 jefe-seguridad-privada / 400 catálogo OTEC) |
 | 5 | **Firebase backups** | Programar exportaciones periódicas de Firestore (Ley 21.663) |
+| 6 | **WebPay en producción** | Commerce code + API key reales de Transbank → `web/.env` (`WEBPAY_MODE=production`) |
 
 ## Fase 4 — Entrega
 

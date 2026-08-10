@@ -12,10 +12,6 @@ export const metadata: Metadata = {
 
 const servicios = [
   {
-    title: "Guardias para eventos y empresas",
-    desc: "Guardias uniformados y acreditados por OS-10 para eventos y empresas.",
-  },
-  {
     title: "Informes y diagnósticos",
     desc: "Informes, medidas y diagnósticos de seguridad a medida.",
   },
@@ -59,9 +55,7 @@ export default function AsesoriasPage() {
             Asesorías en Seguridad Privada
           </h1>
           <p className="mt-4 max-w-3xl leading-relaxed text-white/80">
-            Guardias uniformados y acreditados por OS-10 para eventos y
-            empresas. Brindamos asesoría de seguridad a empresas y personas
-            naturales.
+            Brindamos asesoría de seguridad a empresas y personas naturales.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <WhatsAppButton texto="Hola, quiero asesoría en seguridad privada" />

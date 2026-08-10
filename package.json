@@ -11,6 +11,7 @@
     "scrape:logo": "node scripts/download-logo.mjs",
     "scrape:moodle": "node scripts/scrape-moodle.mjs",
     "scrape:all": "pnpm scrape:logo && pnpm scrape:wp && pnpm scrape:moodle",
+    "extract:pdfs": "node scripts/extract-pdfs.mjs",
     "build-data": "node scripts/build-data.mjs",
     "dev": "pnpm --dir web dev --port 3000",
     "build": "pnpm --dir web build",
@@ -22,5 +23,9 @@
     "cheerio": "^1.2.0",
     "dotenv": "^17.4.2",
     "react": "^19.2.8"
+  },
+  "devDependencies": {
+    "pdf-parse": "^2.4.5",
+    "puppeteer-core": "^25.5.0"
   }
 }

@@ -22,16 +22,28 @@ export const cursosOtec: CursoOtec[] = [
     image: "https://aprecap.cl/wp-content/uploads/2023/10/capacitacion.png",
   },
   {
-    slug: "mayordomo-y-conserjes",
-    title: "Curso de Mayordomo y Conserjes",
+    slug: "nochero-portero-y-rondin",
+    title: "Curso de Nochero, Portero y Rondín",
     duracion: "32 horas",
-    modalidad: "Presencial",
+    modalidad: "Presencial con material en línea",
     acreditado: false,
     financiadoSence: false,
     description:
-      "En este curso, proporcionamos a los participantes los conocimientos y habilidades requeridas para ejercer de manera efectiva el rol de conserje. A través de nuestro programa de formación presencial, garantizamos una preparación integral y enfocada en la práctica.",
+      "En este curso, proporcionamos a los participantes los conocimientos y habilidades requeridas para ejercer de manera efectiva los roles de nochero, portero y rondín. A través de nuestro programa de formación presencial con material en línea, garantizamos una preparación integral y enfocada en la práctica. Para matricularte, envíanos tus datos y coordinaremos tu cupo.",
     image:
       "https://aprecap.cl/wp-content/uploads/2023/10/banner_mayordomo_OTECCGAI_26agosto_mobile.jpg",
+  },
+  {
+    slug: "baston-y-esposas",
+    title: "Curso de Bastón y Esposas",
+    duracion: "8 horas",
+    modalidad: "Presencial con material en línea",
+    acreditado: false,
+    financiadoSence: false,
+    description:
+      "Curso práctico de manejo de bastón y uso de esposas, orientado al personal de seguridad que necesita dominar estas destrezas de control con seguridad y responsabilidad. Para matricularte, envíanos tus datos y coordinamos tu cupo.",
+    image:
+      "https://aprecap.cl/wp-content/uploads/2023/10/capacitacion.png",
   },
   {
     slug: "supervisor-de-seguridad",

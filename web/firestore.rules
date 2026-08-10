@@ -92,6 +92,12 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ---- Pagos WebPay: lectura admin; escritura solo server-side (Admin SDK) ----
+    match /pagos/{docId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     // ---- Denegar todo lo demás por defecto ----
     match /{document=**} {
       allow read, write: if false;

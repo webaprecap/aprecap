@@ -31,7 +31,7 @@ export default function SolicitarAccesoPage() {
     if (!loading && userData) {
       const target =
         userData.rol === "alumno"
-          ? "/panel"
+          ? "/panel/alumno"
           : userData.rol === "profesor"
           ? "/panel/profesor"
           : "/panel/admin";
@@ -142,7 +142,10 @@ export default function SolicitarAccesoPage() {
                     Paso 1: Identifícate con tu cuenta de Google
                   </p>
                   <button
-                    onClick={() => signInGoogle()}
+                    onClick={async () => {
+                      const u = await signInGoogle();
+                      if (!u) setErr("No se pudo iniciar sesión con Google.");
+                    }}
                     className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl bg-apre-blue px-5 py-3 font-bold text-white transition hover:bg-apre-blue-light"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24">

@@ -23,7 +23,7 @@ export default function LoginPage() {
           ? "/panel/admin"
           : userData.rol === "profesor"
           ? "/panel/profesor"
-          : "/panel";
+          : "/panel/alumno";
       router.push(target);
     }
   }, [userData, loading, router]);

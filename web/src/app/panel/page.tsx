@@ -17,7 +17,7 @@ export default function PanelRouter() {
       } else if (userData.rol === "profesor") {
         router.push("/panel/profesor");
       } else {
-        router.push("/panel");
+        router.push("/panel/alumno");
       }
     }
   }, [userData, loading, router]);

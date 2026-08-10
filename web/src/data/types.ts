@@ -29,7 +29,6 @@ export interface CursoLP {
   title: string;
   source: string;
   image: string;
-  price: string;
   duration: string;
   students: number;
   quizzes: number;
@@ -57,6 +56,7 @@ export interface CursoMoodle {
   files: string[];
   filePaths: string[];
   videos: string[];
+  curriculum?: CurriculumItem[];
 }
 
 export interface DatosContacto {
