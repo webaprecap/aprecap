@@ -4,8 +4,6 @@ import { guardarPago, guardarConsentimiento } from "@/lib/admin-firebase";
 import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
 
-export const runtime = "nodejs";
-
 const CONSENT_VERSION = "v2.0-pago-ley21719";
 
 export async function POST(req: NextRequest) {

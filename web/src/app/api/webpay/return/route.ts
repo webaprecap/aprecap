@@ -3,8 +3,6 @@ import { webpayTransaction } from "@/lib/webpay";
 import { actualizarPago, obtenerPago } from "@/lib/admin-firebase";
 import { metodoPagoDe } from "@/lib/webpay";
 
-export const runtime = "nodejs";
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const token = url.searchParams.get("token_ws") || url.searchParams.get("TBK_TOKEN");

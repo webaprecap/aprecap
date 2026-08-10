@@ -52,16 +52,8 @@ export async function POST(req: Request) {
     );
     await logAuditAction("DELETE_ACCOUNT", { uid: claims.uid, email: claims.email });
 
-    // Borrado de la cuenta de Auth vía Admin SDK (si está disponible).
-    let authDeleted = false;
-    try {
-      const { getAuth } = await import("firebase-admin/auth");
-      const { getFirebaseAdminApp } = await import("@/lib/firebase-admin");
-      await getAuth(getFirebaseAdminApp()).deleteUser(claims.uid);
-      authDeleted = true;
-    } catch {
-      // Sin Admin SDK configurado: la cuenta de Auth se borra en el cliente.
-    }
+    // Borrado de la cuenta de Auth se completa en el cliente si es necesario.
+    const authDeleted = false;
 
     return NextResponse.json({ ok: true, authDeleted });
   } catch (e) {

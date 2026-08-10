@@ -21,9 +21,13 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 
 export function getFirebaseApp(): FirebaseApp | null {
-  if (!firebaseEnabled()) return null;
+  if (typeof window === "undefined" || !firebaseEnabled()) return null;
   if (!app) {
-    app = getApps().length ? getApps()[0] : initializeApp(config);
+    try {
+      app = getApps().length ? getApps()[0] : initializeApp(config);
+    } catch {
+      return null;
+    }
   }
   return app;
 }

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getFirestoreDb } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { firestoreAddDoc, serviceAccountConfigured } from "@/lib/firebase-rest";
 
 // Formulario de contacto público — guarda en Firestore (contact_submissions).
 export async function POST(req: Request) {
@@ -18,17 +17,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
 
-    const db = getFirestoreDb();
-    if (!db) {
+    if (!serviceAccountConfigured()) {
       return NextResponse.json({ error: "Base de datos no configurada" }, { status: 503 });
     }
 
-    await addDoc(collection(db, "contact_submissions"), {
+    await firestoreAddDoc("contact_submissions", {
       nombre,
       email,
       telefono,
       mensaje,
-      fecha: serverTimestamp(),
+      fecha: new Date().toISOString(),
     });
 
     return NextResponse.json({ ok: true });

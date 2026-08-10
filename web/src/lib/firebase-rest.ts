@@ -58,7 +58,7 @@ export async function getServiceAccountToken(): Promise<string | null> {
 }
 
 const JWKS = createRemoteJWKSet(
-  new URL("https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com")
+  new URL("https://www.googleapis.com/robot/v1/metadata/jwk/securetoken@system.gserviceaccount.com")
 );
 
 /** Verifica un ID token de Firebase Auth (JWT) y devuelve el payload o null. */
@@ -77,7 +77,7 @@ export async function verifyUserToken(token: string): Promise<{ uid: string; ema
   }
 }
 
-async function firestoreFetch(path: string, init?: RequestInit): Promise<any> {
+export async function firestoreFetch(path: string, init?: RequestInit): Promise<any> {
   const token = await getServiceAccountToken();
   if (!token || !PROJECT_ID) throw new Error("Service account no configurada");
   const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents${path}`;
@@ -136,12 +136,39 @@ export async function firestoreAddDoc(collectionName: string, data: Record<strin
   return res.name?.split("/").pop() ?? "";
 }
 
+/** Guarda/sobrescribe un documento con id específico (server-side). */
+export async function firestoreSetDoc(collectionName: string, docId: string, data: Record<string, any>): Promise<void> {
+  const fields = toFirestoreValue(data).mapValue?.fields || {};
+  await firestoreFetch(`/${collectionName}/${docId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ fields }),
+  });
+}
+
+/** Actualiza campos específicos de un documento por id (server-side). */
+export async function firestorePatchDoc(collectionName: string, docId: string, data: Record<string, any>): Promise<void> {
+  const fields = toFirestoreValue(data).mapValue?.fields || {};
+  const fieldNames = Object.keys(fields);
+  if (fieldNames.length === 0) return;
+  const updateMask = fieldNames.map((k) => `updateMask.fieldPaths=${encodeURIComponent(k)}`).join("&");
+  await firestoreFetch(`/${collectionName}/${docId}?${updateMask}`, {
+    method: "PATCH",
+    body: JSON.stringify({ fields }),
+  });
+}
+
 /** Obtiene un documento por id (server-side). */
 export async function firestoreGetDoc(collectionName: string, docId: string): Promise<any | null> {
-  const res = await firestoreFetch(`/${collectionName}/${docId}`);
-  const out: Record<string, any> = {};
-  for (const [k, f] of Object.entries(res.fields ?? {})) out[k] = fromFirestoreValue(f);
-  return out;
+  try {
+    const res = await firestoreFetch(`/${collectionName}/${docId}`);
+    if (!res || !res.fields) return null;
+    const out: Record<string, any> = {};
+    for (const [k, f] of Object.entries(res.fields ?? {})) out[k] = fromFirestoreValue(f);
+    return out;
+  } catch (e) {
+    if (e instanceof Error && e.message.includes("404")) return null;
+    throw e;
+  }
 }
 
 /** Consulta documentos con filtro simple de igualdad (server-side). */
