@@ -14,7 +14,7 @@
     "extract:pdfs": "node scripts/extract-pdfs.mjs",
     "build-data": "node scripts/build-data.mjs",
     "dev": "pnpm --dir web dev --port 3000",
-    "build": "pnpm --dir web build",
+    "build": "pnpm --dir web build:worker",
     "start": "pnpm --dir web start --port 3000",
     "lint": "pnpm --dir web lint"
   },
