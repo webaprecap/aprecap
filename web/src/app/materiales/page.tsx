@@ -1,13 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PPTSlideViewer from "@/components/PPTSlideViewer";
 import { materialesEstudio } from "@/data/materiales-estudio";
 
-export default function MaterialesPage() {
+function MaterialesContent() {
+  const searchParams = useSearchParams();
+  const cursoParam = searchParams.get("curso");
+
   const [selectedCursoSlug, setSelectedCursoSlug] = useState(materialesEstudio[0].slug);
   const [selectedModuloIdx, setSelectedModuloIdx] = useState(0);
+
+  useEffect(() => {
+    if (cursoParam && materialesEstudio.some((c) => c.slug === cursoParam)) {
+      setSelectedCursoSlug(cursoParam);
+      setSelectedModuloIdx(0);
+    }
+  }, [cursoParam]);
 
   const cursoActual = materialesEstudio.find((c) => c.slug === selectedCursoSlug) || materialesEstudio[0];
   const moduloActual = cursoActual.modulos[selectedModuloIdx] || cursoActual.modulos[0];
@@ -126,5 +137,13 @@ export default function MaterialesPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function MaterialesPage() {
+  return (
+    <Suspense fallback={<p className="p-8 text-center text-slate-400">Cargando presentaciones...</p>}>
+      <MaterialesContent />
+    </Suspense>
   );
 }

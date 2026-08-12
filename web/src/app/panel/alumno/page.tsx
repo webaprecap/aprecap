@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { cursosMoodle } from "@/data/moodle";
@@ -48,6 +48,10 @@ export default function PanelAlumno() {
   const [clases, setClases] = useState<Clase[]>([]);
   const [historial, setHistorial] = useState<HistorialNota[]>([]);
   const [aviso, setAviso] = useState<Clase | null>(null);
+  const [showModalSolicitud, setShowModalSolicitud] = useState(false);
+  const [cursoSolicitadoNombre, setCursoSolicitadoNombre] = useState("");
+  const [solicitandoCurso, setSolicitandoCurso] = useState<string | null>(null);
+
   const avisados = useRef<Set<string>>(new Set());
 
   useEffect(() => {
@@ -99,12 +103,28 @@ export default function PanelAlumno() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enrolls.length > 0, cursosDeAlumno.join(",")]);
 
-  if (loading || !userData) return <p className="p-8 text-center text-gray-500">Cargando portal del alumno…</p>;
+  const solicitarAccesoCurso = async (fieldKey: string, nombreCurso: string) => {
+    if (!user) return;
+    setSolicitandoCurso(fieldKey);
+    try {
+      const db = getFirestoreDb();
+      if (db) {
+        const userRef = doc(db, "usuarios", user.uid);
+        await updateDoc(userRef, {
+          [fieldKey]: "pendiente"
+        });
+        setCursoSolicitadoNombre(nombreCurso);
+        setShowModalSolicitud(true);
+      }
+    } catch (err) {
+      console.error("Error solicitando acceso:", err);
+      alert("Hubo un error enviando la solicitud. Intenta nuevamente.");
+    } finally {
+      setSolicitandoCurso(null);
+    }
+  };
 
-  const cursoDe = (slug?: string) =>
-    cursosLP.find((c) => c.slug === slug) || cursosMoodle.find((c) => c.slug === slug);
-  const moodleUrl = (moodleCourseId?: number) =>
-    moodleCourseId ? `https://aprecap.cl/campus/course/view.php?id=${moodleCourseId}` : "https://aprecap.cl/campus";
+  if (loading || !userData) return <p className="p-8 text-center text-gray-500">Cargando portal del alumno…</p>;
 
   const promedioGeneral =
     historial.length > 0
@@ -124,7 +144,7 @@ export default function PanelAlumno() {
               ¡Hola, {userData.nombre.split(" ")[0]}! 👋
             </h1>
             <p className="mt-1 text-sm text-white/80">
-              Bienvenido a tu aula virtual. Accede a tus clases en vivo, material PPT, evaluaciones y notas.
+              Bienvenido a tu aula virtual. Accede a tus clases en vivo, material PPT, evaluaciones y solicitudes de cursos.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -151,7 +171,7 @@ export default function PanelAlumno() {
           {/* Quick Action Feature Grid (Estilo SARMAT) */}
           <div>
             <h2 className="text-xl font-extrabold text-apre-blue mb-4">
-              📌 Accesos Principales de Tu Portal
+              📌 Herramientas Principales
             </h2>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -235,6 +255,187 @@ export default function PanelAlumno() {
             </div>
           </div>
 
+          {/* SECCIÓN DE CURSOS INDIVIDUALES (ESTILO SARMAT: OS10 DESBLOQUEADO, OTROS BLOQUEADOS CON SOLICITUD) */}
+          <div>
+            <h2 className="text-xl font-extrabold text-apre-blue mb-4">
+              📚 Catálogo de Cursos y Accesos Acreditados
+            </h2>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* CURSO 1: GUARDIA OS-10 (DESBLOQUEADO PARA TODOS) */}
+              <div className="rounded-2xl border-2 border-emerald-500 bg-white p-6 shadow-md relative flex flex-col justify-between">
+                <span className="absolute -top-3 right-4 rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-bold text-white shadow-sm">
+                  DESBLOQUEADO ✓
+                </span>
+                <div>
+                  <div className="text-3xl mb-2">🛡️</div>
+                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Guardia de Seguridad (OS-10)</h3>
+                  <p className="mt-1 text-xs text-gray-600">
+                    Formación y Reacreditación oficial de 90h/36h normada por Carabineros de Chile. 8 Módulos de estudio.
+                  </p>
+                </div>
+                <div className="mt-6">
+                  <Link
+                    href="/materiales?curso=guardia-de-seguridad"
+                    className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
+                  >
+                    ENTRAR AL CURSO OS-10
+                  </Link>
+                </div>
+              </div>
+
+              {/* CURSO 2: OPERADOR CCTV Y ALARMAS (SOLICITUD DE ACCESO ESTILO SARMAT) */}
+              <div className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
+                userData?.accesoCCTV === "aceptado"
+                  ? "border-2 border-cyan-500 bg-cyan-50/20 shadow-md"
+                  : "border-dashed border-gray-300 bg-white"
+              }`}>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl mb-2">📹</div>
+                    {userData?.accesoCCTV === "aceptado" ? (
+                      <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">APROBADO</span>
+                    ) : userData?.accesoCCTV === "pendiente" ? (
+                      <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-bold text-white">PENDIENTE ⏳</span>
+                    ) : (
+                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-bold text-gray-700">BLOQUEADO 🔒</span>
+                    )}
+                  </div>
+                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Operador CCTV y Alarmas</h3>
+                  <p className="mt-1 text-xs text-gray-600">
+                    Capacitación en monitoreo de videovigilancia IP, cámaras PTZ y sensores de intrusión (40h).
+                  </p>
+                </div>
+
+                <div className="mt-6">
+                  {userData?.accesoCCTV === "aceptado" ? (
+                    <Link
+                      href="/materiales?curso=operador-cctv-y-alarmas"
+                      className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white hover:bg-cyan-600"
+                    >
+                      ENTRAR AL CURSO CCTV
+                    </Link>
+                  ) : userData?.accesoCCTV === "pendiente" ? (
+                    <button
+                      disabled
+                      className="w-full rounded-xl bg-gray-200 py-3 text-center text-xs font-extrabold text-gray-500 cursor-not-allowed"
+                    >
+                      SOLICITUD PENDIENTE ⏳
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => solicitarAccesoCurso("accesoCCTV", "Operador CCTV y Alarmas")}
+                      disabled={solicitandoCurso === "accesoCCTV"}
+                      className="w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                    >
+                      {solicitandoCurso === "accesoCCTV" ? "ENVIANDO..." : "SOLICITAR PERMISO / ACCESO"}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* CURSO 3: SUPERVISOR DE SEGURIDAD (SOLICITUD DE ACCESO ESTILO SARMAT) */}
+              <div className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
+                userData?.accesoSupervisor === "aceptado"
+                  ? "border-2 border-cyan-500 bg-cyan-50/20 shadow-md"
+                  : "border-dashed border-gray-300 bg-white"
+              }`}>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl mb-2">⭐</div>
+                    {userData?.accesoSupervisor === "aceptado" ? (
+                      <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">APROBADO</span>
+                    ) : userData?.accesoSupervisor === "pendiente" ? (
+                      <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-bold text-white">PENDIENTE ⏳</span>
+                    ) : (
+                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-bold text-gray-700">BLOQUEADO 🔒</span>
+                    )}
+                  </div>
+                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Supervisor de Seguridad</h3>
+                  <p className="mt-1 text-xs text-gray-600">
+                    Liderazgo operativo, supervisión de guardias, estudios de seguridad y gestión de crisis (140h).
+                  </p>
+                </div>
+
+                <div className="mt-6">
+                  {userData?.accesoSupervisor === "aceptado" ? (
+                    <Link
+                      href="/materiales?curso=supervisor-de-seguridad"
+                      className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white hover:bg-cyan-600"
+                    >
+                      ENTRAR AL CURSO SUPERVISOR
+                    </Link>
+                  ) : userData?.accesoSupervisor === "pendiente" ? (
+                    <button
+                      disabled
+                      className="w-full rounded-xl bg-gray-200 py-3 text-center text-xs font-extrabold text-gray-500 cursor-not-allowed"
+                    >
+                      SOLICITUD PENDIENTE ⏳
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => solicitarAccesoCurso("accesoSupervisor", "Supervisor de Seguridad")}
+                      disabled={solicitandoCurso === "accesoSupervisor"}
+                      className="w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                    >
+                      {solicitandoCurso === "accesoSupervisor" ? "ENVIANDO..." : "SOLICITAR PERMISO / ACCESO"}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* CURSO 4: JEFE DE SEGURIDAD PRIVADA (SOLICITUD DE ACCESO ESTILO SARMAT) */}
+              <div className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
+                userData?.accesoJefe === "aceptado"
+                  ? "border-2 border-cyan-500 bg-cyan-50/20 shadow-md"
+                  : "border-dashed border-gray-300 bg-white"
+              }`}>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl mb-2">👔</div>
+                    {userData?.accesoJefe === "aceptado" ? (
+                      <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">APROBADO</span>
+                    ) : userData?.accesoJefe === "pendiente" ? (
+                      <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-bold text-white">PENDIENTE ⏳</span>
+                    ) : (
+                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-bold text-gray-700">BLOQUEADO 🔒</span>
+                    )}
+                  </div>
+                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Jefe de Seguridad Privada</h3>
+                  <p className="mt-1 text-xs text-gray-600">
+                    Dirección estratégica de sistemas de seguridad, ciberseguridad y planificación (420h).
+                  </p>
+                </div>
+
+                <div className="mt-6">
+                  {userData?.accesoJefe === "aceptado" ? (
+                    <Link
+                      href="/materiales?curso=jefe-de-seguridad-privada"
+                      className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white hover:bg-cyan-600"
+                    >
+                      ENTRAR AL CURSO JEFE
+                    </Link>
+                  ) : userData?.accesoJefe === "pendiente" ? (
+                    <button
+                      disabled
+                      className="w-full rounded-xl bg-gray-200 py-3 text-center text-xs font-extrabold text-gray-500 cursor-not-allowed"
+                    >
+                      SOLICITUD PENDIENTE ⏳
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => solicitarAccesoCurso("accesoJefe", "Jefe de Seguridad Privada")}
+                      disabled={solicitandoCurso === "accesoJefe"}
+                      className="w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                    >
+                      {solicitandoCurso === "accesoJefe" ? "ENVIANDO..." : "SOLICITAR PERMISO / ACCESO"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Historial de Notas & Calificaciones */}
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -300,86 +501,35 @@ export default function PanelAlumno() {
             )}
           </div>
 
-          {/* Mis Cursos Inscritos */}
-          <div>
-            <h2 className="text-xl font-extrabold text-apre-blue">📚 Mis Cursos Matriculados</h2>
-            {enrolls.length === 0 ? (
-              <div className="mt-4 rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-                <p className="text-gray-600">
-                  Aún no tienes cursos matriculados. Si ya te inscribiste, el administrador confirmará tu acceso.
-                </p>
-                <Link
-                  href="/cursos"
-                  className="mt-4 inline-block font-bold text-apre-red hover:underline text-sm"
-                >
-                  Ver catálogo de cursos APRECAP →
-                </Link>
-              </div>
-            ) : (
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {enrolls.map((e) => {
-                  const curso = cursoDe(e.courseSlug);
-                  const curriculum = curso?.curriculum ?? [];
-                  const completados = e.modulosCompletados ?? [];
-                  const pct =
-                    curriculum.length > 0
-                      ? Math.round((completados.length / curriculum.length) * 100)
-                      : 0;
-                  return (
-                    <div
-                      key={e.id}
-                      className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-3"
-                    >
-                      <h3 className="font-extrabold text-apre-blue">
-                        {curso?.title || (e.courseSlug ?? "Curso APRECAP")}
-                      </h3>
-                      <p className="text-xs text-gray-500">
-                        Modalidad: {curso ? "Asincrónico" : "Presencial/Online"}
-                      </p>
-                      {curriculum.length > 0 && (
-                        <div>
-                          <div className="flex items-center justify-between text-xs font-bold text-gray-500">
-                            <span>Avance</span>
-                            <span>
-                              {completados.length}/{curriculum.length} módulos
-                            </span>
-                          </div>
-                          <div className="mt-1 h-2 overflow-hidden rounded-full bg-gray-100">
-                            <div
-                              className="h-full rounded-full bg-whatsapp transition-all"
-                              style={{ width: `${pct}%` }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      <div className="pt-2 flex flex-wrap gap-2">
-                        <Link
-                          href="/materiales"
-                          className="flex-1 rounded-xl bg-apre-red px-3 py-2 text-center text-xs font-bold text-white hover:bg-apre-red-dark"
-                        >
-                          Ver Presentación PPT
-                        </Link>
-                        <a
-                          href={moodleUrl(e.moodleCourseId)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-xl bg-gray-100 px-3 py-2 text-center text-xs font-bold text-gray-700 hover:bg-gray-200"
-                        >
-                          Moodle
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
           {/* Privacidad & Cumplimiento Ley 21.719 */}
           <PrivacidadPanel />
         </div>
       </section>
       <ConsentModal />
+
+      {/* MODAL DE CONFIRMACIÓN DE SOLICITUD DE CURSO (ESTILO SARMAT) */}
+      {showModalSolicitud && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-sm rounded-2xl bg-slate-900 p-6 text-center shadow-2xl border border-cyan-500/30 text-white">
+            <div className="text-4xl mb-3">🎉</div>
+            <h3 className="text-xl font-extrabold text-cyan-400">¡Solicitud Enviada!</h3>
+            <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+              Hola <strong>{userData?.nombre.split(" ")[0]}</strong>, hemos recibido tu solicitud de permiso para acceder al <strong>{cursoSolicitadoNombre}</strong>.
+              <br /><br />
+              La administración de APRECAP revisará tu cuenta para habilitarte el curso a la brevedad.
+            </p>
+            <button
+              onClick={() => {
+                setShowModalSolicitud(false);
+                window.location.reload();
+              }}
+              className="mt-6 w-full rounded-xl bg-cyan-500 py-3 text-xs font-extrabold text-slate-950 transition hover:bg-cyan-400 shadow-lg"
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Modal Emergente Alerta de Clase en Vivo (Zoom) */}
       {aviso && (
