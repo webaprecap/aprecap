@@ -212,7 +212,7 @@ export default function PanelAlumno() {
               </div>
 
               {/* Card 2: Materiales PPT */}
-              <Link href="/materiales" className="group">
+              <Link href="/materiales/guardia-de-seguridad" className="group">
                 <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-apre-red group-hover:shadow-md">
                   <div className="flex items-center justify-between">
                     <div className="text-3xl">📊</div>
@@ -276,7 +276,7 @@ export default function PanelAlumno() {
                 </div>
                 <div className="mt-6">
                   <Link
-                    href="/materiales?curso=guardia-de-seguridad"
+                    href="/materiales/guardia-de-seguridad"
                     className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
                   >
                     ENTRAR AL CURSO OS-10
@@ -299,7 +299,7 @@ export default function PanelAlumno() {
 
                 <div className="mt-6">
                   <Link
-                    href="/materiales?curso=operador-cctv-y-alarmas"
+                    href="/materiales/operador-cctv-y-alarmas"
                     className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
                   >
                     ENTRAR AL CURSO CCTV
@@ -322,7 +322,7 @@ export default function PanelAlumno() {
 
                 <div className="mt-6">
                   <Link
-                    href="/materiales?curso=supervisor-de-seguridad"
+                    href="/materiales/supervisor-de-seguridad"
                     className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
                   >
                     ENTRAR AL CURSO SUPERVISOR
@@ -345,7 +345,7 @@ export default function PanelAlumno() {
 
                 <div className="mt-6">
                   <Link
-                    href="/materiales?curso=jefe-de-seguridad-privada"
+                    href="/materiales/jefe-de-seguridad-privada"
                     className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
                   >
                     ENTRAR AL CURSO JEFE

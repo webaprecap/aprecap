@@ -1,26 +1,25 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { use, useState } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import PPTSlideViewer from "@/components/PPTSlideViewer";
 import { materialesEstudio } from "@/data/materiales-estudio";
 
-function MaterialesContent() {
-  const searchParams = useSearchParams();
-  const cursoParam = searchParams.get("curso");
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-  const [selectedCursoSlug, setSelectedCursoSlug] = useState(materialesEstudio[0].slug);
+export default function CursoMaterialesPage({ params }: PageProps) {
+  const { slug } = use(params);
+
+  const cursoActual = materialesEstudio.find((c) => c.slug === slug);
   const [selectedModuloIdx, setSelectedModuloIdx] = useState(0);
 
-  useEffect(() => {
-    if (cursoParam && materialesEstudio.some((c) => c.slug === cursoParam)) {
-      setSelectedCursoSlug(cursoParam);
-      setSelectedModuloIdx(0);
-    }
-  }, [cursoParam]);
+  if (!cursoActual) {
+    notFound();
+  }
 
-  const cursoActual = materialesEstudio.find((c) => c.slug === selectedCursoSlug) || materialesEstudio[0];
   const moduloActual = cursoActual.modulos[selectedModuloIdx] || cursoActual.modulos[0];
 
   return (
@@ -122,13 +121,5 @@ function MaterialesContent() {
         </div>
       </section>
     </>
-  );
-}
-
-export default function MaterialesPage() {
-  return (
-    <Suspense fallback={<p className="p-8 text-center text-slate-400">Cargando presentaciones...</p>}>
-      <MaterialesContent />
-    </Suspense>
   );
 }
