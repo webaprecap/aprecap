@@ -7,6 +7,7 @@ export interface CursoMaterial {
   pdfUrl?: string;
   modulos: {
     nombre: string;
+    pdfUrl?: string;
     slides: SlideData[];
   }[];
 }
@@ -19,186 +20,159 @@ export const materialesEstudio: CursoMaterial[] = [
     pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
     modulos: [
       {
-        nombre: "Módulo 1: Legislación Laboral y Seguridad Privada",
+        nombre: "Módulo 1: Legislación de Seguridad Privada",
         slides: [
           {
             id: "os10-1-1",
             courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 1: Legislación Laboral y Seguridad Privada",
+            moduleName: "Módulo 1: Legislación de Seguridad Privada",
             slideNumber: 1,
             title: "Marco Legal de la Seguridad Privada en Chile",
             contentBullets: [
               "Regido bajo la Ley N° 21.659 y el Decreto Supremo N° 867.",
-              "La función del guardia de seguridad es de carácter estrictamente preventivo y de protección de personas e instalaciones.",
+              "La función del guardia de seguridad es estrictamente preventiva y de protección de bienes e instalaciones.",
               "Es obligatorio portar la credencial de acreditación OS-10 vigente emitida por Carabineros de Chile."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf"
+            imageUrl: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"
           },
           {
             id: "os10-1-2",
             courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 1: Legislación Laboral y Seguridad Privada",
+            moduleName: "Módulo 1: Legislación de Seguridad Privada",
             slideNumber: 2,
             title: "Derechos de las Personas y Flagrancia (Art. 129 CPP)",
             contentBullets: [
-              "Toda persona tiene derecho a la libertad personal y la integridad física garantizada por la Constitución.",
-              "En caso de Delito Flagrante (Art. 129 Código Procesal Penal), cualquier persona o guardia puede detener al delincuente.",
-              "El detenido en flagrancia debe ser entregado inmediatamente a Carabineros o PDI."
+              "Toda persona tiene derecho a la libertad personal e integridad física garantizada por la Constitución.",
+              "En caso de Delito Flagrante (Art. 129 CPP), cualquier persona o guardia puede detener al delincuente.",
+              "El detenido debe ser entregado inmediatamente a Carabineros o PDI."
             ],
             imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
           }
         ]
       },
       {
-        nombre: "Módulo 2: Prevención de Riesgos y Primeros Auxilios",
+        nombre: "Módulo 2: Prevención de Riesgos y Control de Incendios",
         slides: [
           {
             id: "os10-2-1",
             courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 2: Prevención de Riesgos y Primeros Auxilios",
+            moduleName: "Módulo 2: Prevención de Riesgos y Control de Incendios",
             slideNumber: 1,
             title: "Prevención de Riesgos Laborales (Ley N° 16.744)",
             contentBullets: [
               "Establece el seguro obligatorio contra accidentes del trabajo y enfermedades profesionales.",
-              "Uso obligatorio de EPP (Elementos de Protección Personal): Calzado de seguridad, chaleco reflectante y linterna.",
+              "Uso obligatorio de EPP: Calzado de seguridad, chaleco reflectante y linterna.",
               "Evaluación permanente de condiciones inseguras en el puesto de vigilancia."
             ],
             imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80"
-          },
-          {
-            id: "os10-2-2",
-            courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 2: Prevención de Riesgos y Primeros Auxilios",
-            slideNumber: 2,
-            title: "Primeros Auxilios Básicos y Protocolo PAS",
-            contentBullets: [
-              "Protocolo PAS: Proteger el área, Avisar a emergencias (131 SAMU), Socorrer al afectado.",
-              "Evaluación primaria de signos vitales (consciencia, respiración y pulso).",
-              "Atención inicial de quemaduras, heridas sangrantes y desmayos sin mover en sospecha de daño cervical."
-            ],
-            imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
           }
         ]
       },
       {
-        nombre: "Módulo 3: Control de Incendios y Evacuación de Emergencia",
+        nombre: "Módulo 3: Valores, Ética y Psicoprevención",
         slides: [
           {
             id: "os10-3-1",
             courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 3: Control de Incendios y Evacuación",
+            moduleName: "Módulo 3: Valores, Ética y Psicoprevención",
             slideNumber: 1,
-            title: "Triángulo del Fuego y Tipos de Extintores",
+            title: "Valores Institucionales y Conducta Profesional",
             contentBullets: [
-              "Requerimientos del fuego: Combustible, Oxígeno y Calor.",
-              "Extintor PQS (Polvo Químico Seco): Apto para fuegos de clase A (sólidos), B (líquidos) y C (eléctricos).",
-              "Extintor CO2 (Dióxido de Carbono): Específico para tableros eléctricos y equipos electrónicos delicados."
-            ],
-            imageUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80"
-          },
-          {
-            id: "os10-3-2",
-            courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 3: Control de Incendios y Evacuación",
-            slideNumber: 2,
-            title: "Plan de Evacuación y Puntos de Encuentro (PEE)",
-            contentBullets: [
-              "Mantener vías de evacuación desbloqueadas, iluminadas y correctamente señalizadas.",
-              "Guiar el flujo de personas hacia las zonas de seguridad (PEE) sin generar pánico.",
-              "Llamado inmediato a Bomberos (132) y Carabineros (133)."
-            ],
-            imageUrl: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
-          }
-        ]
-      },
-      {
-        nombre: "Módulo 4: Sistemas de Comunicación y Radiotransmisión",
-        slides: [
-          {
-            id: "os10-4-1",
-            courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 4: Sistemas de Comunicación",
-            slideNumber: 1,
-            title: "Uso Correcto del Equipo de Radiotransmisión (VHF/UHF)",
-            contentBullets: [
-              "Formato de transmisión claro, conciso y breve respetando la jerarquía.",
-              "Manejo de claves alfanuméricas y códigos de emergencia estándar.",
-              "Verificación diaria del estado de carga de baterías y canal principal de guardia."
-            ],
-            imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80"
-          }
-        ]
-      },
-      {
-        nombre: "Módulo 5: Control de Accesos y Técnicas de Vigilancia",
-        slides: [
-          {
-            id: "os10-5-1",
-            courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 5: Control de Accesos y Vigilancia",
-            slideNumber: 1,
-            title: "Protocolo de Registro en Control de Acceso Peatonal y Vehicular",
-            contentBullets: [
-              "Identificación de visitas, contratistas y proveedores mediante cédula de identidad.",
-              "Registro en libro de novedades físico o sistema digital autorizado.",
-              "Inspección visual periódica de perímetros, portones y mamparas."
-            ],
-            imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-          }
-        ]
-      },
-      {
-        nombre: "Módulo 6: Valores, Ética Profesional y Atención de Público",
-        slides: [
-          {
-            id: "os10-6-1",
-            courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 6: Valores, Ética y Atención de Público",
-            slideNumber: 1,
-            title: "Ética, Honestidad y Trato Directo",
-            contentBullets: [
-              "Representación de la imagen de seguridad de la instalación con respeto y sobriedad.",
-              "Manejo de conflictos con técnica de desescalamiento verbal sin agresiones.",
-              "Confidencialidad absoluta sobre los movimientos e información sensible de la empresa cliente."
+              "Representación de la imagen de seguridad con sobriedad y profesionalismo.",
+              "Confidencialidad sobre la información sensible del puesto de trabajo.",
+              "Desescalamiento de conflictos y buen trato a clientes y usuarios."
             ],
             imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
           }
         ]
       },
       {
-        nombre: "Módulo 7: Defensa Personal y Proporcionalidad de la Fuerza",
+        nombre: "Módulo 4: Técnicas de Vigilancia y Pauta de Puesto",
         slides: [
           {
-            id: "os10-7-1",
+            id: "os10-4-1",
             courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 7: Defensa Personal y Uso de la Fuerza",
+            moduleName: "Módulo 4: Técnicas de Vigilancia y Pauta de Puesto",
             slideNumber: 1,
-            title: "Legítima Defensa y Proporcionalidad",
+            title: "Supervisión y Ejecución de la Pauta de Puesto",
             contentBullets: [
-              "Requisitos penales de la legítima defensa: Agresión ilegítima, falta de provocación suficiente y necesidad racional del medio empleado.",
-              "Distancia de seguridad e inmovilización preventiva hasta la llegada de Carabineros.",
-              "Prohibición estricta de uso de armas de fuego por parte de guardias privados sin autorización expresa de vigilancia armada."
+              "Verificación de puntos críticos e inspección de cerrojos y vías de acceso.",
+              "Rondas periódicas no predecibles.",
+              "Registro en el Libro de Novedades del Puesto."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
+            imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
           }
         ]
       },
       {
-        nombre: "Módulo 8: Seguridad Física de Instalaciones",
+        nombre: "Módulo 5: Seguridad Física de Instalaciones y Accesos",
+        slides: [
+          {
+            id: "os10-5-1",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Módulo 5: Seguridad Física de Instalaciones y Accesos",
+            slideNumber: 1,
+            title: "Control de Acceso Peatonal y Vehicular",
+            contentBullets: [
+              "Acreditación de visitas mediante cédula de identidad.",
+              "Control de ingreso y salida de mercaderías e insumos.",
+              "Mantenimiento de zonas perimetrales iluminadas y despejadas."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 6: Sistemas de Comunicación y Enlace",
+        slides: [
+          {
+            id: "os10-6-1",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Módulo 6: Sistemas de Comunicación y Enlace",
+            slideNumber: 1,
+            title: "Uso de Equipos de Radiocomunicación VHF/UHF",
+            contentBullets: [
+              "Transmisión breve, objetiva y utilizando claves operativas.",
+              "Verificación diaria del estado de carga de baterías y canal principal.",
+              "Enlace permanente con la central de control o supervisor."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 7: Primeros Auxilios",
+        slides: [
+          {
+            id: "os10-7-1",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Módulo 7: Primeros Auxilios",
+            slideNumber: 1,
+            title: "Protocolo PAS y Atención Inicial de Urgencias",
+            contentBullets: [
+              "PAS: Proteger el área, Avisar (131 SAMU), Socorrer.",
+              "Atención de desmayos, hemorragias y quemaduras leves.",
+              "No mover al afectado en sospecha de traumatismo grave."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 8: Defensa Personal y Uso del Bastón",
         slides: [
           {
             id: "os10-8-1",
             courseSlug: "guardia-de-seguridad",
-            moduleName: "Módulo 8: Seguridad Física de Instalaciones",
+            moduleName: "Módulo 8: Defensa Personal y Uso del Bastón",
             slideNumber: 1,
-            title: "Rondas de Inspección y Vulnerabilidades",
+            title: "Técnicas de Retención y Distancia de Seguridad",
             contentBullets: [
-              "Programación de rondas periódicas a distintas horas (aleatorias) para evitar previsibilidad.",
-              "Revisión de cerrojos, luces perimetrales, ventanas y sensores de movimiento.",
-              "Anotación inmediata de cualquier anomalía en el Libro de Novedades de Puesto."
+              "Uso defensivo del bastón isorréptico ante agresión ilegítima.",
+              "Zonas prohibidas de impacto: Cabeza, cuello y columna vertebral.",
+              "Inmovilización preventiva y entrega inmediata a Carabineros."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
+            imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
           }
         ]
       }
@@ -211,34 +185,56 @@ export const materialesEstudio: CursoMaterial[] = [
     pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
     modulos: [
       {
-        nombre: "Módulo 1: Operación de Centros de Control (CCTV)",
+        nombre: "Módulo 1: Fundamentos Legales de Operación de CCTV y Alarmas",
         slides: [
           {
             id: "cctv-1-1",
             courseSlug: "operador-cctv-y-alarmas",
-            moduleName: "Módulo 1: Operación de Centros de Control",
+            moduleName: "Módulo 1: Fundamentos Legales de Operación de CCTV",
             slideNumber: 1,
-            title: "Arquitectura de Sistemas de Videovigilancia",
+            title: "Marco Legal y Normativa de Videovigilancia",
             contentBullets: [
-              "Componentes clave: Cámaras IP/Análogas, DVR/NVR, Consola de Monitoreo y Almacenamiento.",
-              "Cámaras PTZ (Pan-Tilt-Zoom): Permiten control de movimiento y acercamiento óptico.",
-              "Supervisión continua de zonas críticas, accesos peatonales y estacionamientos."
+              "Normas de protección a la privacidad y privacidad del trabajador.",
+              "Uso de grabaciones de video como medio de prueba legal.",
+              "Custodia de grabaciones y acceso restringido a personal autorizado."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf"
-          },
+            imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 2: Sistemas Electrónicos de Seguridad Privada",
+        slides: [
           {
-            id: "cctv-1-2",
+            id: "cctv-2-1",
             courseSlug: "operador-cctv-y-alarmas",
-            moduleName: "Módulo 1: Operación de Centros de Control",
-            slideNumber: 2,
-            title: "Protocolo de Respuesta ante Intrusión y Alarmas",
+            moduleName: "Módulo 2: Sistemas Electrónicos de Seguridad Privada",
+            slideNumber: 1,
+            title: "Sensores, Contactos Magnéticos y Centrales de Alarma",
             contentBullets: [
-              "Recepción de señal de sensor PIR en consola de monitoreo.",
-              "Verificación visual inmediata a través de la cámara asociada.",
-              "Despacho de patrulla de respuesta o notificación directa a Carabineros."
+              "Operación de paneles de alarma contra intrusión e incendio.",
+              "Interpretación de zonas, fallas de sistema y tamper.",
+              "Detección de intrusión volumétrica (sensores PIR)."
             ],
             imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 3: Televigilancia y Operación de Centro de Control",
+        slides: [
+          {
+            id: "cctv-3-1",
+            courseSlug: "operador-cctv-y-alarmas",
+            moduleName: "Módulo 3: Televigilancia y Operación de Centro de Control",
+            slideNumber: 1,
+            title: "Técnicas de Monitoreo y Manejo de Cámaras PTZ",
+            contentBullets: [
+              "Seguimiento visual de sospechosos mediante cámaras PTZ (Pan-Tilt-Zoom).",
+              "Monitoreo de accesos, estacionamientos y perímetros.",
+              "Protocolo de despacho de patrullas y aviso policial ante alertas."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
           }
         ]
       }
@@ -251,46 +247,136 @@ export const materialesEstudio: CursoMaterial[] = [
     pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
     modulos: [
       {
-        nombre: "Módulo 1: Liderazgo y Supervisión Operativa",
+        nombre: "Módulo 1: Normativa Laboral y Prevención de Riesgos",
         slides: [
           {
             id: "sup-1-1",
             courseSlug: "supervisor-de-seguridad",
-            moduleName: "Módulo 1: Liderazgo Operativo",
+            moduleName: "Módulo 1: Normativa Laboral y Prevención de Riesgos",
             slideNumber: 1,
-            title: "Funciones del Supervisor en Pauta de Servicio",
+            title: "Legislación Aplicada al Personal de Vigilancia",
             contentBullets: [
-              "Nexo directo entre Jefatura de Seguridad y el personal de vigilancia.",
-              "Inspección de presentación personal, libro de novedades y puntualidad.",
-              "Auditoría continua del cumplimiento de la Directiva de Funcionamiento."
+              "Supervisión de contratos, jornadas y turnos de trabajo.",
+              "Cumplimiento del Reglamento Interno de Orden, Higiene y Seguridad.",
+              "Fiscalización del uso de EPP por el personal a cargo."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80",
-            pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf"
+            imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 2: Prevención de Riesgos y Control de Emergencias",
+        slides: [
+          {
+            id: "sup-2-1",
+            courseSlug: "supervisor-de-seguridad",
+            moduleName: "Módulo 2: Prevención de Riesgos y Control de Emergencias",
+            slideNumber: 1,
+            title: "Gestión de Crisis y Planes de Contingencia",
+            contentBullets: [
+              "Liderazgo durante la ejecución del plan de evacuación.",
+              "Coordinación con Bomberos, Carabineros y ambulancias.",
+              "Evaluación posterior a la emergencia e informe técnico."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 3: Procedimientos de Gestión de Seguridad y Administración",
+        slides: [
+          {
+            id: "sup-3-1",
+            courseSlug: "supervisor-de-seguridad",
+            moduleName: "Módulo 3: Procedimientos de Gestión de Seguridad",
+            slideNumber: 1,
+            title: "Elaboración de Directivas de Funcionamiento",
+            contentBullets: [
+              "Confección y tramitación de Directivas de Funcionamiento ante OS-10.",
+              "Auditoría del cumplimiento de pautas de puesto.",
+              "Análisis de vulnerabilidades y pautas de inspección."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 4: Liderazgo y Resolución de Conflictos",
+        slides: [
+          {
+            id: "sup-4-1",
+            courseSlug: "supervisor-de-seguridad",
+            moduleName: "Módulo 4: Liderazgo y Resolución de Conflictos",
+            slideNumber: 1,
+            title: "Conducción de Equipos de Trabajo Operativo",
+            contentBullets: [
+              "Técnicas de motivación y resolución de controversias internas.",
+              "Evaluación del desempeño y control de asistencia.",
+              "Comunicación asertiva con clientes y administración."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 5: Sistemas de Alarma, Comunicación y Enlace",
+        slides: [
+          {
+            id: "sup-5-1",
+            courseSlug: "supervisor-de-seguridad",
+            moduleName: "Módulo 5: Sistemas de Alarma, Comunicación y Enlace",
+            slideNumber: 1,
+            title: "Tecnología Aplicada al Control Operativo",
+            contentBullets: [
+              "Sistemas de marcas de reloj y control de rondas por GPS.",
+              "Monitoreo remoto de puestos de guardia y centrales de alarma.",
+              "Mantenimiento preventivo de equipos de comunicación radial."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80"
           }
         ]
       }
     ]
   },
   {
-    slug: "baston-y-esposas",
-    title: "Curso de Bastón Isorréptico y Esposas",
-    categoria: "Técnicas de Retención y Control",
+    slug: "jefe-de-seguridad-privada",
+    title: "Curso de Jefe de Seguridad Privada",
+    categoria: "Dirección Estratégica de Seguridad",
+    pdfUrl: "/materiales/GENERALIDADES-CURSO-JEFE-DE-SEGURIDAD.pdf",
     modulos: [
       {
-        nombre: "Módulo 1: Uso Proporcional de la Fuerza",
+        nombre: "Módulo 1: Conformación de Sistemas de Seguridad Privada",
         slides: [
           {
-            id: "baston-1-1",
-            courseSlug: "baston-y-esposas",
-            moduleName: "Módulo 1: Uso Proporcional de la Fuerza",
+            id: "jefe-1-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo 1: Conformación de Sistemas de Seguridad Privada",
             slideNumber: 1,
-            title: "Técnicas de Sujeción y Uso del Bastón",
+            title: "Diseño y Estrategia de Seguridad Integral",
             contentBullets: [
-              "El bastón debe ser utilizado únicamente en caso de agresión inminente a la integridad física.",
-              "Zonas prohibidas de impacto: Cabeza, cuello, columna vertebral y genitales.",
-              "Técnicas de bloqueo, distancia de seguridad y desarme."
+              "Planificación global de recursos humanos, físicos y tecnológicos.",
+              "Creación del Estudio de Seguridad y manuales corporativos de crisis.",
+              "Relación directa con la Prefectura OS-10 de Carabineros de Chile."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
+            imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 2: Gestión Operativa y Seguridad Informática",
+        slides: [
+          {
+            id: "jefe-2-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo 2: Gestión Operativa y Ciberseguridad",
+            slideNumber: 1,
+            title: "Protección de Activos Digitales e Infraestructura Crítica",
+            contentBullets: [
+              "Mitigación de riesgos cibernéticos e ingenios de intrusión digital.",
+              "Protección de redes de vigilancia, servidores NVR y bases de datos.",
+              "Auditoría continua de seguridad física e informática."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80"
           }
         ]
       }
