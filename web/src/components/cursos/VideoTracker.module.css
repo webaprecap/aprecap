@@ -1,0 +1,402 @@
+/* =============================================
+   VideoTracker — VicTech Premium Player UI
+   Portada Sarmat + anti-skip + progress bar
+   ============================================= */
+
+.videoContainer {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #080d14;
+  border: 1px solid rgba(234, 179, 8, 0.15);
+  position: relative;
+  /* <-- critical: overlay floats inside here */
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ---- OVERLAY PORTADA — flota encima del player ---- */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background:
+    linear-gradient(180deg, rgba(3, 7, 18, 0.97) 0%, rgba(8, 13, 20, 0.92) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.overlay:hover {
+  background:
+    linear-gradient(180deg, rgba(3, 7, 18, 0.93) 0%, rgba(234, 179, 8, 0.06) 100%);
+}
+
+.overlayContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+  padding: 2.5rem;
+  position: relative;
+}
+
+/* Anillo decorativo detrás del logo */
+.overlayContent::before {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid rgba(234, 179, 8, 0.08);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  animation: ringPulse 4s ease-in-out infinite;
+}
+
+.overlayContent::after {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(234, 179, 8, 0.04);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  animation: ringPulse 4s ease-in-out infinite 1s;
+}
+
+@keyframes ringPulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translate(-50%, -58%) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -58%) scale(1.03);
+  }
+}
+
+.logo {
+  filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.5));
+  animation: logoFloat 4s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes logoFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.4));
+  }
+
+  50% {
+    transform: translateY(-8px);
+    filter: drop-shadow(0 0 30px rgba(234, 179, 8, 0.7));
+  }
+}
+
+.overlay h3 {
+  color: #fff;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.sarmatTag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* ---- PLAY BUTTON ---- */
+.playButton {
+  background: linear-gradient(135deg, #E30613, #a1040d);
+  color: #fff;
+  border: none;
+  padding: 1rem 2.8rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow:
+    0 8px 24px rgba(227, 6, 19, 0.3),
+    0 0 0 0 rgba(227, 6, 19, 0.2);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.playButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.4s ease;
+}
+
+.playButton:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow:
+    0 16px 40px rgba(227, 6, 19, 0.5),
+    0 0 0 6px rgba(227, 6, 19, 0.1);
+}
+
+.playButton:hover::before {
+  left: 100%;
+}
+
+.playButton:active {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.mobileOnly {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobileOnly {
+    display: flex !important;
+    width: 100%;
+    margin-top: 0.5rem;
+    justify-content: center;
+  }
+
+  /* Escondemos el de la portada en móvil porque ya tenemos el de abajo */
+  .overlay .playButton {
+    display: none !important;
+  }
+}
+
+/* ---- PLAYER WRAPPER ---- */
+.playerWrapper {
+  position: relative;
+  padding-top: 56.25%;
+  /* 16:9 Aspect Ratio */
+  width: 100%;
+  background: #000;
+}
+
+/* El iframe de YouTube llena exactamente el espacio del wrapper */
+.youtubeFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.errorState {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #f87171;
+}
+
+.errorState code {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  word-break: break-all;
+}
+
+/* ---- PROGRESS BAR ---- */
+.progressContainer {
+  padding: 1.25rem 1.5rem;
+  background: rgba(8, 13, 20, 0.95);
+  border-top: 1px solid rgba(227, 6, 19, 0.1);
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #E30613, #a1040d);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(227, 6, 19, 0.4);
+}
+
+.unlockMarker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 2;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+.progressFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  min-height: 45px;
+}
+
+/* ---- ALERTA DE VIDEO OBLIGATORIO ---- */
+.warningBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  animation: warningPulse 3s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 15px 0 rgba(239, 68, 68, 0.15);
+  }
+}
+
+.warningIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.warningText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.warningText strong {
+  color: #f87171;
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.warningText p {
+  color: #d1d5db;
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.progressText {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressText.unlocked {
+  color: #4ade80;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.continueBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+  overflow: hidden;
+  margin-left: auto;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.continueBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.4s ease;
+}
+
+.continueBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.45);
+}
+
+.continueBtn:hover::before {
+  left: 100%;
+}

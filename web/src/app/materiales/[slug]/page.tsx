@@ -1,22 +1,102 @@
 "use client";
 
-import { use, useState } from "react";
+import { Suspense, use, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import dynamic from "next/dynamic";
 import PPTSlideViewer from "@/components/PPTSlideViewer";
+import VideoTracker from "@/components/cursos/VideoTracker";
+import MiniQuiz from "@/components/cursos/MiniQuiz";
+import { getBancoModulo } from "@/lib/questionBanks/os10";
+import { useModoDemo } from "@/lib/useModoDemo";
 import { materialesEstudio } from "@/data/materiales-estudio";
+
+const PDFSwipeViewer = dynamic(() => import("@/components/cursos/PDFSwipeViewer"), {
+  ssr: false,
+});
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+type PasoModulo = "video" | "pdf" | "quiz" | "completed";
+
+const PASO_INICIAL: PasoModulo = "video";
+const EMPTY_PROGRESS: number[] = [];
+
+function leerProgresoLocal(slug: string): number[] {
+  try {
+    const raw = localStorage.getItem(`aprecap_progreso_${slug}`);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((n) => typeof n === "number") : [];
+  } catch {
+    return [];
+  }
+}
+
+function guardarProgresoLocal(slug: string, modulos: number[]) {
+  try {
+    localStorage.setItem(`aprecap_progreso_${slug}`, JSON.stringify(modulos));
+  } catch {
+    /* localStorage no disponible */
+  }
+}
+
+let progressCache: { key: string; value: number[] } | null = null;
+const progressListeners = new Set<() => void>();
+const emitProgress = () => progressListeners.forEach((l) => l());
+const subscribeProgress = (cb: () => void) => {
+  progressListeners.add(cb);
+  return () => progressListeners.delete(cb);
+};
+const getProgressSnapshot = (key: string) => () => {
+  if (!progressCache || progressCache.key !== key) {
+    progressCache = { key, value: leerProgresoLocal(key) };
+  }
+  return progressCache.value;
+};
+
+function useStoredProgress(key: string) {
+  const snapshot = useSyncExternalStore(
+    subscribeProgress,
+    getProgressSnapshot(key),
+    () => EMPTY_PROGRESS
+  );
+  const setProgress = (value: number[]) => {
+    progressCache = { key, value };
+    guardarProgresoLocal(key, value);
+    emitProgress();
+  };
+  return [snapshot, setProgress] as const;
+}
+
 export default function CursoMaterialesPage({ params }: PageProps) {
+  return (
+    <Suspense fallback={null}>
+      <CursoMaterialesInner params={params} />
+    </Suspense>
+  );
+}
+
+function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const modoDemo = useModoDemo();
 
   const cursoActual = materialesEstudio.find((c) => c.slug === slug);
-  
+
   const [expandedModuloIdx, setExpandedModuloIdx] = useState<number>(0);
   const [selectedSubModuloIdx, setSelectedSubModuloIdx] = useState<number>(0);
+  const [paso, setPaso] = useState<PasoModulo>(PASO_INICIAL);
+  const [completados, setCompletados] = useStoredProgress(slug);
+
+  const tieneQuiz = cursoActual?.banco === "os10";
+
+  const cambiarModulo = (idx: number) => {
+    setExpandedModuloIdx(idx);
+    setSelectedSubModuloIdx(0);
+    setPaso(PASO_INICIAL);
+  };
 
   if (!cursoActual) {
     notFound();
@@ -24,14 +104,31 @@ export default function CursoMaterialesPage({ params }: PageProps) {
 
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];
   const hasSubModulos = Boolean(moduloActual.subModulos && moduloActual.subModulos.length > 0);
-  
+
   const subModuloActual = hasSubModulos
     ? moduloActual.subModulos![selectedSubModuloIdx] || moduloActual.subModulos![0]
     : null;
 
   const slidesActuales = subModuloActual ? subModuloActual.slides : (moduloActual.slides || []);
   const pdfDownloadUrl = subModuloActual?.pdfUrl || moduloActual.pdfUrl || cursoActual.pdfUrl;
-  const tituloActivo = subModuloActual ? `${subModuloActual.codigo} ${subModuloActual.nombre}` : moduloActual.nombre;
+  const tituloActivo = subModuloActual
+    ? `${subModuloActual.codigo} ${subModuloActual.nombre}`
+    : moduloActual.nombre;
+
+  const bancoQuiz = tieneQuiz ? getBancoModulo(expandedModuloIdx) : null;
+  const esUltimoModulo = expandedModuloIdx >= cursoActual.modulos.length - 1;
+  const todosCompletados =
+    completados.length >= cursoActual.modulos.length &&
+    cursoActual.modulos.every((_, i) => completados.includes(i));
+
+  const manejarQuizAprobado = () => {
+    const nuevos = completados.includes(expandedModuloIdx)
+      ? completados
+      : [...completados, expandedModuloIdx];
+    setCompletados(nuevos);
+    guardarProgresoLocal(slug, nuevos);
+    setPaso("completed");
+  };
 
   return (
     <>
@@ -40,7 +137,7 @@ export default function CursoMaterialesPage({ params }: PageProps) {
         <div className="mx-auto max-w-7xl px-4 flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-apre-red border border-apre-red/30">
-              <span>🛡️</span> Aula Virtual APRECAP
+              <span>🛡️</span> Aula Virtual APRECAP{modoDemo ? " · 🧪 DEMO" : ""}
             </div>
             <h1 className="mt-2 text-2xl md:text-3xl font-black">{cursoActual.title}</h1>
             <p className="mt-1 text-xs text-white/80">
@@ -75,14 +172,14 @@ export default function CursoMaterialesPage({ params }: PageProps) {
                 {cursoActual.modulos.map((m, mIdx) => {
                   const isExpanded = mIdx === expandedModuloIdx;
                   const modSubModulos = m.subModulos || [];
+                  const isCompletado = completados.includes(mIdx);
 
                   return (
                     <div key={mIdx} className="rounded-xl border border-slate-800/80 bg-slate-900/40 overflow-hidden">
                       {/* Modulo Parent Header */}
                       <button
                         onClick={() => {
-                          setExpandedModuloIdx(mIdx);
-                          setSelectedSubModuloIdx(0);
+                          cambiarModulo(mIdx);
                         }}
                         className={`w-full text-left p-3.5 text-xs font-bold transition flex items-center justify-between ${
                           isExpanded
@@ -92,7 +189,7 @@ export default function CursoMaterialesPage({ params }: PageProps) {
                       >
                         <div className="flex items-center gap-2 pr-2">
                           <span className={`font-black text-xs ${isExpanded ? "text-cyan-400" : "text-slate-500"}`}>
-                            #{mIdx + 1}
+                            {isCompletado ? "✓" : `#${mIdx + 1}`}
                           </span>
                           <span className="line-clamp-2">{m.nombre}</span>
                         </div>
@@ -127,6 +224,33 @@ export default function CursoMaterialesPage({ params }: PageProps) {
                   );
                 })}
               </div>
+
+              {tieneQuiz && (
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-400">
+                    <span>Progreso del curso</span>
+                    <span className="text-cyan-400">
+                      {completados.length}/{cursoActual.modulos.length}
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-400 to-apre-red transition-all"
+                      style={{ width: `${(completados.length / cursoActual.modulos.length) * 100}%` }}
+                    />
+                  </div>
+                  <Link
+                    href={`/evaluaciones/${cursoActual.slug}${modoDemo ? "?demo=1" : ""}`}
+                    className={`mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border ${
+                      todosCompletados
+                        ? "bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
+                        : "bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-800"
+                    }`}
+                  >
+                    {todosCompletados ? "🏆 Rendir Examen Final" : `🎯 Examen Final (completa ${cursoActual.modulos.length} módulos)`}
+                  </Link>
+                </div>
+              )}
             </div>
 
             {pdfDownloadUrl && (
@@ -152,14 +276,81 @@ export default function CursoMaterialesPage({ params }: PageProps) {
                 Unidad Activa: <strong className="text-cyan-400">{tituloActivo}</strong>
               </span>
               <span className="text-xs font-bold text-slate-400">
-                {slidesActuales.length} Diapositivas disponibles
+                {tieneQuiz && bancoQuiz
+                  ? paso === "video"
+                    ? "Paso 1: Video · Paso 2: Lectura PDF · Paso 3: MiniQuiz"
+                    : paso === "pdf"
+                      ? "Video ✓ · Paso 2: Lectura PDF · Paso 3: MiniQuiz"
+                      : paso === "quiz"
+                        ? "Video ✓ · PDF ✓ · Paso 3: MiniQuiz"
+                        : "Módulo completado ✓"
+                  : moduloActual.videoUrl
+                    ? "Video + Lectura PDF"
+                    : `${slidesActuales.length} Diapositivas disponibles`}
               </span>
             </div>
 
-            <PPTSlideViewer
-              slides={slidesActuales}
-              pdfDownloadUrl={pdfDownloadUrl}
-            />
+            {paso === "completed" && tieneQuiz ? (
+              <div className="rounded-2xl border border-emerald-500/40 bg-emerald-950/20 p-8 text-center space-y-4">
+                <div className="text-4xl">🎉</div>
+                <h3 className="text-xl font-black text-white">
+                  ¡Módulo {expandedModuloIdx + 1} Completado!
+                </h3>
+                <p className="text-sm text-slate-300 max-w-md mx-auto">
+                  Excelente trabajo. Has terminado todo el contenido y aprobado la evaluación de
+                  {` ${moduloActual.nombre}`}.
+                </p>
+                {!esUltimoModulo ? (
+                  <button
+                    onClick={() => {
+                      cambiarModulo(expandedModuloIdx + 1);
+                    }}
+                    className="rounded-xl bg-cyan-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-300"
+                  >
+                    Continuar al Módulo {expandedModuloIdx + 2} →
+                  </button>
+                ) : (
+                  <Link
+                    href={`/evaluaciones/${cursoActual.slug}${modoDemo ? "?demo=1" : ""}`}
+                    className="inline-block rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark"
+                  >
+                    🏆 Ir al Examen Final
+                  </Link>
+                )}
+              </div>
+            ) : moduloActual.videoUrl ? (
+              <div className="space-y-4">
+                {paso === "video" ? (
+                  <VideoTracker
+                    url={moduloActual.videoUrl}
+                    title={tituloActivo}
+                    onUnlockNext={() => setPaso("pdf")}
+                  />
+                ) : paso === "pdf" ? (
+                  <PDFSwipeViewer
+                    url={moduloActual.pdfUrl || pdfDownloadUrl || ""}
+                    onFinishReading={() => setPaso(tieneQuiz ? "quiz" : "completed")}
+                  />
+                ) : paso === "quiz" && bancoQuiz ? (
+                  <MiniQuiz
+                    banco={bancoQuiz.alternativas}
+                    tituloModulo={moduloActual.nombre}
+                    onPass={manejarQuizAprobado}
+                    modoDemo={modoDemo}
+                  />
+                ) : (
+                  <PDFSwipeViewer
+                    url={moduloActual.pdfUrl || pdfDownloadUrl || ""}
+                    onFinishReading={() => setPaso("completed")}
+                  />
+                )}
+              </div>
+            ) : (
+              <PPTSlideViewer
+                slides={slidesActuales}
+                pdfDownloadUrl={pdfDownloadUrl}
+              />
+            )}
           </main>
         </div>
       </section>

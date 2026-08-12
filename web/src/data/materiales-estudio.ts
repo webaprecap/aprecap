@@ -11,6 +11,7 @@ export interface SubModuloData {
 export interface ModuloData {
   nombre: string;
   pdfUrl?: string;
+  videoUrl?: string;
   subModulos?: SubModuloData[];
   slides?: SlideData[];
 }
@@ -20,542 +21,66 @@ export interface CursoMaterial {
   title: string;
   categoria: string;
   pdfUrl?: string;
+  banco?: "os10";
   modulos: ModuloData[];
 }
 
 export const materialesEstudio: CursoMaterial[] = [
-  {
+    {
     slug: "guardia-de-seguridad",
     title: "Curso de Guardia de Seguridad (OS-10)",
     categoria: "Seguridad Privada Acreditada (Carabineros de Chile)",
-    pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
+    pdfUrl: "/materiales/os10/Legislación_de_Seguridad_Privada.pdf",
+    banco: "os10",
     modulos: [
       {
-        nombre: "Módulo 1: Legislación de Seguridad Privada",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-1-1",
-            codigo: "1.1",
-            nombre: "Conceptos de Estado, Nación y Constitución",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-1-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 1.1: Estado y Constitución",
-                slideNumber: 1,
-                title: "Marco Legal e Institucional en Chile",
-                contentBullets: [
-                  "Definición de Estado: Grupo humano asentado en un territorio con una autoridad soberana.",
-                  "La Constitución Política es la Ley Fundamental del Estado a la que deben someterse todas las personas e instituciones.",
-                  "La Seguridad Privada es una actividad colaborativa y complementaria a la función pública ejercida por las Fuerzas de Orden."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-1-2",
-            codigo: "1.2",
-            nombre: "Derecho Penal, Delito Flagrante y Legítima Defensa",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-1-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 1.2: Delito Flagrante y Legítima Defensa",
-                slideNumber: 1,
-                title: "Detención en Flagrancia (Art. 129 Código Procesal Penal)",
-                contentBullets: [
-                  "Delito Flagrante: Aquel que se está cometiendo actualmente o acaba de cometerse.",
-                  "Cualquier persona (incluyendo el Guardia de Seguridad) puede detener al delincuente flagrante.",
-                  "Condición obligatoria: El detenido debe ser entregado de inmediato a Carabineros o PDI."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "os10-1-2-2",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 1.2: Delito Flagrante y Legítima Defensa",
-                slideNumber: 2,
-                title: "Legítima Defensa (Art. 10 N° 4, 5 y 6 del Código Penal)",
-                contentBullets: [
-                  "Requisito 1: Agresión ilegítima no provocada.",
-                  "Requisito 2: Necesidad racional del medio empleado para impedirla o repelerla.",
-                  "Requisito 3: Falta de provocación suficiente por parte de quien se defiende."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-1-3",
-            codigo: "1.3",
-            nombre: "Nuevo Sistema Procesal Penal",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-1-3-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 1.3: Sistema Procesal Penal",
-                slideNumber: 1,
-                title: "Actores del Sistema Procesal Penal en Chile",
-                contentBullets: [
-                  "Fiscales del Ministerio Público: Dirigen la investigación de los delitos y ejercen la acción penal pública.",
-                  "Jueces de Garantía: Aseguran el respeto a los derechos constitucionales del imputado y la víctima.",
-                  "Tribunal de Juicio Oral en lo Penal: Resuelve la culpabilidad o inocencia en la audiencia pública."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-1-4",
-            codigo: "1.4",
-            nombre: "Leyes y Decretos de Seguridad Privada (Ley N° 21.659 / DS 867)",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-1-4-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 1.4: Normativa OS-10",
-                slideNumber: 1,
-                title: "Reglamentación y Fiscalización por Carabineros de Chile",
-                contentBullets: [
-                  "Decreto Supremo N° 867: Norma la formación, equipamiento y obligaciones de los guardias de seguridad.",
-                  "Fiscalización permanente por la Prefectura de Seguridad Privada OS-10 de Carabineros de Chile.",
-                  "Obligatoriedad de portar la credencial OS-10 vigente en todo momento durante el turno."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-1-5",
-            codigo: "1.5",
-            nombre: "Derecho Laboral y Código del Trabajo",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-1-5-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 1.5: Código del Trabajo",
-                slideNumber: 1,
-                title: "Contratos, Turnos y Jornada de Trabajo",
-                contentBullets: [
-                  "Contrato Individual de Trabajo: Vínculo de subordinación y dependencia entre empleador y trabajador.",
-                  "Jornada ordinaria de trabajo y descansos semanales establecidos en la legislación.",
-                  "Reglamento Interno de Orden, Higiene y Seguridad del puesto."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Legislación OS 10",
+        videoUrl: "https://youtu.be/M1lEmsruPHI",
+        pdfUrl: "/materiales/os10/Legislación_de_Seguridad_Privada.pdf"
       },
       {
-        nombre: "Módulo 2: Prevención de Riesgos y Control de Incendios",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-2-1",
-            codigo: "2.1",
-            nombre: "Prevención de Riesgos Laborales (Ley N° 16.744)",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-2-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 2.1: Prevención de Riesgos",
-                slideNumber: 1,
-                title: "Seguro Obligatorio de Accidentes del Trabajo (Ley 16.744)",
-                contentBullets: [
-                  "Protección frente a accidentes a causa o con ocasión del trabajo y trayecto.",
-                  "Uso obligatorio de Elementos de Protección Personal (EPP).",
-                  "Notificación obligatoria de accidentes a la mutualidad o ACHS."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-2-2",
-            codigo: "2.2",
-            nombre: "Secuencia del Accidente y Causas Inseguras",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-2-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 2.2: Secuencia del Accidente",
-                slideNumber: 1,
-                title: "Factores de Riesgo en el Puesto de Trabajo",
-                contentBullets: [
-                  "Gente, Equipos, Materiales y Ambiente (GEMA).",
-                  "Acciones Inseguras: Viola procedimientos o normas de seguridad.",
-                  "Condiciones Inseguras: Defectos físicos o ambientales en la instalación."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-2-3",
-            codigo: "2.3",
-            nombre: "Teoría del Fuego y Tetraedro del Fuego",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-2-3-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 2.3: Química del Fuego",
-                slideNumber: 1,
-                title: "Elementos de la Combustión",
-                contentBullets: [
-                  "Combustible (Materia sólida, líquida o gaseosa).",
-                  "Comburente (Oxígeno del aire).",
-                  "Calor (Temperatura de ignición) y Reacción en cadena."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1542385151-efd9000785a0?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-2-4",
-            codigo: "2.4",
-            nombre: "Clases de Fuego (A, B, C, D, K) y Extintores",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-2-4-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 2.4: Clasificación del Fuego",
-                slideNumber: 1,
-                title: "Uso y Manejo de Extintores Portátiles",
-                contentBullets: [
-                  "Clase A: Materiales sólidos (Madera, papel). Extintor de Agua o PQS.",
-                  "Clase B: Líquidos inflamables (Gasolina, aceites). Extintor CO2 o PQS.",
-                  "Clase C: Equipos eléctricos energizados. Extintor CO2.",
-                  "Métodos de extinción: Enfriamiento, Sofocación y Segregación."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1599586120429-48281b6f0e20?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Seguridad Corporativa",
+        videoUrl: "https://youtu.be/sSkexLMqqkY",
+        pdfUrl: "/materiales/os10/Manual_de_Seguridad_Física_OS-10.pdf"
       },
       {
-        nombre: "Módulo 3: Valores, Ética y Psicoprevención",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-3-1",
-            codigo: "3.1",
-            nombre: "Psicoprevención y Conducta Humana",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-3-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 3.1: Psicoprevención",
-                slideNumber: 1,
-                title: "Factores Psicológicos en la Vigilancia",
-                contentBullets: [
-                  "Control de impulsos y concentración sostenida durante turnos largos.",
-                  "Manejo de la fatiga laboral y estrés operacional.",
-                  "Autocuidado y hábitos de sueño reparador."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-3-2",
-            codigo: "3.2",
-            nombre: "Valores e Imagen Institucional",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-3-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 3.2: Valores Institucionales",
-                slideNumber: 1,
-                title: "Sobriedad y Presentación Personal",
-                contentBullets: [
-                  "Porte de uniforme limpio, planchado y calzado lustrado.",
-                  "Trato cortés, firme y respetuoso a usuarios y clientes.",
-                  "Representación adecuada de la imagen del cliente mandante."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-3-3",
-            codigo: "3.3",
-            nombre: "Ética Profesional y Confidencialidad",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-3-3-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 3.3: Ética Profesional",
-                slideNumber: 1,
-                title: "Integridad y Reserva de Información",
-                contentBullets: [
-                  "Confidencialidad absoluta sobre sistemas de seguridad y claves.",
-                  "Cero tolerancia al soborno o cobros indebidos.",
-                  "Uso correcto de bienes e instalaciones encomendadas."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Riesgos y Control de Incendios",
+        videoUrl: "https://youtu.be/yklkKntu6TY",
+        pdfUrl: "/materiales/os10/Tactical_Safety_and_Fire_Guide.pdf"
       },
       {
-        nombre: "Módulo 4: Técnicas de Vigilancia y Pauta de Puesto",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-4-1",
-            codigo: "4.1",
-            nombre: "Control y Observación en Puestos de Trabajo",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-4-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 4.1: Técnicas de Vigilancia",
-                slideNumber: 1,
-                title: "Rondas e Inspecciones Perimetrales",
-                contentBullets: [
-                  "Rondas a tiempos impares no predecibles.",
-                  "Revisión de vías de escape, portones, luces y cerrojos.",
-                  "Detección oportuna de bultos sospechosos o anomalias."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-4-2",
-            codigo: "4.2",
-            nombre: "Libro de Novedades e Informes de Seguridad",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-4-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 4.2: Registro de Novedades",
-                slideNumber: 1,
-                title: "Formato Oficial del Libro de Minutas",
-                contentBullets: [
-                  "Anotación cronológica clara, legible y sin tachaduras.",
-                  "Registro de relevos de turno, inventario de equipos e incidentes.",
-                  "Firma de entrega y recepción del puesto."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Comunicación",
+        videoUrl: "https://youtu.be/MCpJkz8hzH0",
+        pdfUrl: "/materiales/os10/Security_Communication_Systems.pdf"
       },
       {
-        nombre: "Módulo 5: Seguridad Física de Instalaciones y Accesos",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-5-1",
-            codigo: "5.1",
-            nombre: "Sistemas de Seguridad Física e Instalaciones",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-5-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 5.1: Seguridad Física",
-                slideNumber: 1,
-                title: "Protección Perimetral y Barreras",
-                contentBullets: [
-                  "Cierres perimetrales, concertinas y cercos eléctricos.",
-                  "Sistemas de iluminación de emergencia e intemperie.",
-                  "Zonas de acceso restringido y recintos críticos."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-5-2",
-            codigo: "5.2",
-            nombre: "Control de Acceso Peatonal y Vehicular",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-5-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 5.2: Control de Accesos",
-                slideNumber: 1,
-                title: "Acreditación y Revisión de Materiales",
-                contentBullets: [
-                  "Verificación de Cédula de Identidad de visitas.",
-                  "Revisión de Guías de Despacho y facturas de carga.",
-                  "Inspección visual de vehículos y maleteros autorizados."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Guía de Primeros Auxilios",
+        videoUrl: "https://youtu.be/x3y0sLw6RL8",
+        pdfUrl: "/materiales/os10/Primeros_Auxilios_OS-10.pdf"
       },
       {
-        nombre: "Módulo 6: Sistemas de Comunicación y Enlace",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-6-1",
-            codigo: "6.1",
-            nombre: "Canales y Principios de la Comunicación",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-6-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 6.1: Principios Radiocomunicativos",
-                slideNumber: 1,
-                title: "Elementos de la Transmisión Radial",
-                contentBullets: [
-                  "Emisor, Mensaje, Canal y Receptor.",
-                  "Criterios de Brevedad, Objetividad y Claridad.",
-                  "Uso de alfabeto fonético y claves de emergencia."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-6-2",
-            codigo: "6.2",
-            nombre: "Equipos Radiocomunicativos VHF/UHF",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-6-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 6.2: Equipos Portátiles",
-                slideNumber: 1,
-                title: "Operación de Radios Portátiles y Carga",
-                contentBullets: [
-                  "Comprobación de baterías y estado de antena.",
-                  "Operación en canal operativo asignado.",
-                  "Pruebas de audio diarias al iniciar el servicio."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "El Guardia Estratégico",
+        videoUrl: "https://youtu.be/vzNAhjWjW-E",
+        pdfUrl: "/materiales/os10/OS-10_Tactical_Blueprint.pdf"
       },
       {
-        nombre: "Módulo 7: Primeros Auxilios",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-7-1",
-            codigo: "7.1",
-            nombre: "Principios Generales y Protocolo PAS",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-7-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 7.1: Protocolo PAS",
-                slideNumber: 1,
-                title: "Proteger, Avisar (131 SAMU) y Socorrer",
-                contentBullets: [
-                  "P: Proteger la escena para evitar segundos accidentes.",
-                  "A: Avisar inmediatamente a emergencias médicas (131).",
-                  "S: Socorrer aplicando primeros auxilios básicos."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-7-2",
-            codigo: "7.2",
-            nombre: "Atención de Lesiones, Hemorragias y Quemaduras",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-7-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 7.2: Control de Hemorragias",
-                slideNumber: 1,
-                title: "Compresión Directa y Vendajes",
-                contentBullets: [
-                  "Presión directa sobre la herida con gasa o compresa limpia.",
-                  "Posición lateral de seguridad en víctimas inconscientes que respiran.",
-                  "Uso adecuado de los insumos del Botiquín de Emergencia."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Psicología de emergencias",
+        videoUrl: "https://youtu.be/Te_wPjNEAaU",
+        pdfUrl: "/materiales/os10/Manual_Táctico_de_Psicoprevención.pdf"
       },
       {
-        nombre: "Módulo 8: Defensa Personal y Uso del Bastón",
-        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-        subModulos: [
-          {
-            id: "os10-8-1",
-            codigo: "8.1",
-            nombre: "Principios de Defensa Personal y Distancia",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-8-1-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 8.1: Defensa Personal",
-                slideNumber: 1,
-                title: "Posición de Seguridad y Distancia Crítica",
-                contentBullets: [
-                  "Mantención de distancia de reacción (1.5 metros).",
-                  "Evitación de agresiones físicas e inmovilización defensiva.",
-                  "Principio de proporcionalidad ante cualquier amenaza."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          },
-          {
-            id: "os10-8-2",
-            codigo: "8.2",
-            nombre: "Esgrima de Bastón Policial e Inmovilización con Esposas",
-            pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
-            slides: [
-              {
-                id: "os10-8-2-1",
-                courseSlug: "guardia-de-seguridad",
-                moduleName: "Módulo 8.2: Bastón y Grilletes",
-                slideNumber: 1,
-                title: "Empuñadura y Zonas Prohibidas de Impacto",
-                contentBullets: [
-                  "Técnica de empuñadura recta u oculta paralela al antebrazo.",
-                  "Zonas prohibidas: Cabeza, cuello, garganta y columna vertebral.",
-                  "Aplicación reglamentaria de grilletes y entrega a Carabineros."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
-          }
-        ]
+        nombre: "Psicología en Crisis",
+        videoUrl: "https://youtu.be/o81yak_-_jc",
+        pdfUrl: "/materiales/os10/Tactical_Psychoprevention_Manual.pdf"
+      },
+      {
+        nombre: "Psicología en Emergencias",
+        videoUrl: "https://youtu.be/owhFjjQLtkU",
+        pdfUrl: "/materiales/os10/Tactical_Security_Blueprint.pdf"
       }
     ]
   },
+
   {
     slug: "operador-cctv-y-alarmas",
     title: "Curso de Operador de CCTV y Alarmas",
@@ -569,21 +94,157 @@ export const materialesEstudio: CursoMaterial[] = [
           {
             id: "cctv-1-1",
             codigo: "1.1",
-            nombre: "Marco Legal y Normativa de Videovigilancia",
+            nombre: "Definición de Operador de CCTV y Decreto Supremo N° 41",
             pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
             slides: [
               {
                 id: "cctv-1-1-1",
                 courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.1: Normativa Legal CCTV",
+                moduleName: "Módulo 1.1: Operador CCTV y D.S. N° 41",
                 slideNumber: 1,
-                title: "Uso Probatorio de Grabaciones y Privacidad",
+                title: "Rol Legal del Operador de CCTV (Decreto 261)",
                 contentBullets: [
-                  "Límites a la privacidad en lugares de trabajo.",
-                  "Custodia y cadena de evidencia en grabaciones de seguridad.",
-                  "Acceso autorizado y confidencialidad."
+                  "El operador controla a través de CCTV y alarmas la seguridad de una instalación.",
+                  "Objetivo: Detección oportuna de riesgos, alertas a Carabineros/PDI y neutralizar la amenaza.",
+                  "Responsabilidad en el manejo confidencial de datos e imágenes."
                 ],
                 imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: "cctv-1-1-2",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.1: Operador CCTV y D.S. N° 41",
+                slideNumber: 2,
+                title: "Conexión a Centrales de Carabineros (D.S. N° 41)",
+                contentBullets: [
+                  "Autoriza la conexión directa de empresas de seguridad a la Central de Comunicaciones de Carabineros (CENCO).",
+                  "Transmisión mediante canales de voz, audio, imagen, digital o satelital.",
+                  "Costo de la conexión: Renta mensual 3 U.F. por cada 100 usuarios y cobro de 0,5 U.F. por falsa alarma."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-1-2",
+            codigo: "1.2",
+            nombre: "Medidas Mínimas de Seguridad para Empresas (Decreto Supremo N° 1122 / DL 3607)",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-1-2-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.2: Decreto Supremo N° 1122",
+                slideNumber: 1,
+                title: "Alarmas de Asalto y Vigilancia Privada (Art. 5° al 8°)",
+                contentBullets: [
+                  "En recintos con más de un vigilante, al menos uno debe vestir de civil.",
+                  "Dispositivo de alarma de asalto obligatorio, independiente de alarmas de robo o incendio.",
+                  "Conexión directa con la Central de Comunicaciones de Carabineros o PDI con activación remota y manual."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: "cctv-1-2-2",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.2: Decreto Supremo N° 1122",
+                slideNumber: 2,
+                title: "Régimen de Falsas Alarmas y Cámaras HD (Art. 10° a 17°)",
+                contentBullets: [
+                  "Cobro de 1,5 U.T.M. por cada falsa alarma.",
+                  "Sanción por reincidencia (más de 4 falsas alarmas al mes): plazo de 30 días para subsanar o desconexión del sistema.",
+                  "Sistemas de filmación HD en entidades de alto riesgo con digitalización de hora, fecha y resguardo de grabaciones."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-1-3",
+            codigo: "1.3",
+            nombre: "Regulación en Transporte de Valores y Bóvedas (Decreto Supremo N° 1814)",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-1-3-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.3: Decreto Supremo N° 1814",
+                slideNumber: 1,
+                title: "Cámaras en Camiones Blindados y Centros de Acopio",
+                contentBullets: [
+                  "Mínimo 3 cámaras HD por vehículo (cabina, tripulación y exterior) conectadas a central de monitoreo.",
+                  "Resguardo de grabaciones: 15 días hábiles mínimo, o 1 año si hubo un delito.",
+                  "Ratio de monitoreo: 1 operador por cada 10 camiones blindados en ruta."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: "cctv-1-3-2",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.3: Decreto Supremo N° 1814",
+                slideNumber: 2,
+                title: "Seguridad Electrónica en Bóvedas de Acopio (Art. 17° y 18°)",
+                contentBullets: [
+                  "Bóvedas deben contar con sensores de intrusión, cerraduras electrónicas con retardo y bloqueo horario.",
+                  "Pulsadores de asalto conectados al sistema ALPHA 2 de Carabineros.",
+                  "Detectores de humo, calor y vibración estructural en el área de acopio."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-1-4",
+            codigo: "1.4",
+            nombre: "Seguridad en Cajeros Automáticos y Dispensadores de Dinero (Decreto Supremo N° 222)",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-1-4-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.4: Decreto Supremo N° 222",
+                slideNumber: 1,
+                title: "Sensores Mínimos en Cajeros Automáticos (Art. 6° y 9°)",
+                contentBullets: [
+                  "Sistema de alarma monitoreado en línea 24/7 conectado a central de monitoreo.",
+                  "Sensores obligatorios: Movimiento, inclinación, corte de cables, temperatura, humo y apertura de puertas/bóveda.",
+                  "Alarma sonora y lumínica (máximo 100 dB) con sistema de respaldo de energía (UPS)."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: "cctv-1-4-2",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.4: Decreto Supremo N° 222",
+                slideNumber: 2,
+                title: "Cámaras Pin-Hole y Plazos de Almacenamiento (Art. 10°)",
+                contentBullets: [
+                  "Cámara externa para entorno y cámara interna (pin-hole) para rostro de usuarios.",
+                  "Resguardo estándar de grabaciones: 45 días continuos.",
+                  "En caso de ataques o robos al cajero: obligación de mantener grabaciones por 24 meses."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-1-5",
+            codigo: "1.5",
+            nombre: "Videovigilancia en Espectáculos de Fútbol Profesional (Ley N° 19.327)",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-1-5-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 1.5: Ley N° 19.327",
+                slideNumber: 1,
+                title: "Estándares de Televigilancia en Recintos Deportivos",
+                contentBullets: [
+                  "Obligación de instalar cámaras HD, detectores de metales y control de acceso en estadios.",
+                  "Monitoreo continuo durante todo el desarrollo del espectáculo deportivo.",
+                  "Almacenamiento de imágenes de accesos y perimetrales por un plazo mínimo de 90 días."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"
               }
             ]
           }
@@ -596,21 +257,97 @@ export const materialesEstudio: CursoMaterial[] = [
           {
             id: "cctv-2-1",
             codigo: "2.1",
-            nombre: "Sensores, Paneles de Alarma y Detección de Intrusión",
+            nombre: "Tarjetas de Control de Acceso Electrónico y Biometría",
             pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
             slides: [
               {
                 id: "cctv-2-1-1",
                 courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 2.1: Centrales de Alarma",
+                moduleName: "Módulo 2.1: Control de Acceso y Biometría",
                 slideNumber: 1,
-                title: "Monitoreo de Sensores e Incendio",
+                title: "Tecnologías de Tarjetas de Acceso",
                 contentBullets: [
-                  "Operación de paneles contra intrusión e incendio.",
-                  "Detección volumétrica PIR y contactos magnéticos.",
-                  "Procedimientos ante emergencias y zonas de falla."
+                  "Banda Magnética: Grabación de datos digitales en cinta magnética (económica pero sensible a campos magnéticos).",
+                  "Tecnología Wiegand: Hilos metálicos incrustados de alta durabilidad e inmunidad.",
+                  "Proximidad (RFID): Circuitos sintonizados bobinados que resuenan ante el lector."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: "cctv-2-1-2",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 2.1: Control de Acceso y Biometría",
+                slideNumber: 2,
+                title: "Sistemas Biométricos de Identificación",
+                contentBullets: [
+                  "Huella Digital y Geometría de Mano: Escaneo 3D de patrones dactilares y palmares.",
+                  "Reconocimiento Facial e Iris/Retina: Análisis de rasgos faciales y patrones vasculares del ojo.",
+                  "Reconocimiento de Voz, Firma y Sensores de Olor."
                 ],
                 imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-2-2",
+            codigo: "2.2",
+            nombre: "Detectores de Metales y Arcos Electrónicos de Control",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-2-2-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 2.2: Detección de Metales",
+                slideNumber: 1,
+                title: "Arcos y Detectores Manuales de Metales",
+                contentBullets: [
+                  "Barreras electromagnéticas para prevenir el ingreso de armas y objetos peligrosos a áreas restringidas.",
+                  "Sistema Rot-Acces: Exclusa giratoria automática con arco detector (flujo de 20 personas/min).",
+                  "Paletas manuales de inspección corporal directa."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-2-3",
+            codigo: "2.3",
+            nombre: "Detectores de Intrusión, Sensores Pasivos/Activos y Barreras Fotoeléctricas",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-2-3-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 2.3: Detectores de Intrusión",
+                slideNumber: 1,
+                title: "Tipos de Sensores de Intrusión",
+                contentBullets: [
+                  "Sensores Pasivos (PIR): Fototransistores que miden variación de radiación térmica infrarroja.",
+                  "Sensores Activos: Combinan diodo IRED emisor y fototransistor receptor.",
+                  "Barreras Fotoeléctricas: Interrupción de haz invisible para protección perimetral."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-2-4",
+            codigo: "2.4",
+            nombre: "Centrales de Alarma y Paneles de Control Multizona",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-2-4-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 2.4: Centrales de Alarma",
+                slideNumber: 1,
+                title: "Operación de Centrales y Paneles de Alarma",
+                contentBullets: [
+                  "CPU Principal: Procesa alertas de intrusión, incendio, pánico y sabotaje (Tamper).",
+                  "Segmentación en Zonas: Perimetral, interior, 24 horas y supervisada.",
+                  "Vías de Transmisión: Celular 4G, IP Ethernet, línea telefónica y radiofrecuencia."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
               }
             ]
           }
@@ -623,19 +360,95 @@ export const materialesEstudio: CursoMaterial[] = [
           {
             id: "cctv-3-1",
             codigo: "3.1",
-            nombre: "Técnicas de Monitoreo y Manejo de Cámaras PTZ",
+            nombre: "Políticas de Seguridad y Central de Televigilancia",
             pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
             slides: [
               {
                 id: "cctv-3-1-1",
                 courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 3.1: Monitoreo PTZ",
+                moduleName: "Módulo 3.1: Central de Televigilancia",
                 slideNumber: 1,
-                title: "Seguimiento Visual en Centrales de Control",
+                title: "Función Preventiva de la Central de Monitoreo",
                 contentBullets: [
-                  "Operación de joystick y rondas virtuales PTZ.",
-                  "Coordinación radial con patrullas de terreno.",
-                  "Gestión de alertas en consolas multimóvil."
+                  "Prioridad fundamental: Resguardo de la vida de trabajadores y clientes por sobre lo material.",
+                  "Vigilancia remota activa en tiempo real y registro continuo de incidentes.",
+                  "Coordinación directa con personal de seguridad en terreno y fuerzas policiales."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-3-2",
+            codigo: "3.2",
+            nombre: "Modus Operandi Delictual y Análisis de Riesgos",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-3-2-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 3.2: Modus Operandi Delictual",
+                slideNumber: 1,
+                title: "Patrones de Delitos y Modus Operandi",
+                contentBullets: [
+                  "Robo Simple vs Planificado: Vigilancia previa, bandas organizadas y vehículos.",
+                  "Robo de Vehículos: Portonazos, encerronas y asaltos a transporte.",
+                  "Robo por Sorpresa (Lanzazos): Concentración en horarios peak (07:00-10:00, 12:00-14:00, 18:00-20:00)."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-3-3",
+            codigo: "3.3",
+            nombre: "Circuito Cerrado de Televisión (CCTV), Control de Personas y Zonas Operativas",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-3-3-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 3.3: CCTV y Zonas Operativas",
+                slideNumber: 1,
+                title: "CCTV como Transductor Óptico y Elemento Disuasivo",
+                contentBullets: [
+                  "Conversión de señales de luz en señales eléctricas de video.",
+                  "Efecto disuasivo inmediato y generación de imágenes probatorias para juicios.",
+                  "Monitoreo diferenciado: Autodomos PTZ en zonas de circulación y cámaras fijas en accesos/estacionamientos."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          },
+          {
+            id: "cctv-3-4",
+            codigo: "3.4",
+            nombre: "Sistemas Ópticos, Cámaras Ocultas, Equipos CCTV y Guía de Buenas Prácticas",
+            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+            slides: [
+              {
+                id: "cctv-3-4-1",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 3.4: Equipos y Guía de Buenas Prácticas",
+                slideNumber: 1,
+                title: "Equipamiento de Grabación y Procesamiento",
+                contentBullets: [
+                  "Medios de transmisión: Cable Coaxial, Fibra Óptica y Enlaces de Microondas.",
+                  "Procesadores de video: Switchers, Quads (divisores 4 imágenes) y Multiplexores.",
+                  "Grabadoras DVR/NVR: Time-lapse, por evento, 24 horas y 72 horas alta densidad."
+                ],
+                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: "cctv-3-4-2",
+                courseSlug: "operador-cctv-y-alarmas",
+                moduleName: "Módulo 3.4: Equipos y Guía de Buenas Prácticas",
+                slideNumber: 2,
+                title: "Estándares de Montaje y Superposición de Campos",
+                contentBullets: [
+                  "Montaje de cámaras fijas a una altura superior a 2,3 metros para evitar sabotajes.",
+                  "Posicionamiento Cenital (90°) para monitoreo de mesas de juego y cajas de dinero.",
+                  "Superposición y cruce de campos de imagen para eliminar puntos ciegos."
                 ],
                 imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
               }
