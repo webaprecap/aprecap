@@ -21,6 +21,7 @@ interface PPTSlideViewerProps {
 export default function PPTSlideViewer({ slides, pdfDownloadUrl }: PPTSlideViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [orientation, setOrientation] = useState<"vertical" | "horizontal">("vertical");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const currentSlide = slides[currentIndex] || {
@@ -71,26 +72,52 @@ export default function PPTSlideViewer({ slides, pdfDownloadUrl }: PPTSlideViewe
     <div
       ref={containerRef}
       className={`relative flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-slate-950 text-white shadow-2xl transition-all ${
-        isFullscreen ? "fixed inset-0 z-[9999] rounded-none border-none p-4" : "w-full"
+        isFullscreen ? "fixed inset-0 z-[9999] rounded-none border-none p-4 overflow-y-auto" : "w-full"
       }`}
     >
       {/* Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 bg-slate-900/90 px-6 py-3.5 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-apre-red/20 text-sm font-bold text-apre-red border border-apre-red/30">
-            📊
+            📖
           </span>
           <div>
             <h3 className="text-sm font-extrabold text-white">
               {currentSlide.moduleName}
             </h3>
-            <p className="text-xs text-slate-400">Presentación Interactiva en Diapositivas (PPT)</p>
+            <p className="text-xs text-slate-400">Presentación de Material de Estudio ({orientation === "vertical" ? "Formato Vertical A4" : "Formato Horizontal 16:9"})</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {/* Selector de Orientación */}
+          <div className="flex items-center rounded-xl bg-slate-800 p-1 border border-slate-700">
+            <button
+              onClick={() => setOrientation("vertical")}
+              className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                orientation === "vertical"
+                  ? "bg-apre-red text-white shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Formato Vertical (A lo largo)"
+            >
+              📄 Vertical (A lo largo)
+            </button>
+            <button
+              onClick={() => setOrientation("horizontal")}
+              className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                orientation === "horizontal"
+                  ? "bg-apre-red text-white shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Formato Horizontal (A lo ancho)"
+            >
+              🖥️ Horizontal (16:9)
+            </button>
+          </div>
+
           <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-bold text-slate-300">
-            Diapositiva {currentIndex + 1} de {slides.length}
+            Página {currentIndex + 1} de {slides.length}
           </span>
 
           {pdfDownloadUrl && (
@@ -100,7 +127,7 @@ export default function PPTSlideViewer({ slides, pdfDownloadUrl }: PPTSlideViewe
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-slate-800 px-3 py-1.5 text-xs font-bold text-cyan-400 hover:bg-slate-700 transition border border-cyan-500/20"
             >
-              📥 Descargar PDF
+              📥 PDF
             </a>
           )}
 
@@ -109,25 +136,40 @@ export default function PPTSlideViewer({ slides, pdfDownloadUrl }: PPTSlideViewe
             className="rounded-xl bg-slate-800 p-2 text-xs text-slate-300 hover:bg-slate-700 transition"
             title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
           >
-            {isFullscreen ? "↙️ Normal" : "↗️ Pantalla Completa"}
+            {isFullscreen ? "↙️ Normal" : "↗️ Full"}
           </button>
         </div>
       </div>
 
-      {/* Main 16:9 Slide Stage */}
-      <div className="relative flex flex-1 items-center justify-center p-6 md:p-10 min-h-[380px] md:min-h-[460px]">
-        <div className="grid w-full max-w-5xl gap-8 md:grid-cols-12 items-center">
-          {/* Left Column: Title & Key Bullet Points */}
-          <div className={`${currentSlide.imageUrl ? "md:col-span-7" : "md:col-span-12"} space-y-5`}>
-            <div className="inline-block rounded-lg bg-apre-red/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-apre-red border border-apre-red/20">
-              Concepto Clave #{currentIndex + 1}
+      {/* Main Slide / Document Stage */}
+      <div className="relative flex flex-1 items-center justify-center p-4 md:p-8 min-h-[450px]">
+        {orientation === "vertical" ? (
+          /* VISTA VERTICAL (A LO LARGO / FORMATO A4 / DOCUMENTO) */
+          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 md:p-10 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <span className="inline-block rounded-lg bg-apre-red/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-apre-red border border-apre-red/20">
+                Página / Sección #{currentIndex + 1}
+              </span>
+              <span className="text-xs font-semibold text-slate-400">APRECAP OTEC</span>
             </div>
+
             <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug">
               {currentSlide.title}
             </h2>
+
+            {currentSlide.imageUrl && (
+              <div className="overflow-hidden rounded-xl border border-slate-800 max-h-72">
+                <img
+                  src={currentSlide.imageUrl}
+                  alt={currentSlide.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
             <div className="space-y-3 pt-2">
               {currentSlide.contentBullets.map((bullet, idx) => (
-                <div key={idx} className="flex items-start gap-3 rounded-xl bg-slate-900/60 p-3.5 border border-slate-800/80">
+                <div key={idx} className="flex items-start gap-3 rounded-xl bg-slate-950 p-4 border border-slate-800">
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-xs font-bold text-cyan-400 mt-0.5">
                     ✓
                   </span>
@@ -138,24 +180,43 @@ export default function PPTSlideViewer({ slides, pdfDownloadUrl }: PPTSlideViewe
               ))}
             </div>
           </div>
-
-          {/* Right Column: Illustrative Image / Photo */}
-          {currentSlide.imageUrl && (
-            <div className="md:col-span-5 flex justify-center">
-              <div className="relative overflow-hidden rounded-2xl border-2 border-slate-800 bg-slate-900 shadow-2xl group w-full max-w-sm">
-                <img
-                  src={currentSlide.imageUrl}
-                  alt={currentSlide.title}
-                  className="h-56 md:h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                <p className="absolute bottom-3 left-3 right-3 text-center text-xs font-semibold text-slate-300 backdrop-blur-sm bg-slate-900/60 p-1.5 rounded-lg border border-white/10">
-                  📷 {currentSlide.title}
-                </p>
+        ) : (
+          /* VISTA HORIZONTAL (A LO ANCHO / 16:9) */
+          <div className="grid w-full max-w-5xl gap-8 md:grid-cols-12 items-center">
+            <div className={`${currentSlide.imageUrl ? "md:col-span-7" : "md:col-span-12"} space-y-5`}>
+              <div className="inline-block rounded-lg bg-apre-red/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-apre-red border border-apre-red/20">
+                Concepto Clave #{currentIndex + 1}
+              </div>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug">
+                {currentSlide.title}
+              </h2>
+              <div className="space-y-3 pt-2">
+                {currentSlide.contentBullets.map((bullet, idx) => (
+                  <div key={idx} className="flex items-start gap-3 rounded-xl bg-slate-900/60 p-3.5 border border-slate-800/80">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-xs font-bold text-cyan-400 mt-0.5">
+                      ✓
+                    </span>
+                    <p className="text-sm md:text-base leading-relaxed text-slate-200">
+                      {bullet}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
-        </div>
+
+            {currentSlide.imageUrl && (
+              <div className="md:col-span-5 flex justify-center">
+                <div className="relative overflow-hidden rounded-2xl border-2 border-slate-800 bg-slate-900 shadow-2xl group w-full max-w-sm">
+                  <img
+                    src={currentSlide.imageUrl}
+                    alt={currentSlide.title}
+                    className="h-56 md:h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Footer Navigation Bar */}
