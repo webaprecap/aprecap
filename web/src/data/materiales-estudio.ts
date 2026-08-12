@@ -345,38 +345,146 @@ export const materialesEstudio: CursoMaterial[] = [
     pdfUrl: "/materiales/GENERALIDADES-CURSO-JEFE-DE-SEGURIDAD.pdf",
     modulos: [
       {
-        nombre: "Módulo 1: Conformación de Sistemas de Seguridad Privada",
+        nombre: "Módulo N°1: Legislación Laboral y Seguridad Privada",
         slides: [
           {
             id: "jefe-1-1",
             courseSlug: "jefe-de-seguridad-privada",
-            moduleName: "Módulo 1: Conformación de Sistemas de Seguridad Privada",
+            moduleName: "Módulo N°1: Legislación Laboral y Seguridad Privada",
             slideNumber: 1,
-            title: "Diseño y Estrategia de Seguridad Integral",
+            title: "Marco Legal y Ley 21.659 de Seguridad Privada",
             contentBullets: [
-              "Planificación global de recursos humanos, físicos y tecnológicos.",
-              "Creación del Estudio de Seguridad y manuales corporativos de crisis.",
-              "Relación directa con la Prefectura OS-10 de Carabineros de Chile."
+              "Normativa legal aplicable a empresas obligadas y transporte de valores.",
+              "Leyes, Decretos OS-10 N° 867, 261 Exento, 1814 y 222.",
+              "Responsabilidad legal de la Jefatura de Seguridad frente a la autoridad fiscalizadora."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo N°2: Prevención de Riesgos",
+        slides: [
+          {
+            id: "jefe-2-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo N°2: Prevención de Riesgos",
+            slideNumber: 1,
+            title: "Gestión de Riesgos e Higiene Ambiental",
+            contentBullets: [
+              "Decreto 594 sobre condiciones sanitarias e higiénicas en puestos de trabajo.",
+              "Supervisión del Comité Paritario de Higiene y Seguridad (Decreto 54).",
+              "Prevención y control de accidentes y contingencias ambientales."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo N°3: Administración",
+        slides: [
+          {
+            id: "jefe-3-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo N°3: Administración",
+            slideNumber: 1,
+            title: "Pensamiento Administrativo y Recursos Humanos",
+            contentBullets: [
+              "Funciones de la empresa y gestión estratégica de recursos humanos.",
+              "Planificación, organización, dirección y control en departamentos de seguridad.",
+              "Optimización de presupuestos y dotaciones de personal."
             ],
             imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
           }
         ]
       },
       {
-        nombre: "Módulo 2: Gestión Operativa y Seguridad Informática",
+        nombre: "Módulo N°4: Planificación Estratégica",
         slides: [
           {
-            id: "jefe-2-1",
+            id: "jefe-4-1",
             courseSlug: "jefe-de-seguridad-privada",
-            moduleName: "Módulo 2: Gestión Operativa y Ciberseguridad",
+            moduleName: "Módulo N°4: Planificación Estratégica",
             slideNumber: 1,
-            title: "Protección de Activos Digitales e Infraestructura Crítica",
+            title: "Planes de Seguridad Integral y Continuidad Operativa",
             contentBullets: [
-              "Mitigación de riesgos cibernéticos e ingenios de intrusión digital.",
-              "Protección de redes de vigilancia, servidores NVR y bases de datos.",
-              "Auditoría continua de seguridad física e informática."
+              "Desarrollo e implementación del Plan de Seguridad Institucional.",
+              "Matriz FODA y análisis de escenarios de alto riesgo.",
+              "Respuesta y recuperación ante eventos críticos y crisis."
             ],
-            imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80"
+            imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo N°5: Gestión Operativa",
+        slides: [
+          {
+            id: "jefe-5-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo N°5: Gestión Operativa",
+            slideNumber: 1,
+            title: "Estudios de Seguridad y Análisis de Riesgos",
+            contentBullets: [
+              "Pautas oficializadas por OS-10 para la confección del Estudio de Seguridad.",
+              "Conformación del Sistema de Seguridad Privada de la instalación.",
+              "Estrategias de control preventivo e inspecciones de puesto."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo N°6: Seguridad Condominios",
+        slides: [
+          {
+            id: "jefe-6-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo N°6: Seguridad Condominios",
+            slideNumber: 1,
+            title: "Control de Accesos y Resguardo en Condominios y Edificios",
+            contentBullets: [
+              "Gestión de seguridad residencial, conserjería y controles vehiculares.",
+              "Protocolos de emergencia en copropiedades e inmuebles.",
+              "Tecnologías de televigilancia aplicadas a condominios."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo N°7: Psicología de la Emergencia",
+        slides: [
+          {
+            id: "jefe-7-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo N°7: Psicología de la Emergencia",
+            slideNumber: 1,
+            title: "Manejo del Pánico y Primeros Auxilios Psicológicos",
+            contentBullets: [
+              "Conducta humana ante catástrofes, sismos e incendios.",
+              "Contención emocional y liderazgo en evacuaciones masivas.",
+              "Prevención del síndrome de burnout en personal de vigilancia."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo N°8: Seguridad Electrónica",
+        slides: [
+          {
+            id: "jefe-8-1",
+            courseSlug: "jefe-de-seguridad-privada",
+            moduleName: "Módulo N°8: Seguridad Electrónica",
+            slideNumber: 1,
+            title: "CCTV, Centrales de Alarma y Control de Accesos Tecnológico",
+            contentBullets: [
+              "Integración de sistemas de videovigilancia IP y biometría.",
+              "Sistemas de detección de intrusión y barreras infrarrojas.",
+              "Ciberseguridad aplicada a redes de vigilancia y centros de control."
+            ],
+            imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
           }
         ]
       }
