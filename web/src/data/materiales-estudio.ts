@@ -21,6 +21,7 @@ export const materialesEstudio: CursoMaterial[] = [
     modulos: [
       {
         nombre: "Módulo 1: Legislación de Seguridad Privada",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-1-1",
@@ -52,6 +53,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 2: Prevención de Riesgos y Control de Incendios",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-2-1",
@@ -70,6 +72,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 3: Valores, Ética y Psicoprevención",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-3-1",
@@ -88,6 +91,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 4: Técnicas de Vigilancia y Pauta de Puesto",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-4-1",
@@ -106,6 +110,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 5: Seguridad Física de Instalaciones y Accesos",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-5-1",
@@ -124,6 +129,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 6: Sistemas de Comunicación y Enlace",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-6-1",
@@ -142,6 +148,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 7: Primeros Auxilios",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-7-1",
@@ -160,6 +167,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 8: Defensa Personal y Uso del Bastón",
+        pdfUrl: "/materiales/MANUAL-DE-SEGURIDAD-PRIVADA-OS10.pdf",
         slides: [
           {
             id: "os10-8-1",
@@ -186,6 +194,7 @@ export const materialesEstudio: CursoMaterial[] = [
     modulos: [
       {
         nombre: "Módulo 1: Fundamentos Legales de Operación de CCTV y Alarmas",
+        pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
         slides: [
           {
             id: "cctv-1-1",
@@ -204,6 +213,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 2: Sistemas Electrónicos de Seguridad Privada",
+        pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
         slides: [
           {
             id: "cctv-2-1",
@@ -222,6 +232,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 3: Televigilancia y Operación de Centro de Control",
+        pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
         slides: [
           {
             id: "cctv-3-1",
@@ -248,6 +259,7 @@ export const materialesEstudio: CursoMaterial[] = [
     modulos: [
       {
         nombre: "Módulo 1: Normativa Laboral y Prevención de Riesgos",
+        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         slides: [
           {
             id: "sup-1-1",
@@ -266,6 +278,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 2: Prevención de Riesgos y Control de Emergencias",
+        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         slides: [
           {
             id: "sup-2-1",
@@ -284,6 +297,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 3: Procedimientos de Gestión de Seguridad y Administración",
+        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         slides: [
           {
             id: "sup-3-1",
@@ -302,6 +316,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 4: Liderazgo y Resolución de Conflictos",
+        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         slides: [
           {
             id: "sup-4-1",
@@ -320,6 +335,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo 5: Sistemas de Alarma, Comunicación y Enlace",
+        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         slides: [
           {
             id: "sup-5-1",
@@ -342,10 +358,11 @@ export const materialesEstudio: CursoMaterial[] = [
     slug: "jefe-de-seguridad-privada",
     title: "Curso de Jefe de Seguridad Privada",
     categoria: "Dirección Estratégica de Seguridad",
-    pdfUrl: "/materiales/GENERALIDADES-CURSO-JEFE-DE-SEGURIDAD.pdf",
+    pdfUrl: "/materiales/jefe-mod1-legislacion.pdf",
     modulos: [
       {
         nombre: "Módulo N°1: Legislación Laboral y Seguridad Privada",
+        pdfUrl: "/materiales/jefe-mod1-legislacion.pdf",
         slides: [
           {
             id: "jefe-1-1",
@@ -364,6 +381,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°2: Prevención de Riesgos",
+        pdfUrl: "/materiales/jefe-mod2-prevencion.pdf",
         slides: [
           {
             id: "jefe-2-1",
@@ -382,6 +400,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°3: Administración",
+        pdfUrl: "/materiales/jefe-mod3-administracion.pdf",
         slides: [
           {
             id: "jefe-3-1",
@@ -400,6 +419,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°4: Planificación Estratégica",
+        pdfUrl: "/materiales/jefe-mod4-planificacion-estrategica.pdf",
         slides: [
           {
             id: "jefe-4-1",
@@ -418,6 +438,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°5: Gestión Operativa",
+        pdfUrl: "/materiales/jefe-mod5-gestion-operativa.pdf",
         slides: [
           {
             id: "jefe-5-1",
@@ -436,6 +457,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°6: Seguridad Condominios",
+        pdfUrl: "/materiales/jefe-mod1-legislacion.pdf",
         slides: [
           {
             id: "jefe-6-1",
@@ -454,6 +476,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°7: Psicología de la Emergencia",
+        pdfUrl: "/materiales/jefe-mod2-prevencion.pdf",
         slides: [
           {
             id: "jefe-7-1",
@@ -472,6 +495,7 @@ export const materialesEstudio: CursoMaterial[] = [
       },
       {
         nombre: "Módulo N°8: Seguridad Electrónica",
+        pdfUrl: "/materiales/jefe-mod8-seguridad-electronica.pdf",
         slides: [
           {
             id: "jefe-8-1",

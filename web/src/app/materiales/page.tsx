@@ -91,17 +91,17 @@ export default function MaterialesPage() {
               </div>
             </div>
 
-            {cursoActual.pdfUrl && (
+            {(moduloActual.pdfUrl || cursoActual.pdfUrl) && (
               <div className="rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-5 text-center">
-                <p className="text-xs font-extrabold text-cyan-400">Manual Oficial Completo (PDF)</p>
-                <p className="mt-1 text-xs text-slate-400">Descarga la guía teórica para estudio offline.</p>
+                <p className="text-xs font-extrabold text-cyan-400">Manual Oficial del Módulo (PDF)</p>
+                <p className="mt-1 text-xs text-slate-400">Descarga la guía teórica oficial para estudio offline.</p>
                 <a
-                  href={cursoActual.pdfUrl}
+                  href={moduloActual.pdfUrl || cursoActual.pdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-3 block w-full rounded-xl bg-cyan-500 py-2 text-xs font-bold text-slate-950 transition hover:bg-cyan-400"
                 >
-                  Descargar PDF Oficial
+                  Descargar PDF del Módulo
                 </a>
               </div>
             )}
@@ -120,7 +120,7 @@ export default function MaterialesPage() {
 
             <PPTSlideViewer
               slides={moduloActual.slides}
-              pdfDownloadUrl={cursoActual.pdfUrl}
+              pdfDownloadUrl={moduloActual.pdfUrl || cursoActual.pdfUrl}
             />
           </main>
         </div>
