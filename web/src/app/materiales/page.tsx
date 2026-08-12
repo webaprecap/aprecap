@@ -26,61 +26,58 @@ function MaterialesContent() {
   return (
     <>
       {/* Header Banner */}
-      <section className="bg-apre-blue text-white py-10">
+      <section className="bg-apre-blue text-white py-8">
         <div className="mx-auto max-w-7xl px-4 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-apre-red">
-              Campus Virtual · Material Interactivo
-            </span>
-            <h1 className="mt-1 text-3xl font-extrabold">Materiales de Estudio en Diapositivas (PPT)</h1>
-            <p className="mt-2 text-sm text-white/80 max-w-2xl">
-              Navega por las presentaciones interactivas de tus cursos, revisa conceptos clave con apoyo visual HD y descarga los manuales en PDF.
+            <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-apre-red border border-apre-red/30">
+              <span>📖</span> Materiales del Curso
+            </div>
+            <h1 className="mt-2 text-2xl md:text-3xl font-black">{cursoActual.title}</h1>
+            <p className="mt-1 text-xs text-white/80">
+              {cursoActual.categoria} · {cursoActual.modulos.length} Módulos interactivos en diapositivas (PPT)
             </p>
           </div>
-          <Link
-            href="/panel/alumno"
-            className="rounded-xl bg-white/10 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/20 border border-white/10"
-          >
-            ← Volver a mi Panel
-          </Link>
+          <div className="flex items-center gap-3">
+            <select
+              value={selectedCursoSlug}
+              onChange={(e) => {
+                setSelectedCursoSlug(e.target.value);
+                setSelectedModuloIdx(0);
+              }}
+              className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs font-bold text-slate-200 outline-none focus:border-cyan-500"
+            >
+              {materialesEstudio.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+
+            <Link
+              href="/panel/alumno"
+              className="rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/20 border border-white/10"
+            >
+              ← Volver a mi Panel
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Main Interactive Stage */}
-      <section className="bg-slate-900 py-10 min-h-[75vh]">
+      <section className="bg-slate-900 py-8 min-h-[75vh]">
         <div className="mx-auto max-w-7xl px-4 grid gap-8 lg:grid-cols-12">
-          {/* Sidebar Menu: Cursos & Módulos */}
+          {/* Sidebar Menu: Módulos del Curso Únicamente */}
           <aside className="lg:col-span-3 space-y-6">
             <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5 shadow-xl">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
-                1. Selecciona tu Curso
-              </h2>
-              <div className="space-y-2">
-                {materialesEstudio.map((c) => {
-                  const isActive = c.slug === selectedCursoSlug;
-                  return (
-                    <button
-                      key={c.slug}
-                      onClick={() => {
-                        setSelectedCursoSlug(c.slug);
-                        setSelectedModuloIdx(0);
-                      }}
-                      className={`w-full text-left rounded-xl p-3.5 text-xs font-bold transition flex items-center justify-between ${
-                        isActive
-                          ? "bg-apre-red text-white shadow-lg shadow-apre-red/20"
-                          : "bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800/60"
-                      }`}
-                    >
-                      <span>{c.title}</span>
-                      <span className="text-xs">→</span>
-                    </button>
-                  );
-                })}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                <h2 className="text-xs font-black uppercase tracking-wider text-cyan-400">
+                  MÓDULOS DE ESTUDIO
+                </h2>
+                <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs font-bold text-cyan-400 border border-cyan-500/20">
+                  {cursoActual.modulos.length} Módulos
+                </span>
               </div>
 
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mt-6 mb-3">
-                2. Módulos de Estudio
-              </h2>
               <div className="space-y-2">
                 {cursoActual.modulos.map((m, idx) => {
                   const isActive = idx === selectedModuloIdx;
@@ -88,14 +85,19 @@ function MaterialesContent() {
                     <button
                       key={idx}
                       onClick={() => setSelectedModuloIdx(idx)}
-                      className={`w-full text-left rounded-xl p-3 text-xs font-semibold transition ${
+                      className={`w-full text-left rounded-xl p-3 text-xs font-semibold transition flex items-center justify-between ${
                         isActive
-                          ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40"
+                          ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm"
                           : "bg-slate-900/60 text-slate-400 hover:bg-slate-800 border border-slate-800/40"
                       }`}
                     >
-                      <span className="font-bold text-slate-500 mr-2">#{idx + 1}</span>
-                      {m.nombre}
+                      <div className="flex items-center gap-2 pr-2">
+                        <span className={`font-black text-xs ${isActive ? "text-cyan-400" : "text-slate-500"}`}>
+                          #{idx + 1}
+                        </span>
+                        <span className="line-clamp-2">{m.nombre}</span>
+                      </div>
+                      <span className="text-xs text-slate-500">{isActive ? "▶" : "→"}</span>
                     </button>
                   );
                 })}
@@ -110,9 +112,9 @@ function MaterialesContent() {
                   href={moduloActual.pdfUrl || cursoActual.pdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 block w-full rounded-xl bg-cyan-500 py-2 text-xs font-bold text-slate-950 transition hover:bg-cyan-400"
+                  className="mt-3 block w-full rounded-xl bg-cyan-500 py-2.5 text-xs font-bold text-slate-950 transition hover:bg-cyan-400 shadow-md"
                 >
-                  Descargar PDF del Módulo
+                  📥 Descargar PDF del Módulo
                 </a>
               </div>
             )}
@@ -121,11 +123,11 @@ function MaterialesContent() {
           {/* Main Viewer Area */}
           <main className="lg:col-span-9 space-y-4">
             <div className="flex items-center justify-between bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <span className="text-xs font-bold text-slate-400">
-                Curso: <strong className="text-white">{cursoActual.title}</strong>
+              <span className="text-xs font-bold text-slate-300">
+                Módulo Activo: <strong className="text-cyan-400">{moduloActual.nombre}</strong>
               </span>
-              <span className="text-xs font-bold text-cyan-400">
-                {moduloActual.slides.length} Diapositivas disponibles
+              <span className="text-xs font-bold text-slate-400">
+                {moduloActual.slides.length} Diapositivas
               </span>
             </div>
 

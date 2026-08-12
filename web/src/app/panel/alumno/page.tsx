@@ -284,153 +284,72 @@ export default function PanelAlumno() {
                 </div>
               </div>
 
-              {/* CURSO 2: OPERADOR CCTV Y ALARMAS (SOLICITUD DE ACCESO ESTILO SARMAT) */}
-              <div className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
-                userData?.accesoCCTV === "aceptado"
-                  ? "border-2 border-cyan-500 bg-cyan-50/20 shadow-md"
-                  : "border-dashed border-gray-300 bg-white"
-              }`}>
+              {/* CURSO 2: OPERADOR CCTV Y ALARMAS */}
+              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="text-3xl mb-2">📹</div>
-                    {userData?.accesoCCTV === "aceptado" ? (
-                      <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">APROBADO</span>
-                    ) : userData?.accesoCCTV === "pendiente" ? (
-                      <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-bold text-white">PENDIENTE ⏳</span>
-                    ) : (
-                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-bold text-gray-700">BLOQUEADO 🔒</span>
-                    )}
+                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
                   </div>
                   <h3 className="font-extrabold text-apre-blue text-lg">Curso Operador CCTV y Alarmas</h3>
                   <p className="mt-1 text-xs text-gray-600">
-                    Capacitación en monitoreo de videovigilancia IP, cámaras PTZ y sensores de intrusión (40h).
+                    Capacitación en monitoreo de videovigilancia IP, cámaras PTZ y sensores de intrusión (3 Módulos).
                   </p>
                 </div>
 
                 <div className="mt-6">
-                  {userData?.accesoCCTV === "aceptado" ? (
-                    <Link
-                      href="/materiales?curso=operador-cctv-y-alarmas"
-                      className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white hover:bg-cyan-600"
-                    >
-                      ENTRAR AL CURSO CCTV
-                    </Link>
-                  ) : userData?.accesoCCTV === "pendiente" ? (
-                    <button
-                      disabled
-                      className="w-full rounded-xl bg-gray-200 py-3 text-center text-xs font-extrabold text-gray-500 cursor-not-allowed"
-                    >
-                      SOLICITUD PENDIENTE ⏳
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => solicitarAccesoCurso("accesoCCTV", "Operador CCTV y Alarmas")}
-                      disabled={solicitandoCurso === "accesoCCTV"}
-                      className="w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
-                    >
-                      {solicitandoCurso === "accesoCCTV" ? "ENVIANDO..." : "SOLICITAR PERMISO / ACCESO"}
-                    </button>
-                  )}
+                  <Link
+                    href="/materiales?curso=operador-cctv-y-alarmas"
+                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
+                  >
+                    ENTRAR AL CURSO CCTV
+                  </Link>
                 </div>
               </div>
 
-              {/* CURSO 3: SUPERVISOR DE SEGURIDAD (SOLICITUD DE ACCESO ESTILO SARMAT) */}
-              <div className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
-                userData?.accesoSupervisor === "aceptado"
-                  ? "border-2 border-cyan-500 bg-cyan-50/20 shadow-md"
-                  : "border-dashed border-gray-300 bg-white"
-              }`}>
+              {/* CURSO 3: SUPERVISOR DE SEGURIDAD */}
+              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="text-3xl mb-2">⭐</div>
-                    {userData?.accesoSupervisor === "aceptado" ? (
-                      <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">APROBADO</span>
-                    ) : userData?.accesoSupervisor === "pendiente" ? (
-                      <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-bold text-white">PENDIENTE ⏳</span>
-                    ) : (
-                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-bold text-gray-700">BLOQUEADO 🔒</span>
-                    )}
+                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
                   </div>
                   <h3 className="font-extrabold text-apre-blue text-lg">Curso Supervisor de Seguridad</h3>
                   <p className="mt-1 text-xs text-gray-600">
-                    Liderazgo operativo, supervisión de guardias, estudios de seguridad y gestión de crisis (140h).
+                    Liderazgo operativo, supervisión de guardias, estudios de seguridad y gestión de crisis (5 Módulos).
                   </p>
                 </div>
 
                 <div className="mt-6">
-                  {userData?.accesoSupervisor === "aceptado" ? (
-                    <Link
-                      href="/materiales?curso=supervisor-de-seguridad"
-                      className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white hover:bg-cyan-600"
-                    >
-                      ENTRAR AL CURSO SUPERVISOR
-                    </Link>
-                  ) : userData?.accesoSupervisor === "pendiente" ? (
-                    <button
-                      disabled
-                      className="w-full rounded-xl bg-gray-200 py-3 text-center text-xs font-extrabold text-gray-500 cursor-not-allowed"
-                    >
-                      SOLICITUD PENDIENTE ⏳
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => solicitarAccesoCurso("accesoSupervisor", "Supervisor de Seguridad")}
-                      disabled={solicitandoCurso === "accesoSupervisor"}
-                      className="w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
-                    >
-                      {solicitandoCurso === "accesoSupervisor" ? "ENVIANDO..." : "SOLICITAR PERMISO / ACCESO"}
-                    </button>
-                  )}
+                  <Link
+                    href="/materiales?curso=supervisor-de-seguridad"
+                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
+                  >
+                    ENTRAR AL CURSO SUPERVISOR
+                  </Link>
                 </div>
               </div>
 
-              {/* CURSO 4: JEFE DE SEGURIDAD PRIVADA (SOLICITUD DE ACCESO ESTILO SARMAT) */}
-              <div className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
-                userData?.accesoJefe === "aceptado"
-                  ? "border-2 border-cyan-500 bg-cyan-50/20 shadow-md"
-                  : "border-dashed border-gray-300 bg-white"
-              }`}>
+              {/* CURSO 4: JEFE DE SEGURIDAD PRIVADA */}
+              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="text-3xl mb-2">👔</div>
-                    {userData?.accesoJefe === "aceptado" ? (
-                      <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">APROBADO</span>
-                    ) : userData?.accesoJefe === "pendiente" ? (
-                      <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-bold text-white">PENDIENTE ⏳</span>
-                    ) : (
-                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-bold text-gray-700">BLOQUEADO 🔒</span>
-                    )}
+                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
                   </div>
                   <h3 className="font-extrabold text-apre-blue text-lg">Curso Jefe de Seguridad Privada</h3>
                   <p className="mt-1 text-xs text-gray-600">
-                    Dirección estratégica de sistemas de seguridad, ciberseguridad y planificación (420h).
+                    Dirección estratégica de sistemas de seguridad, ciberseguridad y planificación (8 Módulos).
                   </p>
                 </div>
 
                 <div className="mt-6">
-                  {userData?.accesoJefe === "aceptado" ? (
-                    <Link
-                      href="/materiales?curso=jefe-de-seguridad-privada"
-                      className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white hover:bg-cyan-600"
-                    >
-                      ENTRAR AL CURSO JEFE
-                    </Link>
-                  ) : userData?.accesoJefe === "pendiente" ? (
-                    <button
-                      disabled
-                      className="w-full rounded-xl bg-gray-200 py-3 text-center text-xs font-extrabold text-gray-500 cursor-not-allowed"
-                    >
-                      SOLICITUD PENDIENTE ⏳
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => solicitarAccesoCurso("accesoJefe", "Jefe de Seguridad Privada")}
-                      disabled={solicitandoCurso === "accesoJefe"}
-                      className="w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
-                    >
-                      {solicitandoCurso === "accesoJefe" ? "ENVIANDO..." : "SOLICITAR PERMISO / ACCESO"}
-                    </button>
-                  )}
+                  <Link
+                    href="/materiales?curso=jefe-de-seguridad-privada"
+                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
+                  >
+                    ENTRAR AL CURSO JEFE
+                  </Link>
                 </div>
               </div>
             </div>
