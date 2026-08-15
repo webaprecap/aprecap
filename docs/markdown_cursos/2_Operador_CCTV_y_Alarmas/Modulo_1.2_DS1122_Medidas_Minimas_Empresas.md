@@ -1,28 +1,45 @@
-# Submódulo 1.2: Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas (DL 3607)
+# Submódulo 1.2: Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas
 
-## 1. Disposiciones sobre Vigilantes Privados y Alarmas de Asalto (Artículos 5° al 8°)
+## 1. Alcance del decreto
 
-* **Artículo 5° (Vestimenta):** En los locales en que se atienda público y exista más de un vigilante privado, uno de ellos, a lo menos, deberá vestir de civil. En los locales en que haya un solo vigilante, éste deberá vestir de uniforme.
-* **Aprobación Previa:** Para abrir nuevas oficinas, agencias, sucursales o instalar nuevos cajeros automáticos, es imprescindible contar previamente con la aprobación del Estudio de Seguridad por parte de la Autoridad Fiscalizadora.
-* **Artículo 7° (Alarma de Asalto):** Las entidades deberán tener un dispositivo de alarma de asalto, independiente de las alarmas de incendio, robo u otras.
-* **Artículo 8° (Conexión):** Las alarmas de asalto deberán estar conectadas directamente con la Central de Comunicaciones de Carabineros o de la Policía de Investigaciones, permitiendo su activación desde distintos puntos dentro del recinto y de manera remota.
+El Decreto Supremo N° 1122 (relacionado con el DL 3.607) establece las medidas mínimas de seguridad que deben cumplir las empresas y entidades que cuentan con sistemas de vigilancia y alarmas. Su objetivo es estandarizar condiciones que permitan prevenir delitos y garantizar una respuesta eficaz de los organismos policiales.
 
----
+## 2. Vigilantes privados y dispositivos de alarma
 
-## 2. Tarifas y Régimen de Falsas Alarmas (Artículos 10° a 12°)
+- **Uniformes:** en recintos con más de un vigilante privado, al menos uno debe vestir de civil. Si hay un solo vigilante, vestirá de uniforme.
+- **Dispositivo de alarma de asalto:** debe ser independiente de las alarmas de incendio o robo, con conexión directa con la Central de Comunicaciones de Carabineros o de la PDI, y debe permitir activación remota o manual.
+- **Cajeros de alto riesgo:** deben contar con sensores de movimiento, calor, humo, corte de energía, desnivel y traslado.
 
-* **Artículo 10° (Valores por Conexión):**
-  * Conexión inicial y reconexión: 2,0 U.T.M.
-  * Renta mensual: 0,5 U.T.M.
-  * Falsas alarmas: 1,5 U.T.M. cada una.
-* **Artículo 11° (Procedimiento ante Falsas Alarmas):** Cuando una oficina o sucursal origine más de cuatro falsas alarmas dentro de un mismo mes, la Autoridad Fiscalizadora notificará para que en el plazo de un mes (prorrogable por una vez) subsane las deficiencias humanas o técnicas.
-* **Artículo 12° (Desconexión):** En caso de no subsanar las deficiencias o reincidir en más de cuatro falsas alarmas en un mes, se dispondrá la desconexión del sistema y se cursará el denuncio al Juzgado de Policía Local.
+## 3. Régimen de tarifas y falsas alarmas (Artículos 10° a 12°)
 
----
+### Costos de conexión y servicio
 
-## 3. Cámaras y Grabaciones de Alta Resolución (Artículo 17°)
+- Conexión inicial o reconexión: **2,0 U.T.M.**
+- Renta mensual: **0,5 U.T.M.**
+- Falsa alarma: **1,5 U.T.M.** por cada una.
 
-* **Cámaras HD:** Las sucursales deberán tener sistemas de filmación de alta resolución que permitan la grabación de imágenes nítidas en caso de asalto.
-* **Entidades de Alto Riesgo:** Deberán incluir la digitalización e impresión en pantalla de la hora, día, mes y año.
-* **Horario de Operación:** Deberán permanecer en funcionamiento continuo en el lapso que medie entre 15 minutos antes del inicio de la atención de público y 60 minutos después del cierre.
-* **Resguardo Físico:** Las cámaras y equipos deberán estar instalados ocultos o debidamente resguardados de posible intrusión.
+### Saneamiento de deficiencias
+
+- Al registrar más de 4 falsas alarmas en un mismo mes, la autoridad notifica a la empresa para subsanar las fallas en un plazo de 30 días (prorrogable por una vez).
+
+### Desconexión del sistema
+
+- Si no se subsanan las fallas o se reincide, se dispone la desconexión del sistema y se cursa denuncio al Juzgado de Policía Local.
+
+## 4. Cámaras y grabaciones de alta resolución (Artículo 17°)
+
+- Obligatoriedad de filmación en alta definición (HD) para capturar imágenes nítidas de asaltos.
+- En entidades de alto riesgo: digitalización de hora, día, mes y año en las grabaciones.
+- Funcionamiento continuo: desde 15 minutos antes hasta 60 minutos después del horario de atención de público.
+
+## 5. Relevancia para el operador de CCTV
+
+- Las medidas mínimas definen los estándares que el operador debe conocer y verificar en su instalación: tipos de alarmas, sensores y condiciones de grabación.
+- El régimen de falsas alarmas obliga a operar con cuidado: cada verificación oportuna evita multas para la empresa y mantiene la credibilidad del sistema ante Carabineros.
+- La exigencia de filmación HD y digitalización de fecha y hora refuerza el valor probatorio de las imágenes y la responsabilidad del operador sobre la calidad del registro.
+
+## 6. Procedimientos recomendados
+
+- Verificar al inicio de cada turno que las cámaras graben con fecha y hora correctas y que los sensores estén operativos.
+- Registrar toda activación de alarma y su resultado en el libro de novedades.
+- Ante fallas técnicas, informar de inmediato a la jefatura para subsanarlas dentro de los plazos establecidos.

@@ -30,7 +30,7 @@ function MaterialesContent() {
     ? moduloActual.subModulos![selectedSubModuloIdx] || moduloActual.subModulos![0]
     : null;
 
-  const slidesActuales = subModuloActual ? subModuloActual.slides : (moduloActual.slides || []);
+  const slidesActuales = (subModuloActual ? subModuloActual.slides : moduloActual.slides) || [];
   const pdfDownloadUrl = subModuloActual?.pdfUrl || moduloActual.pdfUrl || cursoActual.pdfUrl;
   const tituloActivo = subModuloActual ? `${subModuloActual.codigo} ${subModuloActual.nombre}` : moduloActual.nombre;
 

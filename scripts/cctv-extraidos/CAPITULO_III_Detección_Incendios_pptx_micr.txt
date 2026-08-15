@@ -1,0 +1,548 @@
+﻿=== DIAPOSITIVA 1 ===
+Detección  de Incendios 
+Capítulo III 
+=== DIAPOSITIVA 2 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ INCENDIO 
+LA PROTECCIÓN DE ANTAÑO,...  ¡ HOY  PRODUCE  PAVOR !¡El fuego!  Las primeras civilizaciones vivían bajo su protección, pero desde que el hombre dejó de ser cazador para hacerse sedentario, comenzó a acumular reservas.    Desde entonces, el fuego dejó de ser sólo una protección eficaz, para transformarse también en un fenómeno terriblemente destructor. Hoy por tanto, es necesario servirse como protegerse de él.Y si eso ocurre hoy día, cuando los bienes aumentan su importancia, los riesgos y los peligros siguen la misma tendencia, y es preciso protegerse.
+=== DIAPOSITIVA 3 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+CONCEPTO  DE  FUEGOEs una reacción química de oxido-reducción de carácter exotérmico.Si esta reacción alcanza una determinada velocidad se produce el fuego y, si ese fuego se descontrola, se genera un incendio.
+=== DIAPOSITIVA 4 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Para que se produzca un fuego son necesarios los siguientes factores: combustible, oxígeno y calor.  Estos tres factores forman el denominado “triángulo del fuego”. La eliminación de cualquiera de ellos determina la desaparición del fuego.
+FACTORES  DEL  FUEGO
+=== DIAPOSITIVA 5 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+COMBUSTIBLE: Es la materia que arde. De su naturaleza y la forma de presentarse va a depender el tipo de fuego y la velocidad de propagación.
+OXIGENO: El oxígeno es el comburente por excelencia. El comburente se denomina también agente oxidante. Se encuentra en el aire en la proporción del 21 % en volumen. Si la proporción es inferior al 15%, la combustión se extingue. 
+CALOR: Es la energía de activación. Las fuentes de incendio más comunes pueden ser: cigarrillos, fuegos mal apagados, chispas, fallas eléctricas, etc.
+=== DIAPOSITIVA 6 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Según la NFPA (National Fire Protection Association), los incendios provocados son la principal causa de daños a la propiedad.Según NFPA,... En las construcciones que concentra público o habitacionales de envergadura, se debe considerar sistemas de detección y alarmas, capaces de reducir las pérdidas cuando la prevención falla (sprinklers).
+GENERALIDADES
+=== DIAPOSITIVA 7 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Es imprescindible contar con un sistema detector de incendios fiable, de alerta temprana y que cubra todo el edificio.Es fundamental seleccionar los detectores adecuados y, su ubicación será determinante para su eficacia.Analizar en detalle las especificaciones del edificio, para diseñar un eficaz sistema de protección de incendios.
+=== DIAPOSITIVA 8 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+SE  DEBE  CONSIDERAR :Las características y el comportamiento de aquellos incendios previsibles.Los materiales y planos del edificio; El destino del edificio;Su contenido; Las capacidades y limitaciones del material de lucha contra incendios en relación con la detección, alarma y control.
+=== DIAPOSITIVA 9 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Los detectores de fuego son la primera línea de defensa en caso de incendio.   Según la norma NFPA-72E, los detectores automáticos de fuego  están “diseñados para detectar la presencia de fuego e iniciar la acción”, pudiendo “iniciar una acción de emergencia en conjunto con otros equipos de protección de incendio, tales como sistemas de alarma, extinción y control”.
+=== DIAPOSITIVA 10 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+   Un sistema de incendios integrado con detectores automáticos de fuego dispuestos para activar los sistemas de alarma y de extinción ayudará a acelerar el proceso de extinción y evacuación.
+=== DIAPOSITIVA 11 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Dependiendo del combustible, el foco de origen y las condiciones ambientales, un fuego puede ser de combustión rápida o lenta, con llama o humo.Un fuego puede iniciarse por llamas, falla eléctrica, vapores e incluso calor intenso por período prolongado de tiempo.
+IMPORTANTE
+=== DIAPOSITIVA 12 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Los detectores automáticos de fuego están diseñados para generar alarmas tempranas. Los detectores deben ser aprobados por las normas UL(Son normas norteamericanas de calidad, que indican los requisitos técnicos que deben tener los materiales, componentes, productos y sistemas).  
+=== DIAPOSITIVA 13 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+Para anticipar eficazmente los tipos de fuego que sucederán en un edificio,  se debe determinar si el primer subproducto de una sustancia inflamable será humo, calor, llama o gas.Conociendo esta información será posible seleccionar los detectores más apropiados para un recinto.
+=== DIAPOSITIVA 14 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO
+TIPOS  DE  DETECTORESSe clasifican de acuerdo a la capacidad para apreciar las características específicas de ciertos fuegos.Los tipos de detectores son: de humo, llama, gas, calor, ductos de aire y combinación especial.   Los detectores automáticos de incendio son los más utilizados en edificios comerciales, industriales e institucionales. En viviendas son los de humo y calor. Los de llama y gas suelen emplearse en ambientes con riesgo de explosión.
+HUMO
+CALOR
+=== DIAPOSITIVA 15 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO 
+GENERALIDADESLos detectores de humo detectan las partículas visibles e invisibles producidas por un fuego y suspendidas en el aire.  La detección óptica o fotoeléctrica  y la radiactiva o de ionización, son las dos tecnologías más importantes utilizadas para detectar humos.  La diferencia entre ambas tecnologías está en el principio de funcionamiento.  
+=== DIAPOSITIVA 16 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO
+LUGAR  PARA  SU  INSTALACION
+=== DIAPOSITIVA 17 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIO
+Los detectores fotoeléctricos responden mejor a las partículas de humo procedentes de fuegos  sin  llama.Los de ionización son más apropiados para el humo de fuegos  con  llama.
+APLICACIONES
+=== DIAPOSITIVA 18 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+
+Tipo de detectores        de humo : 
+
+IONICOS 
+Y 
+FOTOELECTRICOS 
+=== DIAPOSITIVA 19 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Principio de funcionamientoConstan de una cámara de ionización, que consiste en dos placas eléctricamente cargadas y una fuente radiactiva (Americio Am-241 para ionizar el aire entre dichas placas).
+TIPOS  DE  DETECTORES  DE  HUMO 
+DETECTORES  IONICOS
+=== DIAPOSITIVA 20 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Las partículas de humo son mucho más grandes que las moléculas de aire ionizadas. A medida que las partículas de la combustión entran en la cámara de ionización, las moléculas de aire ionizadas chocan y se combinan con ellas.
+IÓNICOS
+=== DIAPOSITIVA 21 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Algunas partículas quedan positivamente cargadas y otras en forma negativa. Las partículas de combustión, relativamente grandes continúan combinándose con muchos otros iones, convirtiéndose en definitiva en un centro de recombinación, reduciéndose considerablemente el número de partículas ionizadas en la cámara. 
+IÓNICOS
+=== DIAPOSITIVA 22 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+IÓNICOS
+La reducción de las partículas ionizadas produce una disminución en la corriente de la cámara que es detectada por los circuitos electrónicos que la supervisan, generándose una condición de alarma.
+CONDICION  DE  ALARMA
+=== DIAPOSITIVA 23 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+IÓNICOS
+Es recomendable instalar detectores iónicos para partículas de combustión invisibles, inferiores a una micra, presentes en casi todos los fuegos con llama.La eficacia de los detectores iónicos para detectar fuegos, decrece al aumentar el tamaño de las partículas de combustión.  Los detectores iónicos suelen emplearse en lugares que se almacena grasa, gas, químicos o papel, productos de alta y rápida inflamabilidad.
+=== DIAPOSITIVA 24 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Los cambios en la humedad y presión atmosférica podrían afectar la corriente de la cámara y crear un efecto similar al de las partículas de combustión que entran en la cámara sensible. Para neutralizar este efecto se desarrolló la doble cámara de ionización.
+IONICOS
+=== DIAPOSITIVA 25 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+IONICOS 
+El detector de doble cámara de ionización utiliza dos cámaras de ionización :CAMARA  SENSIBLE  yCAMARA DE REFERENCIA
+Cámara sensible
+Is
+Ir
+Cámara referencia
+=== DIAPOSITIVA 26 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+IONICOS 
+CAMARA  SENSIBLEAbierta al aire externo. Es afectada por el material presente en partículas fumígenas, humedad y presión atmosférica.
+=== DIAPOSITIVA 27 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Parcialmente cerrada al aire externo y afectada solamente por la humedad y presión atmosférica, debido a  que sus aberturas diminutas bloquean efectivamente la entrada de partículas más grandes, como las de humo.    Ambas cámaras son supervisadas por un circuíto electrónico que compara ambas corrientes. Si cambia la humedad o la presión atmosférica, los ambientes de ambas cámaras son afectadas igualmente y se anulan entre sí.
+IONICOS
+CAMARA  DE  REFERENCIA
+=== DIAPOSITIVA 28 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Al entrar las partículas de combustión en la cámara sensible, disminuye su corriente, mientras que la corriente de la cámara de referencia permanece virtualmente inalterada. Este desequilibrio de las corrientes de las cámaras sensible y de referencia, es detectado por el circuito supervisor electrónico, generándose una alarma.
+IONICOS
+CONDICION  DE  ALARMA
+Is
+Ir
+=== DIAPOSITIVA 29 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+VULNERABILIDADESEstos detectores son afectados por el polvo, humead excesiva (condensación), importantes corrientes de aire, insectos diminutos, vapores, gases de soldadura eléctrica, algunas sustancias de alta volatilidad.
+IONICOS
+=== DIAPOSITIVA 30 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+EFICACIAEstos detectores “huelen” el humo. Proporcionan una detección temprana de incendio en base al olor inicial de la combustión, sin necesidad que el humo aún sea visible.   Por esta característica, su uso es adecuado para la detección de incendios de rápido desarrollo que se caracterizan por partículas de combustión de tamaños 0,01 a 0,3 micras.
+IONICOS
+=== DIAPOSITIVA 31 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Principio de funcionamientoEl humo afecta la intensidad de un haz de luz. El humo puede bloquear u obscurecer el haz de luz. Puede dispersar el haz de luz debido a la reflexión, refracción y difracción, desde las partículas de humo. Los detectores fotoeléctricos de humo están diseñados para detectar al humo utilizando estos efectos del humo sobre la luz.
+FOTOELECTRICOS  
+DETECTORES  FOTOELECTRICOS
+=== DIAPOSITIVA 32 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+FOTOELECTRICOS  
+a.-) Por obscurecimiento del haz de luz Emplea una fuente de luz y un dispositivo receptor fotosensible.  
+HAY  DOS  TIPOS :
+=== DIAPOSITIVA 33 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+FOTOELECTRICOS  
+Cuando las partículas de humo bloquean parcialmente el haz de luz, se reduce la luz que llega al dispositivo fotosensible produciéndose variaciones eléctricas en el circuito electrónico de control, lo que al sobrepasar cierto nivel o umbral origina la alarma.
+=== DIAPOSITIVA 34 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+FOTOELECTRICOS 
+	
+b.-) Por difusión de la luzLa mayoría de los detectores fotoeléctricos de humo operan sobre este principio (reflexión, refracción, difracción).   Un dispositivo emisor de luz (led) está dirigido hacia un área que no es “observada” por un elemento fotosensible o fotodiodo.    Cuando las partículas de humo entran en la trayectoria de la luz, esta incide sobre esas partículas y es reflejada o refractada sobre el fotodiodo activando el detector. 
+=== DIAPOSITIVA 35 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS 
+VulnerabilidadesLa luz procedente de la fuente puede ser reflejada por las paredes de la cámara sensible y ser observada por el dispositivo fotosensible cuando no hay humo; la entrada de insectos, suciedad, polvo y otras formas de contaminación hacia la cámara sensible pueden reflejar la luz procedente de la fuente sobre el dispositivo fotosensible. 
+=== DIAPOSITIVA 36 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS 
+EficaciaEste tipo de detectores “ven” el humo.   Son apropiados para detectar incendios de combustión lenta que se caracterizan por partículas de tamaño 0,3 a 10 micras. 
+=== DIAPOSITIVA 37 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS 
+Los detectores fotoelectrónicos de refraccion de luz son ideales para fuegos que afecten a tejidos, acrílicos, madera, sofás, espuma y otros productos que emiten grandes cantidades de humo antes que las llamas aparezcan.  Estos detectores se recomiendan para oficinas y viviendas, lugares en los que los fuegos son de combustión lenta y sin llama.
+=== DIAPOSITIVA 38 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS  DE  HAZ  PROYECTADO
+FOTOELECTRICOS  DE  HAZ  PROYECTADO
+Operan también bajo el principio de Obscurecimiento de haz de luz. Responden a las partículas de combustión visibles e invisibles. El precio por unidad, es superior al de los detectores fotoeléctricos de dispersión de luz y a los de ionización.
+=== DIAPOSITIVA 39 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS  DE  HAZ  PROYECTADO
+Estos detectores generan un gran haz de luz a través  de un área despejada, donde son muy adecuados.Es ideal para áreas obscuras por la escasa luminosidad de transfondo, que contraste con el haz de luz.Su capacidad de detección, en espacios abiertos, alcanza los 100 ó más metros. 
+=== DIAPOSITIVA 40 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS  DE  HAZ  PROYECTADO
+Se recomienda colocar dos detectores de haz sobre paredes opuestas. Un detector proyecta un haz de luz sobre un fotodiodo o sensor fotosensible, el que lee el nivel del haz que recibe.   Las partículas de humo, al interponerse en el haz de luz, lo oscurecen (atenúan), con lo que el nivel de luz que llega al dispositivo fotosensible es menor, pudiendo generarse una alarma.
+EMISOR
+RECEPTOR
+=== DIAPOSITIVA 41 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ FOTOELECTRICOS  DE  HAZ  PROYECTADO
+EMISOR
+RECEPTOR
+Programación y alineamiento por medio de la señal de los LED's Provee una protección lineal de 18 mts. en el centro y de 10 mts a 100 mts. a lo largo Compensación automática por la desviación de la señal o de lente sucio Filtros de calibración para verificación de sensibilidad Etiquetas de colores en el emisor (rojo) y receptor (Azul) para facilitar reconocimiento
+CARACTERISTICAS
+=== DIAPOSITIVA 42 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ DETECCION  DE  INCENDIOS
+SISTEMA  DE  DETECCION  DE  INCENDIOS
+Panel de Control
+Iniciadores
+Anunciadores
+Fuentes de Poder
+Batería
+=== DIAPOSITIVA 43 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ 
+INICIADORES
+Detectores de  Fuego
+Palancas manuales
+Monitores de flujo
+Supervisores de válvula
+DETECCION  DE  INCENDIOS
+=== DIAPOSITIVA 44 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ DETECCION  DE  INCENDIOS
+	
+Además: Detectores de Calor,Llama, Gas, Amoniaco, y Concentraciones Explosivas
+Anunciadores remotos
+Sirenas estrobos
+Parlantes
+ANUNCIADORES
+=== DIAPOSITIVA 45 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+=== DIAPOSITIVA 46 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+Los detectores serán conectados al alambrado de la instalación, la que debería ser “supervisada eléctricamente”, de modo que se garantice la supervisión eléctrica para el dispositivo.  Al sacar un detector instalado, se abrirá el circuito, dando como resultado una condición de “problema” (trouble).Las guías para la instalación de detectores de incendio están contenidas en las normas americanas publicadas por la NFPA (National Fire Association, Quincy, Massachusetts, USA).   
+GENERALIDADES  PARA  SU INSTALACION
+=== DIAPOSITIVA 47 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+
+Según  la  NFPA
+=== DIAPOSITIVA 48 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+
+En general, de acuerdo a normas NFPA, se deben instalar detectores en todas las áreas de almacenamiento, sótanos, desvanes, espacios por encima de cielos rasos o tipo americanos, closets, shafts con cablerias, fosas de ascensores, escaleras encerradas y cualquier otra subdivisión o espacio accesible. El detector debe ser instalado, en lo posible, en el centro del cielo raso, o excepcionalmente en otros lugares.Debe considerarse las direcciones y velocidades del recorrido del fluído humo, ya que cualquiera de estos factores puede afectar el rendimiento del detector. Tal es el caso de los acondicionadores de aire, inyectores y/o extractores de aire. 
+LUGARES  DE  INSTALACION
+=== DIAPOSITIVA 49 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+=== DIAPOSITIVA 50 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+Correcto
+Incorrecto
+=== DIAPOSITIVA 51 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+DONDE  NO  INSTALAR  DETECTORES  DE HUMO 
+En áreas excesivamente sucias o polvorientas.   Debe evitarse áreas donde se utilizan fumigantes, materiales productores de niebla o compuestos para limpieza.En áreas húmedas o cerca de baños con ducha.En ambientes muy fríos o muy cálidos.Donde estén normalmente presentes partículas de combustión, tal como  cocinas u otras áreas con hornos y quemadores, en garajes, estacionamientos donde hay partículas de combustión en escapes de vehículos, en talleres de soldadura al arco.  Cuando debe ser colocado en esas áreas un detector de incendios, lo más apropiado es detectores de calor térmicos ó termovelocímetros.   
+=== DIAPOSITIVA 52 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+En lugares con corrientes de aire que desplacen el humo desde el detector.En salas de baterías u otras áreas donde puede haber cantidades considerables de vapor, gas o humo (dióxido de carbono, ozono, helio, etc.).Áreas infectadas por insectos diminutos.Cerca de lámparas fluorescentes.  El ruido eléctrico generado por los fluorescentes puede causar alarmas indeseadas.   
+DONDE  NO  INSTALAR  DETECTORES  DE HUMO 
+=== DIAPOSITIVA 53 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+ESPACIAMIENTO  NECESARIO PARA SU  INSTALACION  
+Para habitaciones con cielos rasos lisos y sin obstrucciones, en general y en forma práctica se considera que un detector protege eficazmente una superficie circular de 6,4 mts. de radio, medidas desde el detector.Entonces, entre detectores vecinos habrá una distancia de unos 12 metros.En resumen estaremos protegiendo un área ideal de 128 mts2
+=== DIAPOSITIVA 54 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+En cielos rasos irregulares o cruzados por vigas y viguetas, el espaciamiento entre detectores debe ser más reducido respecto del espaciamiento ideal.Cada compartimiento estanco separado por vigas de altura considerable, sin exceder de 45 cm. de profundidad y más de 2,5 mts. de esparcimiento, deberá ser tratado como un área  independiente que exige por lo menos un detector. 
+=== DIAPOSITIVA 55 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+INSTALACION  DE  DETECTORES  DE  HUMO
+LUCES  ESTROBOSCOPICAS
+Es un sistema luminoso que emite una serie de destellos  de alta luminosidad, con una frecuencia regulable.Se instalan estas luces como apoyo a los sistemas audibles de aviso de incendios, para las personas sordas o en ambientes que exista elevado nivel de ruido.
+=== DIAPOSITIVA 56 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+Tipo de detectores        de calor : 
+TERMICOS 
+TERMOVELOCIMETRICOS 
+y 
+=== DIAPOSITIVA 57 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+Los detectores de calor han sido específicamente diseñados para lugares en los que habitualmente hay humo o gases procedentes de la combustión o llamas. Si utilizáramos detectores de humo o llama en dichos ambientes, las falsas alarmas serían contínuas y provocarían un alto costo.    Se instalan preferentemente en cocinas, garajes, hangares de aeronaves y plantas industriales.    
+=== DIAPOSITIVA 58 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+Son detectores de calor de temperatura fija.Incorporan un interruptor térmico que activa el detector si se supera la temperatura umbral, programada previamente.
+TERMOSTATICOS  O  TERMICOS
+Detector térmico de temperatura fija con ampolla de cuarzo
+Aparato de temperatura fija de membrana bimetálica
+=== DIAPOSITIVA 59 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+Se disparan al detectar en forma rápida o lenta, una determinada temperatura que altera las características mecánicas de una placa bimetálica formada por dos láminas de metal de diferente dilatación (Cu y Fe).Al aplicar calor sobre el bimetal, el cobre (Cu) se dilata más y a mayor velocidad que el fierro (Fe), por lo tanto la lámina se curva hacia arriba haciendo contacto con el interruptor y alarmando el sistema.Este dispositivo no es confiable, por los rangos variables de temperatura en que se opera.Se utiliza esencialmente en ambientes donde habitualmente existe humo (salas de reuniones), vapores y calor (cocinas).
+=== DIAPOSITIVA 60 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+CONFIGURACION DUAL, COMPUESTA POR UN COMPONENTE TERMOSTATICO Y OTRO TERMOVELOCIMETRICO.Termostático.Estos dispositivos generan una alarma al detectar una alta temperatura, que lentamente ha alcanzado un umbral de (58°C), o en su defecto,Termovelocimétrico.Si se produce un aumento gradual de la temperatura a una velocidad de 10°C/min.Estas cifras pueden variar de acuerdo al tipo de detector termovelocímetro o al fabricante. 
+TERMOVELOCIMETRICOS
+=== DIAPOSITIVA 61 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+En forma similar a las dos cámaras del detector de humo por ionización, el detector de calor   termovelocímetro también posee dos cámaras, una interior y cerrada, de referencia donde se ubica un elemento detector de calor (termistor) y; en contacto con el ambiente, existe otro termistor que es más sensible a los cambios de temperatura.  
+TERMOVELOCIMETRICOS
+PRINCIPIO DE FUNCIONAMIENTO
+=== DIAPOSITIVA 62 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+Un cambio brusco de temperatura afectará más rápidamente al termistor exterior o ambiental (Te) que al termistor interior o de referencia (Ti), produciéndose entre ellos una diferencia de temperatura a una determinada velocidad 10°C/min, lo que produce una variación eléctrica en los dispositivos de control y  generará una alarma al sobrepasar un umbral de 58° en forma lenta (termostático) ó alcanzar un ascenso de temperatura a una velocidad de 10°C/min. a partir de los 25°C (termovelocimétrico). 
+Funcionamiento electrónico
+Te
+Ti
+TERMOVELOCIMETRICOS
+=== DIAPOSITIVA 63 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+TERMOVELOCIMETRICOS
+=== DIAPOSITIVA 64 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  CALOR
+INSTALACIONSe debe considerar los mismos parámetros que para la instalación de los detectores de humo.
+=== DIAPOSITIVA 65 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  LLAMA
+Tipo de detectores        de llama : 
+INFRARROJO 
+ULTRAVIOLETA 
+y 
+=== DIAPOSITIVA 66 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  LLAMA
+Diseñados para detectar fuego de líquidos inflamables y llamas producidas por combustión de maderas, plásticos, alcoholes, gases y derivados del petróleo.El detector tiene dos sensores piroeléctricos  y proporciona buena inmunidad contra las fuentes de interferencia tales como rayos de sol, luz artificial, calefactores, máquinas vibratorias, etc.
+CONCEPTO  Y  FUNCIONAMIENTO
+=== DIAPOSITIVA 67 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  LLAMA
+El detector tiene dos sensores piroeléctricos que son sensibles a dos diferentes longitudes de onda. El primer detector “A”, reacciona ante la actividad infrarroja de la combustión de materiales que contienen carbón, energía infrarroja que se encuentra en el rango de 4,1nm a 4,7nm.El segundo detector “B”, reacciona ante la energía infrarroja en el rango de 5nm a 6nm, emitidos por fuentes de interferencia tales como: luz solar, luz artificial y calefactores.La energía infrarroja proveniente de llamas con un parpadeo de frecuencias que oscilan entre 2hz a 20hz, es recibida en el detector “A” y como es mayor que la que pudiera existir en el detector “B”, entonces el detector de llamas se activará.
+ESTRUCTURA Y FUNCIONAMIENTO
+=== DIAPOSITIVA 68 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  LLAMA
+ESTRUCTURA Y FUNCIONAMIENTO
+DETECTORES  DE  LLAMA   IR/UV
+=== DIAPOSITIVA 69 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  LLAMA
+InstalaciónLa detección depende del ángulo o campo de visión.
+La distancia, depende de las características del detector indicadas por el fabricante en el catálogo.
+=== DIAPOSITIVA 70 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+ROCIADORES  DE  AGUA
+SPRINKLER 
+Rociadores     de  agua : 
+=== DIAPOSITIVA 71 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+SPRINKLERS  O  ROCIADORES  DE  AGUA
+Son elementos de Extinción Automática de Incendios. Se instalan en los cielos rasos, son conectados a una red de agua especial, con cañerías de alta resistencia a la presión.Están sometidos a una presión de agua que oscila entre 70 y 120 libras ó 170 a 220 PSI. Se activan al detectar una temperatura de 74°C.   La activación permite liberar el agua contenida en la cañería y rociar un área aproximada de 4 mts2 desde una altura de 3 metros.  
+CONCEPTO  Y  FUNCIONAMIENTO
+=== DIAPOSITIVA 72 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+SPRINKLERS  O  ROCIADORES  DE  AGUA
+Por estética, para ocultar su mecanismo rociador el sprinkler lleva una tapa metálica que se desprende al fundirse la soldadura de fijación a los 57°C.Los Sprinklers configuran una red unida por cañería con agua inmóvil y a presión. Al activarse un sprinkler y expulsar agua a presión, se produce un flujo del agua que activa válvulas de flujo que accionan bombas de agua que inyectan líquido a las cañerías, hasta restablecer el nivel de la presión  adecuada.
+FUNCIONAMIENTO
+=== DIAPOSITIVA 73 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+SPRINKLERS  O  ROCIADORES  DE  AGUA
+La red de sprinklers está supervisada por éstas válvulas de flujo que aparte de indicar emergencia, por existir movimiento el agua, señala a la central de incendio el sector activado.VÁLVULAS  DE  FLUJO.Accesorio que se utiliza para regular y controlar el fluido de una tubería. Este proceso puede ser desde cero (válvula totalmente cerrada), hasta de flujo (válvula totalmente abierta), y pasa por todas las posiciones intermedias, entre estos dos extremos.
+FUNCIONAMIENTO
+=== DIAPOSITIVA 74 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+Detectores  de Gas : 
+*Gas natural 
+*Gas licuado 
+*Monóxido de   Carbono 
+=== DIAPOSITIVA 75 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+Precauciones ante filtraciones de gas
+No fumar.  No usar llama  viva de encendedores.No colocar el interruptor de luz en posición diferente a la que tiene (ON u OFF).Cortar el suministro de gas.Abrir puertas y ventanas para que escape el gas.   
+=== DIAPOSITIVA 76 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+PRECAUCIONES  ANTE  FILTRACIONES  DE  GAS
+No fumar.  No usar llama  viva de encendedores.No colocar el interruptor de luz en posición diferente a la que tiene (ON u OFF).Cortar el suministro de gas.Abrir puertas y ventanas para que escape el gas.   
+=== DIAPOSITIVA 77 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+PRECAUCIONES PARA NO PRODUCIR FALSAS ALARMAS
+No utilizar spray aerosoles cerca del detector.No usar alcoholes.No fumar cerca.No utilizar solventes para su limpieza
+=== DIAPOSITIVA 78 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+Funcionamiento 
+Rangos  de  detecciónEl 100% es considerado el límite superior de explosión.   Sin embargo, la mayoría de estos detectores comienzan a generar alarmas entre el 5 y el 20%.   Detectan emanaciones de gas licuado y de cañería (o de ciudad o gas natural).
+Luz verde encendida, significa que está energizado eléctricamente.Luz roja encendida, significa que ha detectado escape de gas y produce una alarma sonora por 45 segundos.
+=== DIAPOSITIVA 79 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+	
+Este gas es más liviano que el aire.El detector debe instalarse entre 10 y 20 cm desde el cielo y entre 1 a 2 metros, desde la fuente que producirá la emanación.
+GAS  NATURAL
+=== DIAPOSITIVA 80 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+GAS  LICUADO
+Este tipo de gas es más pesado que el aire; se acumula a nivel del suelo. El detector deberá instalarse en la pared entre 10 y 20 cm desde el piso y a una distancia de 1 a 2 metros de la fuente que generará el gas, ante posibles escapes.
+=== DIAPOSITIVA 81 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECTORES  DE  GAS
+LUGARES  DONDE  NO INSTALAR ESTOS DETECTORES 
+Fuera del edificio.En un recinto cerrado.Detrás de cortinajes.Directamente sobre redes de gas.Sobre marmitas.Cerca de ventanas o puertas.Cerca de un extractor de aire.En un área donde la temperatura baje de  los –5°C ó suba sobre 40°C.Donde la suciedad o polvo puedan bloquear el detector.Donde pueda golpearse o dañarse.
+=== DIAPOSITIVA 82 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIOS
+    Consideraciones para          la instalación de     detectores de incendio 
+=== DIAPOSITIVA 83 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIOS
+Anticipe y conozca el tipo de incendio más probable que pueda tener lugar. Conozca el edificio, su construcción, uso y contenido.Estudie los planos del edificio para completar su información sobre los métodos de construcción y los detalles incorporados al mismo.Considere el tamaño y forma de cada espacio, la altura y tipo de cielos, localización de tabiques, luces, equipos, ductos de ventilación y aire acondicionado, etc.   
+=== DIAPOSITIVA 84 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIOS
+Utilice como referencia inicial las normas de incendio NFPA, hágalas más exhaustivas para responder a las particularidades de cada área.   En lo posible, preservar la estética del edificio especificando detectores que se integren  con su arquitectura. La seguridad de las personas está primero.Considerar la maquinaria que se utilizará dentro del edificio, cual es el margen de temperaturas que generan, si el edificio dispone de sistema de calefacción central, o equipos de calefacción portátiles.  
+=== DIAPOSITIVA 85 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIOS
+Establecer contratos de limpieza y mantención de detectores.  Al seleccionar una marca y modelo de sistemas de detección, asegúrese que dispondrá de asistencia técnica y repuestos a largo plazo.Saber cual será la respuesta más adecuada para una alarma y considerar las órdenes de evacuación.
+=== DIAPOSITIVA 86 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+DETECCION  DE  INCENDIOS
+Tener en cuenta las medidas de control a aplicar en caso de incendio, tales como, control de ascensores, cierre del sistema de ventilación, de aire acondicionado y presurización de cajas de escalas.Revisar y comentar todos estos factores con especialistas en detección de fuegos y gerencias responsables del tema seguridad en los edificios.
+=== DIAPOSITIVA 87 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+COMPONENTES  DE  UN  SISTEMA DE  DETECCION DE  INCENDIOS
+=== DIAPOSITIVA 88 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+PROYECTO  INSTALACION    DETECTORES  DE  INCENDIO
+=== DIAPOSITIVA 89 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+PROYECTO  INSTALACION    DETECTORES  DE  INCENDIO
+=== DIAPOSITIVA 90 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+PROYECTO  INSTALACION  
+=== DIAPOSITIVA 91 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+PROYECTO  INSTALACION 
+=== DIAPOSITIVA 92 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+PROYECTO  INSTALACION
+=== DIAPOSITIVA 93 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  III  “DETECCION DE INCENDIO”
+PROYECTO  INSTALACION 
+=== DIAPOSITIVA 94 ===
+Detección  de Incendios 
+FIN 
+Capítulo III 

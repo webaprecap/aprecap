@@ -2,115 +2,185 @@
 
 ---
 
-## 📋 Índice del Módulo 1
+## Contexto del curso
 
-1. [Submódulo 1.1: Definición de Operador de CCTV y Decreto Supremo N° 41](#submódulo-11-definición-de-operador-de-cctv-y-decreto-supremo-n-41)
-2. [Submódulo 1.2: Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas (DL 3607)](#submódulo-12-decreto-supremo-n-1122--medidas-mínimas-de-seguridad-para-empresas-dl-3607)
-3. [Submódulo 1.3: Decreto Supremo N° 1814 — Regulación en Transporte de Valores y Bóvedas](#submódulo-13-decreto-supremo-n-1814--regulación-en-transporte-de-valores-y-bóvedas)
-4. [Submódulo 1.4: Decreto Supremo N° 222 — Seguridad en Cajeros Automáticos y Dispensadores de Dinero](#submódulo-14-decreto-supremo-n-222--seguridad-en-cajeros-automáticos-y-dispensadores-de-dinero)
-5. [Submódulo 1.5: Ley N° 19.327 — Videovigilancia y Seguridad en Espectáculos de Fútbol Profesional](#submódulo-15-ley-n-19327--videovigilancia-y-seguridad-en-espectáculos-de-fútbol-profesional)
-6. [Submódulo 1.6: Actividades Prácticas, Evaluación del Módulo y Resumen Ejecutivo](#submódulo-16-actividades-prácticas-evaluación-del-módulo-y-resumen-ejecutivo)
+El curso de Operador de CCTV y Alarmas tiene una duración de 40 horas y está organizado en tres módulos de estudio: fundamentos legales, sistemas electrónicos de seguridad privada y televigilancia con operación de centro de control. Su propósito es formar al operador que controla, a través de sistemas de circuito cerrado de televisión y alarmas, la seguridad de una instalación, siempre dentro del marco legal vigente en Chile.
 
 ---
 
-## Submódulo 1.1: Definición de Operador de CCTV y Decreto Supremo N° 41
+## Submódulo 1.1: Definición del Operador de CCTV y Decreto Supremo N° 41
 
-### 1. Definición Legal del Operador de CCTV (Decreto 261)
-Es la persona encargada de controlar, a través de un sistema de circuito cerrado de televisión o alarma, la seguridad de una instalación determinada. Su objetivo principal es:
-* Detectar oportunamente riesgos y amenazas.
-* Efectuar comunicaciones y coordinaciones internas y con la autoridad policial (Carabineros / PDI).
-* Neutralizar o mitigar amenazas a la seguridad de las personas y bienes.
+### 1. Definición legal del Operador de CCTV
+
+El operador de CCTV y alarmas es la persona encargada de controlar, a través de un sistema de circuito cerrado de televisión o de alarmas, la seguridad de una instalación determinada. Sus responsabilidades clave son:
+
+- **Detección oportuna:** identificar riesgos y amenazas a la seguridad en forma temprana.
+- **Coordinación:** efectuar comunicaciones y coordinaciones internas y con la autoridad policial (Carabineros de Chile o Policía de Investigaciones).
+- **Neutralización:** procurar neutralizar o mitigar la amenaza resguardando la integridad de las personas y los bienes.
+
+El operador debe además manejar con confidencialidad los datos e imágenes que obtiene en el ejercicio de sus funciones, respetando la normativa de protección de datos personales.
 
 ### 2. Conexión a Centrales de Comunicaciones de Carabineros (Decreto Supremo N° 41)
-* **Autorización:** Faculta a prestadores de servicios técnicos de seguridad privada a conectar sus alarmas/centrales directamente a las Centrales de Comunicaciones de Carabineros (CENCO).
-* **Formatos de Información:** Transmisión vía canales de voz, audio, imagen o tecnología digital, satelital o radial.
-* **Costos:** Financiamiento exclusivo a cargo del usuario o entidad interesada.
-* **Tarifas y Multas:**
-  * Renta mensual por cada 100 usuarios (o fracción): 3 U.F.
-  * Cobro por cada Falsa Alarma: 0,5 U.F. (Ingresados al Fondo Rotativo de Abastecimiento de Carabineros).
+
+- **Autorización:** el decreto faculta a los prestadores de servicios técnicos de seguridad privada a conectar sus alarmas y centrales directamente a la Central de Comunicaciones de Carabineros (CENCO).
+- **Formatos de información:** la transmisión puede realizarse por canales de voz, audio, imagen o tecnología digital, satelital o radial.
+- **Costos:** el financiamiento de la conexión es de cargo exclusivo del usuario o entidad interesada.
+- **Tarifas y multas:**
+  - Renta mensual por cada 100 usuarios o fracción: **3 U.F.**
+  - Cobro por cada falsa alarma: **0,5 U.F.**, ingresados al Fondo Rotativo de Abastecimiento de Carabineros.
+
+Esta conexión directa permite una respuesta policial más rápida, pero impone a la empresa y al operador la obligación de mantener sistemas confiables para evitar falsas alarmas.
 
 ---
 
-## Submódulo 1.2: Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas (DL 3607)
+## Submódulo 1.2: Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas
 
-### 1. Vigilantes Privados y Dispositivos de Alarma
-* **Uniformes:** En recintos con más de un vigilante privado, al menos uno debe vestir de civil. Si hay un solo vigilante, vestirá de uniforme.
-* **Dispositivo de Alarma de Asalto:** Independiente de las alarmas de incendio o robo. Conexión directa con la Central de Comunicaciones de Carabineros o PDI, permitiendo activación remota o manual.
-* **Cajeros de Alto Riesgo:** Deben contar con sensores de movimiento, calor, humo, corte de energía, desnivel y traslado.
+### 1. Vigilantes privados y dispositivos de alarma
 
-### 2. Régimen de Tarifas y Falsas Alarmas (Artículos 10° a 12°)
-* **Costos de Conexión:** Conexión inicial/reconexión (2,0 U.T.M.), Renta mensual (0,5 U.T.M.), Falsa alarma (1,5 U.T.M. cada una).
-* **Sanatorio de Deficiencias:** Al registrar más de 4 falsas alarmas en un mismo mes, la autoridad notifica a la empresa para subsanar fallas en un plazo de 1 mes (prorrogable 1 vez).
-* **Desconexión:** En caso de no subsanar o reincidir, se dispone la desconexión del sistema y se cursa denuncio al Juzgado de Policía Local.
+- **Uniformes:** en recintos con más de un vigilante privado, al menos uno debe vestir de civil. Si hay un solo vigilante, vestirá de uniforme.
+- **Dispositivo de alarma de asalto:** debe ser independiente de las alarmas de incendio o robo, con conexión directa con la Central de Comunicaciones de Carabineros o de la PDI, y debe permitir activación remota o manual.
+- **Cajeros de alto riesgo:** deben contar con sensores de movimiento, calor, humo, corte de energía, desnivel y traslado.
 
-### 3. Cámaras y Grabaciones de Alta Resolución (Artículo 17°)
-* Obligatoriedad de filmación HD para capturar imágenes nítidas de asaltos.
-* En entidades de Alto Riesgo: Digitalización de hora, día, mes y año.
-* Funcionamiento continuo: Desde 15 minutos antes hasta 60 minutos después del horario de atención de público.
+### 2. Régimen de tarifas y falsas alarmas (Artículos 10° a 12°)
+
+- **Costos de conexión:**
+  - Conexión inicial o reconexión: **2,0 U.T.M.**
+  - Renta mensual: **0,5 U.T.M.**
+  - Falsa alarma: **1,5 U.T.M.** cada una.
+- **Saneamiento de deficiencias:** al registrar más de 4 falsas alarmas en un mismo mes, la autoridad notifica a la empresa para subsanar las fallas en un plazo de 30 días (prorrogable por una vez).
+- **Desconexión:** si no se subsanan las fallas o se reincide, se dispone la desconexión del sistema y se cursa denuncio al Juzgado de Policía Local.
+
+### 3. Cámaras y grabaciones de alta resolución (Artículo 17°)
+
+- Obligatoriedad de filmación en alta definición (HD) para capturar imágenes nítidas de asaltos.
+- En entidades de alto riesgo: digitalización de hora, día, mes y año en las grabaciones.
+- Funcionamiento continuo: desde 15 minutos antes hasta 60 minutos después del horario de atención de público.
 
 ---
 
 ## Submódulo 1.3: Decreto Supremo N° 1814 — Regulación en Transporte de Valores y Bóvedas
 
-### 1. Cámaras y Monitoreo en Vehículos Blindados
-* **Cantidad Mínima:** Al menos 3 cámaras de televigilancia de alta resolución por camión (2 interiores: cabina y habitáculo de tripulación; 1 exterior).
-* **Plazos de Resguardo de Grabaciones:** Resguardo mínimo por **15 días hábiles**, o **1 año** en caso de comisión de delitos.
-* **Ratio de Monitoreo:** Mínimo 1 operador por cada 10 camiones blindados en la central de monitoreo.
+### 1. Cámaras y monitoreo en vehículos blindados
 
-### 2. Seguridad Electrónica en Bóvedas (Artículo 17° y 18°)
-* Sistemas de grabación HD en accesos y zonas de acopio con monitoreo en línea.
-* Resguardo de grabaciones de bóvedas por **30 días hábiles** (o 1 año en caso de investigación).
-* Equipamiento electrónico obligatorio: Sensores de alarma, control de acceso, cerraduras electrónicas con retardo y bloqueo horario, pulsadores de asalto **ALPHA 2**, detectores de humo, calor y vibración estructural.
+- **Cantidad mínima:** al menos 3 cámaras de televigilancia de alta resolución por camión: 2 interiores (cabina y habitáculo de tripulación) y 1 exterior.
+- **Plazos de resguardo de grabaciones:** mínimo **15 días hábiles**, o **1 año** en caso de comisión de delitos.
+- **Ratio de monitoreo:** mínimo 1 operador por cada 10 camiones blindados en la central de monitoreo.
 
-### 3. Centros de Recaudación y Pagos (Artículo 31°)
-* Exigencia de Vigilantes Privados, CCTV con respaldo de grabación, cajas blindadas compartimentadas, alarmas y recinto aislado para entrega de valores.
+### 2. Seguridad electrónica en bóvedas (Artículos 17° y 18°)
+
+- Sistemas de grabación HD en accesos y zonas de acopio, con monitoreo en línea.
+- Resguardo de grabaciones de bóvedas por **30 días hábiles** (o 1 año en caso de investigación).
+- Equipamiento electrónico obligatorio:
+  - Sensores de alarma y control de acceso.
+  - Cerraduras electrónicas con retardo y bloqueo horario.
+  - Pulsadores de asalto **ALPHA 2**.
+  - Detectores de humo, calor y vibración estructural.
+
+### 3. Centros de recaudación y pagos (Artículo 31°)
+
+- Exigencia de vigilantes privados, CCTV con respaldo de grabación, cajas blindadas compartimentadas, alarmas y recinto aislado para la entrega de valores.
 
 ---
 
 ## Submódulo 1.4: Decreto Supremo N° 222 — Seguridad en Cajeros Automáticos y Dispensadores de Dinero
 
-### 1. Definición y Especificaciones de Sensores (Artículos 6° y 9°)
-* Alarma sonora y lumínica monitoreada en línea 24/7 (límite de sonido: máximo 100 decibeles).
-* **Sensores Obligatorios:** Movimiento, inclinación, corte de cables, interrupción eléctrica, temperatura, humo y apertura no autorizada de bóveda.
-* **Respaldo de Energía:** Sistema UPS/Baterías obligatorio para mantener la operatividad ante cortes eléctricos.
+### 1. Definición y especificaciones de sensores (Artículos 6° y 9°)
 
-### 2. Cámaras de Grabación Internas y Externas (Artículo 10°)
-* **Cámara Externa:** Captura entorno y actividades alrededor del cajero.
-* **Cámara Interna (Pin-hole):** Muestra el rostro y rasgos físicos de los usuarios e interactuantes.
-* **Almacenamiento:** Mínimo **45 días** en condiciones normales; **24 meses** obligatorios si el cajero sufre un ataque o intento de robo.
+- Alarma sonora y lumínica monitoreada en línea 24/7, con límite de sonido de máximo **100 decibeles**.
+- **Sensores obligatorios:** movimiento, inclinación, corte de cables, interrupción eléctrica, temperatura, humo y apertura no autorizada de bóveda.
+- **Respaldo de energía:** sistema UPS o baterías obligatorio para mantener la operatividad ante cortes eléctricos.
 
-### 3. Excepciones y Pilotes de Resguardo (Artículo 12 BIS)
-* En estaciones de metro y aeropuertos con vigilantes privados se permite el uso de pilotes frontales de acero (100x100x850 mm, anclaje de 150 mm) con cerradura electromagnética conectada al sistema de alarma.
+### 2. Cámaras de grabación internas y externas (Artículo 10°)
+
+- **Cámara externa:** captura el entorno y las actividades alrededor del cajero.
+- **Cámara interna (pin-hole):** muestra el rostro y rasgos físicos de los usuarios e interactuantes.
+- **Almacenamiento:** mínimo **45 días** continuos en condiciones normales; **24 meses** obligatorios si el cajero sufre un ataque o intento de robo.
+
+### 3. Excepciones y pilotes de resguardo (Artículo 12 BIS)
+
+- En estaciones de metro y aeropuertos que cuentan con vigilantes privados se permite el uso de pilotes frontales de acero (100x100x850 mm, con anclaje de 150 mm) con cerradura electromagnética conectada al sistema de alarma.
 
 ---
 
 ## Submódulo 1.5: Ley N° 19.327 — Videovigilancia y Seguridad en Espectáculos de Fútbol Profesional
 
-### 1. Exigencias Tecnológicas en Estadios (Artículo 5°)
-* Instalación obligatoria de cámaras de seguridad HD, detectores de metales y control de accesos.
-* La cantidad, calidad y posición de las cámaras es determinada por la Delegación Presidencial / Intendencia.
+### 1. Exigencias tecnológicas en estadios (Artículo 5°)
 
-### 2. Monitoreo y Resguardo de Imágenes
-* Monitoreo continuo y en tiempo real durante todo el evento deportivo.
-* Cobertura de accesos, graderías y perímetro del recinto deportivo.
-* **Plazo Obligatorio de Almacenamiento:** Mínimo **90 días** para fines probatorios judiciales.
+- Instalación obligatoria de cámaras de seguridad HD, detectores de metales y control de accesos.
+- La cantidad, calidad y posición de las cámaras es determinada por la Delegación Presidencial o la autoridad correspondiente.
+
+### 2. Monitoreo y resguardo de imágenes
+
+- Monitoreo continuo y en tiempo real durante todo el desarrollo del espectáculo deportivo.
+- Cobertura de accesos, graderías y perímetro del recinto deportivo.
+- **Plazo obligatorio de almacenamiento:** mínimo **90 días**, para fines probatorios judiciales.
 
 ---
 
-## Submódulo 1.6: Actividades Prácticas, Evaluación del Módulo y Resumen Ejecutivo
+## Submódulo 1.6: Privacidad, Uso de Imágenes y Protección de Datos en Videovigilancia
 
-### 1. Actividad Práctica — Caso "Banco KZ"
-* Anális de requerimientos de instalación de alarmas, trámites ante Carabineros (ALPHA 2 / CENCO) y cumplimiento de los decretos 1122, 1814 y 222.
+### 1. Fundamentos del tratamiento de imágenes
 
-### 2. Cuestionario de Evaluación Formativa
-1. ¿Cuáles son las medidas mínimas de seguridad requeridas por el Decreto 1122?
-2. ¿Qué requisitos deben cumplir las cámaras y la retención de imágenes en el transporte de valores?
-3. ¿Cuáles son los sensores mínimos obligatorios en un cajero automático según el Decreto 222?
-4. ¿Cuál es el tiempo de resguardo de imágenes en espectáculos de fútbol profesional?
+Las imágenes de videovigilancia constituyen datos personales cuando permiten identificar a una persona. Su tratamiento debe basarse estrictamente en la ley y ejecutarse siempre de buena fe, conforme a la normativa chilena de protección de datos personales (Ley N° 19.628 y su actualización en la Ley N° 21.719).
 
-### 3. Resumen Sintético del Módulo 1
-* **Decreto 261:** Define el rol del Operador de CCTV.
-* **Decreto 41 / 1122:** Regula conexiones a Carabineros y multas por falsas alarmas.
-* **Decreto 1814:** Regula cámaras y sensores en transporte de valores y bóvedas.
-* **Decreto 222:** Fija estándares para cajeros automáticos (45 días / 24 meses resguardo).
-* **Ley 19.327:** Normativa de televigilancia en recintos deportivos (90 días resguardo).
+### 2. Principios que debe aplicar el operador
+
+- **Finalidad:** las imágenes deben captarse únicamente para fines específicos, explícitos y legítimos de seguridad (prevención de delitos, protección de personas y bienes).
+- **Proporcionalidad y minimización:** capturar solo lo estrictamente necesario para el objetivo de seguridad. No se deben enfocar cámaras hacia lugares donde las personas tienen una expectativa razonable de intimidad (baños, camarines, casilleros) salvo justificación legal muy calificada.
+- **Calidad:** mantener los sistemas operativos para que las imágenes sean fidedignas y útiles como prueba.
+- **Transparencia:** informar al público mediante avisos visibles que la zona se encuentra bajo videovigilancia.
+- **Seguridad:** proteger las grabaciones contra accesos no autorizados, alteración o pérdida.
+- **Conservación limitada:** las imágenes deben mantenerse solo por el tiempo necesario para la finalidad de seguridad, salvo que exista una obligación legal de retención mayor (por ejemplo, los plazos establecidos por los decretos de seguridad).
+
+### 3. Derechos de los titulares de los datos
+
+Las personas filmadas tienen derechos sobre sus datos, entre ellos:
+
+- **Acceso:** conocer qué imágenes existen de ellas, su finalidad y destinatarios.
+- **Rectificación, cancelación y oposición:** solicitar corrección o eliminación cuando el tratamiento sea ilícito o ya no sea necesario.
+- **Portabilidad:** recibir una copia de sus datos en un formato estructurado cuando corresponda.
+
+El operador debe reconocer estos derechos y derivar las solicitudes al responsable de la empresa que administra el sistema.
+
+### 4. Reglas prácticas para el operador
+
+- No divulgar ni exhibir públicamente las grabaciones fuera de los fines de seguridad o de los requerimientos de la autoridad.
+- No capturar audio sin justificación legal (en general, la videovigilancia se limita a imágenes).
+- Registrar quién accede a las grabaciones, cuándo y con qué motivo (bitácora de acceso).
+- Entregar copias solo a Carabineros, PDI, Ministerio Público o tribunales cuando corresponda, dejando constancia escrita de la entrega.
+
+---
+
+## Submódulo 1.7: Evidencia Digital, Informes y Cadena de Custodia
+
+### 1. Valor probatorio de las imágenes
+
+Las grabaciones de CCTV pueden constituir prueba en un proceso penal. Para ello deben ser:
+
+- **Auténticas:** provenir del sistema de la instalación, con fecha y hora confiables (hora sincronizada y digitalizada).
+- **Íntegras:** no haber sido alteradas, editadas ni fragmentadas.
+- **Trazables:** poder demostrar quién manipuló la grabación y en qué momento.
+
+### 2. Cadena de custodia de la evidencia digital
+
+Cuando una grabación es requerida para una investigación, se debe:
+
+1. **Asegurar el original:** conservar el registro tal como fue generado, sin sobrescribirlo.
+2. **Extraer una copia:** generar un respaldo íntegro (idealmente con verificación de integridad tipo hash) y entregar la copia, manteniendo el original resguardado.
+3. **Registrar la entrega:** dejar constancia escrita de fecha, hora, persona que entrega, persona que recibe, número de cámara y tramo horario de la grabación.
+4. **Documentar el acceso:** anotar en el libro de novedades o bitácora todo acceso a las grabaciones.
+
+### 3. Informes del operador
+
+El registro escrito es la base de toda investigación futura. Un informe adecuado debe consignar:
+
+- **Fecha, hora e identificación del operador.**
+- **Lugar exacto del hecho (sitio del suceso).**
+- **Identificación de terceros:** nombre completo y RUT de las personas involucradas, cuando sea posible.
+- **Descripción objetiva (retrato hablado):** rasgos físicos, vestimenta, joyas, paquetes y forma de actuar de los sujetos.
+- **Hechos observados en orden cronológico:** qué cámaras registraron el evento, horarios exactos y acciones relevantes.
+- **Comunicaciones efectuadas:** avisos a la jefatura, a Carabineros o a la PDI, con horas precisas.
+
+### 4. Regla de oro
+
+Todo hecho relevante debe quedar documentado por escrito y respaldado por la grabación. Lo que no se documenta ni se registra, para efectos de la investigación no existe.

@@ -1,0 +1,322 @@
+NOMBRE:
+
+
+CUESTIONARIO DE PREGUNTAS PARA EXAMEN OS -10.
+
+¿Qué es Seguridad?
+
+¿Cuál es su función?
+
+¿Qué tipo de seguridad existen?
+
+¿Quienes la ejercen?
+
+¿Qué disposiciones legales regulan la seguridad privada en Chile?
+
+¿Qué disposiciones legales reglamentan estas Leyes?
+
+¿Quién es la Autoridad Fiscalizadora de la Seguridad Privada?
+
+¿Cómo es la Seguridad Privada con respecto a la Seguridad Pública?
+
+¿Qué idoneidad deben cumplir los agentes y empresas se seguridad?
+
+¿Quién autoriza y acredita a las empresas y agentes de seguridad Privada?
+
+¿Cuál es el deber del Estado según la Constitución con respecto a la Seguridad?
+
+¿Cuáles son los tres poderes del Estado?
+
+¿Cuál de los tres poderes es el más importante?
+
+¿Qué función cumple cada uno?
+
+¿Cuándo se aplica el recurso de Amparo y el de Protección?
+
+¿En qué caso se puede privar de libertad a una persona?
+
+¿En qué caso un particular o un guardia está facultado para detener?
+
+¿Qué es delito?
+
+¿Qué es cuasidelito?
+
+¿Grados del delito?
+
+¿Clasificación de los delitos atendida su gravedad?
+
+¿Elementos comunes del robo y el hurto?
+
+¿Diferencia entre robo y hurto?
+
+Diferencia entre robo calificado y robo simple.
+
+Diferencia entre hurto simple y hurto calificado.
+
+¿Diferencia entre hurto uso, hurto hallazgo, hurto falta?
+
+¿Qué es la estafa?
+
+¿Qué es el delito de lesiones?
+
+¿Qué es delito de Homicidio?
+
+¿Qué es legítima defensa?
+
+¿Qué elementos deben existir para aplicar la legítima defensa?
+
+¿Qué es legítima defensa privilegiada?
+
+¿Clasifique la legítima defensa?
+
+¿Qué es un sitio del suceso?
+
+¿Cómo se clasifica el sitio del suceso?
+
+¿Qué es un retrato hablado?
+
+¿Qué caracteriza las rondas?
+
+Tipos de rondas.
+
+¿Indique tres eximentes de responsabilidad?
+
+¿Indique tres agravantes?
+
+¿Indique tres atenuantes?
+
+¿Qué es un Recinto?
+
+¿Con que se protege una instalación?
+
+¿Cuántos tipos de barrera conoce?
+
+¿Cuántos tipos de artefactos explosivos existen?
+
+Indique procedimiento ante artefactos explosivos.
+
+¿Qué es una evacuación?
+
+¿Qué es una Directiva de Funcionamiento?
+
+¿Quiénes la confeccionan?
+
+¿Qué es un Estudio de Seguridad?
+
+¿Quién aprueba, rechaza o modifica las Directivas y el Estudio de Seguridad?
+
+¿Señale tipos de credenciales?
+
+¿Qué información debe tener un Guardia de su instalación?
+
+¿Quién fiscaliza la ley de control de armas (N° 17.798)?
+
+¿Cuál es el delito de porte ilegal de armas?
+¿Cuál es el delito de tenencia ilegal de armas?
+
+¿Quién autoriza el uniforme, armamento especial de un Guardia?
+
+¿Quién autoriza el uso de las radiocomunicaciones?
+
+¿En un supermercado, el guardia podrá detener a una persona que consuma alimento o esconde una especie antes de pasar por las cajas?
+
+¿Qué es el secuestro?
+
+¿Misión de Carabineros?
+
+¿Cuáles son los roles de Carabineros?
+
+¿Cuáles son las personas responsables de delito?
+
+¿Qué es escalamiento?
+
+¿Diferencia entre ronda fija y ronda móvil?
+
+¿Qué frecuencias tienen los equipos de radiocomunicaciones?
+
+¿Qué es Ley?
+
+¿Cómo se clasifican las leyes?
+
+¿Qué es la injuria?
+
+¿Qué es la calumnia?
+
+¿Cuáles son las normas más importantes dentro del Estado?
+
+¿Cómo debe ser un contrato de trabajo?
+
+¿Qué se entiende por arma?
+
+¿Cuál es el triángulo que provoca el fuego?
+
+¿Qué factores debe enfrentar un guardia ante un asalto?
+
+¿Cómo se minimiza el riesgo de un incendio?
+
+¿Cuál es el estado normal de las agujas de los extintores?
+
+¿Cuáles son los métodos de extinción de incendio?
+
+¿Cómo se consideran los daños físicos y síquicos sufridos por un guardia en el cumplimiento de sus funciones?
+
+¿Qué es un riesgo?
+
+¿Cuál es la finalidad de una antena en un transceptor portátil?
+
+¿Qué elementos técnicos se utilizan en las puertas y ventanas para detectar apertura?
+
+RESPUESTAS
+
+Es la sensación de estar cubiertos de todo riesgo o amenaza.
+Proteger personas y bienes.
+Seguridad Nacional, Seguridad Pública y Seguridad Privada
+Seguridad Nacional: FF.AA. (: Ejército- Armada y Fuerza Aérea).
+Seguridad Pública: FF.OO. (Fuerzas de Orden: Carabineros de Chile y la Policía de Investigaciones)
+Seguridad Privada: Agentes: Guardias de Seguridad (conserjes, porteros, nocheros) y Vigilantes Privados. Empresas de Seguridad Privada: Empresas de Asesorías, de Capacitación, de Recursos Humanos y de Sistemas Técnicos (Alarmas).
+
+Ley 21.659. publicado año 2024
+
+D/S 209 reglamento de la ley 21.659 y D/S 208 aprueba reglamento de eventos masivos. Publicado año 2025
+
+La Prefectura de Carabineros de Chile. Deptos OS10 Seguridad privada
+
+La Seguridad Privada cumple una labor complementaria y coadyuvante a la función que cumple Carabineros e Investigaciones.
+
+Idoneidad Cívica, Moral y Profesional.
+
+La Subsecretaria de Prevención del Delito y Carabineros sigue siendo la Autoridad Fiscalizadora a través de la Prefectura de Carabineros OS-10
+
+Proteger la Nación y su población.
+
+Ejecutivo, legislativo y judicial.
+
+Ninguno, pues los tres son independientes y autónomos.
+
+Ejecutivo: Administra el Gobierno (Presidenta con ministros) Legislativo: Estudian las Leyes (155 Diputados y 43 Senadores.)
+Judicial: Administra justicia (Jueces, Cabeza es la Corte Suprema de justicia).
+
+R. de Amparo= ante una privación ilegal de la libertad. Protección= Ante vulneración de los derechos Constitucionales.
+
+Por medio de una Orden Judicial, o por ser sorprendido cometiendo un Delito Flagrante o Infraganti.
+
+En caso de sorprender a alguien cometiendo delito flagrante.
+
+Es toda acción u omisión VOLUNTARIA penada por la Ley. Dolo con intención.
+Es toda acción u omisión INVOLUNTARIA, penada por la ley. Sin intención, solo hay Culpa.
+Delito consumado, Delito frustrado y Tentativa de delito.
+Crímenes, simples delitos y faltas.
+
+Apropiación indebida de bien mueble, sin conocimiento del dueño, y con fines de lucro.
+
+Robo es con violencia, intimidación y fuerza en las cosas. Hurto es sin violencia, intimidación y fuerza en las cosas.
+Robo calificado es cuando con ocasión del ROBO se comete Homicidio, violación, secuestro y lesiones graves.
+Hurto calificado es cuando hay abuso de confianza del trabajador contra el empleador. En el Hurto simple no hay compromiso laboral ni familiar.
+
+Hurto uso: es usar algo sin autorización y devolverlo. Hurto hallazgo: es encontrar algo y no devolverlo. Hurto falta: apropiación indebida hasta ½ UTM.
+
+Es apropiarse de un bien mueble o inmueble mediante el engaño.
+Es el daño a la integridad física o psíquica de una persona.
+Muerte de una persona causada por otra.
+Es la reacción necesaria de una persona ante una agresión ilegítima.
+a) Agresión ilegítima, b) el medio empleado (arma) debe ser racional o proporcional y c) falta de provocación suficiente por parte del que se defiende.
+
+R.- Es rechazar el escalamiento en un lugar habitado, y si es de noche en lugar no habitado.
+
+Defensa Propia, Defensa de parientes y extraños.
+
+Es el lugar donde se ha cometido un delito y que se va a investigar.
+a) Sitio abierto, b) Sitio cerrado y c) Sitio Mixto.
+
+Es la descripción que se hace de una persona en base a las observaciones realizadas.
+
+Su movilidad.
+
+Ronda móvil, fija y mixta.
+
+Loco o demente, el menor de 14 años y el que obra en legítima defensa.
+Actuar con alevosía, hacerlo por recompensa, En los delitos contra las personas, obrar con premeditación conocida o emplear astucia, fraude o disfraz.
+
+Irreprochable conducta anterior, si ha procurado con celo reparar el mal causado o
+impedir sus ulteriores perniciosas consecuencias y si pudiendo eludir la acción de la justicia por medio de la fuga u ocultándose, se ha denunciado y confesado el delito.
+
+Lugar debidamente demarcado y cerrado; Área: se encuentra dentro del recinto, áreas, verdes, áreas de estacionamiento, área de producción y áreas de seguridad.
+
+Con las barreras de seguridad.
+
+Naturales, artificiales, humanas, animal, mecánicas, electrónicas, de iluminación y mecánicas
+
+1.- Autobomba, 2.- Carta-bomba y 3.- Paquete-bomba.
+
+
+
+Ubicado un posible artefacto explosivo, informar de inmediato al jefe, quién dispondrá llamar a Carabineros. No mover ni tocar nada. Evacuar la zona si el jefe lo ordena. Cortar los servicios de emergencia.
+
+Es el traslado de personas en forma ordenada hacia un mismo lugar que hemos denominado zona de seguridad por un riesgo inminente a la integridad física de las personas.
+
+Es un documento que tiene por objeto implementar un servicio de los guardias de seguridad y debe ser autorizado por la SPD
+
+Debe ser confeccionada por el empleador de los GG.SS. que realizarán el servicio de seguridad.
+
+Documento secreto que tiene por objeto señalar el funcionamiento de las empresas de riesgos mediano y alto, además contiene las vulnerabilidades y debilidades de la empresa que se va a asegurar y las conclusiones para abordar las soluciones que puedan tener. Para las entidades de riesgo alto el estudio tiene una vigencia de 2 años, riesgo medio 4 años y empresas de transporte de valores 1 año.
+
+La SPD (Subsecretaria Prevención del Delito).
+
+GG.SS. = Blanco. VV.PP. = Amarillo, Verde, Azul.
+
+Dimensión del área y recinto, cantidad de personas que trabaja en este-ejecutivos de la empresa-trabajadores de la empresa-Teléfonos de emergencia-patentes de los vehículos que normalmente ingresa- ubicación permanente del supervisor. etc.
+
+Carabineros de Chile a través de la Prefectura de Control de Armas y Explosivos, OS-11.
+Es portar un arma en la vía pública sin autorización.
+Es tener un arma de fuego sin inscripción.
+
+La Prefectura de Carabineros del sector.
+
+La Subsecretaría de Telecomunicaciones (SUBTEL).
+
+No.
+
+El que sin derecho encerrare o detuviere a otro privándole de su libertad
+
+Garantizar el Orden y la Seguridad pública y dar eficacia al derecho.
+Rol preventivo, educativo, de comodidad pública, de solidaridad social,
+Los Autores, Cómplices y Encubridores.
+
+Es ingresar por una vía no destinada al efecto, por forado, rompimiento de tejas, o fractura de puertas o ventanas.
+
+La ronda fija se realiza en un horario fijo y por una ruta predeterminada. La ronda móvil en cualquier horario y por una ruta no preestablecida.
+
+HF - VHF - UHF – SHF.
+
+Es la declaración de la voluntad soberana, que manifestada en la Constitución, manda, prohíbe o permite.
+
+
+Imperativa: Ordena hacer algo (pagar impuestos). Prohibitivas: Prohíbe hacer algo (matar) Permisivas: Defensa Propia.
+
+Es una ofensa pública que atenta a la dignidad, decoro, honor y que causa daño.
+
+Es imputar a una persona un delito, pero que es falso.
+
+La constitución política de la República, las leyes propiamente como tales, Decretos Leyes, Decretos Supremos, y los tratados internacionales.
+
+Ser extendido por escrito y dos ejemplares dentro del plazo de 15 días de incorporar al trabajador. El contrato debe ser consensual y existirá dependencia y subordinación, naturaleza del trabajo, remuneración, horario, lugar de trabajo, plazo del contrato (fijo, indefinido o por término de obra).
+
+Es toda máquina, instrumento, utensilio, objeto o parte del cuerpo que se ha tomado con la intención de matar, herir o golpear.
+
+Calor, oxígeno y combustible.
+
+Factor sorpresa, Cantidad de delincuentes, Armamento.
+
+Control de extintores en lugares dispuestos, Grifos en buen estado y revisión de elementos que podrían ser r foco de fuego, sensores de incendios y capacitación de los trabajadores en el uso de extintores y redes húmedas.
+
+Debe indicar el color verde (NORMAL).
+
+Sofocación, aislamiento, enfriamiento e inhibición de la reacción en cadena.
+
+Como accidente laboral, Ley N° 16.744.
+
+Es la contingencia (RIESGO) y daños que provienen de diferentes fuentes denominadas vulnerabilidades. Se puede definir también como la amenaza o proximidad de un daño.
+
+Es propagar y recepcionar la señal de radiofrecuencia.
+
+Los contactos magnéticos.

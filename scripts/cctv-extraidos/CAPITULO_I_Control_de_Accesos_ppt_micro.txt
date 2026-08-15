@@ -1,0 +1,451 @@
+﻿=== DIAPOSITIVA 1 ===
+Control de Accesos
+Capítulo I      
+=== DIAPOSITIVA 2 ===
+¿Qué es el Control de Acceso?
+En una simple definición, el término control de acceso describe cualquier técnica utilizada para controlar el paso entrante o saliente de un área o sistema.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 3 ===
+¿Qué es el Control de Acceso?
+Alrededor del año 1000 a.c los chinos desarrollaron un sistema de control de acceso para el palacio imperial, que consistía en otorgarle al personal de palacio unos anillos grabados con complicados diseños, que identificaban las áreas del palacio en las cuales tenían permitido el acceso.Las razones actuales para disponer de un sistema de control de acceso son las mismas que las del año 1000 a.c, seleccionar al personal perteneciente a la empresa de la que no lo es, y mantener al personal no autorizado fuera de las áreas de seguridad.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 4 ===
+¿Qué es el Control de Acceso?
+OBJETIVOS  QUE  PRETENDE  LOGRAR  EL CONTROL  DE  ACCESOS
+REDUCCIÓN DEL RIESGO: Regulando el acceso de empleados y visitas. Los bienes de valor, se hallan protegidos, reduciendo las pérdidas potenciales. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 5 ===
+¿Qué es el Control de Acceso?
+REDUCCIÓN  DE  LOS  COSTOS  DE  SEGURIDAD:Contribuye a lograr un mejor uso de los guardias, reduciendo los lugares y tiempo en los que éstos han de estar y, bajando drásticamente los costos totales de seguridad. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 6 ===
+¿Qué es el Control de Acceso?
+AMBIENTE  SEGURO: Permiten que los empleados se sientan más seguros y por lo tanto, se produce más y mejor. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 7 ===
+¿Qué es el Control de Acceso?
+A través del tiempo, los Sistemas de Control de Acceso se han hecho más sofisticados para responder a  mayores exigencias de los usuarios. Hoy, estos sistemas utilizan tecnología de microprocesadores y microelectrónica. Se basan en tarjetas de tamaño parecido a las tarjetas de crédito. Estos sistemas son utilizados para monitorear y controlar el acceso a estacionamientos,edificios,áreas peligrosas,áreas restringidas, archivos, o sencillamente controladas,etc.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 8 ===
+Tipo de tarjetas de control de acceso electrónico
+Muchas tecnologías han sido utilizadas para la confección de tarjetas de control de acceso, tales como: tarjetas perforadas, capacitivas, con circuitos electrónicos, etc. De todas formas, las cuatro tecnologías más utilizadas hoy son: Banda Magnética, Wiegand, Proximidad e Infrarroja. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 9 ===
+Tipo de tarjetas de control de acceso electrónico
+FUNCIONAMIENTO  GENERALEl usuario presenta su tarjeta a un lector situado en el punto de control. El sensor envía la información de la tarjeta a la CPU que la transforma en un número. La CPU compara dicho número con los que tienen permitido el acceso en dicho punto, permitiendo o denegando el acceso según se halle programado.  Todo el flujo de información generado es guardado en memoria y puede ser impresa en el momento en el que se requiera.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 10 ===
+Tarjetas de Banda Magnética
+Las Tarjetas de Banda Magnética son similares a las tarjetas de crédito de los bancos. En este sistema, una serie de datos digitales (unos y ceros) son grabados en el espacio magnético de la tarjeta (similar a una cinta de ordenador). 
+La mayor ventaja de estas tarjetas es la gran cantidad de información que se les puede grabar, y la calidad de la misma (son las homologadas por todas las entidades financieras).  Entre las desventajas se destaca su vulnerabilidad (a rayados, campos magnéticos, a doblados, etc.) que ha sido disminuida con el desarrollo de las tarjetas de alta coercitividad.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 11 ===
+Tarjetas Wiegand
+Tecnología WIEGAND utiliza una cantidad determinada de hilos metálicos insertos dentro de la tarjeta. La principal ventaja de este sistema es ser más inmune que la de banda magnética, pero su desventaja es el elevado precio de los sistemas adicionales, junto con la mínima cantidad de información que se le puede insertar.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 12 ===
+Tarjetas de Proximidad
+Las Tarjetas de Proximidad utilizan un circuito electrónico sintonizado y resonante conformado por condensadores y bobinas, insertos en un soporte plástico. Al aproximar una tarjeta al lector, éste capta la frecuencia de resonancia proveniente y que es propia de la tarjeta, enviándola a la CPU que la procesa. La principal ventaja de este tarjeta es la inmunidad a la clonación, pero su desventajas es el elevado precio, tanto de las tarjetas como del sistema y además, la problemática de falsas lecturas generadas por dos tarjetas con circuitos electrónicos similares. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 13 ===
+Tarjetas de Proximidad
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Existen tarjetas, que contienen la fotografía y firma de la persona titular, para chequear con mayor certeza que la tarjeta corresponde a ese usuario, que la presenta al lector.
+=== DIAPOSITIVA 14 ===
+Tecnología Infrarroja
+Las tarjetas de tecnología infrarroja, han logrado una alta inmunidad, junto con una cantidad media de información grabada, a un precio competitivo. Para operarla, se desliza por el lector que emite un haz infrarrojo que lee la información grabada en el interior de la tarjeta (código de barras). Su desventaja es que no existen normas de homologación, existiendo una total disparidad de características entre proveedores, al igual que las tarjetas de proximidad. La principal ventaja de cualquier sistema electrónico de control de acceso es : La facilidad de cambiar el programa rápidamente, para adecuarse a sus nuevas necesidades de seguridad. Por ejemplo, si una tarjeta es perdida o robada, puede ser fácilmente anulada y el sistema de seguridad repuesto, sin necesidad de cambiar todo el sistema (caso de las llaves).
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 15 ===
+El control de acceso es solo unaparte del Sistema de Seguridad
+El sistema de control de acceso no es un sistema de seguridad total, es sólo una parte. Otras partes del sistema de seguridad pueden incluir varios tipos de detectores de instrusión, alarmas, guardias, cctv, detectores de humo y fuego, contactos magnéticos y cerámicos para puertas y ventanas sin controlar.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 16 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+1.- INVENTARIO:Para justificar la instalación de un sistema de control de acceso electrónico, se necesita saber no sólo las personas, áreas y bienes que necesita proteger, sino igualmente cuales son las potenciales pérdidas o daños que pueden acarrear su no instalación.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 17 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+El primer paso es realizar un “Inventario de pérdidas potenciales”. Este inventario se ha de realizar zona por zona e indicar todos los bienes que pueden ser robados o dañados, y el costo que implicaría su sustitución o reparación.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+No límitar el inventario únicamente a equipos y elementos, sino incluir también los bienes intangibles (bases de dato, listados de clientes, informes confidenciales, diseños de productos, etc.). A continuación incluir lo que dichas pérdidas supondrían en términos de retrasos, reducción de la eficiencia, pérdida de cuota de mercado, pérdida de imagen y otras consideraciones.
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 18 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+2.- DEFINA LO QUE QUIERA CONTROLAR CON SU SISTEMA:
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Se debe definir adecuada y previamente, las características que ha de tener el sistema de control de acceso.Ser lo más específico posible en cuanto a las exigencias. Su objetivo es reducir el riesgo y las pérdidas a un nivel aceptable.
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 19 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Cada empresa o instalación a proteger necesita una solución especifica. No existe una solución que valga para todas las situaciones.  
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 20 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+3.- GUARDIAS O CONTROL DE ACCESO:¿Se quiere un sistema de seguridad visible y costoso, o inadvertido y económico? Un guardia uniformado puede ser la solución óptima, cuando se dispone de un gran estacionamiento con mucho tráfico y donde se den muchos casos de robos o vandalismo.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 21 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Por otra parte, si no se desea llamar la atención de los lugares donde se guarde ficheros e información clasificada, entonces  en este lugar se debe instalar un sistema de control de accesos electrónico, con lector simulado.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 22 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Considerar también el costo que significan los guardias. El sistema de control de accesos puede reducir el tiempo y el número de guardias necesarios y, asimismo, obtener un mejor uso de los guardias disponibles.Es frecuente que estos sistemas eliminen la necesidad de guardias, llegando a amortizar la inversión en poco tiempo.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 23 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+4.- IDENTIFICACIÓN ADICIONAL:Para otorgar mayor nivel de seguridad a lugares sensibles, se puede incrementar el control de acceso con dispositivos adicionales (electrónicos y/o biométricos), como por ejemplo un teclado en que se introduzca un número de identificación personal (PIN) o código secreto, inmediatamente después que se haya realizado la lectura de la tarjeta. De este modo se duplica la seguridad, adicionándole un grado de dificultad a la accesibilidad.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 24 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Asimismo, en el desarrollo de las tarjetas, existen algunas que integran en su estructura la fotografía y firma del usuario, para chequear con mayor certeza que ésta corresponde a la persona que la está presentando ante el lector.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 25 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+5.- FLUJO  DE  PERSONAL:Para evitar que dos personas ingresen al mismo lugar con la misma tarjeta, los sistemas de control acceso deben ofrecer el antipass-back. Consiste en que, una vez que una tarjeta ha sido utilizada en un lector de entrada, es necesario el paso por el lector de salida antes de que se permita el paso nuevamente por el mismo punto de ingreso.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 26 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Otros  complementos :Consideran opciones mecánicas  y ópticas para el paso unitario del personal. Las cabinas de doble puerta permiten el paso de personal unitariamente, al igual que los rotatorios de metal o torniquetes.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Precaución :Considerar que estos sistemas deben instalarse en lugares muy específicos, puesto que disminuyen drásticamente el flujo de personas y debe tenerse en cuenta la normativa contra incendios.
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 27 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Flujo:El flujo normal de una puerta controlada con sistema de control de acceso es de seis a veinte personas por minuto.  Esto es suficiente para un uso normal, pero que ocurre si por cualquier circunstancia este flujo se multiplica por dos o tres, es decir, ¿Cómo reaccionará el sistema en el peor de los casos?   
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Entonces, es necesario evaluar el flujo para el peor de los casos, y exigir al proveedor, que el sistema debe otorgar una respuesta adecuada en dichas circunstancias.
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 28 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+6.-CONTROL DE  INFORMACIÓN:Una de las grandes ventajas de los sistemas de control de acceso es la gran cantidad de información que generan a la vez que permiten realizar una tarea de control.    Estos sistemas pueden ofrecer un listado de eventos para determinados empleados o clientes, en que es posible determinar donde y cuando se encontraban en un determinado momento.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 29 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+En emergencias :Para casos de emergencia, un sistema de control de acceso nos informa del personal que se hallaba en una determinada área, y a que hora había entrado.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Asimismo, si un sistema de control de acceso se encontraba bien integrado con un sistema de alarmas, grabando permanentemente en disco informático los eventos ocurridos, puede ayudar a la policía y a las compañías de seguros a determinar las áreas que han sido objeto de daños e ilícitos y asimismo, seguir el recorrido efectuado por él o los intrusos.
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 30 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+7.- LOS  EMPLEADOS:¿Comprenderán y aceptarán el sistema los empleados?Cuando por definición, la función de los sistemas de control de acceso es limitar o controlar la libertad de acción de la gente.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 31 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Es importante reconocer que los empleados no deseen ser controlados y reaccionar en un primer momento de forma extraña.  Considerar el tiempo de respuesta del sistema. Un empleado puede sentirse molesto si el sistema es muy lento.    Cuando se producen respuestas negativas de los empleados, se generan actos vandálicos contrarios al sistema, como inutilización de lectores y otros sabotajes.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 32 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+8.- ESTUDIO  ECONOMICO:Una vez que el inventario de pérdidas potenciales y sus costos relacionados ha sido realizado, se estará en condiciones de calcular el nivel de inversión posible para cada área de la empresa.   En la medida que los sistemas de control de acceso vayan implementándose, las pérdidas potenciales y reales deberían ir decreciendo progresivamente.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 33 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+La clave del estudio económico es :Que se logre, el nivel necesario de seguridad, evitando la implementación de más seguridad que la necesaria para cada área.Equilibrio :Se debe mantener un eficiente y racional equilibrio entre la Seguridad y la Operatividad  de la empresa.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 34 ===
+Proceso a seguir para la instalaciónde un sistema de control de acceso
+Condición necesaria e indispensable :Un buen sistema de control de acceso es absolutamente inútil, si las puertas en que se instale, están en malas condiciones.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 35 ===
+Biometría      
+=== DIAPOSITIVA 36 ===
+BIOMETRIA
+Desde épocas remotas hasta hoy, se ha transitado por  variados sistemas para controlar los accesos de personas a lugares restringidos o prohibidos; sin embargo, las formas de vulnerarlas han avanzado también muy rápido.El hombre moderno, descubrió que algunas de sus características físicas o biológicas eran capaces de idintificarlo y presentaban dificultades para ser vulneradas.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Evolución
+=== DIAPOSITIVA 37 ===
+BIOMETRIA
+BIOMETRÍA. Es la aplicación de métodos de identificación y autentificación de los seres humanos, a través de sus características fisiológicas y/o de comportamiento.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Ahora, la Identificación Biométrica, es la verificación de la identidad de una persona midiendo digitalmente determinados rasgos de alguna de sus características físicas, comparándolos con los patrones de referencia guardados en un archivo, en una base de datos o algunas veces, en una tarjeta inteligente.
+CAPITULO  I  “CONTROLES DE ACCESO”
+¿ Que es la Identificación Biométrica ?
+=== DIAPOSITIVA 38 ===
+BIOMETRIA
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Para  un control de alta precisión, la Biometría ofrece identificación altamente confiable, pero involucra algunas dificultades de relaciones públicas con los usuarios. . 
+Los Pro y los Contra de la Biometría
+En las naciones occidentales, por ejemplo, el uso de huellas digitales estimula el estigma de la criminalidad. Hoy, la Biometría ha alcanzado un destacado nivel de seguridad, desplazando otras formas de identificación
+=== DIAPOSITIVA 39 ===
+BIOMETRIA
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+La Identificación Biométrica de una persona resulta lenta, porque los lectores deben captar sus características fisiológicas y luego compararlas con los datos contenidos en la base de datos, Por tanto, es necesario adicionar un Sistema Secundario de Identificación Personal (Por ejemplo un PIN).
+Los Pro y los Contra de la Biometría
+=== DIAPOSITIVA 40 ===
+BIOMETRIA
+Algunos Sistemas Biométricos
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Los sensores de olor utilizan un procesamiento químico similar al que existe entre la nariz y el cerebro. Hace algunos años, investigadores ingleses anunciaron el desarrollo de un proceso que podía identificar a las personas de acuerdo a su olor.
+CAPITULO  I  “CONTROLES DE ACCESO”
+1.- IDENTIFICACION  POR  EL OLOR
+Los perfumes no enmascaraban este proceso ya que las esencias de estos, tienen una composición química muy diferente al olor humano. 
+=== DIAPOSITIVA 41 ===
+BIOMETRIA
+Son los más difundidos. Estos sistemas utilizan varias técnicas para crear una imagen digital tridimensional que es capturada, medida y guardada en un archivo.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+2.- IDENTIFICACION DE MANOS Y HUELLAS DACTILARES
+=== DIAPOSITIVA 42 ===
+BIOMETRIA
+2.- IDENTIFICACION  POR  MANOS Y HUELLAS  DACTILARES (Continuación)...
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+El sistema de mano geométrica usado desde hace unos años, por el proyecto de control de inmigrantes INSPASS de Estados Unidos, no ha producido, hasta este momento, dos identificaciones similares.
+=== DIAPOSITIVA 43 ===
+BIOMETRIA
+Existen dos tipos de sistemas que utilizan al ojo humano como identificador: 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Los sistemas de identificación de la  topografía del iris, identifican más de 4.000 puntos característicos ubicados en el iris del ojo humano.El diagrama del iris humano se establece en el momento de nacer y, al igual que las huellas dactilares, no hay dos personas con el mismo patrón.
+CAPITULO  I  “CONTROLES DE ACCESO”
+3.- IDENTIFICACION  POR  EL OJO
+3.1.- IRIS
+=== DIAPOSITIVA 44 ===
+BIOMETRIA
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+IRIS (continuación)Por ejemplo, el nivel de seguridad de un sistema "Iriscan" de lectura del iris del ojo, es cercano al 100%.  En otras palabras, en teoría ni siquiera dos seres humanos en el planeta tendrán el mismo registro del ojo.
+=== DIAPOSITIVA 45 ===
+BIOMETRIA
+Lee la superficie interior del globo ocular, mediante una luz infrarroja de baja intensidad, midiendo en 320 puntos predefinidos el diagrama de las venas del ojo.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+3.2.-RETINA
+=== DIAPOSITIVA 46 ===
+BIOMETRIA
+Verifica las características faciales comparándolas con una imagen de la persona, previamente escaneada.  Al ser fácil el cambio del rostro de una persona, hay varios sistemas en desarrollo de la morfología facial, que buscan reducir el tiempo de validación con un aumento en la seguridad.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+4.- RECONOCIMIENTO  FACIAL
+=== DIAPOSITIVA 47 ===
+BIOMETRIA
+Identifica las características únicas de la voz humana, comparándolas con la voz pregrabada de una persona. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+5.- IDENTIFICACION  POR  VOZ
+=== DIAPOSITIVA 48 ===
+BIOMETRIA
+La comparación de la voz incluye interrogación aleatoria. Esta modalidad asegura no ser posible burlar el sistema de identificación por voz utilizando un grabador convencional. Esto se logra haciendo que el sistema interrogue a la persona utilizando en forma aleatoria alguna de las preguntas pregrabadas para cada individuo. Las respuestas a ellas, son comparadas con las que están archivadas validando así el ingreso.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Para no burlar este sistema 
+=== DIAPOSITIVA 49 ===
+BIOMETRIA
+6.- IDENTIFICACION  POR  LA  FIRMA 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+La Biometría considera, aparte de la fisiología humana, el comportamiento de la persona. El comportamiento más conocido es el de la firma. La persona firma con un lápiz óptico en un pad y el algoritmo de verificación comprueba que haya firmado igual o parecido a cuando se produjo el enrolamiento del usuario. Mide el tiempo y la presión utilizados para crear una firma.
+=== DIAPOSITIVA 50 ===
+BIOMETRIA
+6.- IDENTIFICACION  POR  FIRMA (Continuación) 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Para enrolarse una persona debe firmar 6 veces.Este sistema no controla la forma de la firma. No importa tanto el dibujo, sino el ángulo de posicionamiento del lápiz y la velocidad de las curvas. De esta forma, si una persona consigue la firma de la persona autorizada y trata de calcarla encima, no podrá ser reconocido dado que el dibujo será el mismo pero no la velocidad y la inclinación del lápiz.
+=== DIAPOSITIVA 51 ===
+BIOMETRIA
+En Chile, los Sistemas de Identificación Biométrica están posicionándose poco a poco en el mercado del control de accesos de alta seguridad. En las redes de computación se está empleando el control de accesos de huellas digitales, para reemplazar el password. El control de accesos de personas y asistencia de personal llegaron a Chile en 1997.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Aplicaciones de la Biometría
+=== DIAPOSITIVA 52 ===
+BIOMETRIA
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Sistema Secundario de Identificación Personal
+El algoritmo tendrá que encontrar entre todas las huellas digitales que tenga almacenadas, aquella que coincida. Esto ocasionará gran lentitud al sistema.Para acelerarlo, la persona a identificar debe ingresar previamente su PIN o tarjeta, de modo que el sistema localice rápidamente la huella almacenada, y la compare con la de la persona, obtenida al apoyar el dedo  sobre el lector óptico. 
+=== DIAPOSITIVA 53 ===
+BIOMETRIA
+Cualquier método tradicional requiere llaves, códigos, tarjetas de proximidad, tarjetas magnéticas, etc., lo cual implica que pueden ser prestadas, perdidas, robadas o copiadas, limitando notablemente la seguridad del control de accesos de personas o la confiabilidad en el sistema.El único medio que no puede ser prestado, ni robado, ni copiado es una parte del cuerpo, que identifica en forma inequívoca a una persona. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+VENTAJAS
+=== DIAPOSITIVA 54 ===
+BIOMETRIA
+Puede haber dedos de goma, fotocopias de dedos e inclusive dedos muertos, llegando al extremo si el bien protegido es una  bóveda que contiene mucho dinero o valores importantes. Es sabido que mucha gente estaría dispuesta a matar a un individuo y cortarle el dedo para realizar su reconocimiento de esa manera. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Este lector biométrico no reconoce dedos muertos, detecta por sistema lumínico infrarrojo, que fluya sangre por el interior del dedo. Este lector efectúa una exploración tridimensional cromatográfica de la sangre en el dedo expuesto.
+CAPITULO  I  “CONTROLES DE ACCESO”
+Lector de huella dactilar,...  ¿INVIOLABLE?
+=== DIAPOSITIVA 55 ===
+BIOMETRIA
+El sistema más actualizado de reconocimiento de huellas dactilares, incorpora la tecnología de escaneado por ultrasonido realizando una ecografía del dedo, resaltando los montes y valles del trazo de la huella
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Sin embargo, había algunos inconvenientes como la transpiración, el dedo con pegamento o con escrituras, lo que dificultaba la lectura e identificación. 
+CAPITULO  I  “CONTROLES DE ACCESO”
+Evolución
+Hasta hoy se conocía el escaneado lumínico, que se usa para escanear una fotografía, una imagen o lo que fuere, en forma plana.
+=== DIAPOSITIVA 56 ===
+BIOMETRIA
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Diferencias entre las tecnologías lumínica y de ultrasonido
+Toda sustancia o cuerpo, se resiste o al menos dificulta o altera el paso de una señal lumínica a través de él.
+Sin embargo no existe la misma oposición a las ondas  ultrasónicas, que penetran la piel y van proporcionando información de las diferentes capas de ella, generando una imagen virtual del dedo, producto de los ecos captados de las señales emitidas por el lector ultrasónico.
+=== DIAPOSITIVA 57 ===
+BIOMETRIA
+Las ventajas del Sistema de Identificación Dactilar Ultrasónico, es que la huella puede estar sucia, dañada, tener pegamento o inclusive poseer guantes de látex; igualmente, lee y configura la huella dactilar para su identificación.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Diferencias entre las tecnologías lumínica y de ultrasonido
+Ventajas
+=== DIAPOSITIVA 58 ===
+BIOMETRIA
+El forense. Identifica la huella en su forma geométrica y gráfica, es decir, toma la huella y la guarda en un archivo en forma totalmente gráfica.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Es el único medio que permite a un perito en huellas dactilares pueda comparar una huella existente o proveniente de un levantamiento de un rastro, con la huella real de una persona y verificar si corresponde. 
+CAPITULO  I  “CONTROLES DE ACCESO”
+Existen dos tipos de reconocimiento de huellas dactilares
+El Forense 	El de  Control de Accesos                                                                                                   
+=== DIAPOSITIVA 59 ===
+BIOMETRIA
+Control de Accesos. Empleada para permitir el acceso a determinados lugares, inclusive de máxima seguridad.La huella se lee con menor precisión. Capta los puntos gráficos necesarios o característicos, para generar lo que se llama un algoritmo y lo graba en un archivo. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 60 ===
+BIOMETRIA
+Control de Accesos. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+Esta fórmula es muy confiable y ocupa poco lugar. Entonces, cuando una persona va a ser reconocida, la máquina toma la huella, la transforma en un algoritmo, la compara con uno existente en la base de datos y si son coincidentes en un 99%, le autoriza el acceso, habilitándole una puerta, un molinete, una cámara, una alarma, o cualquier aplicación que se haya instalado. 
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 61 ===
+BIOMETRIA
+Existen la tarjeta Smart Card y de otros tipos, que posibilitan imprimirle la huella de la persona, lo que permite al usuario identificarse sin necesidad que el control de acceso sea totalmente inteligente, esto es que, deba consultar en la memoria si realmente la persona, es quien dice ser. Al pasar la tarjeta, la máquina carga la imagen y la compara con la almacenada, de esta forma se confirma que la tarjeta es del usuario porque encontró coincidencia entre la información suministrada por intermedio de la misma y la obtenida a través del dedo. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Aplicación : Tarjeta de Identificación y  Huella  Dactilar
+=== DIAPOSITIVA 62 ===
+Variedad de funcionesque puede cumplir unSistema de Control de Accesos
+=== DIAPOSITIVA 63 ===
+Variedad de funciones que puede cumplirun Sistema de Control de Accesos
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 64 ===
+Variedad de funciones que puede cumplirun Sistema de Control de Accesos
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 65 ===
+Variedad de funciones que puede cumplirun Sistema de Control de Accesos
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 66 ===
+Diagrama en Bloque de un típicoSistema de Control de Accesos
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CENTRAL ALARMAS Y MONITOREO
+BARRERAS
+PUERTAS PERSONALES
+TORNIQUETES
+LECTOR DE TARJETAS
+CONSOLA DE CONTROL
+LECTOR DE TARJETAS
+UPS, BOMBAS, ELECTROGENO,ETC
+ESTACION DE MONITOREO REMOTO
+PUERTAS ELECTRONICAS
+COMPUTADOR
+IMPRESORA
+CCTV
+ALARMA LOCAL
+MONITOR ZONA ACTIVADA
+ENLACE DIGITAL
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 67 ===
+Sistema de Control de AccesosConfiguración del Sistema
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+MODEM
+MODEM
+Puntos de Alarma (Máx 40)
+Proximidad
+Banda Magnética
+BARRERA AUTOMATICA    (Estacionamiento)
+Lector con tecnología Wiegand
+Sensor infrarrojo pasivo
+Chapa de puerta
+Contacto para posición de puerta
+Caja de Conexiones
+8 Lectores de tarjetas
+Computador Local (Administrativo)
+Computador Local (Operativo)
+Computador Remoto
+Impresora
+Impresora
+Controlador
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 68 ===
+Esquema de Control de Acceso
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 69 ===
+CONFIGURACIÓN DE UN SISTEMA DE CONTROL DE ACCESOS POR PROXIMIDAD PARA 4 Y 8 PUERTAS CON SISTEMA MONITOR DE ALARMAS Y CCTV
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 70 ===
+Control de Acceso por reconocimiento de la Voz
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 71 ===
+Carácterísticas Generales:
+DETECTOR DE METALES DE ARCO, MP 1783 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Tecnología : Por inducción de impulsosMicroprocesadoProgramableManejo fácil y seguroCompensación automática de elementos metálicos
+=== DIAPOSITIVA 72 ===
+DETECTOR DE METALES DE ARCO, MP 1783 
+Este sistema no sólo indica elementos metálicos, sino también el tamaño aproximado y los clasifica según su género. El detector distingue  entre aluminio, acero, monedas, en sus características especificas de metal y los contrasta con los valores programados.    
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 73 ===
+ESPEJO PARA INSPECCIÓN DE VEHÍCULOS          (MODELO TROLLEY 8265) 
+Carrito con espejo convexo iluminado, sobre 4 ruedas, especialmente diseñado para inspeccionar por debajo de todo tipo de vehículos. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 74 ===
+CONTROL DE ENTRADA AUTOMÁTICO GIRATORIO CON DETECTOR DE METALES INCORPORADO (ROT-ACCES) 
+El sistema Rot-Acces es una exclusa de puertas giratorias, con un arco detector de metales. El funcionamiento es totalmente automático, permite un acceso libre y continuado de los usuarios (hasta 20 personas por minuto en los dos sentidos).  Se bloquea al detectar objetos metálicos no autorizados por el detector de metales, a la vez que un sintetizador de voz avisa de este hecho. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 75 ===
+CONTROL DE ENTRADA AUTOMÁTICO GIRATORIO CON DETECTOR DE METALES INCORPORADO (ROT-ACCES) 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Al producirse la detección y  bloqueo del sistema, un sintetizador de voz avisa al cliente de la detección y le invita a depositar el objeto metálico detectado en las casilla situadas al efecto.El conjunto de prestaciones del sistema rot-acces permite liberar totalmente a los empleados de la entidad de toda función de vigilancia. 
+=== DIAPOSITIVA 76 ===
+CONTROL DE ENTRADA AUTOMÁTICO GIRATORIO CON DETECTOR DE METALES INCORPORADO (ROT-ACCES) 
+Esta misma electrónica controla el retroceso de las puertas giratorias después del bloqueo, de tal manera, que arrastra hacia el exterior, cualquier objeto metálico depositado en el interior de la exclusa, yObliga a salir a la persona portadora del objeto no autorizado. Cuando el objeto se encuentra ya fuera de la exclusa, reinicia el funcionamiento en forma automática. 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+Continuación...
+=== DIAPOSITIVA 77 ===
+DETECTOR MANUAL DE METALES 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  I  “CONTROLES DE ACCESO”
+=== DIAPOSITIVA 78 ===
+Control de Accesos
+FIN

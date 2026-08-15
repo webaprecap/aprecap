@@ -1,0 +1,156 @@
+﻿=== DIAPOSITIVA 1 ===
+SEGURIDAD  ELECTRONICA
+ SeguridadElectrónica
+2019
+=== DIAPOSITIVA 2 ===
+INTRODUCCION
+SEGURIDAD  ELECTRONICA
+=== DIAPOSITIVA 3 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+OBJETIVOS  TERMINALES  DEL  CURSOAl término del curso, el alumno será capaz de identificar y conocer los equipos que componen un sistema electrónico de seguridad, su utilidad, características principales, funcionamiento, configuraciones típicas y vulnerabilidades.El alumno quedará en condiciones de auditar sistemas  de  seguridad instalados, participar en proyectos de seguridad  electrónica, capacitar  en  el rubro y asesorar  a  autoridades  y  empresarios  encargados  de  la  seguridad  privada.
+=== DIAPOSITIVA 4 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOS  HUMANOSSe refiere al personal encargado de velar por la seguridad en una organización; con la calificación y formación específica que requiere en cada caso, para el eficaz y eficiente cumplimiento de su misión, en los roles preventivo y reactivo.Está constituído por los agentes de la Seguridad Pública, Institucional y/o Privada.
+SISTEMA DE  SEGURIDADTodo SISTEMA INTEGRAL DE SEGURIDAD de una organización, para ser operativo y hacer frente con eficacia a los riesgos que se encuentra expuesta, debe incorporar un conjunto de medios y medidas que podemos diferenciar en tres grandes grupos: 
+=== DIAPOSITIVA 5 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIDAS  ORGANIZATIVASAplicables para lograr la consecución de los fines de seguridad propuestos, mediante la adecuada gestión de los medios humanos y técnicos, a través de la aplicación de planes, normas y estrategias.MEDIOS  TECNICOSSurgen como apoyo a los medios humanos y, tienen por objeto lograr una mayor efectividad en las tareas de control y vigilancia, facilitando una mayor agilidad en la intervención y a la vez, racionalizar el empleo de efectivos humanos.
+=== DIAPOSITIVA 6 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOSHUMANOS
+Personal de Seguridad
+CalificaciónFormación Específica
+MEDIDAS ORGANIZATIVAS
+Organización Departamento de Seguridad
+Plan de Seguridad
+Procedimientos
+   
+SISTEMA  INTEGRAL  DE  SEGURIDAD
+MEDIOS  TECNICOS
+Pasivos
+Activos
+OrganigramaDimensionadoPresupuesto
+Plan EmergenciaPlan EvacuaciónPlan Conservación
+OperativosAdministrativos
+Control de AccesosDetección de IntrusiónDetección de IncendiosCCTVRadiocomunicacionesSistemas AntiasaltosOtros
+=== DIAPOSITIVA 7 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOS  TECNICOS  PARA   CONTROL  DE  ACCESOS
+Lectores de Tarjetas
+Teclado Digital
+Biométricos
+Detectores de Metales
+Rayos X
+MEDIOS  PASIVOS
+PuertasTorniquetesEsclusasBarreras MotorizadasContenedores AntiexplosivosOtros
+MEDIOS  ACTIVOS
+Detectores de Explosivos
+MagnéticasWiegandProximidadInfrarrojas
+Huella DactilarContorno de la ManoIris del OjoRetina del OjoVozFirma
+De PórticoPortátilPuerta Giratoria
+NuméricoAlfa Numérico
+ManualPor CCTVPor cinta transportadora
+Analizador de vapores y gasesAnalizador térmico de  neutrones
+=== DIAPOSITIVA 8 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOS  TECNICOS  PARA   DETECCION  DE  INTRUSION
+MEDIOS  PASIVOS
+MUROS Y TABIQUES
+CERRAMIENTOS  Y  VALLADOS
+ALAMBRADOS  Y  CONCERTINAS
+PUERTAS METALICAS  Y BLINDADAS 
+BARRERAS  DE  DETENCION
+VIDRIOS  DE  SEGURIDAD
+REJAS  Y  EMPALIZADAS
+OTROS
+=== DIAPOSITIVA 9 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOS  TECNICOS  PARA   DETECCION  DE  INTRUSION
+VIGILANCIA PERIMETRICA
+DETECCION  PERIMETRAL
+MEDIOS  ACTIVOS
+CCTV
+InercialesMicrofónicosCampo ElectromagnéticoHilos tensadosOtros
+MicroondasInfrarrojos activosUltrasónicosInfrarrojos pasivosCapacitivos
+SOPORTADOS
+Contactos  electromagnéticosSensores de presiónCélulas fotoeléctricas
+MicroondasUltrasónicosInfrarrojos pasivosCampo electromagnéticoCapacitivosMicrofónicos
+ENTERRADOS
+AUTOSOPORTADOS
+IgeofónicosPresión diferencialcampo electromagnéticoRadiofrecuencias
+DETECCION  PERIFERICA
+PUNTUALES
+LINEALES
+VOLUMETRICOS
+Infrarrojos activosHilos tensados
+=== DIAPOSITIVA 10 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOS  TECNICOS  PARA  PROTECCION  DEL  FUEGO
+MEDIOS  PASIVOS
+SECTORIZACION
+ENCERRAMIENTOS  Y  VALLADOS
+ESCALERAS  DE  EVACUACION
+ALAMBRADAS  Y  CONCERTINAS
+PUERTAS BLINDADAS O ANTIFUEGOS
+REJAS  Y  EMPALIZADAS
+BARRERAS  DE  DETENCION
+SEÑALIZACION VIAS DE EVACUACION 
+EQUIPOS  AUTONOMOS DE RESPIRACION
+MEDIOS DE  COMBATE CONTRA INCENDIOS
+=== DIAPOSITIVA 11 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+MEDIOS  TECNICOS  PARA  PROTECCION  DEL  FUEGO
+MEDIOS  ACTIVOS
+HumosTemperaturaLlamaFugas de fluidosOtros
+Alumbrado  de  emergenciaAlumbrado  de  señalizacionTamper  para  ductos  de  ventilaciÓnAccionamiento  puertas cortafuegosPresurizacion  de  zonas  de  seguridad
+DETECCION  AUTOMATICA
+Red de bocas para conexión bomberosRed  hÚmedaRed  secaRed  inerteExtintores  portatilesSistemas automaticos  de  extincionPor  aguaPor difusion polvo extintorPor difusion de gas extintorFM-200CO2HalonOtros
+INSTALACIONES  DE  ALARMA
+INSTALACIONES  DE  EMERGENCIA
+Instalaciones  de  alertaPulsadores  de  alarmaInstalaciones  de  megafoniaInstalaciones  estroboscopicas
+SISTEMAS  DE  EXTINCION
+=== DIAPOSITIVA 12 ===
+SEGURIDAD  ELECTRONICA
+LOS MEDIOS TECNICOS Y LA DETECCION TEMPRANA 
+INTRODUCCION
+La DETECCION TEMPRANA de un intruso o un evento, es esencial para la eficacia de un Sistema de Seguridad porque:
+Posibilita una reacción oportuna para neutralizar la intrusión
+=== DIAPOSITIVA 13 ===
+SEGURIDAD  ELECTRONICA
+INTRODUCCION
+La EFICACIA de un Sistema de Seguridad está determinada por :
+La selección correcta de los Medios Técnicos para lo que se protege
+La instalación adecuada de los Medios Técnicos seleccionados
+=== DIAPOSITIVA 14 ===
+SEGURIDAD  ELECTRONICA
+tb
+t1 + t2 + t3 + t4  << tb  +  ta
+Los Medios Técnicos y la Detección Temprana 
+Detección
+Transmisión
+Procesamiento
+Intercepción
+Realizar la intrusión y lograr el objetivo
+Medios Técnicos Pasivos
+ta
+t2
+t3
+t4
+t1
+Medios Técnicos Activos
+Tiempo de Holgura
+Intrusión
+¡
+!
+=== DIAPOSITIVA 15 ===
+INTRODUCCION
+FIN

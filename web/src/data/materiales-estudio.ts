@@ -5,7 +5,8 @@ export interface SubModuloData {
   codigo: string; // ej: "1.1", "1.2", "2.1"
   nombre: string;
   pdfUrl?: string;
-  slides: SlideData[];
+  videoUrl?: string;
+  slides?: SlideData[];
 }
 
 export interface ModuloData {
@@ -30,53 +31,186 @@ export const materialesEstudio: CursoMaterial[] = [
     slug: "guardia-de-seguridad",
     title: "Curso de Guardia de Seguridad (OS-10)",
     categoria: "Seguridad Privada Acreditada (Carabineros de Chile)",
-    pdfUrl: "/materiales/os10/Legislación_de_Seguridad_Privada.pdf",
+    pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7ea50e400ad6ec69eda48a5fc38f3a9ed99a9e42.pdf",
     banco: "os10",
     modulos: [
       {
         nombre: "Legislación OS 10",
         videoUrl: "https://youtu.be/M1lEmsruPHI",
-        pdfUrl: "/materiales/os10/Legislación_de_Seguridad_Privada.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7ea50e400ad6ec69eda48a5fc38f3a9ed99a9e42.pdf"
       },
       {
         nombre: "Seguridad Corporativa",
         videoUrl: "https://youtu.be/sSkexLMqqkY",
-        pdfUrl: "/materiales/os10/Manual_de_Seguridad_Física_OS-10.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/f4fdc2a2151f7a2f5f55eb8dbd54e31305455501.pdf"
       },
       {
         nombre: "Riesgos y Control de Incendios",
         videoUrl: "https://youtu.be/yklkKntu6TY",
-        pdfUrl: "/materiales/os10/Tactical_Safety_and_Fire_Guide.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7d0c23ccb95d046e7c76738eb3c98f031f8427d7.pdf"
       },
       {
         nombre: "Comunicación",
         videoUrl: "https://youtu.be/MCpJkz8hzH0",
-        pdfUrl: "/materiales/os10/Security_Communication_Systems.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/312fe707f767116cb8cc5b39c9b2b3f96c89eaf5.pdf"
       },
       {
         nombre: "Guía de Primeros Auxilios",
         videoUrl: "https://youtu.be/x3y0sLw6RL8",
-        pdfUrl: "/materiales/os10/Primeros_Auxilios_OS-10.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/8ea871e254bfdd6a8e98cf7f6d8bf568fe730892.pdf"
       },
       {
         nombre: "El Guardia Estratégico",
         videoUrl: "https://youtu.be/vzNAhjWjW-E",
-        pdfUrl: "/materiales/os10/OS-10_Tactical_Blueprint.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/149595a9f0bdc3bd9a36b145157ab8ecb3ffced2.pdf"
       },
       {
         nombre: "Psicología de emergencias",
         videoUrl: "https://youtu.be/Te_wPjNEAaU",
-        pdfUrl: "/materiales/os10/Manual_Táctico_de_Psicoprevención.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/0b142f802f9c49f2bace8132c93fc14523954cf9.pdf"
       },
       {
         nombre: "Psicología en Crisis",
         videoUrl: "https://youtu.be/o81yak_-_jc",
-        pdfUrl: "/materiales/os10/Tactical_Psychoprevention_Manual.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/f271c345063cb4d2e14a5202e1e513d683b0c3a4.pdf"
       },
       {
         nombre: "Psicología en Emergencias",
         videoUrl: "https://youtu.be/owhFjjQLtkU",
-        pdfUrl: "/materiales/os10/Tactical_Security_Blueprint.pdf"
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/60cddc2e98585eea14ce9bf2a82e623a0a04bc49.pdf"
+      },
+      {
+        nombre: "Evolución del Guardia",
+        videoUrl: "https://youtu.be/m1p-fI3uwek",
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/0265519810833a4c1728e9004917b547e24c5021.pdf"
+      },
+      {
+        nombre: "Seguridad de Instalaciones OS-10",
+        videoUrl: "https://youtu.be/AHhDEfJAM1s",
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/84238022a76a9fa487d354fe10342167e60f7aef.pdf"
+      },
+      {
+        nombre: "Ética y Eventos Masivos",
+        videoUrl: "https://youtu.be/bsLIP7v5-A8",
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/493a70c10eeafeeca762dcde2d919f84b4e536d2.pdf"
+      },
+      {
+        nombre: "Derechos y Deberes Legales",
+        videoUrl: "https://youtu.be/Xvp-GwrbWW0",
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/222b18e655de1083a8ea5e74cfae270639320861.pdf"
+      },
+      {
+        nombre: "Protección Moderna Integral",
+        videoUrl: "https://youtu.be/G9UWNolIgCA",
+        pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/d6afa9714fcc6a9ce8260941150e88f17f451639.pdf"
+      },
+      {
+        nombre: "Resolución Exenta N° 2183 · Capacitación y Exámenes (Lectura)",
+        slides: [
+          {
+            id: "res2183-1",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 1,
+            title: "¿Qué es la Resolución Exenta N° 2.183?",
+            contentBullets: [
+              "Dictada el 6 de noviembre de 2025 por el Ministerio de Seguridad Pública (Subsecretaría de Prevención del Delito).",
+              "Aprueba las Instrucciones Generales sobre Capacitación y Exámenes en Seguridad Privada.",
+              "Aplica a Vigilantes Privados, Guardias de Seguridad, Porteros, Nocheros, Rondines u otros de similar carácter.",
+              "La autoridad fiscalizadora es Carabineros de Chile (Prefectura de Seguridad Privada OS-10)."
+            ]
+          },
+          {
+            id: "res2183-2",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 2,
+            title: "Base legal",
+            contentBullets: [
+              "Ley N° 21.659, sobre Seguridad Privada.",
+              "Decreto N° 209 de 2024: aprueba el Reglamento de Seguridad Privada de la Ley 21.659.",
+              "Decreto N° 208 de 2024: aprueba el Reglamento de Eventos Masivos.",
+              "Estas normas regulan la capacitación y los exámenes que deben rendir los guardias."
+            ]
+          },
+          {
+            id: "res2183-3",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 3,
+            title: "Tipos de cursos regulados",
+            contentBullets: [
+              "Curso de Formación: se rinde por una sola vez.",
+              "Curso de Perfeccionamiento: actualización periódica de conocimientos.",
+              "Curso de Especialización para Guardias de Seguridad.",
+              "Si la persona no rinde el perfeccionamiento o especialización en el plazo correspondiente, deberá rendir nuevamente el curso de formación."
+            ]
+          },
+          {
+            id: "res2183-4",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 4,
+            title: "Duración mínima del curso de formación",
+            contentBullets: [
+              "Vigilantes Privados: 100 horas pedagógicas.",
+              "Guardias de Seguridad: 90 horas pedagógicas.",
+              "Porteros, Nocheros, Rondines u otros de similar carácter: 60 horas pedagógicas."
+            ]
+          },
+          {
+            id: "res2183-5",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 5,
+            title: "Área legal (asignaturas para Guardias de Seguridad)",
+            contentBullets: [
+              "Legislación aplicada a la seguridad privada.",
+              "Respeto y promoción de los derechos humanos.",
+              "Privacidad y uso de datos personales.",
+              "Probidad, no discriminación y perspectiva de género."
+            ]
+          },
+          {
+            id: "res2183-6",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 6,
+            title: "Área técnica (asignaturas para Guardias de Seguridad)",
+            contentBullets: [
+              "Prevención de riesgos.",
+              "Seguridad de las instalaciones.",
+              "Seguridad electrónica.",
+              "Sistemas de telecomunicaciones, entre otras."
+            ]
+          },
+          {
+            id: "res2183-7",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 7,
+            title: "Examen teórico (Artículos 30 a 32)",
+            contentBullets: [
+              "Se examinan teóricamente los cursos de formación y perfeccionamiento (VV.PP., GG.SS., porteros, nocheros, rondines) y el curso de especialización de los guardias de seguridad.",
+              "El examen consta de 60 preguntas cerradas.",
+              "Tiempo máximo: 120 minutos, contados desde que el examinador declara su inicio.",
+              "Las preguntas se distribuyen proporcionalmente entre las áreas temáticas de la malla."
+            ]
+          },
+          {
+            id: "res2183-8",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Resolución Exenta N° 2183",
+            slideNumber: 8,
+            title: "Examen práctico y puntos clave",
+            contentBullets: [
+              "La resolución establece disposiciones generales para el examen práctico y pautas de evaluación de los exámenes prácticos.",
+              "Regula los procedimientos asociados a la rendición y calificación de los exámenes.",
+              "La Subsecretaría de Prevención del Delito dicta estas instrucciones y Carabineros de Chile las fiscaliza en terreno.",
+              "Conocer esta normativa es parte del perfil profesional del Guardia OS-10."
+            ]
+          }
+        ]
       }
     ]
   },
@@ -89,370 +223,170 @@ export const materialesEstudio: CursoMaterial[] = [
     modulos: [
       {
         nombre: "Módulo 1: Fundamentos Legales de Operación de CCTV y Alarmas",
-        pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
         subModulos: [
           {
             id: "cctv-1-1",
             codigo: "1.1",
             nombre: "Definición de Operador de CCTV y Decreto Supremo N° 41",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-1-1-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.1: Operador CCTV y D.S. N° 41",
-                slideNumber: 1,
-                title: "Rol Legal del Operador de CCTV (Decreto 261)",
-                contentBullets: [
-                  "El operador controla a través de CCTV y alarmas la seguridad de una instalación.",
-                  "Objetivo: Detección oportuna de riesgos, alertas a Carabineros/PDI y neutralizar la amenaza.",
-                  "Responsabilidad en el manejo confidencial de datos e imágenes."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "cctv-1-1-2",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.1: Operador CCTV y D.S. N° 41",
-                slideNumber: 2,
-                title: "Conexión a Centrales de Carabineros (D.S. N° 41)",
-                contentBullets: [
-                  "Autoriza la conexión directa de empresas de seguridad a la Central de Comunicaciones de Carabineros (CENCO).",
-                  "Transmisión mediante canales de voz, audio, imagen, digital o satelital.",
-                  "Costo de la conexión: Renta mensual 3 U.F. por cada 100 usuarios y cobro de 0,5 U.F. por falsa alarma."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            videoUrl: "https://youtu.be/pZbUu8NOLts",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/aeaed4f5abf1cb1ccf20bbb5ae5fb58112db51a9.pdf"
           },
           {
             id: "cctv-1-2",
             codigo: "1.2",
-            nombre: "Medidas Mínimas de Seguridad para Empresas (Decreto Supremo N° 1122 / DL 3607)",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-1-2-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.2: Decreto Supremo N° 1122",
-                slideNumber: 1,
-                title: "Alarmas de Asalto y Vigilancia Privada (Art. 5° al 8°)",
-                contentBullets: [
-                  "En recintos con más de un vigilante, al menos uno debe vestir de civil.",
-                  "Dispositivo de alarma de asalto obligatorio, independiente de alarmas de robo o incendio.",
-                  "Conexión directa con la Central de Comunicaciones de Carabineros o PDI con activación remota y manual."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "cctv-1-2-2",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.2: Decreto Supremo N° 1122",
-                slideNumber: 2,
-                title: "Régimen de Falsas Alarmas y Cámaras HD (Art. 10° a 17°)",
-                contentBullets: [
-                  "Cobro de 1,5 U.T.M. por cada falsa alarma.",
-                  "Sanción por reincidencia (más de 4 falsas alarmas al mes): plazo de 30 días para subsanar o desconexión del sistema.",
-                  "Sistemas de filmación HD en entidades de alto riesgo con digitalización de hora, fecha y resguardo de grabaciones."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas",
+            videoUrl: "https://youtu.be/VIUwp5TCFUA",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/58085a8873e5de02cd0c59bd606623b8fd75d3c3.pdf"
           },
           {
             id: "cctv-1-3",
             codigo: "1.3",
-            nombre: "Regulación en Transporte de Valores y Bóvedas (Decreto Supremo N° 1814)",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-1-3-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.3: Decreto Supremo N° 1814",
-                slideNumber: 1,
-                title: "Cámaras en Camiones Blindados y Centros de Acopio",
-                contentBullets: [
-                  "Mínimo 3 cámaras HD por vehículo (cabina, tripulación y exterior) conectadas a central de monitoreo.",
-                  "Resguardo de grabaciones: 15 días hábiles mínimo, o 1 año si hubo un delito.",
-                  "Ratio de monitoreo: 1 operador por cada 10 camiones blindados en ruta."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "cctv-1-3-2",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.3: Decreto Supremo N° 1814",
-                slideNumber: 2,
-                title: "Seguridad Electrónica en Bóvedas de Acopio (Art. 17° y 18°)",
-                contentBullets: [
-                  "Bóvedas deben contar con sensores de intrusión, cerraduras electrónicas con retardo y bloqueo horario.",
-                  "Pulsadores de asalto conectados al sistema ALPHA 2 de Carabineros.",
-                  "Detectores de humo, calor y vibración estructural en el área de acopio."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Decreto Supremo N° 1814 — Transporte de Valores y Bóvedas",
+            videoUrl: "https://youtu.be/Ajm64egwHSs",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/1b131c5f69abc71f6dedcbda65699a2382f8748a.pdf"
           },
           {
             id: "cctv-1-4",
             codigo: "1.4",
-            nombre: "Seguridad en Cajeros Automáticos y Dispensadores de Dinero (Decreto Supremo N° 222)",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-1-4-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.4: Decreto Supremo N° 222",
-                slideNumber: 1,
-                title: "Sensores Mínimos en Cajeros Automáticos (Art. 6° y 9°)",
-                contentBullets: [
-                  "Sistema de alarma monitoreado en línea 24/7 conectado a central de monitoreo.",
-                  "Sensores obligatorios: Movimiento, inclinación, corte de cables, temperatura, humo y apertura de puertas/bóveda.",
-                  "Alarma sonora y lumínica (máximo 100 dB) con sistema de respaldo de energía (UPS)."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "cctv-1-4-2",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.4: Decreto Supremo N° 222",
-                slideNumber: 2,
-                title: "Cámaras Pin-Hole y Plazos de Almacenamiento (Art. 10°)",
-                contentBullets: [
-                  "Cámara externa para entorno y cámara interna (pin-hole) para rostro de usuarios.",
-                  "Resguardo estándar de grabaciones: 45 días continuos.",
-                  "En caso de ataques o robos al cajero: obligación de mantener grabaciones por 24 meses."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Decreto Supremo N° 222 — Seguridad en Cajeros Automáticos",
+            videoUrl: "https://youtu.be/AjRCNTkwvgI",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c1d56584f438e5ce26581ce50d91188057619677.pdf"
           },
           {
             id: "cctv-1-5",
             codigo: "1.5",
-            nombre: "Videovigilancia en Espectáculos de Fútbol Profesional (Ley N° 19.327)",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-1-5-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 1.5: Ley N° 19.327",
-                slideNumber: 1,
-                title: "Estándares de Televigilancia en Recintos Deportivos",
-                contentBullets: [
-                  "Obligación de instalar cámaras HD, detectores de metales y control de acceso en estadios.",
-                  "Monitoreo continuo durante todo el desarrollo del espectáculo deportivo.",
-                  "Almacenamiento de imágenes de accesos y perimetrales por un plazo mínimo de 90 días."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Ley N° 19.327 — Seguridad en Espectáculos de Fútbol Profesional",
+            videoUrl: "https://youtu.be/d31ccKMCv8w",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/ac35fd56eb34634c724017fe23f6ee6bee42c1c6.pdf"
+          },
+          {
+            id: "cctv-1-6",
+            codigo: "1.6",
+            nombre: "Privacidad, Uso de Imágenes y Protección de Datos",
+            videoUrl: "https://youtu.be/Za4QxSqXaPY",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/dbcbf30e7c70ee9165ee8d54077b056fe3421ec4.pdf"
+          },
+          {
+            id: "cctv-1-7",
+            codigo: "1.7",
+            nombre: "Evidencia Digital, Informes y Cadena de Custodia",
+            videoUrl: "https://youtu.be/WDbDDQEbNVg",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/1be373037de7a2fa069f649f2e2e9ad7440b0e6a.pdf"
           }
         ]
       },
       {
         nombre: "Módulo 2: Sistemas Electrónicos de Seguridad Privada",
-        pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
         subModulos: [
           {
             id: "cctv-2-1",
             codigo: "2.1",
-            nombre: "Tarjetas de Control de Acceso Electrónico y Biometría",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-2-1-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 2.1: Control de Acceso y Biometría",
-                slideNumber: 1,
-                title: "Tecnologías de Tarjetas de Acceso",
-                contentBullets: [
-                  "Banda Magnética: Grabación de datos digitales en cinta magnética (económica pero sensible a campos magnéticos).",
-                  "Tecnología Wiegand: Hilos metálicos incrustados de alta durabilidad e inmunidad.",
-                  "Proximidad (RFID): Circuitos sintonizados bobinados que resuenan ante el lector."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "cctv-2-1-2",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 2.1: Control de Acceso y Biometría",
-                slideNumber: 2,
-                title: "Sistemas Biométricos de Identificación",
-                contentBullets: [
-                  "Huella Digital y Geometría de Mano: Escaneo 3D de patrones dactilares y palmares.",
-                  "Reconocimiento Facial e Iris/Retina: Análisis de rasgos faciales y patrones vasculares del ojo.",
-                  "Reconocimiento de Voz, Firma y Sensores de Olor."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Tarjetas de Control de Acceso y Biometría",
+            videoUrl: "https://youtu.be/oXI6-8w_bTQ",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/4aa3c4835e4f4a78123ef34f17aa1c5055d07042.pdf"
           },
           {
             id: "cctv-2-2",
             codigo: "2.2",
-            nombre: "Detectores de Metales y Arcos Electrónicos de Control",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-2-2-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 2.2: Detección de Metales",
-                slideNumber: 1,
-                title: "Arcos y Detectores Manuales de Metales",
-                contentBullets: [
-                  "Barreras electromagnéticas para prevenir el ingreso de armas y objetos peligrosos a áreas restringidas.",
-                  "Sistema Rot-Acces: Exclusa giratoria automática con arco detector (flujo de 20 personas/min).",
-                  "Paletas manuales de inspección corporal directa."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Detectores de Metales y Arcos de Control",
+            videoUrl: "https://youtu.be/_eUoi5t6UEY",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/b8675ecc5c54e54565c37a3b0b021314d71ea7a6.pdf"
           },
           {
             id: "cctv-2-3",
             codigo: "2.3",
-            nombre: "Detectores de Intrusión, Sensores Pasivos/Activos y Barreras Fotoeléctricas",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-2-3-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 2.3: Detectores de Intrusión",
-                slideNumber: 1,
-                title: "Tipos de Sensores de Intrusión",
-                contentBullets: [
-                  "Sensores Pasivos (PIR): Fototransistores que miden variación de radiación térmica infrarroja.",
-                  "Sensores Activos: Combinan diodo IRED emisor y fototransistor receptor.",
-                  "Barreras Fotoeléctricas: Interrupción de haz invisible para protección perimetral."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Detectores de Intrusión y Sensores",
+            videoUrl: "https://youtu.be/BqwzH2EPuzM",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c5a77d7760489259ddefd2af9d63ca113bb912cf.pdf"
           },
           {
             id: "cctv-2-4",
             codigo: "2.4",
-            nombre: "Centrales de Alarma y Paneles de Control Multizona",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-2-4-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 2.4: Centrales de Alarma",
-                slideNumber: 1,
-                title: "Operación de Centrales y Paneles de Alarma",
-                contentBullets: [
-                  "CPU Principal: Procesa alertas de intrusión, incendio, pánico y sabotaje (Tamper).",
-                  "Segmentación en Zonas: Perimetral, interior, 24 horas y supervisada.",
-                  "Vías de Transmisión: Celular 4G, IP Ethernet, línea telefónica y radiofrecuencia."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Centrales de Alarma Multizona",
+            videoUrl: "https://youtu.be/bMGWSTcPE1I",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/9b4020a526b714b8800096b7997a412c858128b5.pdf"
+          },
+          {
+            id: "cctv-2-5",
+            codigo: "2.5",
+            nombre: "Fundamentos Eléctricos y Electrónicos",
+            videoUrl: "https://youtu.be/cHO8p-KyT54",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/3d19c73cf46e29a4526c41bcc1cbacc5d95931d7.pdf"
+          },
+          {
+            id: "cctv-2-6",
+            codigo: "2.6",
+            nombre: "Componentes y Arquitectura del Sistema CCTV",
+            videoUrl: "https://youtu.be/l5bLq5wwshI",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/06e4e88cdb54a52052e3a294ce618f1d6774db79.pdf"
+          },
+          {
+            id: "cctv-2-7",
+            codigo: "2.7",
+            nombre: "Detección de Incendio y Evacuación",
+            videoUrl: "https://youtu.be/mlPFihezXxk",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/f56d519c5a8e3b1c75c3b0d628fd83154c3dc6a8.pdf"
           }
         ]
       },
       {
         nombre: "Módulo 3: Televigilancia y Operación de Centro de Control",
-        pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
         subModulos: [
           {
             id: "cctv-3-1",
             codigo: "3.1",
             nombre: "Políticas de Seguridad y Central de Televigilancia",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-3-1-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 3.1: Central de Televigilancia",
-                slideNumber: 1,
-                title: "Función Preventiva de la Central de Monitoreo",
-                contentBullets: [
-                  "Prioridad fundamental: Resguardo de la vida de trabajadores y clientes por sobre lo material.",
-                  "Vigilancia remota activa en tiempo real y registro continuo de incidentes.",
-                  "Coordinación directa con personal de seguridad en terreno y fuerzas policiales."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            videoUrl: "https://youtu.be/dqVOVREM9dk",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/d29589f15490727b471acf0be3767e0eeb23a91a.pdf"
           },
           {
             id: "cctv-3-2",
             codigo: "3.2",
             nombre: "Modus Operandi Delictual y Análisis de Riesgos",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-3-2-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 3.2: Modus Operandi Delictual",
-                slideNumber: 1,
-                title: "Patrones de Delitos y Modus Operandi",
-                contentBullets: [
-                  "Robo Simple vs Planificado: Vigilancia previa, bandas organizadas y vehículos.",
-                  "Robo de Vehículos: Portonazos, encerronas y asaltos a transporte.",
-                  "Robo por Sorpresa (Lanzazos): Concentración en horarios peak (07:00-10:00, 12:00-14:00, 18:00-20:00)."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            videoUrl: "https://youtu.be/J3yIS0E-O3I",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/5cc9b9fd7512a343458dc9e292c8307ba0900693.pdf"
           },
           {
             id: "cctv-3-3",
             codigo: "3.3",
-            nombre: "Circuito Cerrado de Televisión (CCTV), Control de Personas y Zonas Operativas",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-3-3-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 3.3: CCTV y Zonas Operativas",
-                slideNumber: 1,
-                title: "CCTV como Transductor Óptico y Elemento Disuasivo",
-                contentBullets: [
-                  "Conversión de señales de luz en señales eléctricas de video.",
-                  "Efecto disuasivo inmediato y generación de imágenes probatorias para juicios.",
-                  "Monitoreo diferenciado: Autodomos PTZ en zonas de circulación y cámaras fijas en accesos/estacionamientos."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "CCTV, Control de Personas y Zonas Operativas",
+            videoUrl: "https://youtu.be/BhqEEOzZIQA",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/a9f94bb9a83987fe9b1e5a479e4192f34ffc8e13.pdf"
           },
           {
             id: "cctv-3-4",
             codigo: "3.4",
-            nombre: "Sistemas Ópticos, Cámaras Ocultas, Equipos CCTV y Guía de Buenas Prácticas",
-            pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
-            slides: [
-              {
-                id: "cctv-3-4-1",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 3.4: Equipos y Guía de Buenas Prácticas",
-                slideNumber: 1,
-                title: "Equipamiento de Grabación y Procesamiento",
-                contentBullets: [
-                  "Medios de transmisión: Cable Coaxial, Fibra Óptica y Enlaces de Microondas.",
-                  "Procesadores de video: Switchers, Quads (divisores 4 imágenes) y Multiplexores.",
-                  "Grabadoras DVR/NVR: Time-lapse, por evento, 24 horas y 72 horas alta densidad."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: "cctv-3-4-2",
-                courseSlug: "operador-cctv-y-alarmas",
-                moduleName: "Módulo 3.4: Equipos y Guía de Buenas Prácticas",
-                slideNumber: 2,
-                title: "Estándares de Montaje y Superposición de Campos",
-                contentBullets: [
-                  "Montaje de cámaras fijas a una altura superior a 2,3 metros para evitar sabotajes.",
-                  "Posicionamiento Cenital (90°) para monitoreo de mesas de juego y cajas de dinero.",
-                  "Superposición y cruce de campos de imagen para eliminar puntos ciegos."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Óptica, Cámaras, Equipos y Buenas Prácticas de Montaje",
+            videoUrl: "https://youtu.be/cQAp5QbHaJA",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/57aa8be3a71e759c4c30d7b50c45849f475ecfdd.pdf"
+          },
+          {
+            id: "cctv-3-5",
+            codigo: "3.5",
+            nombre: "Operación del CCTV por el Guardia y el Centro de Control",
+            videoUrl: "https://youtu.be/SoovCtb5g9I",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/4bb4d9cd7e3cef93b1212133cf4ecb1812fdffba.pdf"
+          },
+          {
+            id: "cctv-3-6",
+            codigo: "3.6",
+            nombre: "Ciberseguridad en Videovigilancia y Bodycams",
+            videoUrl: "https://youtu.be/C_Lmnga6uck",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/d6917936db37fa9694dded4a2e984002b716df33.pdf"
+          },
+          {
+            id: "cctv-3-7",
+            codigo: "3.7",
+            nombre: "Analítica de Video, Inteligencia Artificial y Tendencias",
+            videoUrl: "https://youtu.be/TkUPpovBSWU",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c35b25b4a0fb2eaa3ccebb00b7234227f45ae6b8.pdf"
+          },
+          {
+            id: "cctv-3-8",
+            codigo: "3.8",
+            nombre: "Gestión de Crisis y Custodia Digital",
+            videoUrl: "https://youtu.be/nyKt6Fb5FYg",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/29e5ef2acbca476602e66de41fd968df7497fa3e.pdf"
           }
         ]
       }

@@ -1,0 +1,598 @@
+﻿=== DIAPOSITIVA 1 ===
+Capítulo II      
+Detección de Intrusión
+=== DIAPOSITIVA 2 ===
+TIPOS  DE  DETECTORES
+Estos detectores se pueden dividir en : Detectores para exteriorDetectores para interiorSe hace esta discriminación por las condiciones ambientales que pueden afectarles.
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 3 ===
+TIPOS DE DETECTORES (Exteriores)
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 4 ===
+TIPOS DE DETECTORES (Interiores)
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 5 ===
+TIPOS  DE  DETECTORES
+1.- PROTECCION  PERÍMETRO  EXTERIOR 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 6 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 7 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+2.- PROTECCION  PERIMETRO  INTERIOR
+=== DIAPOSITIVA 8 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+3.-  BARRERAS  DE  PROTECCION  ELECTRONICA
+4.-  PROTECCIÓN  ELECTRÓNICA  DE  OBJETOS
+=== DIAPOSITIVA 9 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+5.- PULSADORES  PARA  ASALTOS
+	6.-  DETECTORES  DE  INCENDIO
+=== DIAPOSITIVA 10 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 11 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 12 ===
+TIPOS  DE  DETECTORES
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 13 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Infrarrojos   Pasivos 
+=== DIAPOSITIVA 14 ===
+INFRARROJOS  PASIVOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 15 ===
+INFRARROJOS  PASIVOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 16 ===
+INFRARROJOS  PASIVOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Los seres humanos y animales irradian ondas infrarrojas o energía electromagnética, a temperatura ambiental, en el área de infrarrojo extremo  entre 8.000 y 20.000 (nanómetros) nm.
+Radiación de Energía
+=== DIAPOSITIVA 17 ===
+INFRARROJOS  PASIVOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Casi todos los materiales reflejan o absorben la radiación infrarroja excepto algunos materiales sintéticos especiales. (Avión F-117 o Invisible).
+Avión Invisible
+=== DIAPOSITIVA 18 ===
+INFRARROJOS  PASIVOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Las ventanas vidriadas comunes y corrientes tienen notables propiedades, permiten el paso de la luz visible, pero son totalmente opacas para la radiación infrarroja, en el área de infrarrojo extremo o infrarrojo pasivo. 
+Las ventanas vidriadas
+=== DIAPOSITIVA 19 ===
+EL SER HUMANO. FUENTE DE ONDAS INFRARROJAS 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+La temperatura máxima de la piel de las personas vestidas es entre 33 y 35 grados centígrados.Los detectores de infrarrojo pasivo tienen una operación óptima a longitudes de onda entre 7.000 a 14.000 nm. 
+El Cuerpo Humano
+=== DIAPOSITIVA 20 ===
+CARACTERISTICAS  RADIACCION PIEL  HUMANA 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+La piel humana es uno de los mejores irradiadores, con un factor de emisión de 0,96 a 0,98. 
+=== DIAPOSITIVA 21 ===
+PROCESO  DE  DETECCIÓN  DE UN  PIR  
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ 
+=== DIAPOSITIVA 22 ===
+ESPEJOS  SEGMENTADOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 23 ===
+ESPEJOS  SEGMENTADOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Se necesitan espejos segmentados o lentes fresnel para enfocar la radiación infrarroja de un objeto en el sensor del detector.Como el sensor sólo detecta las diferencias en la temperatura de la radiación infrarroja, la observación debe ser discontinua y, se crea a través del espejo por medio de varios segmentos.
+Proceso de Detección
+=== DIAPOSITIVA 24 ===
+ESPEJOS  SEGMENTADOS
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Cada segmento esta construido de tal forma que sólo recibe la energía infrarroja a través de los campos de detección dobles con forma de dedos.Si alguien cruza un campo de detección crea un cambio rápido en la temperatura del elemento sensor y se generará una alarma.  
+Proceso de Detección (Continuación)...
+=== DIAPOSITIVA 25 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTORES  PIR  DUAL  Y  QUAD
+=== DIAPOSITIVA 26 ===
+ESQUEMA DE DETECCIÓN DE UN DETECTOR PIR CON ESPEJO GRAN  ANGULAR O UN LENTE FRESNEL 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+20 campos de detección dobles en forma de dedo se proyectan a través de 3 zonas 
+=== DIAPOSITIVA 27 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+COBERTURA  DE  LOS  PIR
+=== DIAPOSITIVA 28 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ESQUEMA DE DETECCIÓN DE UN DETECTOR PIR CON ESPEJO GRANANGULAR O UN LENTE FRESNEL 
+=== DIAPOSITIVA 29 ===
+PROCESAMIENTO  BALANCEADO 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Si un intruso entra a un área protegida y cruza un dedo del campo de detección doble, se crea un cambio extremadamente rápido en el elemento sensor de un lado.El sensor se desbalancea y  generará una alarma. 
+=== DIAPOSITIVA 30 ===
+PROCESAMIENTO  BALANCEADO 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Cambios en la temperatura de trasfondo aplicado a ambos dedos en un campo de detección, no causa un desbalanceo.
+=== DIAPOSITIVA 31 ===
+COMO  Y  DONDE  INSTALAR   PIR 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Tenga una base estable, sin vibraciones.Evite las corrientes y turbulencias de aire dirigidas al detector.Selle la entrada de cables y la parte trasera del detector.La alta energía de la radiación infrarroja continua como la luz solar, cañerías de vapor y cocinas abiertas dirigidas al detector, pueden dañar el sensor. Las zonas de detección deben dirigirse de modo que la trayectoria del intruso cruce las zonas o dedos.
+=== DIAPOSITIVA 32 ===
+COMO  Y  DONDE  INSTALAR  PIR
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Tenga cuidado que el amoblado interior puede moverse o cambiarse, en cuyo caso se deben hacer nuevos ajustes.No use un detector para alcance mayor al especificado.Si un detector se alarma injustificadamente se activa, primero verifique el voltaje de cc.Antes de instalar el detector, verifique que el sistema óptico esté limpio.Se debe ejecutar la prueba de caminar a varias velocidades    dentro del rango especificado.
+=== DIAPOSITIVA 33 ===
+COMPENSACIÓN AUTOMÁTICA DE TEMPERATURA 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Si la temperatura de trasfondo se acerca a la del cuerpo humano, el cambio en la cantidad de señal infrarroja no es suficiente para activar el  PIR.Si la temperatura baja mucho, incluso un ratón o un pájaro mostrará una alta radiación infrarroja comparada con el trasfondo y, el detector generará una falsa alarma.
+-18°C      +50°C
+-18°C
++50°C
+=== DIAPOSITIVA 34 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Sin la compensación automática de temperatura, se pueden generar alarmas indeseadas a muy bajas temperaturas de trasfondo si la luz solar llega momentáneamente a una pared o si hay pequeños animales moviéndose en el área. 
+COMPENSACIÓN  AUTOMÁTICA  DE  TEMPERATURA 
+=== DIAPOSITIVA 35 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+resultan detectores “dormilones” a altas temperaturas y, alarmas indeseadas a bajas temperaturas . La compensación automática de temperatura en el detector, consiste en aumentar la sensibilidad a altas temperaturas de trasfondo y disminuirla a bajas temperaturas de trasfondo. 
+COMPENSACIÓN AUTOMÁTICA DE TEMPERATURA 
+Sin compensación automática de temperatura,...
+=== DIAPOSITIVA 36 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+PLANIFICACIÓN  PARA  INSTALACIÓN  DE  PIR  
+Un detector correctamente instalado debe proveer una detección óptima, es decir temprana y la menor cantidad de falsas alarmas .   
+INSTALACION
+=== DIAPOSITIVA 37 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ALTURA  DE  MONTAJE
+La instalación de los PIR debe realizarse de acuerdo al manual de instalación.Un detector instalado alto, “mira” a una mayor distancia si no existen obstáculos.Un PIR debería montarse  por lo menos 10cm por debajo del cielo, para evitar turbulencias de aire, que son fuente de perturbaciones. 
+=== DIAPOSITIVA 38 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+PLANIFICACIÓN  E  INSTALACIÓN  DE  PIR 
+Para una detección temprana de un intruso, el detector debería proyectarse de tal forma que la trayectoria elegida por el intruso debe cruzar la zona de detección.Al caminar hacia el detector pir, también se detecta al intruso, pero en una etapa muy posterior.
+=== DIAPOSITIVA 39 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+1.-La esquina de paredes es una base muy estable.2.-La trayectoria de un intruso usualmente no es en línea recta hacia una esquina.3.-Se protegen ambas paredes.4.-Es casi imposible caminar bajo el detector sin causar una alarma.5.-Debido al ángulo de abertura del detector, el área se protege en forma óptima. 
+Es  preferible  instalarlos en  las esquinas 
+=== DIAPOSITIVA 40 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Potenciales fuentes de interferencia
+Luz solar directa, de frente al detector.Fuentes calientes y frías en el campo de detección.Animales domésticos.Turbulencia de aire dirigida al detector. Ventiladores, calefactores, aire acondicionado, etc.Cañerías de vapor y cocinas abiertas.Radiofrecuencias.Linternas o luz de vehículos.
+=== DIAPOSITIVA 41 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+PRUEBA  DE  CAMINAR  PARA  LOS  PIR 
+Después de la instalación y de los ajustes de un PIR, siempre termine el trabajo con una prueba de caminar.
+Detector  Granangular
+=== DIAPOSITIVA 42 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+MICROONDAS
+=== DIAPOSITIVA 43 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+MICROONDAS
+Estos dispositivos utilizan el principio de la interrupción de un enlace de frecuencias en el orden de las microondas 10 a 15 (GHz). 
+=== DIAPOSITIVA 44 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR EN  DISPOSITIVOS INDEPENDIENTES 
+Entre el transmisor y el receptor se produce un enlace de microondas (MO) que al interrumpirse, aunque sea breve, el receptor recibe menor cantidad de energía de MO, activándose la alarma. Para su instalación debe procurarse que el área cubierta por este enlace no sea obstaculizada por cuerpos sólidos grandes, vegetación o paso de animales. El terreno a cubrir debe ser plano y de pendiente constante. 
+Zona Sensible
+=== DIAPOSITIVA 45 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR INCORPORADOS EN UN MISMO DISPOSITIVO 
+A esta configuración se les denomina transceptor (de transmisión y receptor).El principio de funcionamiento e instalación es similar al anterior, debiendo tomarse similares precauciones.
+Tx/Rx
+=== DIAPOSITIVA 46 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR  SEPARADOS
+El empleo de elementos de MO son útiles para proteger grandes distancias (450 metros).Son susceptibles a generar falsas alarmas por elementos metálicos o sólidos que interfieren el enlace.
+=== DIAPOSITIVA 47 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR SEPARADOS 
+A distancias de 450 metros, en el centro se puede obtener un diámetro central mayor, de aproximadamente 12 metros.El catálogo indica la distancia off-set, como asimismo las alturas que deben tener las pantallas del Tx y el Rx. 
+=== DIAPOSITIVA 48 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR SEPARADOS 
+Consideraciones
+Cubren distancias largas (450 metros).No es afectado por inducción eléctrica, de lineas de alta tensión (16.000 voltios).No le afectan la neblina, lluvia y otros fenómenos meteorológicos, como en el caso de los infrarrojos activos.
+a = radio de activación máximob = radio libre de obstáculos para evitar alteraciones
+=== DIAPOSITIVA 49 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR SEPARADOS 
+Aplicaciones 
+Existen para interiores y exteriores. Estos últimos son inmunes a las condiciones climáticas adversas como neblina o lluvia fuerte.
+=== DIAPOSITIVA 50 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+TRANSMISOR Y RECEPTOR SEPARADOS 
+Aplicaciones 
+Para mayor seguridad, en interiores se utilizan dispositivos  duales, conformados por dos detectores en un mismo elemento, esto es, un infrarrojo pasivo y un elemento de microondas. Esta configuración emite una alarma cuando se activan ambos simultáneamente. Con este tipo de elementos se disminuyen las falsas alarmas, pues las vulnerabilidades de cada uno son diferentes.
+=== DIAPOSITIVA 51 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+SISTEMA  DETECCION  POR  MICROONDAS 
+=== DIAPOSITIVA 52 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+SISTEMA  DETECCION  POR  MICROONDAS 
+Modo Correcto
+Modo Incorrecto
+=== DIAPOSITIVA 53 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Infrarrojos   Activos 
+=== DIAPOSITIVA 54 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+INFRARROJO  ACTIVO 
+ 
+Un detector infrarrojo activo consiste en un par  Transmisor / Receptor ( Tx / Rx )El transmisor del sistema detector envía un haz infrarrojo controlado ópticamente, hacia la óptica del receptor.
+=== DIAPOSITIVA 55 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+INFRARROJO  ACTIVO 
+Generación  del  haz  infrarrojo
+=== DIAPOSITIVA 56 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+INFRARROJO  PRÓXIMO  O  ACTIVO 
+La luz infrarroja emitida por el transmisor, tiene a una longitud de onda de 1000 nm, aproximadamente.La señal infrarroja de las ondas de infrarrojo próximo o activo pueden pasar a través de las ventanas a diferencia de las señales infrarrojas en las ondas de infrarrojo extremo o pasivo.
+=== DIAPOSITIVA 57 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+INFRARROJO  ACTIVO 
+Se pueden utilizar en aplicaciones al interior y exterior.El haz infrarrojo es una barrera invisible y funciona día y noche.Bajo malas condiciones climáticas, lluvia torrencial, neblina, etc., reducen notablemente el alcance efectivo.
+=== DIAPOSITIVA 58 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+COMPOSICIÓN DE UN HAZ INFRARROJO ACTIVO 
+La luz infrarroja irradiada desde un transmisor tiene una cierta cantidad de dispersión.Dependiendo de la óptica utilizada, el ángulo de abertura, varía dependiendo del fabricante.
+=== DIAPOSITIVA 59 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+COMPOSICIÓN  DE  UN  HAZ  INFRARROJO   ACTIVO 
+1.- Zona activa: Es la línea recta entre el transmisor y el receptor.2.- Zona central : Contiene suficiente energía para permitir que más receptores funcionen de un mismo transmisor.3.-Zona de dispersión : Contiene energía para afectar un receptor, pero no para tener una operación confiable.
+=== DIAPOSITIVA 60 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ALCANCE, ANCHO DE HAZ Y NIVEL DE SEÑAL DE SISTEMAS AÉREOS CON ANGULO DE ABERTURA DE 2,1° 
+Los sistemas de infrarrojo activos se pueden utilizar dentro del alcance de nivel de señal de 25% a 100%. En este caso un transmisor puede cubrir dos receptores con señal infrarroja. 
+=== DIAPOSITIVA 61 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ESQUEMAS DE INFRARROJO ACTIVO EN APLICACIONES DE INTERIOR Y EXTERIOR 
+A más de 100 m. el espaciamiento entre 2 receptores al mismo lado, debe ser 10,5 m. para evitar interferencias cruzadas. Solución: Es poner los transmisores y receptores en forma alternada.Se debería utilizar una unidad multiplex en ambos postes si se requiere más de 4 haces.Esta conmuta el par Tx/Rx a ON/OFF en secuencia, de modo que no ocurran interferencias. 
+=== DIAPOSITIVA 62 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ESQUEMAS DE INFRARROJO ACTIVO EN APLICACIONES DE INTERIOR Y EXTERIOR 
+=== DIAPOSITIVA 63 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+HACES INFRARROJOS ACTIVOS TRASLAPADOS 
+Para asegurarse que no hay espacios en los lugares donde las barreras están dispuestas en ángulos rectos o adyacentes una con otra, se debe mantener un traslape de aproximadamente un metro entre las diferentes barreras.Para detectar los intentos de sobrepasar las barreras por arriba, ellas pueden estar implementadas con un interruptor de cubierta de poste. 
+=== DIAPOSITIVA 64 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+HACES INFRARROJOS ACTIVOS TRASLAPADOS 
+=== DIAPOSITIVA 65 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  EN  ZONAS  DESNIVELADAS 
+La dirección de los haces infrarrojos activos se puede ajustar.Dependiendo del tipo de sistema, se pueden hacer ajustes horizontales hasta 190 grados.Se pueden hacer ajustes verticales hasta 20 o 40 grados. 
+=== DIAPOSITIVA 66 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN EN ZONAS DESNIVELADAS 
+=== DIAPOSITIVA 67 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN EN ZONAS DESNIVELADAS 
+=== DIAPOSITIVA 68 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+MAYOR INMUNIDAD A LAS FALSAS ALARMAS 
+Una de las principales causas de falsas alarmas es la interrupción de un haz causada por pequeños animales y pájaros.El problema de los pájaros se puede resolver disminuyendo el tiempo de respuesta, de tal forma que una persona corriendo sea detectada y un pájaro volando no sea detectado.El problema de los pequeños animales se puede resolver en forma similar. Es necesario disminuir el tiempo de respuesta de los haces que están cercanos al suelo, permitiendo detectar a un hombre que esté arrastrándose a través de los haces, ya que este movimiento es considerablemente más lento que el de los animales. 
+=== DIAPOSITIVA 69 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+MAYOR INMUNIDAD A LAS FALSAS ALARMAS 
+Lento 250 ms
+Lento 300 ms
+Lento 200 ms
+Rápido 100 ms
+Rápido 100 ms
+Rápido 100 ms
+Rápido 100 ms
+Rápido 200 ms
+Pájaros
+Animales pequeños
+=== DIAPOSITIVA 70 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ITEMS IMPORTANTES PARA LA APLICACIÓN DE DETECTORES INFRARROJOS ACTIVOS 
+Siempre elija un detector correcto para la aplicación especifica.Tenga cuidado que los haces estén correctamente ajustados.Es esencial tener una base estable sin vibraciones para tener un funcionamiento correcto.Evite que la gente golpee los detectores o pilares.Nunca monte barreras de detectores al lado de vallas.Nunca use detectores  infrarrojos activos en el exterior sin calefactores del lente y calefactores del pilar. 
+=== DIAPOSITIVA 71 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+7. Ciertas condiciones climáticas limitan el rango del haz.  Tales como neblina densa, tormentas de polvo y tormentas de nieve. Nunca exceda el alcance máximo de un haz.   Se aconseja utilizar los detectores entre un 75% y 90% de su alcance especificado.No deben haber objetos que interrumpan los haces como por ejemplo vegetación y vida silvestre.
+ITEMS IMPORTANTES PARA LA APLICACIÓN DE DETECTORES INFRARROJOS ACTIVOS
+=== DIAPOSITIVA 72 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+Instalar las fuentes de poder lo más cerca posible a los detectores.Verifique si la óptica del detector está limpia y no está cubierta por el grafico de prueba.Siempre verifique el funcionamiento correcto del contacto de sabotaje o tamper abriendo y cerrando la cubierta.Se deben ejecutar pruebas de caminar a varias velocidades dentro del rango de velocidad especificado.  
+ITEMS IMPORTANTES PARA LA APLICACIÓN DE DETECTORES INFRARROJOS ACTIVOS
+=== DIAPOSITIVA 73 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+HAZ FOTOELÉCTRICO SYNCHRO-QUAD SERIES 
+Está diseñado para  intemperie.  Estos haces quad se sincronizan para trabajar unidos, reforzar el alcance y  estabilidad, en condiciones climáticas adversas.   Las seis trayectorias de los haces ayudan a eliminar las alarmas producidas por pájaros, caída de hojas y pequeños animales, ya que todos los haces tienen que ser interrumpidos simultáneamente para que se inicie la alarma.
+Descripcion  General
+=== DIAPOSITIVA 74 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+HAZ FOTOELÉCTRICO SYNCHRO-QUAD SERIES 
+Características
+Cuatro transmisores sincronizados, de alta potencia, capaces de producir una distancia máxima de llegada de los haces diez veces la distancia nominal de protección. Esto hace posible el funcionamiento seguro con fuerte lluvia, niebla u otras condiciones atmosféricas extremas.Cuatro receptores sincronizados que incorporan circuitos de control de amplificación automática de potencia, más el funcionamiento con mal tiempo. 
+=== DIAPOSITIVA 75 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+HAZ FOTOELÉCTRICO SYNCHRO-QUAD SERIES 
+Los blindajes negros lisos incorporan secciones anti-escarcha, diseñadas especialmente para ayudar a eliminar la reducción de potencia del haz por la escarcha.El sistema óptico,  tanto del transmisor como del receptor, puede ser girado totalmente a 180°, lo que permite el enfoque lateral.    
+=== DIAPOSITIVA 76 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ULTRASONICOS
+=== DIAPOSITIVA 77 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ULTRASONIDO 
+=== DIAPOSITIVA 78 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ULTRASONIDO 
+Un detector ultrasónico transmite ondas de sonido ultrasónico entre 25 Khz y 75 Khz, dependiendo del tipo de detector. Las ondas ultrasónicas, inaudibles  para los humanos comienzan en los 20 Khz.A diferencia de las microondas (radar), los ultrasonidos son transportados a través del aire, por tanto, sujetas a las condiciones del aire, como humedad y temperatura.
+=== DIAPOSITIVA 79 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+EFECTO   DOPPLER 
+Consiste en cambios en la frecuenciade de vibración si la fuente sonora cambia de posición con respecto al observador.Ejemplo clásico: Sonido de la sirena de un vehículo. Si el móvil se acerca la sirena suena a frecuencias más altas.   Cuando el móvil pasa y se aleja, la sirena baja de frecuencia  
+Los detectores ultrasónicos funcionan de acuerdo al EFECTO  DOPPLER
+=== DIAPOSITIVA 80 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTOR  DOPPLER  DE  ULTRASONIDO
+El transmisor envía una señal de 26,3 Khz al área que se debe proteger. 
+Las ondas de sonido se reflejan en el piso, paredes y cielo y, son capturadas por el receptor. Si no hay un objeto en movimiento presente, la frecuencia recibida va a ser igual a la frecuencia transmitida.
+=== DIAPOSITIVA 81 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  ULTRASÓNICA 
+No importa si las personas u objetos se mueven hacia el detector o desde el detector, va a haber un cambio de frecuencia de acuerdo al Principio Doppler y se va a generar una señal de alarma.
+=== DIAPOSITIVA 82 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+CONDICIONES  DE  ALARMA  PARA  EL DETECTOR  ULTRASÓNICO  BALANCEADO 
+Los detectores ultrasónicos balanceados comparan durante un cierto período si es que hay un cambio de frecuencia entre la señal transmitida y la señal recibidaSi hay movimiento hacia el detector, la señal recibida durante el tiempo “t” tiene una mayor frecuencia que la señal transmitida y se genera una alarma.Si hay movimiento alejándose del detector, la señal recibida durante el tiempo “t” tiene una menor frecuencia y se genera una alarma. Si hay un movimiento fortuito, la señal recibida es aleatoriamente mayor y menor durante el tiempo “t” y el sistema electrónico cancelará estas señales y no se generará la alarma. 
+=== DIAPOSITIVA 83 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+PLANIFICACIÓN  E INSTALACIÓN  DE DETECTORES  ULTRASÓNICOS 
+Fuentes de falsas alarmas : 
+Pequeños animales.Calefactores.Ventanas abiertas.Sonido ultrasónico de teléfonos.Relojes con señales de sonido.Cañerías de vapor con siseo.Bases de montaje con vibraciones. 
+=== DIAPOSITIVA 84 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+PLANIFICACIÓN  E  INSTALACIÓN  DE DETECTORES  ULTRASÓNICOS 
+Estos detectores montados en la pared tienen un área de detección con forma oval. El alcance de detección depende  de la altura de montaje y del ajuste del alcance. La altura de montaje preferida es de 1,5 - 2 metros apuntando en dirección a la trayectoria más probable del intruso.Instalar este tipo de  detector,  de  forma que la trayectoria más probable del intruso sea acercándose o alejándose de él.
+=== DIAPOSITIVA 85 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+PLANIFICACIÓN  E  INSTALACIÓN  DE DETECTORES  ULTRASÓNICOS 
+Fuera de los detectores ultrasónicos montados en la pared, existen detectores montados en el cielo. El área de detección tiene forma circular. El alcance de detección depende de la altura de montaje y del ajuste del alcance.Si se necesitan mas detectores ultrasónicos en una misma habitación  se deben instalar de tal forma que no se interfieran entre ellos. 
+=== DIAPOSITIVA 86 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+EFECTO  DE  LA  HUMEDAD  RELATIVA  EN  LOS DETECTORES  ULTRASÓNICOS 
+La presión barométrica casi no tiene efecto en el comportamiento de los detectores ultrasónicos. El grado de humedad relativa afecta el alcance efectivo del detector ultrasónico. 
+=== DIAPOSITIVA 87 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+RESUMEN  PARA  LA  APLICACIÓN  DE DETECTORES  ULTRASÓNICOS  
+El alcance de detección depende de la temperatura  y la humedad relativa. La instalación paralela a superficies verticales como paredes, ventanales o gabinetes causará  “efectos de pared”. Las fuentes de sonidos ultrasónicos, como campanilleos, aire acondicionado y cañerías de agua,  causan falsas alarmas.Nunca utilice detectores que funcionen a diferentes frecuencias o de distintos fabricantes.   A bajas temperaturas o a baja o alta humedad relativa, tendrán interferencia en el rango de los 40 – 50 metros.
+=== DIAPOSITIVA 88 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+RESUMEN  PARA  LA  APLICACIÓN  DE DETECTORES   ULTRASONICOS 
+Los objetos no humanos en movimiento hacia el detector, causarán una alarma si se mueven en forma continua más de un segundo.Los letreros (móviles), los ventiladores, cortinas en movimiento, sonido de relojes y objetos que se caen  no activan la alarma.El movimiento de aire en la vecindad del detector que sean distintos a movimientos de aires dirigidos hacia el detector no activan la alarma.Si se utilizan mas detectores en una misma habitación, nunca deben cubrir la misma zona.
+=== DIAPOSITIVA 89 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+RESUMEN  PARA  LA  APLICACIÓN DE DETECTORES   ULTRASÓNICOS  
+Deben evitarse los objetos, repisas y cortinas en la trayectoria mas probable de un intruso ya que pueden crear zonas muertas.Siempre use un medidor ultrasónico para ubicar las fuentes de sonido ultrasónico.Los materiales blandos absorben la energía ultrasónica y pueden limitar el alcance del detector.Las superficies duras reflejan la energía ultrasónica y en caso de que se utilicen  dos o mas detectores en una misma habitación, puede haber interferencias.
+=== DIAPOSITIVA 90 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+RESUMEN PARA  LA  APLICACIÓN DE DETECTORES   ULTRASÓNICOS  
+Usar siempre la menor cantidad de unidades detectoras posibles, porque el campo ultrasónico total en realidad es mayor que la suma teórica de todos los campos y podría haber saturación que eleve la tasa de falsas alarmas.La altura de montaje preferible en la pared es de 1,5 a 2 metros.La base debe ser mecánicamente estable y sin vibraciones.Se debe garantizar una visión libre en todas las direcciones para evitar zonas muertas.
+=== DIAPOSITIVA 91 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+RESUMEN  PARA  LA  APLICACIÓN  DE DETECTORES  ULTRASÓNICOS  
+Verifique el funcionamiento del tamper de sabotaje abriendo y cerrando la cubierta del detector.Efectúe la prueba de caminar a varias velocidades dentro del rango de velocidad especificado.Si se utilizan dos o más detectores en una misma área, cada detector se debe probar individualmente para verificar posteriormente la interferencia mutua.Nunca use un detector para un alcance mayor que lo que mencionan las especificaciones. Siempre instale el detector de tal forma que la trayectoria más probable  de un intruso sea acercándose o alejándose del detector.
+=== DIAPOSITIVA 92 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCION  POR     VIBRACION
+=== DIAPOSITIVA 93 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+=== DIAPOSITIVA 94 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+Existe una variada gama de elementos eléctricos y electrónicos que emplean el efecto de la vibración para convertirlo en una señal utilizable como alarma.Hay por ejemplo detectores de:
+Vibración de cercos metálicos.Vibración de vidrios.Vibración de muros.
+=== DIAPOSITIVA 95 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+Cada uno de estos tipos utiliza un principio diferente de funcionamiento :
+En cercos metálicos: Se utilizan cables transductores que transportan energía de bajo poder y que son sensibles a las alteraciones de movimiento a que sean sometidos, al sacarlos de su estado de reposo a movimientos que alteran sus características eléctricas que son traducidas en alarmas.
+=== DIAPOSITIVA 96 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+En vidriosExisten diferentes tipos:
+	Alambre conductor eléctrico: Instalado entre las placas del vidrio que al quebrarse corta los conductores eléctricos interrumpiendo el flujo eléctrico que es utilizado para alarmas el sistema.
+=== DIAPOSITIVA 97 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+	Cinta foil: Cinta conductora eléctrica. Es adherida al vidrio con pegamento.   Al cortarse por destrucción del vidrio interrumpe el circuito y activa la alarma.
+=== DIAPOSITIVA 98 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+Vibrador mecánico: Está conformado por un elemento mecánico móvil que detecta las vibraciones del vidrio.   Se calibra para vibraciones específicas como el quiebre del vidrio, que presenta frecuencia o vibración determinada.  	En realidad no es muy selectivo en cuanto a los ruidos que detecta, genera falsas alarmas.
+=== DIAPOSITIVA 99 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+Los conductores de estos elementos están protegidos por EOL para evitar su utilización por corte o cortocircuito, para evitar sabotajes.
+Vidrio 
+Lámina flexible 
+Ajuste 
+Contactor 
+Vibraciones 
+Detector de Vibración (Mecánico)
+=== DIAPOSITIVA 100 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+	Window-Bugs: (micrófono de ventana). Dispositivo que se adhiere al vidrio, emplea el principio del micrófono, es decir, esta constituido por una membrana móvil y otra fija.   La membrana móvil resuena a la frecuencia del vidrio al ser rayado o quebrado.	Esta frecuencia activa el circuito electrónico que genera la alarma.   Este dispositivo es inmune al ruido ambiental (vehículos, maquinarias, etc.) que genera frecuencias diferentes a las que detecta el “window-bugs”.
+=== DIAPOSITIVA 101 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+En paredes: Elemento que utiliza la capacidad elástica de los materiales o factibilidad que vibren.    Así, los materiales mientras más compactos, densos o rígidos, mayor será su capacidad para vibrar, porque sus moléculas están íntimamente unidas.   A medida que la densidad o dureza del material disminuye, o sea que el material va siendo mas poroso, va perdiendo su capacidad vibratoria.
+=== DIAPOSITIVA 102 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VIBRACIÓN 
+Este detector de vibración adosado a muros, detectará las vibraciones que se generan ante el rompimiento de los muros por taladros, martillos, combos, etc.,  Está formado por una lámina acerada rígida que al vibrar hará contacto con otra lámina que está conectada a un circuito electrónico que generará una alarma.   Entre ambas láminas existe una distancia regulable que opera como calibración para sensibilizar el dispositivo ante las vibraciones a detectar y el amortiguamiento que tendrá la superficie donde se instale y que es imprescindible considerar.
+=== DIAPOSITIVA 103 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTOR  SISMICO
+Los detectores sísmicos se emplean para supervisar cajeros automáticos, bóvedas, cajas de caudales y cajas fuertes, contra ataques de todas las herramientas  conocidas actualmente, como taladros con corona de diamante, prensas hidráulicas, lanzas de oxigeno y explosivos, etc.
+=== DIAPOSITIVA 104 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTOR  SISMICO
+FuncionamientoCuando se trabaja con materiales rígidos, como hormigón, acero o sistemas blindados, por ejemplo, se producen aceleraciones de masa. Con ello se generan oscilaciones mecánicas que se propagan como ondas sísmicas en el material.
+=== DIAPOSITIVA 105 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTOR   SISMICO
+El captador del detector sísmico, unido al objeto por proteger, capta estas oscilaciones y las convierte en señales eléctricas. La electrónica del detector analiza estas señales en una gama de frecuencias seleccionada, típica para las herramientas de ataque, y acciona una alarma por medio de un contacto de relé.
+=== DIAPOSITIVA 106 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTOR  SISMICO
+Aspecto importante: El campo de supervisiónEl campo de supervisión es la superficie que controla cada detector (en la pared de una cámara acorazada ó de una caja fuerte). Este campo de supervisión depende básicamente del tipo de material y del elemento a proteger. Basado en la experiencia práctica, el radio de supervisión en acero y en hormigón armado con hierro es aprox. 4 m. 
+=== DIAPOSITIVA 107 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTOR   SISMICO
+Las juntas entre dos tipos de materiales diferentes provocan amortiguaciones en la transmisión de la señal de incidencia.Por esta razón se deberán instalar sensores sísmicos en la puerta como en las paredes del mismo. Lo anterior es igualmente válido para puertas blindadas de tesoros de cajas de seguridad.
+=== DIAPOSITIVA 108 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCION POR VARIACION DEL    CAMPO ELECTROMAGNETICO
+=== DIAPOSITIVA 109 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 110 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VARIACIÓN  DEL  CAMPO ELECTROMAGNÉTICO 
+Detecta la alteración del campo electromagnético creado por la circulación de corriente en dos cables coaxiales situados en forma paralela y a una distancia determinada.PRINCIPIO ELÉCTRICO DE FUNCIONAMIENTO:Por el conductor se hace circular una corriente, que genera alrededor del conductor un campo eléctrico en forma circular (axial) y en toda la extensión del cable.
+=== DIAPOSITIVA 111 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECCIÓN  POR  VARIACIÓN  DEL  CAMPO ELECTROMAGNÉTICO 
+Si a una determinada distancia se instala otro conductor similar, en forma paralela y desergenizado, se le inducirá una corriente de las mismas características que el conductor energizado, pero de menor potencia.Si por entre el campo eléctrico generado se mueve un cuerpo, serán cortadas o interrumpidas líneas de flujo del campo eléctrico que producen variaciones en la corriente inducida, estas variaciones serán detectadas por circuitos electrónicos procesadores y que generarán una alarma.
+=== DIAPOSITIVA 112 ===
+DETECCIÓN  POR  VARIACIÓN  DEL  CAMPO ELECTROMAGNÉTICO 
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+=== DIAPOSITIVA 113 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+ELECTROMAGNETICOS
+=== DIAPOSITIVA 114 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTORES  ELECTROMAGNÉTICOS  O CONTACTOS  MAGNÉTICOS 
+Funcionan en base a la fuerza de atracción que ejerce un imán sobre un interruptor metálico que controla el paso de corriente eléctrica de baja intensidad.Tanto el paso de esta corriente como su interrupción, son utilizados como señal por contactos magnéticos para generar una alarma, dependiendo si su tipo de interruptor (switch) es de construcción normalmente abierto (NA o NO) o,  normalmente cerrado (NC).Es típico que los catálogos indiquen la separación máxima que puede existir entre ambos elementos, sin que se alarmen (GAP), como asimismo indicarán si son NO o NC .
+=== DIAPOSITIVA 115 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTORES  ELECTROMAGNÉTICOS  O CONTACTOS  MAGNÉTICOS 
+GAP
+=== DIAPOSITIVA 116 ===
+SISTEMAS TECNICOS DE SEGURIDAD – RAFAEL PONCE PICCARDO
+CAPITULO  II  “DETECCION DE INTRUSION”
+DETECTORES  ELECTROMAGNÉTICOS  O CONTACTOS  MAGNÉTICOS 
+Usos:Se utilizan en puertas abatibles, de corredera, ventanas del mismo tipo.   Se instalan en los extremos opuestos a los ejes (bisagras) para detectar la apertura de puertas o ventanas cuando recién este aconteciendo, para detectar en forma temprana su apertura.
+=== DIAPOSITIVA 117 ===
+Capítulo II      
+Detección de Intrusión
+FIN

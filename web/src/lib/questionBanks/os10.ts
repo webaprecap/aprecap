@@ -9,6 +9,11 @@ import { bancoModulo6 } from "./os10-modulo6";
 import { bancoModulo7 } from "./os10-modulo7";
 import { bancoModulo8 } from "./os10-modulo8";
 import { bancoModulo9 } from "./os10-modulo9";
+import { bancoModulo10 } from "./os10-modulo10";
+import { bancoModulo11 } from "./os10-modulo11";
+import { bancoModulo12 } from "./os10-modulo12";
+import { bancoModulo13 } from "./os10-modulo13";
+import { bancoModulo14 } from "./os10-modulo14";
 
 export const OS10_BANCOS: BancoModulo[] = [
   bancoModulo1,
@@ -20,6 +25,11 @@ export const OS10_BANCOS: BancoModulo[] = [
   bancoModulo7,
   bancoModulo8,
   bancoModulo9,
+  bancoModulo10,
+  bancoModulo11,
+  bancoModulo12,
+  bancoModulo13,
+  bancoModulo14,
 ];
 
 export const MINIQUIZ_PREGUNTAS_POR_MODULO = 5;

@@ -274,12 +274,18 @@ export default function PanelAlumno() {
                     Formación y Reacreditación oficial de 90h/36h normada por Carabineros de Chile. 8 Módulos de estudio.
                   </p>
                 </div>
-                <div className="mt-6">
+                <div className="mt-6 space-y-2">
                   <Link
                     href="/materiales/guardia-de-seguridad"
                     className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
                   >
                     ENTRAR AL CURSO OS-10
+                  </Link>
+                  <Link
+                    href="/cuestionarios/guardia-de-seguridad"
+                    className="block w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                  >
+                    📋 CUESTIONARIOS OFICIALES
                   </Link>
                 </div>
               </div>
@@ -352,6 +358,24 @@ export default function PanelAlumno() {
                   </Link>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Certificados y Diplomas */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-apre-blue">📜 Certificados y Diplomas</h2>
+                <p className="mt-1 text-xs text-gray-500">
+                  Genera tu diploma digital de los cursos aprobados, con tus datos y la fecha de emisión.
+                </p>
+              </div>
+              <Link
+                href="/panel/alumno/certificado"
+                className="rounded-xl bg-apre-blue px-5 py-3 text-xs font-extrabold text-white transition hover:bg-apre-blue/90 shadow-sm"
+              >
+                🎓 Generar mi Diploma
+              </Link>
             </div>
           </div>
 

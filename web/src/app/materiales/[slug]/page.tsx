@@ -109,17 +109,17 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     ? moduloActual.subModulos![selectedSubModuloIdx] || moduloActual.subModulos![0]
     : null;
 
-  const slidesActuales = subModuloActual ? subModuloActual.slides : (moduloActual.slides || []);
+  const slidesActuales = (subModuloActual ? subModuloActual.slides : moduloActual.slides) || [];
   const pdfDownloadUrl = subModuloActual?.pdfUrl || moduloActual.pdfUrl || cursoActual.pdfUrl;
+  const videoUrlActivo = subModuloActual?.videoUrl || moduloActual.videoUrl;
+  const pdfUrlActivo = subModuloActual?.pdfUrl || moduloActual.pdfUrl || cursoActual.pdfUrl;
   const tituloActivo = subModuloActual
     ? `${subModuloActual.codigo} ${subModuloActual.nombre}`
     : moduloActual.nombre;
 
   const bancoQuiz = tieneQuiz ? getBancoModulo(expandedModuloIdx) : null;
   const esUltimoModulo = expandedModuloIdx >= cursoActual.modulos.length - 1;
-  const todosCompletados =
-    completados.length >= cursoActual.modulos.length &&
-    cursoActual.modulos.every((_, i) => completados.includes(i));
+  const modulosEvaluables = cursoActual.modulos.filter((m) => m.videoUrl);
 
   const manejarQuizAprobado = () => {
     const nuevos = completados.includes(expandedModuloIdx)
@@ -204,7 +204,10 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                             return (
                               <button
                                 key={sub.id}
-                                onClick={() => setSelectedSubModuloIdx(sIdx)}
+                                onClick={() => {
+                                  setSelectedSubModuloIdx(sIdx);
+                                  setPaso(PASO_INICIAL);
+                                }}
                                 className={`w-full text-left rounded-lg px-3 py-2 text-xs transition flex items-start gap-2 ${
                                   isSubActive
                                     ? "bg-apre-red text-white font-bold shadow-sm"
@@ -230,24 +233,20 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   <div className="flex items-center justify-between text-xs font-bold text-slate-400">
                     <span>Progreso del curso</span>
                     <span className="text-cyan-400">
-                      {completados.length}/{cursoActual.modulos.length}
+                      {completados.length}/{modulosEvaluables.length}
                     </span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-cyan-400 to-apre-red transition-all"
-                      style={{ width: `${(completados.length / cursoActual.modulos.length) * 100}%` }}
+                      style={{ width: `${(completados.length / Math.max(1, modulosEvaluables.length)) * 100}%` }}
                     />
                   </div>
                   <Link
-                    href={`/evaluaciones/${cursoActual.slug}${modoDemo ? "?demo=1" : ""}`}
-                    className={`mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border ${
-                      todosCompletados
-                        ? "bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
-                        : "bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-800"
-                    }`}
+                    href={`/cuestionarios/${cursoActual.slug}`}
+                    className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
                   >
-                    {todosCompletados ? "🏆 Rendir Examen Final" : `🎯 Examen Final (completa ${cursoActual.modulos.length} módulos)`}
+                    📋 Cuestionarios Oficiales
                   </Link>
                 </div>
               )}
@@ -284,7 +283,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                       : paso === "quiz"
                         ? "Video ✓ · PDF ✓ · Paso 3: MiniQuiz"
                         : "Módulo completado ✓"
-                  : moduloActual.videoUrl
+                  : videoUrlActivo
                     ? "Video + Lectura PDF"
                     : `${slidesActuales.length} Diapositivas disponibles`}
               </span>
@@ -311,24 +310,24 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   </button>
                 ) : (
                   <Link
-                    href={`/evaluaciones/${cursoActual.slug}${modoDemo ? "?demo=1" : ""}`}
+                    href={`/cuestionarios/${cursoActual.slug}`}
                     className="inline-block rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark"
                   >
-                    🏆 Ir al Examen Final
+                    📋 Ir a los Cuestionarios Oficiales
                   </Link>
                 )}
               </div>
-            ) : moduloActual.videoUrl ? (
+            ) : videoUrlActivo ? (
               <div className="space-y-4">
                 {paso === "video" ? (
                   <VideoTracker
-                    url={moduloActual.videoUrl}
+                    url={videoUrlActivo}
                     title={tituloActivo}
                     onUnlockNext={() => setPaso("pdf")}
                   />
                 ) : paso === "pdf" ? (
                   <PDFSwipeViewer
-                    url={moduloActual.pdfUrl || pdfDownloadUrl || ""}
+                    url={pdfUrlActivo || ""}
                     onFinishReading={() => setPaso(tieneQuiz ? "quiz" : "completed")}
                   />
                 ) : paso === "quiz" && bancoQuiz ? (
@@ -340,7 +339,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   />
                 ) : (
                   <PDFSwipeViewer
-                    url={moduloActual.pdfUrl || pdfDownloadUrl || ""}
+                    url={pdfUrlActivo || ""}
                     onFinishReading={() => setPaso("completed")}
                   />
                 )}

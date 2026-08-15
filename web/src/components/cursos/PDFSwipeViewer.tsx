@@ -21,6 +21,16 @@ interface PDFSwipeViewerProps {
   onFinishReading: () => void
 }
 
+// Los PDFs alojados en Sanity se sirven vía proxy local para evitar CORS
+// (react-pdf hace fetch con Origin y cdn.sanity.io lo rechaza si el origen
+// no está registrado en el panel de Sanity).
+function resolverUrlPdf(url: string): string {
+  if (url.startsWith('https://cdn.sanity.io/files/')) {
+    return `/api/pdf?url=${encodeURIComponent(url)}`
+  }
+  return url
+}
+
 export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerProps) {
   const [numPages, setNumPages] = useState<number>(0)
   const [pageNumber, setPageNumber] = useState(1)
@@ -288,7 +298,7 @@ export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerP
         )}
 
         <Document
-          file={url}
+          file={resolverUrlPdf(url)}
           onLoadSuccess={onDocumentLoadSuccess}
           loading={
             <div className={styles.loadingContainer}>
