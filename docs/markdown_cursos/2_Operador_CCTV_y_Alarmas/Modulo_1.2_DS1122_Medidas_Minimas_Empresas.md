@@ -2,7 +2,9 @@
 
 ## 1. Alcance del decreto
 
-El Decreto Supremo N° 1122 (relacionado con el DL 3.607) establece las medidas mínimas de seguridad que deben cumplir las empresas y entidades que cuentan con sistemas de vigilancia y alarmas. Su objetivo es estandarizar condiciones que permitan prevenir delitos y garantizar una respuesta eficaz de los organismos policiales.
+El Decreto Supremo N° 1122 establece las medidas mínimas de seguridad que deben cumplir las empresas y entidades que cuentan con sistemas de vigilancia y alarmas. Su objetivo es estandarizar condiciones que permitan prevenir delitos y garantizar una respuesta eficaz de los organismos policiales.
+
+**Marco normativo actual:** el Decreto Supremo N° 1122 fue dictado bajo el antiguo régimen del Decreto Ley N° 3.607 (1981), hoy derogado. El marco vigente de la seguridad privada es la **Ley N° 21.659** (2024) y su reglamento, el **Decreto Supremo N° 209** (2024). Las medidas del Decreto Supremo N° 1122 continúan aplicándose en lo que no sea contrario a la Ley N° 21.659, hasta su reemplazo por la nueva normativa reglamentaria.
 
 ## 2. Vigilantes privados y dispositivos de alarma
 

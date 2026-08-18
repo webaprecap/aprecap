@@ -86,9 +86,6 @@ export default async function CursoDetalle({ params }: Props) {
               <Boton href={CONTACTO.whatsappLink} variant="whatsapp">
                 Inscribirme por WhatsApp
               </Boton>
-              <Boton href={`/pago/${c.slug}`} variant="primary">
-                Pagar por WebPay
-              </Boton>
               <Boton href="/contacto" variant="red">
                 Pedir información
               </Boton>
@@ -126,9 +123,6 @@ export default async function CursoDetalle({ params }: Props) {
             <div className="mt-8 flex flex-wrap gap-4">
               <Boton href="/contacto" variant="red">
                 Inscribirme
-              </Boton>
-              <Boton href={`/pago/${c.slug}`} variant="primary">
-                Pagar por WebPay
               </Boton>
               <WhatsAppButton texto={`Hola, quiero inscribirme al curso ${c.title}`} />
             </div>
@@ -292,9 +286,6 @@ export default async function CursoDetalle({ params }: Props) {
           <div className="mt-12 flex flex-wrap gap-4">
             <Boton href="/contacto" variant="red">
               Inscribirme a este curso
-            </Boton>
-            <Boton href={`/pago/${c.slug}`} variant="primary">
-              Pagar por WebPay
             </Boton>
             <WhatsAppButton texto={`Hola, quiero inscribirme al curso ${c.title}`} />
           </div>

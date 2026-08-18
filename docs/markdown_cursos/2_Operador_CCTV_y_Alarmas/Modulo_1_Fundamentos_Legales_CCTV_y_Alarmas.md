@@ -20,9 +20,11 @@ El operador de CCTV y alarmas es la persona encargada de controlar, a través de
 
 El operador debe además manejar con confidencialidad los datos e imágenes que obtiene en el ejercicio de sus funciones, respetando la normativa de protección de datos personales.
 
+**Marco normativo actual:** el marco vigente de la seguridad privada es la **Ley N° 21.659** (2024) y su reglamento, el **Decreto Supremo N° 209** (2024), que reemplazaron el antiguo régimen del Decreto Ley N° 3.607 (1981). Las disposiciones sectoriales dictadas bajo el régimen anterior —como el Decreto N° 261 exento (Manual Operativo, 2020) y el Decreto Supremo N° 41— rigen en lo que no sea contrario a la nueva ley, hasta su reemplazo.
+
 ### 2. Conexión a Centrales de Comunicaciones de Carabineros (Decreto Supremo N° 41)
 
-- **Autorización:** el decreto faculta a los prestadores de servicios técnicos de seguridad privada a conectar sus alarmas y centrales directamente a la Central de Comunicaciones de Carabineros (CENCO).
+- **Autorización:** el decreto faculta a los prestadores de servicios técnicos de seguridad privada a conectar sus alarmas y centrales directamente a la Central de Comunicaciones de Carabineros (CENCO). Rige en lo compatible con la Ley N° 21.659 y el Decreto Supremo N° 209.
 - **Formatos de información:** la transmisión puede realizarse por canales de voz, audio, imagen o tecnología digital, satelital o radial.
 - **Costos:** el financiamiento de la conexión es de cargo exclusivo del usuario o entidad interesada.
 - **Tarifas y multas:**
@@ -34,6 +36,8 @@ Esta conexión directa permite una respuesta policial más rápida, pero impone 
 ---
 
 ## Submódulo 1.2: Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas
+
+**Marco normativo actual:** el Decreto Supremo N° 1122 fue dictado bajo el régimen del Decreto Ley N° 3.607 (1981), hoy derogado. El marco vigente es la **Ley N° 21.659** (2024) y el **Decreto Supremo N° 209** (2024); las medidas del Decreto Supremo N° 1122 rigen en lo que no sea contrario a la nueva ley, hasta su reemplazo.
 
 ### 1. Vigilantes privados y dispositivos de alarma
 
@@ -60,6 +64,8 @@ Esta conexión directa permite una respuesta policial más rápida, pero impone 
 
 ## Submódulo 1.3: Decreto Supremo N° 1814 — Regulación en Transporte de Valores y Bóvedas
 
+**Marco normativo actual:** norma sectorial vigente en lo que no sea contrario a la **Ley N° 21.659** (2024) y al **Decreto Supremo N° 209** (2024).
+
 ### 1. Cámaras y monitoreo en vehículos blindados
 
 - **Cantidad mínima:** al menos 3 cámaras de televigilancia de alta resolución por camión: 2 interiores (cabina y habitáculo de tripulación) y 1 exterior.
@@ -84,6 +90,8 @@ Esta conexión directa permite una respuesta policial más rápida, pero impone 
 
 ## Submódulo 1.4: Decreto Supremo N° 222 — Seguridad en Cajeros Automáticos y Dispensadores de Dinero
 
+**Marco normativo actual:** norma sectorial vigente en lo que no sea contrario a la **Ley N° 21.659** (2024) y al **Decreto Supremo N° 209** (2024).
+
 ### 1. Definición y especificaciones de sensores (Artículos 6° y 9°)
 
 - Alarma sonora y lumínica monitoreada en línea 24/7, con límite de sonido de máximo **100 decibeles**.
@@ -104,6 +112,8 @@ Esta conexión directa permite una respuesta policial más rápida, pero impone 
 
 ## Submódulo 1.5: Ley N° 19.327 — Videovigilancia y Seguridad en Espectáculos de Fútbol Profesional
 
+**Marco normativo actual:** la Ley N° 19.327 continúa vigente y se complementa con la **Ley N° 21.659** (2024) y el **Decreto Supremo N° 208** (Reglamento de Eventos Masivos, 2024).
+
 ### 1. Exigencias tecnológicas en estadios (Artículo 5°)
 
 - Instalación obligatoria de cámaras de seguridad HD, detectores de metales y control de accesos.
@@ -121,7 +131,9 @@ Esta conexión directa permite una respuesta policial más rápida, pero impone 
 
 ### 1. Fundamentos del tratamiento de imágenes
 
-Las imágenes de videovigilancia constituyen datos personales cuando permiten identificar a una persona. Su tratamiento debe basarse estrictamente en la ley y ejecutarse siempre de buena fe, conforme a la normativa chilena de protección de datos personales (Ley N° 19.628 y su actualización en la Ley N° 21.719).
+Las imágenes de videovigilancia constituyen datos personales cuando permiten identificar a una persona. Su tratamiento debe basarse estrictamente en la ley y ejecutarse siempre de buena fe, conforme a la normativa chilena de protección de datos personales.
+
+**Marco normativo actualizado:** hoy rige la **Ley N° 19.628** sobre protección de la vida privada. La **Ley N° 21.719** (Ley Marco de Protección de Datos Personales, publicada en diciembre de 2024) moderniza este régimen, incorpora los derechos ARCOP (Acceso, Rectificación, Cancelación, Oposición y Portabilidad) y entrará en vigor pleno en diciembre de 2026, fecha en que derogará la Ley N° 19.628.
 
 ### 2. Principios que debe aplicar el operador
 

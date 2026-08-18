@@ -92,3 +92,53 @@
 3. **Confirmar horas de Jefe de Seguridad** (420 / 140 / 400).
 4. **Firma del acuerdo PDF** (entregado).
 5. Backups de Firestore (Ley 21.663), despliegue Cloudflare, pruebas en producción.
+
+---
+
+## Sesión 2026-08-12 · OS-10 módulos 10–14 + PDFs en Sanity
+- 5 módulos nuevos (10–14) con videos del cliente y PDFs de `docs/pdf os10`; OCR de los 5 PDFs → `pdfs_ocr/`.
+- **14 PDFs subidos a Sanity** (`mwwotgjc/production`) con `scripts/upload-pdfs-sanity.mjs`; `materiales-estudio.ts` apunta a `cdn.sanity.io`.
+- Proxy `/api/pdf` (solo cdn.sanity.io) para evitar CORS en el visor; bancos `os10-modulo10..14.ts` (10 alt + 20 V/F c/u).
+- Verificación con Chrome headless: módulos, video, PDF vía proxy, MiniQuiz demo, examen 140.
+
+## Sesión 2026-08-13/14 · Cuestionarios oficiales + diploma + Res. 2183
+- **Cuestionarios del cliente digitalizados** (8, 539 preguntas): extracción Word COM/pypdf → `scripts/cuestionarios-extraidos/` → `web/src/data/cuestionarios*.ts` → página `/cuestionarios/guardia-de-seguridad`.
+- **Examen final ELIMINADO** (el cliente no lo quiere): `/evaluaciones/[slug]` redirige a cuestionarios; MiniQuiz por módulo se mantiene.
+- **Corrección inmediata**: 82 abiertas → alternativas de 4 opciones (3 distractores creados) + feedback por pregunta (verde/rojo + correcta + porqué); V/F con botones; resultado final con % y reintento; "Mostrar respuestas" solo dev.
+- **Diploma digital** `/panel/alumno/certificado` (nombre editable, RUT/fecha/curso automáticos, imprimir/PDF). Ruta Sarmat verificada: `/admin` → tab "Generar Certificados" (queda pendiente replicar editor admin).
+- **Módulo 15 OS-10 de lectura**: Res. Ex. N° 2183 (8 diapositivas con puntos clave).
+
+## Sesión 2026-08-14/15 · Curso CCTV completo (MDs → PDFs → videos → montaje)
+- MDs CCTV robustecidos: OCR `Capitulo IV CCTV.pdf` (114 págs) + `Capitulo VI` (28 págs) → `pdfs_ocr/`; texto de 4 PPTs → `scripts/cctv-extraidos/`; **22 MDs de submódulos + 3 consolidados** (solo info, sin prácticas).
+- Cliente generó PDFs (NotebookLM) y subió videos: carpeta `Downloads\cctv aprecap` → **44 archivos renombrados** a `Modulo_X.Y_...` (22 PDFs + 22 MP4).
+- **22 PDFs a Sanity** (`scripts/upload-cctv-pdfs-sanity.mjs` → `scripts/sanity-cctv-pdf-urls.json`, todos 200).
+- **Curso montado**: `operador-cctv-y-alarmas` con 3 módulos × 22 submódulos (video YouTube + PDF Sanity); `SubModuloData.videoUrl`; flujo video → PDF → completado; reset a video al cambiar submódulo. Verificado con Chrome headless (1.1, 1.7, 3.8 + PDF proxy).
+- **Push a GitHub**: commit `5d74e8f` (79 archivos) a `main`.
+
+---
+
+## Sesión 2026-08-18 · Actualización legal, MDs Supervisor y Redcompra
+- **Auditoría legal al día**: DL 3.607 derogado (Ley 21.659) corregido en MDs CCTV y banco os10-modulo2; Ley 19.628/21.719 precisada (vigencia dic-2026) en MD 1.6 y banco os10-modulo14; notas "en lo compatible" en MDs 1.3/1.4/1.5.
+- **Cuestionario web**: pregunta 21 de la prueba de 150 → Ley N° 21.659 (cliente aprobó actualizar la respuesta oficial).
+- **Escritorio**: `C:\Users\Vickoto\Desktop\MDs_CCTV_Actualizados\` con 7 MDs `cctv_...` corregidos para regenerar PDFs en NotebookLM (reemplazo en producción pendiente).
+- **Curso Supervisor**: 14 MDs de submódulos + 6 consolidados con ley vigente (Ley 21.561 jornada 42h/2026, Ley Karin 21.643, 16.744, DS 594, 21.659/D.S. 208 eventos masivos). Listos para NotebookLM.
+- **Redcompra/WebPay ocultado**: 3 botones eliminados de `cursos/[slug]`; rutas y tab admin intactas.
+- **Pruebas**: tsc + eslint + Chrome headless (OS-10, cuestionarios, CCTV, cursos sin WebPay, certificado) → todo OK.
+- **Pendiente mañana**: prueba manual de Zoom (crear reunión admin → visible alumno/profesor).
+
+## Sesión 2026-08-18 (2) · Módulo 1 CCTV reformado en producción
+- **Cliente regeneró Módulo 1** con los MDs corregidos: 6 PDFs nuevos (NotebookLM) + 6 videos nuevos en YouTube, en `Downloads\cctv aprecap\modulo 1 reformado`.
+- **6 PDFs nuevos subidos a Sanity** (IDs `7c8925…`, `bc2e5e…`, `2a5233…`, `5c4b9f…`, `cdb6aa…`, `772ff2…`); `scripts/sanity-cctv-pdf-urls.json` actualizado (mismas keys, URLs/sha nuevos).
+- **6 assets viejos de M1 (1.1–1.6) quedaron huérfanos** (DELETE por API da 401): lista de IDs para borrado manual en `scripts/sanity-old-m1-assets-to-delete.txt` (sanity.io/manage → Assets).
+- **`materiales-estudio.ts`**: submódulos 1.1–1.6 con videos nuevos (`OCoA-tyikk8`, `xbG8RJOXYvI`, `4P8PaxuBYiU`, `IIcy36PrH7E`, `KeXxMe68R2Y`, `ubn3jJV-d20`) y PDFs nuevos; nombre 1.1 → "Definición de Operador de CCTV y Nueva Ley (Ley N° 21.659)". 1.7 y Módulos 2–3 intactos.
+- **Verificación**: tsc OK; bundle del curso con 7 videos y 7 PDFs nuevos, sin rastro de los viejos; PDFs 1.1–1.7 vía `/api/pdf` → 200; headless OK (submódulo 1.1 renderiza video+PDF nuevos).
+- **Pendiente**: borrado manual de los 6 assets viejos (opcional), commit+push de la jornada, prueba manual de Zoom.
+
+## Sesión 2026-08-18 (3) · Quizzes y Examen Final del curso CCTV
+- **Banco de preguntas CCTV**: `web/src/lib/questionBanks/cctv.ts` con **63 preguntas** (M1 legal: 21, M2 sistemas: 22, M3 televigilancia: 20; 4 opciones c/u) extraídas de los 3 MDs consolidados. Helper `selectBalancedQuestions(60)` → 20 preguntas por módulo, preguntas y opciones randomizadas (Fisher-Yates); `getPreguntasPorModulo` + `getMiniQuizBancoCctv` (convierte al formato `PreguntaAlternativa` del MiniQuiz).
+- **MiniQuiz por módulo (5 preguntas)**: curso `operador-cctv-y-alarmas` marcado con `banco: "cctv"` (tipo `"os10" | "cctv"`); `materiales/[slug]/page.tsx` usa el banco CCTV por módulo; los 3 módulos quedan evaluables.
+- **Examen Final CCTV** (`CCTVFinalExam.tsx` + ruta `/evaluaciones/operador-cctv-y-alarmas`): 60 preguntas una a la vez con opciones A–D, dots de navegación, contador de respondidas, "ENTREGAR EXAMEN" (aviso si faltan respuestas), **umbral 80%, reintentos ilimitados**, feedback por módulo fallado, confetti al aprobar y resultado guardado en `localStorage` (`aprecap_examen_..._pct/_aprobado`). El resto de slugs sigue redirigiendo a `/cuestionarios/`.
+- **Acceso al examen**: sidebar del curso con botón "📝 Examen Final CCTV" y tarjeta de finalización con "📝 Rendir Examen Final CCTV" (solo visible al completar los 3 módulos); para OS-10 se mantienen los links a Cuestionarios Oficiales.
+- **Verificación**: tsc OK; script de chequeo (63 preguntas, examen 20/20/20 con IDs únicos, MiniQuiz 5, shuffle conserva la correcta); Chrome headless OK (sidebar con botón de examen; `/evaluaciones/operador-cctv-y-alarmas` renderiza examen con umbral 80% y 60 preguntas).
+- **Pendiente**: commit+push de la jornada (fijado al final de esta sesión), borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.
+

@@ -1,127 +1,120 @@
 # 📌 Estado de Tareas y Transferencia de Contexto (Agent Handoff)
 
 > **Documento de Control y Continuidad para Agentes IA y Desarrolladores.**
+> Última actualización: 2026-08-18
 
 ---
 
 ## ✅ TRABAJO REALIZADO Y COMPLETADO
 
-1. **Extracción y Generación de Archivos Markdown (`docs/markdown_cursos/`):**
-   - **Guardia OS-10 (8 Archivos .md):** `Modulo_1` al `Modulo_8` con el 100% del texto extraído plana por plana.
-   - **Operador CCTV y Alarmas (3 Archivos .md):** `Modulo_1` al `Modulo_3` con el 100% del texto extraído.
-   - **Supervisor de Seguridad (5 Archivos .md):** `Modulo_1` al `Modulo_5` con el 100% del texto extraído.
-   - **Jefe de Seguridad Privada (8 Archivos .md):** `Modulo_1` al `Modulo_8` + `Material_Adicional.md` con 2.4 MB de contenido completo extraído.
+### A. Plataforma base (sesiones previas)
+1. **Extracción y generación de Markdown (`docs/markdown_cursos/`):** Guardia OS-10 (Módulos 1–8 + extras), Operador CCTV (3 módulos), Supervisor (5) y Jefe de Seguridad (8 + material adicional) con el 100% del texto extraído plana por plana.
+2. **Rutas dedicadas por curso:** `/materiales/guardia-de-seguridad`, `/materiales/operador-cctv-y-alarmas`, `/materiales/supervisor-de-seguridad`, `/materiales/jefe-de-seguridad-privada` con acordeón de submódulos.
+3. **Sanity CMS:** proyecto `mwwotgjc` (dataset `production`).
+4. **Quizzes OS-10 (MiniQuiz por módulo):** bancos `web/src/lib/questionBanks/os10-modulo1..14.ts` (10 alternativas + 20 V/F por módulo), MiniQuiz de 5 al azar con umbral 60%, flujo módulo **video → PDF → quiz** con progreso en localStorage. **El Examen Final fue ELIMINADO por petición del cliente** (ver punto C).
 
-2. **Organización de PDFs en el Escritorio:**
-   - Ubicación: `C:\Users\Vickoto\Desktop\PDFs_Cursos_Aprecap\`
-   - Carpetas independientes creadas para `1_Guardia_OS10`, `2_Operador_CCTV_y_Alarmas`, `3_Supervisor_de_Seguridad` y `4_Jefe_de_Seguridad` con sus 8 subcarpetas por módulo.
+### B. Curso OS-10 (Guardia de Seguridad)
+5. **Módulos 10–14 nuevos** en `/materiales/guardia-de-seguridad` (video → PDF → quiz):
+   10. Evolución del Guardia (`m1p-fI3uwek` → `The_Ethical_Shield.pdf`)
+   11. Seguridad de Instalaciones OS-10 (`AHhDEfJAM1s` → `OS-10_Tactical_Blueprint_v2.pdf`, 14 págs)
+   12. Ética y Eventos Masivos (`bsLIP7v5-A8` → `Mass_Events_Tactical_Blueprint.pdf`)
+   13. Derechos y Deberes Legales (`Xvp-GwrbWW0` → `Human_Rights_in_Private_Security.pdf`)
+   14. Protección Moderna Integral (`G9UWNolIgCA` → `Seguridad_Física_y_Digital.pdf`)
+6. **14 PDFs de OS-10 subidos a Sanity** (`mwwotgjc/production`) desde `cdn.sanity.io`; mapeo en `scripts/sanity-pdf-urls.json` (script idempotente `scripts/upload-pdfs-sanity.mjs`). El visor usa el **proxy `/api/pdf`** (solo `cdn.sanity.io`) para evitar CORS.
+7. **Bancos nuevos `os10-modulo10..14.ts`** fundamentados en OCR (`docs/markdown_cursos/1_Guardia_OS10/pdfs_ocr/`); los 14 bancos quedaron en `OS10_BANCOS` (aunque el examen final ya no se usa).
+8. **Módulo 15 de solo lectura "Resolución Exenta N° 2183 · Capacitación y Exámenes"** (8 diapositivas con los puntos clave: Ley 21.659, D.S. 209/208, duraciones 100/90/60 horas pedagógicas, examen teórico 60 preguntas/120 min, fiscalización Carabineros). Sin video ni quiz.
 
-3. **Plataforma Web e Interfaz por Curso:**
-   - Creadas las rutas dedicadas por curso:
-     - `/materiales/guardia-de-seguridad`
-     - `/materiales/operador-cctv-y-alarmas`
-     - `/materiales/supervisor-de-seguridad`
-     - `/materiales/jefe-de-seguridad-privada`
-   - La interfaz muestra únicamente el curso activo con su acordeón de sub-módulos (`1.1`, `1.2`, `1.3`, `2.1`...).
+### C. Cuestionarios oficiales del cliente (reemplazan el examen final)
+9. **Página `/cuestionarios/guardia-de-seguridad`** con los **8 cuestionarios oficiales** digitalizados con las mismas preguntas y respuestas (fuente: `C:\Users\Vickoto\Downloads\os10 aprecap\cuestionarios`; textos de trabajo en `scripts/cuestionarios-extraidos/`):
+   1. Cuestionario de Preguntas para Examen OS-10 (82 preguntas)
+   2. Prueba de Diagnóstico General (150 preguntas)
+   3. Prueba Ley 16.744 (40) · 4. Prueba Prevención de Riesgos (80)
+   5. Prueba Control de Emergencia (50) · 6. Prueba Seguridad de Instalaciones (50)
+   7. Prueba Sistemas de Alarmas, Comunicación y Enlace - Revisada (50)
+   8. Prueba Alarmas y Comunicación y Enlace - Rev (37)
+   → Total: **539 preguntas** (verificado programáticamente: 0 claves faltantes, 0 IDs duplicados).
+10. **Corrección inmediata por pregunta** (petición del cliente): al responder se marca verde/rojo, se muestra "✘ Incorrecto. La respuesta correcta era: …" + explicación ("Por qué"). Las **82 preguntas abiertas se convirtieron en alternativas de 4 opciones** (correcta oficial + 3 distractores creados); las 5 de desarrollo de la prueba de 150 también. Las **V/F se mantienen con botones Verdadero/Falso**. Puntaje en vivo y **resultado final con porcentaje + "Reintentar"** al completar todo. Sin "Ver respuesta" (solo "Mostrar todas las respuestas" visible en desarrollo local).
+11. **Examen final eliminado**: `/evaluaciones/[slug]` redirige a `/cuestionarios/[slug]`; el sidebar del curso enlaza "📋 Cuestionarios Oficiales". Los **MiniQuiz por módulo se mantienen**.
+12. Enlaces desde el panel del alumno (tarjeta OS-10).
 
-4. **Sanity CMS e Integración:**
-   - Proyecto Sanity `mwwotgjc` (Dataset `production`) sincronizado con 25 diapositivas iniciales de prueba.
+### D. Diploma digital APRECAP
+13. Página `/panel/alumno/certificado`: certificado del cliente (modelo `JUANA GONZALEZ.docx`) con tipografía mejorada. **Nombre** editable (auto desde el perfil), **RUT** automático, **fecha** = día de emisión, **curso** según el aprobado (OS-10 90h, CCTV 40h, Supervisor 140h, Jefe 140h). Botón "Imprimir / Guardar como PDF". Acceso desde el panel alumno.
+14. **Referencia Sarmat verificada**: el editor WYSIWYG de certificados vive en `/admin` → pestaña "🎓 Generar Certificados" (`CertificadosTab.tsx` + `CertificateDocument.tsx` + `lib/pdfAssets.ts`, solo admin). Queda pendiente replicarlo en `/panel/admin` de Aprecap (ver pendientes).
 
-5. **Sistema de Quizzes y Examen Final OS-10 (NUEVO — replicando Sarmat):**
-   - **Fuente de contenido:** los 9 PDFs oficiales del curso (`Downloads/os10 aprecap`, copiados a `web/public/materiales/os10/`). Se hizo OCR de referencia en `docs/markdown_cursos/1_Guardia_OS10/pdfs_ocr/`; las preguntas se redactaron **fundamentadas frase a frase** en las extracciones oficiales del manual (`Modulo_X_*.md`), NO con conocimiento inventado.
-   - **Bancos de preguntas (TS local, como Sarmat):** `web/src/lib/questionBanks/`
-     - `types.ts` (interfaces + shuffle), `os10.ts` (agregador + selección random), `os10-modulo1..9.ts`
-     - Por módulo: **10 alternativas (4 opciones) + 20 V/F** → 270 preguntas, 90 por curso.
-     - MiniQuiz: **5 al azar** con opciones/letras re-mezcladas en cada intento. Umbral **60%**.
-     - Examen Final: **90 V/F** (10 por módulo del pool de 180). Umbral **80%**. Feedback por módulo al reprobar.
-   - **Componentes (branding Aprecap):** `web/src/components/cursos/MiniQuiz.tsx` + `.module.css`, `FinalExam.tsx` + `.module.css`.
-   - **Página Examen Final:** `/evaluaciones/guardia-de-seguridad` (`web/src/app/evaluaciones/[slug]/page.tsx`).
-   - **Flujo del módulo (video → PDF → quiz → siguiente):** integrado en `web/src/app/materiales/[slug]/page.tsx` con pasos `video | pdf | quiz | completed`, progreso guardado en localStorage (`aprecap_progreso_<slug>`), botón "Examen Final" en sidebar. **SIN candados** (lógica de bloqueo queda para producción, igual que Sarmat).
-   - **Verificado con Puppeteer:** examen completo (90 preguntas, resultado %), MiniQuiz (reintento, letras re-mezcladas, aprobación, avance de módulo), video YouTube + paso al PDF. Sin errores de hidratación ni JS.
-   - `canvas-confetti` agregado a dependencias de `web/`.
+### E. Curso CCTV — MDs, PDFs y montaje completo
+15. **MDs consolidados y robustecidos** en `docs/markdown_cursos/2_Operador_CCTV_y_Alarmas/`:
+    - **22 MDs de submódulos separados** (1.1–1.7, 2.1–2.7, 3.1–3.8, un PDF por NotebookLM) + **3 MDs consolidados** (referencia por módulo).
+    - Sin secciones prácticas, quizzes ni menciones a PDFs/NotebookLM (solo contenido de estudio).
+    - Fuentes: manual de 67 págs, slides, lecciones WP, GENERALIDADES, **OCR de `Capitulo IV CCTV.pdf` (114 págs) y `Capitulo VI` (28 págs)** en `pdfs_ocr/`, **texto de los 4 PPTs de Seguridad Electrónica** en `scripts/cctv-extraidos/` (scripts: `scripts/ocr_cctv_drive_pdfs.py`).
+    - Sarmat usado solo como referencia de estructura/profundidad; los temas faltantes se integraron como submódulos nuevos con contenido propio.
+16. **PDFs generados (cliente, vía NotebookLM) → renombrados y subidos a Sanity**: los 22 PDFs de `C:\Users\Vickoto\Downloads\cctv aprecap\` quedaron con el nombre oficial `Modulo_X.Y_...pdf` y fueron subidos a `mwwotgjc/production` (mapeo en `scripts/sanity-cctv-pdf-urls.json`, script `scripts/upload-cctv-pdfs-sanity.mjs`; los 22 responden 200).
+17. **Videos renombrados**: los 22 MP4 de la misma carpeta quedaron con el esquema `Modulo_X.Y_...mp4` (incluidos los 2 "Módulo 1" ambiguos, resueltos por el cliente como 1.2 y 1.6).
+18. **Curso montado**: `operador-cctv-y-alarmas` en `materiales-estudio.ts` con **3 módulos y 22 submódulos** (videoUrl YouTube del cliente + pdfUrl Sanity). `SubModuloData` ahora soporta `videoUrl` (y `slides` opcional). La página `/materiales/[slug]` usa video/PDF del submódulo activo y **reinicia el paso a "video" al cambiar de submódulo**. Flujo por submódulo: **video → PDF → completado** (sin quiz, el curso no tiene banco).
+19. **Verificado con Chrome headless**: videos 1.1 (`pZbUu8NOLts`), 1.7 (`WDbDDQEbNVg`), 3.8 (`nyKt6Fb5FYg`); PDF de Sanity renderiza vía proxy (200); cambio de submódulo reinicia en video. `tsc` limpio.
+20. **Links de YouTube del cliente** (los 22, formato `https://youtu.be/...`) quedaron aplicados en `materiales-estudio.ts`.
 
-6. **Módulos 10–14 del Curso OS-10 + PDFs en Sanity (NUEVO):**
-   - **5 módulos nuevos** agregados a `/materiales/guardia-de-seguridad` (video → PDF → quiz), en este orden:
-     10. Evolución del Guardia (`m1p-fI3uwek` → `The_Ethical_Shield.pdf`)
-     11. Seguridad de Instalaciones OS-10 (`AHhDEfJAM1s` → `OS-10_Tactical_Blueprint_v2.pdf`, versión 14 págs.)
-     12. Ética y Eventos Masivos (`bsLIP7v5-A8` → `Mass_Events_Tactical_Blueprint.pdf`)
-     13. Derechos y Deberes Legales (`Xvp-GwrbWW0` → `Human_Rights_in_Private_Security.pdf`)
-     14. Protección Moderna Integral (`G9UWNolIgCA` → `Seguridad_Física_y_Digital.pdf`)
-   - **14 PDFs subidos a Sanity** (`mwwotgjc/production`): los 9 existentes (de `C:\Users\Vickoto\Downloads\os10 aprecap`) + los 5 nuevos (`docs/pdf os10`). Mapeo en `scripts/sanity-pdf-urls.json`; script `scripts/upload-pdfs-sanity.mjs` (idempotente por sha256).
-   - `web/src/data/materiales-estudio.ts` ahora referencia todos los `pdfUrl` del curso OS-10 desde `https://cdn.sanity.io/files/...`.
-   - **Proxy de PDFs** `web/src/app/api/pdf/route.ts` (solo permite `cdn.sanity.io`): `PDFSwipeViewer` redirige las URLs de Sanity por `/api/pdf?url=...` para evitar CORS (react-pdf manda Origin y el proyecto Sanity lo rechaza hasta registrar los origins en el panel).
-   - **Bancos de preguntas nuevos** `os10-modulo10..14.ts` (10 alternativas + 20 V/F c/u, fundamentados en OCR en `docs/markdown_cursos/1_Guardia_OS10/pdfs_ocr/`). Examen final ahora **140 V/F** (10 por módulo × 14); header de `/evaluaciones/[slug]` calcula el total dinámicamente.
-   - Verificado con Puppeteer (Chrome headless): 14 módulos en sidebar, video YouTube módulo 10, PDF vía proxy 200 + canvas react-pdf, MiniQuiz en modo demo, "Módulo 10 Completado", examen "140 preguntas".
+### F. Repositorio
+21. **Push a GitHub** (`webaprecap/aprecap`, rama `main`): commit `5d74e8f` con 79 archivos (módulos, cuestionarios, curso CCTV, certificado, MDs, scripts). `.env`, `service-account.json`, mapeos JSON de Sanity y PDFs locales quedaron excluidos por `.gitignore`.
 
-7. **Apartado Cuestionarios Oficiales del Cliente (NUEVO — reemplaza el examen final):**
-   - Nueva página `/cuestionarios/guardia-de-seguridad` con los **8 cuestionarios oficiales** que el cliente entrega en sus cursos, digitalizados con las **mismas preguntas y respuestas** (extraídos de `C:\Users\Vickoto\Downloads\os10 aprecap\cuestionarios`; textos de trabajo en `scripts/cuestionarios-extraidos/`):
-     1. Cuestionario de Preguntas para Examen OS-10 (82 preguntas con alternativas de 4 opciones y corrección inmediata).
-     2. Prueba de Diagnóstico General (150 preguntas: V/F + alternativas + desarrollo).
-     3. Prueba Ley 16.744 (40 V/F con casos prácticos).
-     4. Prueba Prevención de Riesgos (80 V/F).
-     5. Prueba Control de Emergencia (50 V/F).
-     6. Prueba Seguridad de Instalaciones (50 V/F).
-     7. Prueba Sistemas de Alarmas, Comunicación y Enlace - Revisada (50 V/F).
-     8. Prueba Alarmas y Comunicación y Enlace - Rev (37 V/F).
-   - Componentes: `web/src/components/cuestionarios/CuestionarioVFView.tsx` (interactivo con puntaje + corrección completa al entregar, sin nota mínima, reintentos ilimitados).
-   - **Actualización 2026-08 (petición del cliente):** los 8 cuestionarios ahora usan **corrección inmediata por pregunta** (verde/rojo + muestra la respuesta correcta y el porqué). Las 82 preguntas abiertas se convirtieron en **alternativas de 4 opciones** (la correcta oficial + 3 distractores creados), las 5 de desarrollo de la prueba de 150 también pasaron a alternativas, y las V/F se mantienen con botones Verdadero/Falso. Se eliminó el botón "Ver respuesta" (solo queda "Mostrar todas las respuestas" visible en desarrollo local). Al completar todas las preguntas se muestra el **resultado final con porcentaje** y botón "Reintentar".
-   - **Examen final eliminado** (el cliente no quiere examen final, solo sus cuestionarios): se quitó el botón "Examen Final" del sidebar de `/materiales/guardia-de-seguridad` y `/evaluaciones/[slug]` ahora redirige a `/cuestionarios/[slug]`. Los **MiniQuiz por módulo se mantienen** (video → PDF → quiz).
-   - Enlaces: sidebar del curso ("📋 Cuestionarios Oficiales") y tarjeta OS-10 del panel del alumno.
+### H. Actualización legal + Curso Supervisor + Redcompra (2026-08-18)
+23. **Auditoría de leyes desactualizadas (a ley chilena vigente al 18-08-2026) y correcciones aplicadas:**
+    - **DL 3.607 (1981) DEROGADO por la Ley 21.659**: corregido en MDs CCTV 1.1/1.2 (+ consolidado M1), banco web `os10-modulo2.ts` (Estudio de Seguridad) y notas en MDs 1.3/1.4/1.5 ("vigente en lo compatible con la Ley 21.659").
+    - **Ley 19.628 vs 21.719**: precisado en MD CCTV 1.6 (+ consolidado) y bancos `os10-modulo14.ts`: 19.628 vigente; 21.719 (Ley Marco de Protección de Datos) entra en vigor pleno dic-2026 y deroga la 19.628; derechos ARCOP.
+    - **Cuestionario (web)**: pregunta 21 de la Prueba de 150 actualizada a "Carabineros, por medio de la Ley N° 21.659" (sin info antigua al estudiante, decisión del cliente).
+    - **Copias con fix para regenerar PDFs**: `C:\Users\Vickoto\Desktop\MDs_CCTV_Actualizados\` con 7 archivos `cctv_...md` (1.1–1.6 + consolidado M1). ✅ **COMPLETADO**: el cliente regeneró los PDFs (NotebookLM) y los nuevos están en producción (ver sección I).
+24. **MDs del curso Supervisor creados** en `docs/markdown_cursos/3_Supervisor_de_Seguridad/`: **14 submódulos + 6 consolidados** (1.1 Contrato/jornada con Ley 21.561 (42h vigente 2026/40h 2028) y Ley Karin 21.643 · 1.2 Ley 16.744 (DIAT/DIEP) · 1.3 DS 594/40/54 · 2.1 Prevención · 2.2 Incendios y emergencias · 3.1 Directivas y OS-10 · 3.2 Estudios y pautas · 4.1 Liderazgo · 4.2 Conflictos + Ley Karin · 5.1 Alarmas · 5.2 Comunicación/enlace · 6.1 Eventos Masivos (Ley 21.659/D.S. 208) · 6.2 Registros operativos · 6.3 Manejo de incidentes). Fuentes: manual oficial del curso + PDFs del Drive + leyes vigentes verificadas. Reglas cumplidas: solo info, sin menciones a plataformas, sin prácticas ni quizzes.
+25. **Redcompra/WebPay ocultado (temporal)**: eliminados los 3 botones "Pagar por WebPay" de `cursos/[slug]/page.tsx` (se mantiene WhatsApp/contacto). Rutas `/pago`, `/api/webpay` y tab de pagos del admin intactas para reactivación posterior.
+26. **Pruebas ejecutadas (Chrome headless + tsc + eslint)**: OS-10 (15 módulos, sin examen final, link cuestionarios), cuestionarios (8, pregunta 21 con Ley 21.659), CCTV (acordeón OK), cursos sin botón WebPay, certificado renderiza. Todo OK.
 
-8. **Diploma digital APRECAP (NUEVO):**
-   - Página `/panel/alumno/certificado` con el certificado del cliente (modelo `JUANA GONZALEZ.docx`) digitalizado con mejor tipografía y estilo APRECAP.
-   - **Nombre**: editable, auto-completado desde el perfil del estudiante. **RUT**: automático desde el perfil (no editable). **Fecha**: automática al día de emisión. **Curso**: selector con los cursos aprobados y su duración (OS-10 90h, CCTV 40h, Supervisor 140h, Jefe 140h).
-   - Botón "Imprimir / Guardar como PDF" (impresión A4 con la zona de configuración oculta).
-   - Acceso desde el panel del alumno ("📜 Certificados y Diplomas").
+### I. Módulo 1 CCTV reformado en producción (2026-08-18)
+28. **Reemplazo del Módulo 1 del curso CCTV (1.1–1.6) por la versión reformada** del cliente (PDFs regenerados con NotebookLM desde los MDs corregidos + videos nuevos en YouTube):
+    - **6 PDFs nuevos subidos a Sanity** (IDs `7c8925…`, `bc2e5e…`, `2a5233…`, `5c4b9f…`, `cdb6aa…`, `772ff2…`) desde `C:\Users\Vickoto\Downloads\cctv aprecap\modulo 1 reformado\` (ya renombrados `Modulo_1.X_...pdf`). Mapeo actualizado en `scripts/sanity-cctv-pdf-urls.json` (mismas keys, URLs/sha nuevos; 1.7 y Módulos 2–3 intactos).
+    - **6 assets viejos de M1 (1.1–1.6) dejados huérfanos**: el token de Sanity no permite DELETE (401). Lista de IDs para borrado manual en `scripts/sanity-old-m1-assets-to-delete.txt` (sanity.io/manage → Assets → Files).
+    - **`materiales-estudio.ts`**: submódulos 1.1–1.6 → videos nuevos (`OCoA-tyikk8`, `xbG8RJOXYvI`, `4P8PaxuBYiU`, `IIcy36PrH7E`, `KeXxMe68R2Y`, `ubn3jJV-d20`) + PDFs nuevos; nombre 1.1 → "Definición de Operador de CCTV y Nueva Ley (Ley N° 21.659)". 1.7 (`WDbDDQEbNVg` + `1be37303…`) sin cambios.
+    - **Verificación**: tsc OK; bundle del curso con los 7 videos y 7 PDFs nuevos y **sin rastro de los 6 videos/PDFs viejos**; los 7 PDFs responden 200 vía proxy `/api/pdf`; headless OK (submódulo 1.1 renderiza video+PDF nuevos).
+    - **Pendiente del cliente**: borrar manualmente los 6 assets viejos en sanity.io/manage (opcional, no afectan el curso).
 
-9. **Módulo de solo lectura Res. Ex. N° 2.183 (NUEVO):**
-   - Agregado como módulo 15 del curso OS-10 (acordeón): "Resolución Exenta N° 2183 · Capacitación y Exámenes (Lectura)".
-   - 8 diapositivas con los puntos clave (base legal Ley 21.659 y D.S. 209/208, tipos de curso, duraciones 100/90/60 horas pedagógicas, malla legal y técnica, examen teórico de 60 preguntas en 120 minutos, examen práctico, fiscalización Carabineros). Sin video ni quiz (solo lectura vía PPTSlideViewer).
+### J. Quizzes y Examen Final del curso CCTV (2026-08-18)
+29. **Banco de preguntas CCTV** (`web/src/lib/questionBanks/cctv.ts`): **63 preguntas de alternativas (4 opciones c/u)** extraídas de los MDs consolidados — M1 legal: 21 · M2 sistemas: 22 · M3 televigilancia: 20. `selectBalancedQuestions(60)` → examen de **60 preguntas balanceadas 20/20/20** con preguntas y opciones randomizadas; `getPreguntasPorModulo` + `getMiniQuizBancoCctv` (formato `PreguntaAlternativa`).
+30. **MiniQuiz por módulo (5 preguntas)**: curso CCTV marcado `banco: "cctv"` en `materiales-estudio.ts` (tipo `"os10" | "cctv"`); `materiales/[slug]/page.tsx` inyecta el banco del módulo expandido; los 3 módulos ahora son evaluables (video → PDF → quiz).
+31. **Examen Final CCTV** (`web/src/components/cursos/CCTVFinalExam.tsx` en `/evaluaciones/operador-cctv-y-alarmas`): una pregunta a la vez (opciones A–D), dots de navegación, contador, "ENTREGAR EXAMEN" con aviso de faltantes, **umbral 80%** (decisión cliente), **reintentos ilimitados**, feedback por módulo fallado, confetti al aprobar, resultado en localStorage (`aprecap_examen_operador-cctv-y-alarmas_pct/_aprobado`). El resto de slugs de `/evaluaciones/` sigue redirigiendo a `/cuestionarios/`.
+32. **Acceso**: botón "📝 Examen Final CCTV" en sidebar y tarjeta de finalización del curso (los links de Cuestionarios Oficiales quedaron solo para OS-10). Visible al completar los 3 módulos.
+33. **Verificación**: tsc OK; script de chequeo (63 preguntas, examen 20/20/20 IDs únicos, MiniQuiz 5, shuffle conserva la correcta); Chrome headless OK (sidebar + examen renderizan con 80% y 60 preguntas).
+34. **Pendiente de esta jornada**: commit+push (autorizado por el cliente).
 
-10. **Material reservado (pendiente):** `Curso bastón y esposas presentación.pptx` se guarda para el futuro **curso de Bastón y Esposas** (no se construye aún).
-
-11. **Curso CCTV montado con 22 submódulos video+PDF (NUEVO):**
-    - El curso `operador-cctv-y-alarmas` en `web/src/data/materiales-estudio.ts` quedó con sus **3 módulos oficiales y 22 submódulos** (1.1–1.7, 2.1–2.7, 3.1–3.8), cada uno con `videoUrl` (YouTube del cliente) y `pdfUrl` (Sanity `cdn.sanity.io`, servido vía proxy `/api/pdf`).
-    - Los 22 PDFs generados desde los MDs fueron renombrados con el nombre oficial del submódulo, subidos a Sanity (`mwwotgjc/production`) y mapeados en `scripts/sanity-cctv-pdf-urls.json` (script: `scripts/upload-cctv-pdfs-sanity.mjs`).
-    - Los 22 videos (en `C:\Users\Vickoto\Downloads\cctv aprecap\`) fueron renombrados con el mismo esquema `Modulo_X.Y_...`.
-    - `SubModuloData` ahora soporta `videoUrl` (y `slides` pasó a opcional); la página `/materiales/[slug]` usa el video y PDF del submódulo activo y reinicia el paso "video" al cambiar de submódulo. Flujo por submódulo: **video → PDF → completado** (sin quiz, el curso no tiene banco).
-    - Verificado con Chrome headless: video YouTube 1.1 (`pZbUu8NOLts`), PDF de Sanity renderizado vía proxy (200), cambio de submódulo reinicia en video (1.7 `WDbDDQEbNVg`), submódulo 3.8 (`nyKt6Fb5FYg`) OK.
-
-11. **MDs del curso CCTV consolidados y robustecidos (NUEVO):**
-    - `docs/markdown_cursos/2_Operador_CCTV_y_Alarmas/` quedó con **3 MDs consolidados** (uno por módulo) con toda la info del curso, **sin secciones prácticas ni evaluaciones** (solo contenido de estudio, listos para generar los PDFs del curso):
-      - `Modulo_1_Fundamentos_Legales_CCTV_y_Alarmas.md` (1.1–1.5 + nuevos 1.6 Privacidad/uso de imágenes y 1.7 Evidencia digital e informes).
-      - `Modulo_2_Sistemas_Electronicos_de_Seguridad_Privada.md` (2.1–2.4 + nuevos 2.5 Fundamentos eléctricos, 2.6 Componentes/arquitectura CCTV y 2.7 Detección de incendio y evacuación).
-      - `Modulo_3_Televigilancia_y_Operacion_Centro_Control.md` (3.1–3.4 + nuevos 3.5 Operación del guardia/centro, 3.6 Ciberseguridad y bodycams, 3.7 Analítica/IA y 3.8 Gestión de crisis y custodia digital).
-    - **Fuentes propias usadas:** manual de 67 págs (`content/wp-pdfs/CIRCUITOS-...pdf`), slides de `materiales-estudio.ts`, lecciones WP, `GENERALIDADES-CURSO-CCTV-ALARMAS-1.pdf`, **OCR nuevo** de `Capitulo IV CCTV.pdf` (114 págs) y `Capitulo VI Centrales...pdf` (28 págs) en `pdfs_ocr/`, y texto de los 4 PPTs de Seguridad Electrónica en `scripts/cctv-extraidos/` (scripts: `scripts/ocr_cctv_drive_pdfs.py`).
-    - Se eliminaron los 13 MDs delgados de submódulos (evitar duplicados).
-    - **Estructura final por petición del cliente:** **22 MDs de submódulos separados** (uno por cada PDF a generar en NotebookLM: 1.1–1.7, 2.1–2.7, 3.1–3.8) con nombres descriptivos, más los 3 MDs consolidados como referencia de módulo completo. Los submódulos antes delgados (1.5, 2.2, 2.4, 3.1, 3.2, 3.3) fueron robustecidos con el material extraído (PPTs CAP I/II/III, Capítulo IV y VI) y estándares técnicos públicos.
-    - Sarmat se usó solo como referencia de estructura/profundidad (su curso CCTV tiene 10 módulos teóricos + 3 prácticos); los temas faltantes se integraron como submódulos dentro de los 3 módulos oficiales de Aprecap, redactados con contenido propio.
-    - **Siguiente paso (cliente):** llevar los 22 MDs de submódulos a NotebookLM para generar los PDFs por separado y traer los links de YouTube de los videos para montar los módulos en la plataforma.
+### G. Curso Bastón y Esposas — MDs listos (nuevo)
+22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
+    - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).
+    - Fuente principal: manual del cliente `Curso bastón y esposas presentación.pdf` (18 páginas, OCR → `scripts/baston-extraidos/`, script `scripts/ocr_baston_manual.py`). Enriquecido solo con fuentes verificables (Código Penal: legítima defensa; Ley 21.659 y D.S. 209 del Diario Oficial ya en el repo; estándares generales de defensa personal y distancia de reacción). **Nada copiado de Sarmat** (sus PDFs/videos quedaron excluidos por instrucción del cliente).
+    - **Pendiente del cliente:** generar los PDFs en NotebookLM y grabar/aportar los videos del curso (no existen videos propios de Aprecap de bastón y esposas).
 
 ---
 
 ## ⏳ TAREAS PENDIENTES Y PRÓXIMOS PASOS
 
-- [ ] **Construcción de Ejercicios Prácticos Interactivos:**
-  - Compilar `docs/EJERCICIOS_PRACTICOS_INTERACTIVOS.md` con los formularios y casos prácticos donde el alumno debe escribir o simular tareas en pantalla (Libro de Novedades, Informes OS-10, Pautas de Puesto).
+- [ ] **Verificar certificado digital con datos reales** (el alumno imprime su diploma; validar nombre/RUT/fecha/curso y la impresión a PDF en navegador).
+- [ ] **Editor de certificados estilo Sarmat para admin** (pendiente): replicar `CertificadosTab` (WYSIWYG: textos/colores/imágenes arrastrables + PDF con `@react-pdf/renderer`) en `/panel/admin` de Aprecap. Ruta de referencia verificada: Sarmat `/admin` → pestaña "🎓 Generar Certificados".
+- [ ] **Curso de Bastón y Esposas (en curso):** los 11 MDs de submódulos ya están listos en `docs/markdown_cursos/5_Baston_y_Esposas/`. Falta: cliente genera PDFs (NotebookLM) + graba/aporta videos del curso → luego se monta en la plataforma (Sanity + YouTube, flujo video → PDF como CCTV).
+- [ ] **Quizzes/Cuestionarios del curso CCTV** ✅ **COMPLETADO (2026-08-18)**: banco de 63 preguntas, MiniQuiz de 5 por módulo y Examen Final de 60 preguntas (80%, reintentos ilimitados) — ver sección J.
 - [ ] **ELIMINAR MODO DEMO ANTES DE PRODUCCIÓN (importante):**
-  - Quitar el botón temporal "🧪 Test Curso OS-10" del `Header.tsx` (buscar comentario `TEMP-TEST`, está en menú escritorio y móvil).
-  - Quitar el modo demo (`?demo=1` + sessionStorage `aprecap_demo`): hook `web/src/lib/useModoDemo.ts`, prop `modoDemo` en `MiniQuiz.tsx` y `FinalExam.tsx`, badges "🧪 DEMO" y estilos `.demoBox` de los CSS. Solo se activa al entrar por el botón de test o con `?demo=1`; el flujo normal no se ve afectado.
-- [x] **Subir PDFs oficiales a Sanity** (14 PDFs del curso OS-10 subidos a `mwwotgjc/production` y referenciados desde `cdn.sanity.io`; visor usa proxy `/api/pdf`).
-- [ ] **Registrar origins en CORS de Sanity** (panel sanity.io/manage): agregar `http://localhost:3000` y el dominio Cloudflare para poder usar URLs directas `cdn.sanity.io` sin el proxy `/api/pdf`.
-- [ ] **Persistencia de resultados en Firestore** (hoy los puntajes de cuestionarios y el progreso se guardan en localStorage; en producción replicar Sarmat: Firestore + límite de intentos + candados de módulos).
-- [ ] **Configuración de CORS (Producción):**
-  - Agregar URLs de `localhost` y Cloudflare en la configuración de **Sanity CMS**.
-  - Agregar URLs de `localhost` y Cloudflare en la configuración de **Firebase**.
+  - Quitar el botón temporal "🧪 Test Curso OS-10" del `Header.tsx` (comentario `TEMP-TEST`, menú escritorio y móvil).
+  - Quitar el modo demo (`?demo=1` + sessionStorage `aprecap_demo`): `lib/useModoDemo.ts`, prop `modoDemo` en `MiniQuiz.tsx` y `FinalExam.tsx`, badges "🧪 DEMO" y estilos `.demoBox`.
+- [ ] **Registrar origins en CORS de Sanity** (panel sanity.io/manage): `http://localhost:3000` y el dominio Cloudflare, para poder usar `cdn.sanity.io` directo sin el proxy `/api/pdf`.
+- [ ] **Persistencia de resultados en Firestore** (hoy puntajes de cuestionarios y progreso se guardan en localStorage): replicar Sarmat (Firestore + límite de intentos + candados de módulos).
+- [ ] **Configuración de CORS (producción):** agregar URLs de `localhost` y Cloudflare en **Sanity** y **Firebase**.
 - [ ] **Pase a Producción (Restricción de Permisos):**
-  - **IMPORTANTE:** Antes del despliegue en servidor de producción, volver a habilitar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`, `accesoJefe`) en `web/src/app/panel/alumno/page.tsx`, y añadir los candados de módulos/examen estilo Sarmat.
+  - Reactivar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`, `accesoJefe`) en `web/src/app/panel/alumno/page.tsx`.
+  - Añadir candados de módulos/examen estilo Sarmat.
+- [ ] **Ejercicios Prácticos Interactivos:** compilar `docs/EJERCICIOS_PRACTICOS_INTERACTIVOS.md` (Libro de Novedades, Informes OS-10, Pautas de Puesto).
+- [ ] **Tareas del cliente anteriores aún vivas:** WP user/pass (rescatar lecciones LearnPress), confirmar horas del Jefe de Seguridad (420/140/400), PDF del acuerdo firmado.
 
 ---
 
-- [ ] **Curso de Bast?n y Esposas (futuro):** construir el curso con `Curso bast?n y esposas presentaci?n.pptx` (material reservado en `C:\Users\Vickoto\Downloads\os10 aprecap\cuestionarios`).
-
 ## 🔑 Credenciales del Sistema
 
-- **Sanity CMS Project ID:** `mwwotgjc`
-- **Sanity Dataset:** `production`
+- **Sanity CMS Project ID:** `mwwotgjc` · Dataset: `production`
 - **Repositorio GitHub:** `https://github.com/webaprecap/aprecap.git` (Rama `main`)
+- **Materiales locales del cliente:**
+  - OS-10: `C:\Users\Vickoto\Downloads\os10 aprecap\` (PDFs, videos y cuestionarios)
+  - CCTV: `C:\Users\Vickoto\Downloads\cctv aprecap\` (22 videos + 22 PDFs renombrados `Modulo_X.Y_...`)
+  - Bastón y esposas: `C:\Users\Vickoto\Downloads\os10 aprecap\cuestionarios\Curso bastón y esposas presentación.pptx` (reservado)

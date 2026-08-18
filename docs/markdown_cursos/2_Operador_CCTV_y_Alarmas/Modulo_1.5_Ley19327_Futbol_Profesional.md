@@ -4,6 +4,8 @@
 
 La Ley N° 19.327 establece medidas de prevención y control de la violencia en los espectáculos de fútbol profesional. Dentro de estas medidas, impone exigencias tecnológicas de videovigilancia, control de accesos y detección de metales en los estadios y recintos deportivos donde se desarrollan dichos espectáculos.
 
+**Marco normativo actual:** esta ley continúa vigente. Se complementa con la **Ley N° 21.659** (2024) y el **Decreto Supremo N° 208** (Reglamento de Eventos Masivos, 2024), que regulan la seguridad privada y los eventos de alta concurrencia.
+
 ## 2. Exigencias tecnológicas en estadios (Artículo 5°)
 
 - Instalación obligatoria de cámaras de seguridad de alta definición (HD).

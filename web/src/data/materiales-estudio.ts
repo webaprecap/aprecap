@@ -22,7 +22,7 @@ export interface CursoMaterial {
   title: string;
   categoria: string;
   pdfUrl?: string;
-  banco?: "os10";
+  banco?: "os10" | "cctv";
   modulos: ModuloData[];
 }
 
@@ -220,6 +220,7 @@ export const materialesEstudio: CursoMaterial[] = [
     title: "Curso de Operador de CCTV y Alarmas",
     categoria: "Seguridad Electrónica",
     pdfUrl: "/materiales/CIRCUITOS-CERRADOS-DE-TELEVISION-Y-ALARMAS.pdf",
+    banco: "cctv",
     modulos: [
       {
         nombre: "Módulo 1: Fundamentos Legales de Operación de CCTV y Alarmas",
@@ -227,44 +228,44 @@ export const materialesEstudio: CursoMaterial[] = [
           {
             id: "cctv-1-1",
             codigo: "1.1",
-            nombre: "Definición de Operador de CCTV y Decreto Supremo N° 41",
-            videoUrl: "https://youtu.be/pZbUu8NOLts",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/aeaed4f5abf1cb1ccf20bbb5ae5fb58112db51a9.pdf"
+            nombre: "Definición de Operador de CCTV y Nueva Ley (Ley N° 21.659)",
+            videoUrl: "https://youtu.be/OCoA-tyikk8",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7c892528b70909adfeaa33e1c29b8806b369ca08.pdf"
           },
           {
             id: "cctv-1-2",
             codigo: "1.2",
             nombre: "Decreto Supremo N° 1122 — Medidas Mínimas de Seguridad para Empresas",
-            videoUrl: "https://youtu.be/VIUwp5TCFUA",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/58085a8873e5de02cd0c59bd606623b8fd75d3c3.pdf"
+            videoUrl: "https://youtu.be/xbG8RJOXYvI",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/bc2e5ed7e2a9cc2008b7617b8f5cffc510a67175.pdf"
           },
           {
             id: "cctv-1-3",
             codigo: "1.3",
             nombre: "Decreto Supremo N° 1814 — Transporte de Valores y Bóvedas",
-            videoUrl: "https://youtu.be/Ajm64egwHSs",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/1b131c5f69abc71f6dedcbda65699a2382f8748a.pdf"
+            videoUrl: "https://youtu.be/4P8PaxuBYiU",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/2a52338df727ad91d1e9099a4b549db8063c2a2a.pdf"
           },
           {
             id: "cctv-1-4",
             codigo: "1.4",
             nombre: "Decreto Supremo N° 222 — Seguridad en Cajeros Automáticos",
-            videoUrl: "https://youtu.be/AjRCNTkwvgI",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c1d56584f438e5ce26581ce50d91188057619677.pdf"
+            videoUrl: "https://youtu.be/IIcy36PrH7E",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/5c4b9f53ef9080fb8fe8d346711bed8987f19cf9.pdf"
           },
           {
             id: "cctv-1-5",
             codigo: "1.5",
             nombre: "Ley N° 19.327 — Seguridad en Espectáculos de Fútbol Profesional",
-            videoUrl: "https://youtu.be/d31ccKMCv8w",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/ac35fd56eb34634c724017fe23f6ee6bee42c1c6.pdf"
+            videoUrl: "https://youtu.be/KeXxMe68R2Y",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/cdb6aa020377a395c6716c73fe4a39d061993104.pdf"
           },
           {
             id: "cctv-1-6",
             codigo: "1.6",
             nombre: "Privacidad, Uso de Imágenes y Protección de Datos",
-            videoUrl: "https://youtu.be/Za4QxSqXaPY",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/dbcbf30e7c70ee9165ee8d54077b056fe3421ec4.pdf"
+            videoUrl: "https://youtu.be/ubn3jJV-d20",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/772ff24e8c8dc7e9a89f62aa9877831c92be18ba.pdf"
           },
           {
             id: "cctv-1-7",

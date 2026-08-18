@@ -4,6 +4,8 @@
 
 El Decreto Supremo N° 1814 regula las condiciones de seguridad electrónica aplicables al transporte de valores, los camiones blindados y las bóvedas de acopio. Su objetivo es elevar los estándares de televigilancia y monitoreo en una de las actividades de mayor riesgo de la seguridad privada.
 
+**Marco normativo actual:** esta norma sectorial continúa vigente en lo que no sea contrario a la **Ley N° 21.659** (2024) y al **Decreto Supremo N° 209** (2024), que constituyen el marco general vigente de la seguridad privada.
+
 ## 2. Cámaras y monitoreo en vehículos blindados
 
 - **Cantidad mínima:** al menos 3 cámaras de televigilancia de alta resolución por camión:

@@ -2,7 +2,9 @@
 
 ## 1. Fundamentos del tratamiento de imágenes
 
-Las imágenes de videovigilancia constituyen datos personales cuando permiten identificar a una persona. Su tratamiento debe basarse estrictamente en la ley y ejecutarse siempre de buena fe, conforme a la normativa chilena de protección de datos personales (Ley N° 19.628 y su actualización en la Ley N° 21.719).
+Las imágenes de videovigilancia constituyen datos personales cuando permiten identificar a una persona. Su tratamiento debe basarse estrictamente en la ley y ejecutarse siempre de buena fe, conforme a la normativa chilena de protección de datos personales.
+
+**Marco normativo actualizado:** hoy rige la **Ley N° 19.628** sobre protección de la vida privada. La **Ley N° 21.719** (Ley Marco de Protección de Datos Personales, publicada en diciembre de 2024) moderniza este régimen, incorpora los derechos ARCOP (Acceso, Rectificación, Cancelación, Oposición y Portabilidad) y entrará en vigor pleno en diciembre de 2026, fecha en que derogará la Ley N° 19.628. El operador debe aplicar desde ya los principios de ambas normas: finalidad, proporcionalidad, minimización, seguridad y transparencia.
 
 La videovigilancia es una herramienta legítima de seguridad, pero su uso nunca puede vulnerar la dignidad de las personas. El operador es un actor clave en este equilibrio: aplica la técnica y, a la vez, protege los derechos de quienes son filmados.
 

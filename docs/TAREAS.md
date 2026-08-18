@@ -132,3 +132,28 @@
 
 - [x] Enlace WhatsApp para la promo de Facebook de **SARMAT** (fuera del repo): `https://wa.me/56951621840?text=Hola%2C%20vengo%20por%20la%20publicaci%C3%B3n%20de%20Facebook%20de%20SARMAT%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20cursos.`
 - [x] Estadísticas +200 Cursos / +400 Asesorías / +500 Egresados eliminadas del home (fuente `content/pages/inicio.md`)
+
+
+## Sesiones 2026-08-12 → 2026-08-15 — Curso OS-10 + Cuestionarios + Curso CCTV (completado)
+
+- [x] Módulos OS-10 10–14 con videos del cliente + bancos de preguntas (OCR de PDFs)
+- [x] 14 PDFs OS-10 subidos a Sanity y servidos vía proxy `/api/pdf` (CORS)
+- [x] Cuestionarios oficiales del cliente digitalizados (8 pruebas, 539 preguntas, corrección inmediata por pregunta, alternativas de 4 opciones)
+- [x] Examen final eliminado (cliente) — `/evaluaciones` redirige a `/cuestionarios`
+- [x] Diploma digital `/panel/alumno/certificado` (nombre editable, RUT/fecha/curso automáticos)
+- [x] Módulo 15 OS-10 de lectura (Res. Ex. N° 2183)
+- [x] MDs CCTV: 22 submódulos + 3 consolidados (OCR Cap. IV/VI + PPTs + manual + investigación)
+- [x] 22 PDFs CCTV a Sanity; 44 archivos locales renombrados `Modulo_X.Y_...`
+- [x] Curso CCTV montado con 22 submódulos video+PDF (verificado headless)
+- [x] Push a GitHub (`5d74e8f`)
+
+## Pendientes nuevos (2026-08-15)
+
+- [ ] Verificar certificado digital con datos reales de un alumno
+- [ ] Replicar editor de certificados estilo Sarmat en `/panel/admin` (ruta ref.: Sarmat `/admin` → "Generar Certificados")
+- [ ] Curso de Bastón y Esposas (material reservado: `Curso bastón y esposas presentación.pptx`)
+- [ ] Quizzes/cuestionarios del curso CCTV (si el cliente los pide; hoy es video → PDF → completado)
+- [ ] ELIMINAR modo demo antes de producción (`Header.tsx` TEMP-TEST, `useModoDemo`, badges demo)
+- [ ] CORS Sanity (localhost + Cloudflare en sanity.io/manage)
+- [ ] Persistencia en Firestore de progreso y puntajes (hoy localStorage)
+- [ ] Pase a producción: candados de módulos + permisos Firestore (accesoCCTV/Supervisor/Jefe)

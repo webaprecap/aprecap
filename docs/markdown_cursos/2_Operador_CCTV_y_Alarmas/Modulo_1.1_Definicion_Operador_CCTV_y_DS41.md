@@ -11,6 +11,10 @@ El operador de CCTV y alarmas es la persona encargada de controlar, a través de
 
 El operador es un eslabón fundamental del sistema de seguridad: su trabajo convierte la información de cámaras y sensores en decisiones oportunas y en registros útiles para la empresa y para las autoridades.
 
+### Marco normativo actual
+
+El marco vigente de la seguridad privada en Chile es la **Ley N° 21.659** (publicada en 2024) y su reglamento, el **Decreto Supremo N° 209** (2024). Esta ley reemplazó el antiguo régimen del Decreto Ley N° 3.607 (1981) y sus reglamentos, que fueron derogados. Las disposiciones sectoriales dictadas bajo el régimen anterior —como el Decreto N° 261 exento (Manual Operativo en Materias de Seguridad Privada, 2020) y el Decreto Supremo N° 41— continúan aplicándose en lo que no sea contrario a la Ley N° 21.659, hasta que sean reemplazadas por la nueva normativa reglamentaria.
+
 ## 2. Funciones del operador en el día a día
 
 - Observación continua de los monitores de vigilancia.
@@ -22,7 +26,7 @@ El operador es un eslabón fundamental del sistema de seguridad: su trabajo conv
 
 ## 3. Conexión a Centrales de Comunicaciones de Carabineros (Decreto Supremo N° 41)
 
-El Decreto Supremo N° 41 regula la conexión de los sistemas de alarma con la Central de Comunicaciones de Carabineros de Chile (CENCO).
+El Decreto Supremo N° 41 regula la conexión de los sistemas de alarma con la Central de Comunicaciones de Carabineros de Chile (CENCO). Esta norma fue dictada bajo el régimen anterior y rige en lo que no sea contrario a la Ley N° 21.659 y al Decreto Supremo N° 209.
 
 - **Autorización:** faculta a los prestadores de servicios técnicos de seguridad privada a conectar sus alarmas y centrales directamente a la Central de Comunicaciones de Carabineros.
 - **Formatos de información:** la transmisión puede realizarse por canales de voz, audio, imagen o tecnología digital, satelital o radial.

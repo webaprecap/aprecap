@@ -4,6 +4,8 @@
 
 El Decreto Supremo N° 222 establece las condiciones de seguridad electrónica que deben cumplir los cajeros automáticos y dispensadores de dinero. Su objetivo es proteger a los usuarios, disuadir los ataques y garantizar evidencia de calidad para la investigación de delitos.
 
+**Marco normativo actual:** esta norma sectorial continúa vigente en lo que no sea contrario a la **Ley N° 21.659** (2024) y al **Decreto Supremo N° 209** (2024), que constituyen el marco general vigente de la seguridad privada.
+
 ## 2. Definición y especificaciones de sensores (Artículos 6° y 9°)
 
 - Alarma sonora y lumínica monitoreada en línea 24/7.

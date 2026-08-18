@@ -13,14 +13,14 @@ export const bancoModulo2: BancoModulo = {
         "¿Qué es el Estudio de Seguridad según el manual?",
       opciones: [
         "Un formulario que llena el guardia al inicio de cada turno",
-        "Un documento elaborado por las entidades del Art. 3º del D.L. 3.607 que concluye con una apreciación de vulnerabilidades y análisis de áreas de riesgo",
+        "Un documento elaborado por las entidades obligadas conforme a la Ley N° 21.659 que concluye con una apreciación de vulnerabilidades y análisis de áreas de riesgo",
         "Un certificado emitido por Carabineros para cada guardia",
         "Un registro mensual de incidentes de la instalación",
       ],
       respuestaCorrecta:
-        "Un documento elaborado por las entidades del Art. 3º del D.L. 3.607 que concluye con una apreciación de vulnerabilidades y análisis de áreas de riesgo",
+        "Un documento elaborado por las entidades obligadas conforme a la Ley N° 21.659 que concluye con una apreciación de vulnerabilidades y análisis de áreas de riesgo",
       explicacion:
-        "El manual define así el Estudio de Seguridad, elaborado por entidades bancarias, financieras, públicas, de transporte de valores, estratégicas y de utilidad pública.",
+        "El manual define así el Estudio de Seguridad, elaborado por entidades bancarias, financieras, públicas, de transporte de valores, estratégicas y de utilidad pública. El marco legal vigente es la Ley N° 21.659 (que reemplazó al antiguo D.L. 3.607).",
     },
     {
       id: "m2_a2",

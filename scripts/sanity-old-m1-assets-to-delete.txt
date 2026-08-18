@@ -1,0 +1,14 @@
+Assets viejos del Modulo 1 CCTV para borrar manualmente en sanity.io/manage (Project mwwotgjc) -> Assets -> Files:
+
+file-aeaed4f5abf1cb1ccf20bbb5ae5fb58112db51a9-pdf   <- Modulo_1.1_Definicion_Operador_CCTV_y_DS41.pdf
+        https://cdn.sanity.io/files/mwwotgjc/production/aeaed4f5abf1cb1ccf20bbb5ae5fb58112db51a9.pdf
+file-58085a8873e5de02cd0c59bd606623b8fd75d3c3-pdf   <- Modulo_1.2_DS1122_Medidas_Minimas_Empresas.pdf
+        https://cdn.sanity.io/files/mwwotgjc/production/58085a8873e5de02cd0c59bd606623b8fd75d3c3.pdf
+file-1b131c5f69abc71f6dedcbda65699a2382f8748a-pdf   <- Modulo_1.3_DS1814_Transporte_de_Valores_y_Bovedas.pdf
+        https://cdn.sanity.io/files/mwwotgjc/production/1b131c5f69abc71f6dedcbda65699a2382f8748a.pdf
+file-c1d56584f438e5ce26581ce50d91188057619677-pdf   <- Modulo_1.4_DS222_Cajeros_Automaticos.pdf
+        https://cdn.sanity.io/files/mwwotgjc/production/c1d56584f438e5ce26581ce50d91188057619677.pdf
+file-ac35fd56eb34634c724017fe23f6ee6bee42c1c6-pdf   <- Modulo_1.5_Ley19327_Futbol_Profesional.pdf
+        https://cdn.sanity.io/files/mwwotgjc/production/ac35fd56eb34634c724017fe23f6ee6bee42c1c6.pdf
+file-dbcbf30e7c70ee9165ee8d54077b056fe3421ec4-pdf   <- Modulo_1.6_Privacidad_Uso_Imagenes_Datos.pdf
+        https://cdn.sanity.io/files/mwwotgjc/production/dbcbf30e7c70ee9165ee8d54077b056fe3421ec4.pdf

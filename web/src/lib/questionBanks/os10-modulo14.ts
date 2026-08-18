@@ -35,7 +35,7 @@ export const bancoModulo14: BancoModulo = {
       ],
       respuestaCorrecta: "Ley 19.628 / Ley 21.719 (alineadas con estándares RGPD)",
       explicacion:
-        "La integridad digital se sustenta en la Ley 19.628 / 21.719, alineadas con RGPD.",
+        "La integridad digital se sustenta en la Ley 19.628 (vigente) y la Ley 21.719 (Ley Marco de Protección de Datos Personales, que entrará en vigor pleno en diciembre de 2026 y derogará la 19.628), alineadas con RGPD.",
     },
     {
       id: "m14_a3",
@@ -166,7 +166,7 @@ export const bancoModulo14: BancoModulo = {
         "La Ley 19.628 regula la protección de datos personales en Chile.",
       respuestaCorrecta: true,
       explicacion:
-        "La Ley 19.628 / 21.719 regula la protección de datos, alineadas con RGPD.",
+        "La Ley 19.628 regula la protección de datos y sigue vigente; la Ley 21.719 la reemplazará al entrar en vigor pleno (diciembre de 2026).",
     },
     {
       id: "m14_vf3",
