@@ -540,3 +540,164 @@
   filter: brightness(1.12);
   transform: translateY(-1px);
 }
+
+/* ── Alternativas (opciones A–D) ─────────────────────────── */
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .optionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.optionBtn {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  text-align: left;
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.optionBtn:not(:disabled):hover {
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.06);
+}
+
+.optionBtn:disabled {
+  cursor: default;
+}
+
+.optionSelected {
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+}
+
+.optionCorrect {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.optionWrong {
+  border-color: #ff1212;
+  background: rgba(255, 18, 18, 0.12);
+}
+
+.optionLetter {
+  flex-shrink: 0;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 0.4rem;
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionSelected .optionLetter {
+  background: #00e5ff;
+  color: #020617;
+}
+
+.optionCorrect .optionLetter {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.optionWrong .optionLetter {
+  background: #ff1212;
+  color: #ffffff;
+}
+
+.optionText {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+/* ── Fundamento / retroalimentación ──────────────────────── */
+.cardCorrect {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.cardWrong {
+  border-color: rgba(255, 18, 18, 0.55);
+  background: rgba(255, 18, 18, 0.05);
+}
+
+.infoBtn {
+  flex-shrink: 0;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #00e5ff;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.infoBtn:hover {
+  background: #334155;
+}
+
+.explainBox {
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.76rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.explainAnswer {
+  color: #4ade80;
+  font-weight: 700;
+}
+
+.explainText {
+  color: #cbd5e1;
+}
+
+/* ── Revisión post-entrega ───────────────────────────────── */
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.reviewTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.reviewBadge {
+  display: inline-block;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  color: #00e5ff;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

@@ -82,6 +82,14 @@
 33. **Verificación**: tsc OK; script de chequeo (63 preguntas, examen 20/20/20 IDs únicos, MiniQuiz 5, shuffle conserva la correcta); Chrome headless OK (sidebar + examen renderizan con 80% y 60 preguntas).
 34. **Pendiente de esta jornada**: commit+push (autorizado por el cliente).
 
+### K. Fundamentos de retroalimentación y estilo APRECAP en quizzes CCTV (2026-08-18)
+35. **Fundamentos en el banco** (`cctv.ts`): campo `explicacion` escrito en las **63 preguntas** (M1/M2/M3), cada uno explica por qué la correcta es correcta y por qué las 3 opciones incorrectas están mal, con citas normativas (D.S. 41/1122/1814/222, Leyes 21.659/19.327/21.719/19.628, NFPA-72, contenidos de los MDs 2 y 3). Spot-check: ninguna pregunta de M1 tiene ley derogada como correcta (DL 3.607 solo como distractor).
+36. **MiniQuiz**: el campo `explicacion` ya no va vacío → al fallar una pregunta se muestra automáticamente el bloque "Fundamento" (y con botón ℹ️ en el resto). Tag del banner corregido a "Evaluación del Módulo" (era "Formato OS-10").
+37. **Examen Final CCTV en estilo APRECAP**: `CCTVFinalExam.tsx` ahora usa `FinalExam.module.css` (header cyan, grilla de opciones A–D, dots numerados, ENTREGAR verde, aviso de faltantes, tarjeta de resultado con círculo SVG, módulos fallados). Se eliminó el estilo Tailwind genérico que podía asimilarse a otras plataformas.
+38. **Revisión post-entrega**: botón "🔍 Revisar mis respuestas y fundamentos" → las 60 preguntas paginadas de 10 en 10, respuesta del usuario marcada verde/rojo, correcta destacada y fundamento visible (automático en falladas, botón ℹ️ en las demás).
+39. **Verificación**: tsc OK; Chrome headless OK (examen renderiza contador "Respondidas 0 de 60", dots de navegación y opciones; curso sin tag "Formato OS-10" y con botón de examen en sidebar).
+40. **Pendiente**: commit+push de esta sesión.
+
 ### G. Curso Bastón y Esposas — MDs listos (nuevo)
 22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
     - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).

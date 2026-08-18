@@ -124,7 +124,7 @@ export default function MiniQuiz({ banco, tituloModulo, onPass, onFail, modoDemo
       <div className={styles.banner}>
         <div>
           <span className={styles.bannerTag}>
-            Evaluación del Módulo — Formato OS-10
+            Evaluación del Módulo
           </span>
           <h3 className={styles.bannerTitle}>
             {tituloModulo ? `MiniQuiz: ${tituloModulo}` : 'MiniQuiz del Módulo'}

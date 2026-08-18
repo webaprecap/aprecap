@@ -142,3 +142,11 @@
 - **Verificación**: tsc OK; script de chequeo (63 preguntas, examen 20/20/20 con IDs únicos, MiniQuiz 5, shuffle conserva la correcta); Chrome headless OK (sidebar con botón de examen; `/evaluaciones/operador-cctv-y-alarmas` renderiza examen con umbral 80% y 60 preguntas).
 - **Pendiente**: commit+push de la jornada (fijado al final de esta sesión), borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.
 
+## Sesión 2026-08-18 (4) · Fundamentos de retroalimentación + estilo APRECAP en quizzes CCTV
+- **Fundamentos en las 63 preguntas del banco** (`cctv.ts`): campo `explicacion` en cada pregunta del Módulo 1, 2 y 3, explicando por qué la respuesta correcta es correcta y **por qué cada opción incorrecta está mal** (citas normativas D.S. 41/1122/1814/222, Leyes 21.659/19.327/21.719/19.628, NFPA-72, y referencias de los MDs 2 y 3). Se verificó que ninguna pregunta de M1 tiene ley derogada como correcta (DL 3.607 solo aparece como distractor).
+- **MiniQuiz**: ahora muestra automáticamente el bloque "Fundamento" al equivocarse (y con botón ℹ️ en cualquier pregunta), porque el campo `explicacion` ya no va vacío. Tag del banner corregido a "Evaluación del Módulo" (ya no dice "Formato OS-10", pues el componente ahora se usa también en CCTV).
+- **Examen Final CCTV** (`CCTVFinalExam.tsx`) rehecho con **`FinalExam.module.css` (estilo visual APRECAP)**: header cyan, opciones A–D en grilla, dots numerados, botón ENTREGAR verde, aviso de preguntas faltantes, tarjeta de resultado con círculo SVG y lista de módulos fallados (se eliminó el estilo Tailwind genérico).
+- **Revisión post-entrega del examen**: botón "🔍 Revisar mis respuestas y fundamentos" que muestra las 60 preguntas paginadas de 10 en 10, con la respuesta del usuario marcada (verde/rojo), la correcta destacada y el **fundamento explicando por qué las demás opciones están mal** (se muestra automáticamente en las falladas, y con botón ℹ️ en el resto).
+- **Verificación**: tsc OK; Chrome headless OK (examen renderiza con contador, dots y opciones; página del curso sin el tag "Formato OS-10" y con el botón de examen).
+- **Pendiente**: commit+push de esta sesión, borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.
+
