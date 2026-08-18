@@ -19,7 +19,7 @@ export const bancoModulo10: BancoModulo = {
       ],
       respuestaCorrecta: "De vigilante pasivo a aliado estratégico de la institución",
       explicacion:
-        "El documento contrasta la visión tradicional (vigilancia pasiva) con el nuevo rol: garantía de continuidad operativa y confianza.",
+        "El documento contrasta la visión tradicional (vigilancia pasiva y cumplimiento básico de normas) con el nuevo rol del guardia moderno: aliado estratégico que garantiza la continuidad operativa y la confianza de la institución. No pasó a funciones administrativas ni solo a operar CCTV, y su rol sí ha evolucionado.",
     },
     {
       id: "m10_a2",
@@ -28,7 +28,7 @@ export const bancoModulo10: BancoModulo = {
       opciones: ["La valentía", "La honradez", "La obediencia", "El compañerismo"],
       respuestaCorrecta: "La honradez",
       explicacion:
-        "La honradez exige transparencia y sinceridad constante en el actuar del guardia.",
+        "La honradez se define en el documento como transparencia y sinceridad constante en el actuar del guardia. La valentía es enfrentar las situaciones con entereza dominando el temor; la obediencia es acatar las órdenes legítimas; y el compañerismo es la colaboración con los pares.",
     },
     {
       id: "m10_a3",
@@ -37,7 +37,7 @@ export const bancoModulo10: BancoModulo = {
       opciones: ["La lealtad", "La amabilidad", "La valentía", "El compromiso"],
       respuestaCorrecta: "La valentía",
       explicacion:
-        "La valentía es enfrentar las situaciones con entereza, dominando el temor.",
+        "La valentía es enfrentar las situaciones con entereza, dominando el temor. La lealtad es la fidelidad a la institución; la amabilidad es el trato cordial con las personas; y el compromiso es la dedicación al cumplimiento de las responsabilidades, no la definición citada.",
     },
     {
       id: "m10_a4",
@@ -51,7 +51,7 @@ export const bancoModulo10: BancoModulo = {
       ],
       respuestaCorrecta: "El interés general sobre el particular",
       explicacion:
-        "El filtro de probidad exige que el interés general prime siempre por sobre el interés particular.",
+        "El filtro de probidad exige que el interés GENERAL prime siempre por sobre el interés particular, en toda decisión del guardia. Anteponer el interés propio, el beneficio de conocidos o el menor esfuerzo son precisamente las conductas que vulneran la probidad.",
     },
     {
       id: "m10_a5",
@@ -65,7 +65,7 @@ export const bancoModulo10: BancoModulo = {
       ],
       respuestaCorrecta: "Aceptar dádivas o sobornos",
       explicacion:
-        "Aceptar dádivas o sobornos, el nepotismo y el uso de información privilegiada vulneran la probidad.",
+        "Aceptar dádivas o sobornos, junto al nepotismo y el uso de información privilegiada, son conductas que vulneran la probidad. Declarar un conflicto de intereses, rendir cuentas de los recursos y denunciar el nepotismo son conductas probas que la protegen.",
     },
     {
       id: "m10_a6",
@@ -80,7 +80,7 @@ export const bancoModulo10: BancoModulo = {
       respuestaCorrecta:
         "Normas aparentemente neutras generan una desventaja desproporcionada para ciertos grupos",
       explicacion:
-        "La discriminación indirecta proviene de normas en apariencia neutrales que desfavorecen desproporcionadamente a ciertos grupos.",
+        "La discriminación indirecta proviene de normas en apariencia neutrales que, al aplicarse, desfavorecen desproporcionadamente a ciertos grupos. El trato explícitamente menos favorable basado en características innatas es la discriminación DIRECTA; expulsar formalmente a un grupo es una medida institucional abierta; e insultar directamente es discriminación directa en el trato personal.",
     },
     {
       id: "m10_a7",
@@ -95,7 +95,7 @@ export const bancoModulo10: BancoModulo = {
       respuestaCorrecta:
         "Una exclusión profundamente arraigada en las instituciones y normas sociales",
       explicacion:
-        "La discriminación sistémica es una exclusión profundamente arraigada en las instituciones y normas sociales.",
+        "La discriminación sistémica o estructural es una exclusión profundamente arraigada en las instituciones y normas sociales, que se reproduce aunque no exista una intención individual de discriminar. No es un hecho aislado ni una sanción, y el trato favorable a grupos vulnerables es una medida de equidad, no discriminación.",
     },
     {
       id: "m10_a8",
@@ -109,7 +109,7 @@ export const bancoModulo10: BancoModulo = {
       respuestaCorrecta:
         "Justicia en el trato que reconoce los contextos específicos y las diferencias para garantizar acceso real a recursos y oportunidades",
       explicacion:
-        "La equidad es el medio: justicia en el trato que reconoce contextos para garantizar acceso real a recursos y oportunidades.",
+        "El documento define la equidad como justicia en el trato que reconoce los contextos específicos y las diferencias, para garantizar acceso real a recursos y oportunidades. La igualdad absoluta sin considerar contextos es la igualdad mal entendida; no es un beneficio exclusivo para un grupo; y las cuotas son solo una de las posibles medidas, no la definición.",
     },
     {
       id: "m10_a9",
@@ -123,7 +123,7 @@ export const bancoModulo10: BancoModulo = {
       ],
       respuestaCorrecta: "El condicionamiento operante de B.F. Skinner",
       explicacion:
-        "El documento señala que el refuerzo positivo (reconocimiento, empleado del mes) se basa en el condicionamiento operante de B.F. Skinner.",
+        "El documento señala que el refuerzo positivo (reconocimiento, empleado del mes) se basa en el condicionamiento operante de B.F. Skinner: premiar la conducta deseada para que se repita. La disuasión penal castiga conductas; el psicoanálisis de Freud estudia la mente inconsciente; y la pirámide de Maslow ordena necesidades, no refuerza conductas.",
     },
     {
       id: "m10_a10",
@@ -137,7 +137,7 @@ export const bancoModulo10: BancoModulo = {
       ],
       respuestaCorrecta: "El soborno: aceptar regalías a cambio de favores",
       explicacion:
-        "El soborno (aceptar regalías a cambio de favores) anula la honradez y fomenta la corrupción.",
+        "El diagnóstico ético del documento señala que el soborno (aceptar regalías a cambio de favores) anula la honradez y fomenta la corrupción. El exceso de trabajo, la puntualidad y el uso del uniforme son conductas neutras o positivas que no afectan la honradez.",
     },
   ],
   vf: [
@@ -147,7 +147,7 @@ export const bancoModulo10: BancoModulo = {
         "La visión tradicional del guardia se limitaba a la vigilancia pasiva y al cumplimiento básico de normas.",
       respuestaCorrecta: true,
       explicacion:
-        "El documento contrapone la visión tradicional (vigilancia pasiva) con el nuevo rol de aliado estratégico.",
+        "Es VERDADERA: el documento contrapone la visión tradicional (vigilancia pasiva y cumplimiento básico de normas) con el nuevo rol del guardia como aliado estratégico de la institución.",
     },
     {
       id: "m10_vf2",
@@ -155,14 +155,15 @@ export const bancoModulo10: BancoModulo = {
         "El guardia moderno solo protege activos materiales de la empresa.",
       respuestaCorrecta: false,
       explicacion:
-        "El guardia moderno también resguarda la integridad ética, los derechos humanos y la confianza de la institución.",
+        "Es FALSA: el guardia moderno también resguarda la integridad ética, los derechos humanos y la confianza de la institución, además de los activos materiales.",
     },
     {
       id: "m10_vf3",
       afirmacion:
         "La honradez exige transparencia y sinceridad constante.",
       respuestaCorrecta: true,
-      explicacion: "La honradez se define como transparencia y sinceridad constante.",
+      explicacion:
+        "Es VERDADERA: la honradez se define en el documento como transparencia y sinceridad constante en el actuar del guardia.",
     },
     {
       id: "m10_vf4",
@@ -170,7 +171,7 @@ export const bancoModulo10: BancoModulo = {
         "Aceptar dádivas o sobornos es compatible con el principio de probidad.",
       respuestaCorrecta: false,
       explicacion:
-        "Aceptar dádivas o sobornos es una falta de probidad: el interés general debe primar sobre el particular.",
+        "Es FALSA: aceptar dádivas o sobornos es una falta de probidad, porque el interés general debe primar siempre sobre el interés particular.",
     },
     {
       id: "m10_vf5",
@@ -178,7 +179,7 @@ export const bancoModulo10: BancoModulo = {
         "El nepotismo es una práctica que vulnera el principio de probidad.",
       respuestaCorrecta: true,
       explicacion:
-        "El nepotismo figura entre las conductas que vulneran la probidad.",
+        "Es VERDADERA: el nepotismo figura entre las conductas que vulneran el principio de probidad, junto al soborno y el uso de información privilegiada.",
     },
     {
       id: "m10_vf6",
@@ -186,7 +187,7 @@ export const bancoModulo10: BancoModulo = {
         "Usar información privilegiada está prohibido por el filtro de probidad.",
       respuestaCorrecta: true,
       explicacion:
-        "El uso de información privilegiada es una falta de probidad.",
+        "Es VERDADERA: el uso de información privilegiada es una falta de probidad, según el filtro de probidad del documento.",
     },
     {
       id: "m10_vf7",
@@ -194,7 +195,7 @@ export const bancoModulo10: BancoModulo = {
         "La discriminación directa es un trato explícitamente menos favorable basado en características innatas como etnia, edad o discapacidad.",
       respuestaCorrecta: true,
       explicacion:
-        "Así define el documento la discriminación directa.",
+        "Es VERDADERA: así define el documento la discriminación directa: un trato explícitamente menos favorable basado en características innatas como la etnia, la edad o la discapacidad.",
     },
     {
       id: "m10_vf8",
@@ -202,14 +203,14 @@ export const bancoModulo10: BancoModulo = {
         "La discriminación indirecta se genera por normas aparentemente neutras que desfavorecen a ciertos grupos.",
       respuestaCorrecta: true,
       explicacion:
-        "Es la definición de discriminación indirecta del documento.",
+        "Es VERDADERA: es la definición de discriminación indirecta del documento: normas aparentemente neutras que, en su aplicación, desfavorecen desproporcionadamente a ciertos grupos.",
     },
     {
       id: "m10_vf9",
       afirmacion: "La equidad y la igualdad son exactamente lo mismo.",
       respuestaCorrecta: false,
       explicacion:
-        "La equidad reconoce contextos específicos y diferencias para garantizar acceso real; la igualdad asegura los mismos derechos y deberes.",
+        "Es FALSA: la equidad reconoce contextos específicos y diferencias para garantizar acceso real a recursos y oportunidades, mientras la igualdad asegura los mismos derechos y deberes para todas las personas.",
     },
     {
       id: "m10_vf10",
@@ -217,7 +218,7 @@ export const bancoModulo10: BancoModulo = {
         "La brecha salarial es uno de los desafíos actuales de la perspectiva de género.",
       respuestaCorrecta: true,
       explicacion:
-        "El documento menciona la brecha salarial persistente como desafío actual.",
+        "Es VERDADERA: el documento menciona la brecha salarial persistente como uno de los desafíos actuales de la perspectiva de género.",
     },
     {
       id: "m10_vf11",
@@ -225,7 +226,7 @@ export const bancoModulo10: BancoModulo = {
         "El Ministerio de la Mujer y Equidad de Género busca transversalizar la perspectiva de género y erradicar la violencia.",
       respuestaCorrecta: true,
       explicacion:
-        "Es la entidad encargada de promover políticas, transversalizar la perspectiva y erradicar la violencia.",
+        "Es VERDADERA: es la entidad encargada de promover políticas de igualdad, transversalizar la perspectiva de género y erradicar la violencia contra las mujeres.",
     },
     {
       id: "m10_vf12",
@@ -233,7 +234,7 @@ export const bancoModulo10: BancoModulo = {
         "El refuerzo positivo se basa en el condicionamiento operante de B.F. Skinner.",
       respuestaCorrecta: true,
       explicacion:
-        "El documento cita el condicionamiento operante de B.F. Skinner como base del refuerzo positivo.",
+        "Es VERDADERA: el documento cita el condicionamiento operante de B.F. Skinner como base del refuerzo positivo que motiva la excelencia.",
     },
     {
       id: "m10_vf13",
@@ -241,7 +242,7 @@ export const bancoModulo10: BancoModulo = {
         "El refuerzo positivo busca castigar las conductas indeseadas del personal.",
       respuestaCorrecta: false,
       explicacion:
-        "El refuerzo positivo fortalece la conducta deseada mediante estímulos como el reconocimiento, no castiga.",
+        "Es FALSA: el refuerzo positivo fortalece la conducta DESEADA mediante estímulos como el reconocimiento o el premio al empleado del mes; castigar conductas es propio del refuerzo negativo o la sanción.",
     },
     {
       id: "m10_vf14",
@@ -249,7 +250,7 @@ export const bancoModulo10: BancoModulo = {
         "Ante clientes ofuscados, el guardia debe mantener serenidad, respeto y un tono de voz adecuado.",
       respuestaCorrecta: true,
       explicacion:
-        "Los protocolos de interacción exigen serenidad, respeto y tono adecuado ante clientes ofuscados.",
+        "Es VERDADERA: los protocolos de interacción del documento exigen mantener serenidad, respeto y un tono de voz adecuado ante clientes ofuscados.",
     },
     {
       id: "m10_vf15",
@@ -257,7 +258,7 @@ export const bancoModulo10: BancoModulo = {
         "El tino y criterio implican mantener las emociones bajo control ante la hostilidad o el estrés.",
       respuestaCorrecta: true,
       explicacion:
-        "Tino, criterio y control: mantener las emociones bajo control ante hostilidad o estrés.",
+        "Es VERDADERA: tino, criterio y control implican mantener las emociones bajo control ante la hostilidad o el estrés, evitando reacciones desmedidas.",
     },
     {
       id: "m10_vf16",
@@ -265,7 +266,7 @@ export const bancoModulo10: BancoModulo = {
         "El espíritu de cuerpo fomenta el compañerismo y la uniformidad de procedimientos según las políticas de la empresa.",
       respuestaCorrecta: true,
       explicacion:
-        "El espíritu de cuerpo fomenta el compañerismo y la uniformidad de procedimientos.",
+        "Es VERDADERA: el espíritu de cuerpo fomenta el compañerismo y la uniformidad de procedimientos conforme a las políticas de la empresa.",
     },
     {
       id: "m10_vf17",
@@ -273,7 +274,7 @@ export const bancoModulo10: BancoModulo = {
         "El abuso de poder consiste en utilizar el puesto para pisotear a otros.",
       respuestaCorrecta: true,
       explicacion:
-        "El abuso de poder es utilizar el puesto para pisotear a otros.",
+        "Es VERDADERA: el abuso de poder consiste en utilizar el puesto de trabajo para pisotear a otros, conducta contraria a la ética profesional.",
     },
     {
       id: "m10_vf18",
@@ -281,7 +282,7 @@ export const bancoModulo10: BancoModulo = {
         "El conflicto de intereses (emitir normas para beneficio propio) vulnera directamente el principio de probidad.",
       respuestaCorrecta: true,
       explicacion:
-        "El documento señala que el conflicto de intereses vulnera directamente la probidad.",
+        "Es VERDADERA: el documento señala que el conflicto de intereses, como emitir normas para el propio beneficio, vulnera directamente el principio de probidad.",
     },
     {
       id: "m10_vf19",
@@ -289,7 +290,7 @@ export const bancoModulo10: BancoModulo = {
         "El encubrimiento traiciona la lealtad institucional y el compromiso.",
       respuestaCorrecta: true,
       explicacion:
-        "Callar faltas por amistad o temor traiciona la lealtad institucional y el compromiso.",
+        "Es VERDADERA: callar faltas por amistad o por temor (encubrimiento) traiciona la lealtad institucional y el compromiso del guardia.",
     },
     {
       id: "m10_vf20",
@@ -297,7 +298,7 @@ export const bancoModulo10: BancoModulo = {
         "La falta de dedicación evidencia ausencia de sentido de pertenencia.",
       respuestaCorrecta: true,
       explicacion:
-        "Perder el tiempo y no dar el máximo evidencia ausencia de sentido de pertenencia.",
+        "Es VERDADERA: perder el tiempo y no dar el máximo (falta de dedicación) evidencia ausencia de sentido de pertenencia, según el diagnóstico del documento.",
     },
   ],
 };

@@ -15,7 +15,7 @@ export const bancoModulo9: BancoModulo = {
       opciones: ["50%", "75%", "10 a 25%", "100%"],
       respuestaCorrecta: "10 a 25%",
       explicacion:
-        "El manual indica que entre el 10 y el 25% permanece unido y en calma, mientras un 75% manifiesta conducta desordenada y desconcierto.",
+        "El manual indica que entre el 10 y el 25% del público permanece unido y en calma, estudiando un plan de acción. El 75% manifiesta conducta desordenada y desconcierto; el 50% no es la cifra indicada para ningún grupo; y el 100% contradice el hecho de que la mayoría se desconcierta.",
     },
     {
       id: "m9_a2",
@@ -24,7 +24,7 @@ export const bancoModulo9: BancoModulo = {
       opciones: ["10 a 25%", "75%", "50%", "Menos del 5%"],
       respuestaCorrecta: "10 a 25%",
       explicacion:
-        "El manual asigna ese porcentaje a la confusión, ansiedad, paralización y pánico durante el impacto.",
+        "El manual asigna ese porcentaje (10 a 25%) a la confusión, ansiedad, paralización, gritos histéricos y pánico durante el período de impacto. El 75% corresponde a la conducta desordenada y el desconcierto; el 50% no es una cifra citada; y 'menos del 5%' subestima la cantidad de personas que reaccionan así.",
     },
     {
       id: "m9_a3",
@@ -39,7 +39,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Antes de que llegue el personal especializado, siendo el momento más crucial para el salvamento de vidas",
       explicacion:
-        "El manual destaca que el primer comportamiento ocurre antes de la llegada del personal especializado.",
+        "El manual destaca que el primer comportamiento ante una emergencia se produce ANTES de la llegada del personal especializado, y que ese lapso es el más crucial para el salvamento de vidas. Esperar a los especialistas, a la autoridad o al día siguiente perdería la ventana crítica de acción.",
     },
     {
       id: "m9_a4",
@@ -54,7 +54,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Por una red de acciones individuales y grupales: individuos aislados, individuos en colaboración, grupos aislados y grupos en colaboración",
       explicacion:
-        "El manual describe así la red de acciones que determina la dinámica social de la emergencia.",
+        "El manual describe así la dinámica social de la emergencia: una complicada red de acciones individuales y grupales que combina individuos aislados, individuos en colaboración, grupos aislados y grupos en colaboración. No se limita a grupos organizados, ni a las autoridades, ni a un líder único.",
     },
     {
       id: "m9_a5",
@@ -69,7 +69,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Preparación, prevención, respuesta y recuperación",
       explicacion:
-        "El manual indica que los planes de actuación ante emergencias deben contemplar esas cuatro fases.",
+        "El manual indica que los planes de actuación ante emergencias deben contemplar las cuatro fases: preparación, prevención, respuesta y recuperación. Evacuación y rescate son acciones de la fase de respuesta; la simulación es solo un medio de entrenamiento; y comprar equipos o contratar personal son gestiones puntuales, no fases del plan.",
     },
     {
       id: "m9_a6",
@@ -84,7 +84,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Todas las personas de la instalación, en especial el personal de seguridad",
       explicacion:
-        "El manual exige que los planes sean conocidos por todas las personas, en especial por el personal de seguridad.",
+        "El manual exige que los planes de emergencia sean conocidos por TODAS las personas de la instalación, en especial por el personal de seguridad, que es quien debe ejecutarlos. Limitarlos al personal de seguridad, a la gerencia o a los bomberos dejaría sin preparación a los demás ocupantes, que también deben actuar.",
     },
     {
       id: "m9_a7",
@@ -99,7 +99,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Evacuar, combatir el suceso, dar la alarma, prevenir a los demás y reunirse en puntos de convergencia",
       explicacion:
-        "El manual enumera esas posibles acciones del público.",
+        "El manual enumera esas posibles acciones del público ante una emergencia: evacuar, combatir el suceso, dar la alarma, prevenir a los demás y reunirse en puntos de convergencia. Esperar pasivamente, grabar con el celular o irse sin avisar son conductas que agravan el riesgo y no están entre las acciones recomendadas.",
     },
     {
       id: "m9_a8",
@@ -114,7 +114,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Crear normas de organización humana donde frecuentemente no existen, potenciando comportamientos adaptados",
       explicacion:
-        "El manual define así la función del plan de emergencia y evacuación.",
+        "El manual define así la función del plan de emergencia y evacuación: crear normas de organización humana donde frecuentemente no existen, potenciando los comportamientos adaptados del público. No es un trámite sin utilidad, no reemplaza el entrenamiento (ambos se complementan) y su fin no es solo informar a las autoridades.",
     },
     {
       id: "m9_a9",
@@ -129,7 +129,7 @@ export const bancoModulo9: BancoModulo = {
       respuestaCorrecta:
         "Mitigar las consecuencias del suceso en los afectados, disminuir los niveles de estrés de los intervinientes y asesorar a la Dirección de la emergencia",
       explicacion:
-        "El manual enumera esos tres objetivos de la intervención psicológica inmediata.",
+        "El manual enumera esos tres objetivos de la intervención psicológica inmediata: mitigar las consecuencias del suceso en los afectados, disminuir los niveles de estrés de los intervinientes y asesorar a la Dirección de la emergencia. No cura traumas en el lugar (eso requiere tratamiento posterior), no entretiene y no reemplaza la atención médica: la complementa.",
     },
     {
       id: "m9_a10",
@@ -143,7 +143,7 @@ export const bancoModulo9: BancoModulo = {
       ],
       respuestaCorrecta: "La conducta de los demás",
       explicacion:
-        "El manual señala que las reacciones individuales están mediadas en gran parte por la conducta de los demás.",
+        "El manual señala que las reacciones individuales ante una emergencia están mediadas en gran parte por la conducta de los demás: las personas se contagian del comportamiento de quienes las rodean. La edad influye como característica individual, pero no es el único factor; el clima y las cámaras no determinan las reacciones.",
     },
   ],
   vf: [
@@ -153,7 +153,7 @@ export const bancoModulo9: BancoModulo = {
         "Ante una catástrofe, las reacciones a menudo no son las apropiadas y pueden provocar numerosas pérdidas de vidas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo afirma al inicio de la unidad sobre la emergencia.",
+        "Es VERDADERA: el manual lo afirma al inicio de la unidad sobre la emergencia: las reacciones del público a menudo no son las apropiadas y pueden provocar numerosas pérdidas de vidas.",
     },
     {
       id: "m9_v2",
@@ -161,7 +161,7 @@ export const bancoModulo9: BancoModulo = {
         "El 75% del público manifiesta conducta desordenada y desconcierto durante el período de impacto.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual asigna un 75% a la conducta desordenada y desconcierto.",
+        "Es VERDADERA: el manual asigna un 75% del público a la conducta desordenada y el desconcierto durante el período de impacto, mientras el 10-25% permanece en calma.",
     },
     {
       id: "m9_v3",
@@ -169,7 +169,7 @@ export const bancoModulo9: BancoModulo = {
         "La mayoría de las personas piensa con anticipación qué haría si se viera envuelta en una emergencia.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual indica que la mayoría de las personas NO piensa qué haría en una emergencia.",
+        "Es FALSA: el manual indica que la mayoría de las personas NO piensa con anticipación qué haría en una emergencia, y por eso los planes de emergencia y el entrenamiento son tan importantes.",
     },
     {
       id: "m9_v4",
@@ -177,7 +177,7 @@ export const bancoModulo9: BancoModulo = {
         "Entre las variables de las primeras reacciones se incluyen la forma de dar cuenta de la emergencia, la gravedad supuesta, el conocimiento del lugar y el entrenamiento.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lista esas variables, además del tipo de espacio, salidas de socorro, presencia de otras personas, experiencia anterior y características individuales.",
+        "Es VERDADERA: el manual lista esas variables de las primeras reacciones, además del tipo de espacio, las salidas de socorro, la presencia de otras personas, la experiencia anterior y las características individuales.",
     },
     {
       id: "m9_v5",
@@ -185,7 +185,7 @@ export const bancoModulo9: BancoModulo = {
         "Las competencias instrumentales incluyen la toma de decisiones, la resolución de problemas, la organización y planificación, y la gestión de la información.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual enumera esas competencias instrumentales.",
+        "Es VERDADERA: el manual enumera esas competencias instrumentales: toma de decisiones, resolución de problemas, organización y planificación, y gestión de la información.",
     },
     {
       id: "m9_v6",
@@ -193,7 +193,7 @@ export const bancoModulo9: BancoModulo = {
         "El compromiso ético y el trabajo en equipo son competencias SISTÉMICAS según el manual.",
       respuestaCorrecta: false,
       explicacion:
-        "Son competencias PERSONALES; las sistémicas son la adaptación a nuevas situaciones, la creatividad, la iniciativa y el liderazgo.",
+        "Es FALSA: el compromiso ético y el trabajo en equipo son competencias PERSONALES. Las competencias sistémicas son la adaptación a nuevas situaciones, la creatividad, la iniciativa y el espíritu emprendedor, y el liderazgo.",
     },
     {
       id: "m9_v7",
@@ -201,7 +201,7 @@ export const bancoModulo9: BancoModulo = {
         "La información de riesgos debe ser suficiente para adquirir conocimientos claros de los riesgos.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo exige al describir los planes de información.",
+        "Es VERDADERA: el manual lo exige al describir los planes de información: la información de riesgos debe ser suficiente para adquirir conocimientos claros de los riesgos.",
     },
     {
       id: "m9_v8",
@@ -209,7 +209,7 @@ export const bancoModulo9: BancoModulo = {
         "La puesta en práctica del plan de emergencia y el análisis periódico de los comportamientos emitidos son medidas organizativas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual las incluye entre las medidas organizativas.",
+        "Es VERDADERA: el manual las incluye entre las medidas organizativas: poner en práctica el plan y analizar periódicamente los comportamientos emitidos.",
     },
     {
       id: "m9_v9",
@@ -217,7 +217,7 @@ export const bancoModulo9: BancoModulo = {
         "El liderazgo requiere dominio de sí mismo y órdenes enérgicas y decididas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual enumera esas cualidades del liderazgo en emergencias.",
+        "Es VERDADERA: el manual enumera esas cualidades del liderazgo en emergencias: dominio de sí mismo y órdenes enérgicas y decididas, entre otras.",
     },
     {
       id: "m9_v10",
@@ -225,7 +225,7 @@ export const bancoModulo9: BancoModulo = {
         "Los planes de emergencia solo deben contemplar la fase de respuesta.",
       respuestaCorrecta: false,
       explicacion:
-        "Deben contemplar preparación, prevención, respuesta y recuperación.",
+        "Es FALSA: los planes de emergencia deben contemplar las cuatro fases: preparación, prevención, respuesta y recuperación. Reducirlos a la respuesta deja sin preparación ni recuperación a la instalación.",
     },
     {
       id: "m9_v11",
@@ -233,7 +233,7 @@ export const bancoModulo9: BancoModulo = {
         "La intervención psicológica inmediata busca restablecer el equilibrio de los afectados.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual se refiere a las técnicas para restablecer el equilibrio como objetivo de la intervención psicológica.",
+        "Es VERDADERA: el manual se refiere a las técnicas para restablecer el equilibrio de los afectados como objetivo de la intervención psicológica inmediata.",
     },
     {
       id: "m9_v12",
@@ -241,7 +241,7 @@ export const bancoModulo9: BancoModulo = {
         "El entrenamiento previo influye en las primeras reacciones ante una emergencia.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo incluye entre las variables de las primeras reacciones.",
+        "Es VERDADERA: el manual lo incluye entre las variables de las primeras reacciones: quien está entrenado reacciona de forma más adaptada.",
     },
     {
       id: "m9_v13",
@@ -249,7 +249,7 @@ export const bancoModulo9: BancoModulo = {
         "La presencia de humo y gases es una variable que condiciona las reacciones del público.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual la lista entre las variables de las primeras reacciones.",
+        "Es VERDADERA: el manual la lista entre las variables de las primeras reacciones: el humo y los gases condicionan la percepción y la conducta del público.",
     },
     {
       id: "m9_v14",
@@ -257,7 +257,7 @@ export const bancoModulo9: BancoModulo = {
         "La edad y el sexo son características individuales que influyen en las reacciones ante la emergencia.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual incluye edad y sexo entre las características individuales que condicionan las reacciones.",
+        "Es VERDADERA: el manual incluye la edad y el sexo entre las características individuales que condicionan las reacciones ante la emergencia.",
     },
     {
       id: "m9_v15",
@@ -265,7 +265,7 @@ export const bancoModulo9: BancoModulo = {
         "La percepción del riesgo está condicionada por el modo en que la persona es alertada y por la apariencia de la situación.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lista ambos condicionantes de la percepción del riesgo.",
+        "Es VERDADERA: el manual lista ambos condicionantes de la percepción del riesgo: la forma en que la persona es alertada y la apariencia de la situación.",
     },
     {
       id: "m9_v16",
@@ -273,7 +273,7 @@ export const bancoModulo9: BancoModulo = {
         "Los planes de emergencia deben ser conocidos únicamente por los bomberos y las autoridades.",
       respuestaCorrecta: false,
       explicacion:
-        "Deben ser conocidos por todas las personas de la instalación, en especial el personal de seguridad.",
+        "Es FALSA: los planes de emergencia deben ser conocidos por TODAS las personas de la instalación, en especial por el personal de seguridad, no solo por bomberos y autoridades.",
     },
     {
       id: "m9_v17",
@@ -281,7 +281,7 @@ export const bancoModulo9: BancoModulo = {
         "La dinámica social de la emergencia se determina por una complicada red de acciones individuales y grupales.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe así la dinámica social de la emergencia.",
+        "Es VERDADERA: el manual describe así la dinámica social de la emergencia: una complicada red de acciones individuales y grupales (individuos aislados o en colaboración, grupos aislados o en colaboración).",
     },
     {
       id: "m9_v18",
@@ -289,7 +289,7 @@ export const bancoModulo9: BancoModulo = {
         "En una emergencia, la experiencia anterior de la persona influye en sus reacciones.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual la incluye entre las variables de las primeras reacciones.",
+        "Es VERDADERA: el manual la incluye entre las variables de las primeras reacciones: quien ya vivió una emergencia reacciona de manera distinta.",
     },
     {
       id: "m9_v19",
@@ -297,7 +297,7 @@ export const bancoModulo9: BancoModulo = {
         "Las competencias sistémicas incluyen la adaptación a nuevas situaciones, la creatividad, la iniciativa y el espíritu emprendedor, y el liderazgo.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual enumera esas competencias sistémicas.",
+        "Es VERDADERA: el manual enumera esas competencias sistémicas: adaptación a nuevas situaciones, creatividad, iniciativa y espíritu emprendedor, y liderazgo.",
     },
     {
       id: "m9_v20",
@@ -305,7 +305,7 @@ export const bancoModulo9: BancoModulo = {
         "Al percibir una amenaza, la persona hace un balance inmediato que incluye la salud propia y ajena, y la confianza en su control.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe ese balance inmediato al percibir la amenaza.",
+        "Es VERDADERA: el manual describe ese balance inmediato al percibir la amenaza: la persona evalúa la salud propia y ajena, la confianza en su control y otros factores.",
     },
   ],
 };

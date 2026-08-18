@@ -150,3 +150,12 @@
 - **Verificación**: tsc OK; Chrome headless OK (examen renderiza con contador, dots y opciones; página del curso sin el tag "Formato OS-10" y con el botón de examen).
 - **Pendiente**: commit+push de esta sesión, borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.
 
+
+## Sesión 2026-08-18 (5) · Fundamentos de calidad en las 420 preguntas OS-10
+- **Auditoría previa**: script de análisis sobre los 14 bancos (`os10-modulo1..14.ts`) mostró 420 preguntas con explicaciones vacías o genéricas ("El manual señala/enumera..."), solo 4 con "por qué" y ninguna que explicara por qué los distractores estaban mal. El cliente aprobó reescribir las 420 completas.
+- **Reescritura total (módulos 1 al 14, 30 preguntas c/u)**:
+  - Alternativas (10 por módulo): `explicacion` explica por qué la correcta es correcta (con cita normativa: Arts. 19 N°7 y 130 CPP, 432/439 CP, Código del Trabajo, Decretos 54/594, Leyes 16.744/21.659/19.628/21.719, etc.) y **por qué cada opción incorrecta está mal**, descartándola una a una.
+  - V/F (20 por módulo): formato "Es VERDADERA/FALSA: ..." con la razón, corrigiendo además errores de contenido (ej. ahogado azul/blanco invertido, cargador lento/rápido, causas inmediatas/básicas, rasgo depresivo/obsesivo, 20.000/10.000 UTM).
+  - Se mantuvieron intactos `id`, `pregunta`/`afirmacion`, `opciones` y `respuestaCorrecta` (solo cambió `explicacion`).
+- **Verificación**: tsc OK; 14 bancos con 10 alternativas + 20 V/F (420 en total), 0 explicaciones vacías; muestreo de las 30 preguntas por archivo confirma fundamentos sustantivos y ningún texto genérico; examen OS-10 y cuestionarios intactos (el componente `FinalExam.tsx` antiguo quedó huérfano: solo `CCTVFinalExam` se usa en `/evaluaciones/[slug]`).
+- **Pendiente**: commit+push de esta sesión, borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.

@@ -19,7 +19,7 @@ export const bancoModulo3: BancoModulo = {
       ],
       respuestaCorrecta: "Gente, Equipo, Material y Ambiente",
       explicacion:
-        "El manual define G.E.M.A.: Gente (personal y administración), Equipo (herramientas o maquinarias), Material (con lo que se trabaja) y Ambiente (todo lo físico que rodea a la gente).",
+        "El manual define G.E.M.A.: Gente (personal y administración), Equipo (herramientas o maquinarias), Material (con lo que se trabaja) y Ambiente (todo lo físico que rodea a la gente). 'Gerencia, Estado, Mutualidad y Ambiente' mezcla instituciones que no forman parte del sistema; las otras alternativas combinan términos ajenos al modelo de análisis de accidentes.",
     },
     {
       id: "m3_a2",
@@ -34,7 +34,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "La constitución y funcionamiento de comités paritarios de higiene y seguridad en empresas con más de 25 trabajadores",
       explicacion:
-        "El Decreto 54 regula la constitución y funcionamiento de los comités paritarios, que deben formarse en empresas con más de 25 personas.",
+        "El Decreto 54 regula la constitución y funcionamiento de los comités paritarios de higiene y seguridad, que deben formarse en empresas con más de 25 personas. Las condiciones sanitarias y ambientales las fija el Decreto 594 (no el 54); el seguro obligatorio contra accidentes del trabajo lo establece la Ley 16.744; y las horas de jornada no son materia de este decreto.",
     },
     {
       id: "m3_a3",
@@ -48,7 +48,7 @@ export const bancoModulo3: BancoModulo = {
       ],
       respuestaCorrecta: "Identificar las causas, nunca los culpables",
       explicacion:
-        "El manual indica que en la recopilación de información el objetivo es 'identificar las causas, no los culpables'.",
+        "El manual indica que en la recopilación de información el objetivo es 'identificar las causas, no los culpables'. La investigación no busca sancionar personas (eso inhibiría la información de los testigos), no persigue cobrar costos, ni es un mero trámite: su fin es corregir las causas para evitar que el accidente se repita.",
     },
     {
       id: "m3_a4",
@@ -57,7 +57,7 @@ export const bancoModulo3: BancoModulo = {
       opciones: ["Conducción", "Convección", "Contacto directo", "Radiación"],
       respuestaCorrecta: "Radiación",
       explicacion:
-        "El manual define la radiación como la liberación de calor por ondas que viajan en línea recta hasta ser absorbidas o reflejadas.",
+        "El manual define la radiación como la liberación de calor por ondas que viajan en línea recta hasta ser absorbidas o reflejadas. La conducción transfiere calor entre cuerpos mediante un medio conductor (los sólidos son los más usuales); la convección lo transmite por un medio circulante, gas o líquido; y 'contacto directo' no es un mecanismo de propagación del fuego.",
     },
     {
       id: "m3_a5",
@@ -72,7 +72,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "Fuegos de líquidos inflamables como gasolina, aceites, grasas y pinturas",
       explicacion:
-        "El manual clasifica en Clase B los fuegos sobre la superficie de líquidos inflamables como gasolina, aceites, grasas, pinturas y disolventes.",
+        "El manual clasifica en Clase B los fuegos sobre la superficie de líquidos inflamables como gasolina, aceites, grasas, pinturas y disolventes. Maderas y papeles son Clase A; los equipos eléctricos energizados son Clase C; y los metales combustibles como magnesio o sodio son Clase D.",
     },
     {
       id: "m3_a6",
@@ -87,7 +87,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "Los de base de espuma o cualquier variante que contenga agua",
       explicacion:
-        "El manual prohíbe en fuegos Clase C los extintores a base de espuma o cualquier variante con agua, por peligro de electrocución.",
+        "El manual prohíbe en fuegos Clase C los extintores a base de espuma o cualquier variante que contenga agua, porque el agua conduce la electricidad y puede electrocutar al operador. El CO2 y el polvo químico seco (incluido el especial) son aptos para fuegos eléctricos porque no conducen la corriente.",
     },
     {
       id: "m3_a7",
@@ -102,7 +102,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "Desplazar el oxígeno presente en la combustión, tapando el fuego por completo",
       explicacion:
-        "El manual define la sofocación como desplazar el oxígeno tapando el fuego y evitando su contacto con el aire.",
+        "El manual define la sofocación como desplazar el oxígeno tapando el fuego por completo y evitando su contacto con el aire. Reducir la temperatura es el enfriamiento; eliminar o aislar el combustible es la remoción o eliminación; e interferir la reacción química es la inhibición.",
     },
     {
       id: "m3_a8",
@@ -117,7 +117,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "A 1,30 metros medidos desde el suelo hasta la base del extintor",
       explicacion:
-        "El manual fija la altura de 1,30 m medidos desde el suelo hasta la base, en sitios de fácil acceso y clara identificación.",
+        "El manual fija la altura de 1,30 metros medidos desde el suelo hasta la BASE del extintor, en sitios de fácil acceso y clara identificación. Si se midiera hasta la parte superior el extintor quedaría demasiado alto para tomarlo con facilidad; la altura de los ojos no es el criterio; y sí existe una altura reglamentaria.",
     },
     {
       id: "m3_a9",
@@ -132,7 +132,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "La red húmeda corresponde a gabinetes con mangueras de 25 m constantemente presurizadas; la red seca son cañerías sin agua de uso exclusivo de Bomberos",
       explicacion:
-        "El manual define la red húmeda como gabinetes con mangueras de 25 m presurizadas y la red seca como cañerías secas de uso exclusivo de bomberos.",
+        "El manual define la red húmeda como gabinetes con mangueras de 25 m constantemente presurizadas, y la red seca como cañerías secas (sin agua) de uso exclusivo de Bomberos. Es la inversa de lo que dice la alternativa incorrecta: el personal usa la red húmeda y Bomberos la red seca; ninguna usa polvo químico ni CO2; y sí existe diferencia entre ambas.",
     },
     {
       id: "m3_a10",
@@ -147,7 +147,7 @@ export const bancoModulo3: BancoModulo = {
       respuestaCorrecta:
         "Retroceder sin darle la espalda al fuego extinguido",
       explicacion:
-        "El manual indica retroceder sin dar la espalda al fuego y dejar el extintor usado en un lugar apartado e identificado para su recarga.",
+        "El manual indica retroceder SIN dar la espalda al fuego extinguido, por si reaviva, y dejar el extintor usado en un lugar apartado e identificado para su recarga. Acercarse al fuego recién extinguido es peligroso si reaviva; abandonar corriendo no permite vigilar el área; y dejar el extintor junto al fuego impide su recarga y obstruye el lugar.",
     },
   ],
   vf: [
@@ -157,7 +157,7 @@ export const bancoModulo3: BancoModulo = {
         "El fuego es la oxidación de materiales combustibles con desprendimiento de luz y calor.",
       respuestaCorrecta: true,
       explicacion:
-        "Es la definición de fuego del manual.",
+        "Es VERDADERA: es la definición de fuego del manual: oxidación de materiales combustibles con desprendimiento de luz y calor.",
     },
     {
       id: "m3_v2",
@@ -165,7 +165,7 @@ export const bancoModulo3: BancoModulo = {
         "El accidente del trabajo es toda lesión que una persona sufra a causa o con ocasión del trabajo y que le produzca incapacidad o muerte.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual define así el accidente del trabajo.",
+        "Es VERDADERA: el manual define así el accidente del trabajo: toda lesión sufrida a causa o con ocasión del trabajo que produzca incapacidad o muerte.",
     },
     {
       id: "m3_v3",
@@ -173,7 +173,7 @@ export const bancoModulo3: BancoModulo = {
         "El Decreto 594 establece las condiciones sanitarias y ambientales básicas que debe cumplir todo lugar de trabajo, incluidos los límites permisibles de exposición a agentes químicos y físicos.",
       respuestaCorrecta: true,
       explicacion:
-        "Así describe el manual el Reglamento de condiciones sanitarias en lugares de trabajo (Decreto 594).",
+        "Es VERDADERA: así describe el manual el Reglamento de condiciones sanitarias y ambientales básicas en los lugares de trabajo (Decreto 594), que además fija los límites permisibles de exposición a agentes químicos y físicos.",
     },
     {
       id: "m3_v4",
@@ -181,7 +181,7 @@ export const bancoModulo3: BancoModulo = {
         "Las causas INMEDIATAS son el origen de las acciones y condiciones subestándar, mientras las BÁSICAS surgen como consecuencia de ellas.",
       respuestaCorrecta: false,
       explicacion:
-        "Es al revés: las causas inmediatas surgen como consecuencia de las causas básicas, que son el origen de las acciones y condiciones subestándar.",
+        "Es FALSA: la relación está invertida. Las causas BÁSICAS son el origen de las acciones y condiciones subestándar, y las causas INMEDIATAS (las acciones y condiciones subestándar) surgen como consecuencia de ellas.",
     },
     {
       id: "m3_v5",
@@ -189,7 +189,7 @@ export const bancoModulo3: BancoModulo = {
         "Las Observaciones de Seguridad Planeadas (OPT) sirven para identificar acciones subestándar (inseguras) del personal y detectar funciones críticas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual define así el objetivo de las observaciones planeadas.",
+        "Es VERDADERA: el manual define así el objetivo de las observaciones planeadas: identificar acciones subestándar o inseguras del personal y detectar las funciones críticas de cada puesto.",
     },
     {
       id: "m3_v6",
@@ -197,7 +197,7 @@ export const bancoModulo3: BancoModulo = {
         "Las inspecciones planeadas generales consisten en caminar por un sector observando y anotando toda situación que pueda ser causa de accidente.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe así las inspecciones planeadas generales, realizadas por el supervisor, jefe de planta, de mantención o jefe de seguridad.",
+        "Es VERDADERA: el manual describe así las inspecciones planeadas generales: caminar por un sector observando y anotando toda situación que pueda ser causa de accidente; las realiza el supervisor, jefe de planta, de mantención o jefe de seguridad.",
     },
     {
       id: "m3_v7",
@@ -205,7 +205,7 @@ export const bancoModulo3: BancoModulo = {
         "En la investigación de un accidente, el encargado de realizarla es siempre un funcionario de Carabineros.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual indica que el encargado de la investigación será el supervisor de la línea.",
+        "Es FALSA: el manual indica que el encargado de la investigación será el supervisor de la línea del accidentado. Carabineros puede intervenir en otros aspectos, pero la investigación de accidentes laborales corresponde a la línea de supervisión de la empresa.",
     },
     {
       id: "m3_v8",
@@ -213,7 +213,7 @@ export const bancoModulo3: BancoModulo = {
         "El cuarto elemento que se introduce cuando el fuego se ha iniciado es la REACCIÓN EN CADENA, que es una reacción química y no un elemento.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual señala que el cuarto elemento es la reacción en cadena, una reacción química, y que todas las reacciones son exotérmicas.",
+        "Es VERDADERA: el manual señala que el cuarto elemento es la reacción en cadena, que es una reacción química y no un elemento propiamente tal, y que todas las reacciones son exotérmicas.",
     },
     {
       id: "m3_v9",
@@ -221,7 +221,7 @@ export const bancoModulo3: BancoModulo = {
         "La CONDUCCIÓN es la transmisión de calor por medio de un medio circulante, ya sea gas o líquido.",
       respuestaCorrecta: false,
       explicacion:
-        "Esa es la CONVECCIÓN; la conducción es la transferencia de calor entre cuerpos mediante un medio conductor, siendo los sólidos los más usuales.",
+        "Es FALSA: la transmisión de calor por un medio circulante (gas o líquido) es la CONVECCIÓN. La conducción es la transferencia de calor entre cuerpos mediante un medio conductor, siendo los sólidos los más usuales.",
     },
     {
       id: "m3_v10",
@@ -229,7 +229,7 @@ export const bancoModulo3: BancoModulo = {
         "El fuego Clase A se combate por enfriamiento con agua o con soluciones que contengan un alto contenido de este líquido.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual indica que los fuegos Clase A (maderas, papeles, géneros) se combaten por enfriamiento con agua.",
+        "Es VERDADERA: el manual indica que los fuegos Clase A (maderas, papeles, géneros y materiales sólidos comunes) se combaten por enfriamiento, con agua o soluciones de alto contenido de agua.",
     },
     {
       id: "m3_v11",
@@ -237,7 +237,7 @@ export const bancoModulo3: BancoModulo = {
         "Los fuegos Clase D involucran metales combustibles como Magnesio, Titanio, Zirconio, Potasio y Sodio.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lista esos metales en la Clase D, donde los equipos extintores normales pueden provocar reacciones químicas peligrosas.",
+        "Es VERDADERA: el manual lista esos metales en la Clase D y advierte que en ellos los equipos extintores normales pueden provocar reacciones químicas peligrosas.",
     },
     {
       id: "m3_v12",
@@ -245,7 +245,7 @@ export const bancoModulo3: BancoModulo = {
         "El método de INHIBICIÓN interfiere la reacción química del fuego mediante agentes como el polvo químico seco y el anhídrido carbónico.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual define así la inhibición, indicando que normalmente es el método más usado.",
+        "Es VERDADERA: el manual define así la inhibición: interferir la reacción química del fuego mediante agentes como el polvo químico seco y el anhídrido carbónico, siendo normalmente el método más usado.",
     },
     {
       id: "m3_v13",
@@ -253,7 +253,7 @@ export const bancoModulo3: BancoModulo = {
         "Los extintores portátiles son de 4, 6, 10 y 12 kilos, y los de 50 y 100 kilos usan carros para su transporte.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual entrega esas capacidades para extintores portátiles y de carro.",
+        "Es VERDADERA: el manual entrega esas capacidades: los extintores portátiles son de 4, 6, 10 y 12 kilos, y los de 50 y 100 kilos se transportan en carros por su peso.",
     },
     {
       id: "m3_v14",
@@ -261,7 +261,7 @@ export const bancoModulo3: BancoModulo = {
         "Al manejar un extintor, el chorro debe dirigirse a la parte superior de las llamas.",
       respuestaCorrecta: false,
       explicacion:
-        "El chorro debe dirigirse a la BASE del fuego, en forma de abanico.",
+        "Es FALSA: el chorro debe dirigirse a la BASE del fuego, en forma de abanico, para atacar la zona donde se origina la combustión. Apuntar a la parte superior de las llamas no extingue el fuego porque el agente no llega al combustible.",
     },
     {
       id: "m3_v15",
@@ -269,7 +269,7 @@ export const bancoModulo3: BancoModulo = {
         "Las granadas extintoras se fabrican actualmente en grandes cantidades por su efectividad.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual indica que ya no se fabrican por su escasa efectividad y que su fabricación está prohibida por Resolución Nº 05166 de 23-VIII-1974 del Servicio Nacional de Salud.",
+        "Es FALSA: el manual indica que las granadas extintoras ya no se fabrican por su escasa efectividad, y que su fabricación está prohibida por Resolución Nº 05166 de 23-VIII-1974 del Servicio Nacional de Salud.",
     },
     {
       id: "m3_v16",
@@ -277,7 +277,7 @@ export const bancoModulo3: BancoModulo = {
         "Los picos se usan durante el incendio para levantar planchas del techo y aumentar la ventilación.",
       respuestaCorrecta: false,
       explicacion:
-        "Su uso principal es el despeje de cielos rasos DESPUÉS del incendio; usarlos durante el incendio solo aporta más oxígeno a la combustión y aumenta la intensidad del fuego.",
+        "Es FALSA: el uso principal de los picos es el despeje de cielos rasos DESPUÉS del incendio. Usarlos durante el incendio solo aporta más oxígeno a la combustión y aumenta la intensidad del fuego.",
     },
     {
       id: "m3_v17",
@@ -285,7 +285,7 @@ export const bancoModulo3: BancoModulo = {
         "La prevención de riesgos de incendios se basa en que, eliminando el combustible, el calor o el oxígeno, es posible extinguir el fuego; evitando que estos tres elementos se combinen, se evita la creación del fuego.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual formula exactamente ese principio de prevención.",
+        "Es VERDADERA: el manual formula exactamente ese principio de prevención: eliminar uno de los tres elementos (combustible, calor u oxígeno) extingue el fuego, y evitar que se combinen impide su creación.",
     },
     {
       id: "m3_v18",
@@ -293,7 +293,7 @@ export const bancoModulo3: BancoModulo = {
         "Las materias inflamables o explosivas pueden mantenerse en cualquier dependencia de la empresa sin avisos especiales.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual exige ubicarlas en sitios aislados, con avisos visibles de 'PELIGRO' y 'NO FUMAR'.",
+        "Es FALSA: el manual exige ubicarlas en sitios aislados y con avisos visibles de 'PELIGRO' y 'NO FUMAR', para evitar que cualquier fuente de calor o chispa inicie un incendio o explosión.",
     },
     {
       id: "m3_v19",
@@ -301,7 +301,7 @@ export const bancoModulo3: BancoModulo = {
         "El encargado de la investigación de accidentes, si los costos de la corrección son altos, puede esperar indefinidamente sin tomar acción.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual indica que, aunque consulte a sus jefes, debe tomar cualquier acción inmediata factible hasta lograr la aprobación de las medidas recomendadas.",
+        "Es FALSA: el manual indica que, aunque consulte a sus jefes, el encargado debe tomar cualquier acción inmediata factible hasta lograr la aprobación de las medidas recomendadas. Esperar indefinidamente prolonga el riesgo de nuevos accidentes.",
     },
     {
       id: "m3_v20",
@@ -309,7 +309,7 @@ export const bancoModulo3: BancoModulo = {
         "Las empresas con más de 100 trabajadores deben tener un departamento de Prevención de Riesgos con funciones de planificar, organizar y supervisar acciones permanentes para el control de riesgos.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo establece al inicio de la unidad de prevención de riesgos profesionales.",
+        "Es VERDADERA: el manual lo establece al inicio de la unidad de prevención de riesgos profesionales: las empresas con más de 100 trabajadores deben contar con un departamento de Prevención de Riesgos que planifique, organice y supervise acciones permanentes para el control de riesgos.",
     },
   ],
 };

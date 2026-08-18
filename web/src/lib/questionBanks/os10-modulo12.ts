@@ -13,7 +13,7 @@ export const bancoModulo12: BancoModulo = {
       opciones: ["Ley 16.744", "Ley 21.659", "Ley 19.628", "Ley 19.880"],
       respuestaCorrecta: "Ley 21.659",
       explicacion:
-        "La Ley 21.659 es el perímetro de acción que regula los eventos masivos.",
+        "La Ley 21.659 es el perímetro de acción que regula los eventos masivos en Chile. La Ley 16.744 regula los accidentes del trabajo; la Ley 19.628 protege la vida privada; y la Ley 19.880 es la ley de procedimientos administrativos, que solo aplica supletoriamente.",
     },
     {
       id: "m12_a2",
@@ -28,7 +28,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "Se está ante un evento masivo evaluado por la Delegación Presidencial",
       explicacion:
-        "El árbol de clasificación indica que más de 3.000 personas configura evento masivo, evaluado por la Delegación Presidencial.",
+        "El árbol de clasificación de la ley indica que más de 3.000 personas de concurrencia estimada configura un EVENTO MASIVO, que debe ser evaluado por la Delegación Presidencial. No es un evento estándar, no queda prohibido, y la autorización municipal no basta para ese nivel de concurrencia.",
     },
     {
       id: "m12_a3",
@@ -42,7 +42,7 @@ export const bancoModulo12: BancoModulo = {
       ],
       respuestaCorrecta: "Lugar, público, uso de bien nacional, clima o fecha",
       explicacion:
-        "La evaluación considera lugar, público, uso de bien nacional, clima o fecha.",
+        "La evaluación de la Delegación Presidencial considera factores como el lugar, el público esperado, el uso de bien nacional, el clima o la fecha del evento. El precio de las entradas, la cantidad de guardias o el tipo de música no son criterios de esa evaluación.",
     },
     {
       id: "m12_a4",
@@ -56,7 +56,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "Quien celebra más de 5 eventos masivos en un plazo de 12 meses corridos",
       explicacion:
-        "Con más de 5 eventos masivos en 12 meses corridos se es organizador habitual.",
+        "Con más de 5 eventos masivos celebrados en un plazo de 12 meses corridos se adquiere la calidad de organizador habitual. Organizar el primer evento, cobrar entrada o ser productora no configuran por sí solos esa categoría, que depende del número de eventos en el plazo legal.",
     },
     {
       id: "m12_a5",
@@ -71,7 +71,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "Inscribirse en el Registro de Seguridad Privada (Art. 84, Subsecretaría de Prevención del Delito)",
       explicacion:
-        "Es OBLIGATORIO inscribirse en el Registro de Seguridad Privada a cargo de la Subsecretaría de Prevención del Delito.",
+        "Es OBLIGATORIO inscribirse en el Registro de Seguridad Privada a cargo de la Subsecretaría de Prevención del Delito, según el Artículo 84. Contratar una orquesta, pagar un impuesto especial o no asumir obligaciones contradicen la regulación legal del organizador habitual.",
     },
     {
       id: "m12_a6",
@@ -84,7 +84,7 @@ export const bancoModulo12: BancoModulo = {
       ],
       respuestaCorrecta: "Exclusivamente el Organizador",
       explicacion:
-        "El Responsable de Seguridad es una persona natural designada exclusivamente por el Organizador.",
+        "El Responsable de Seguridad es una persona natural designada EXCLUSIVAMENTE por el Organizador del evento. Ni Carabineros, ni la Delegación Presidencial ni los asistentes intervienen en esa designación.",
     },
     {
       id: "m12_a7",
@@ -99,7 +99,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "Solo con el Organizador del evento o con el Propietario del recinto",
       explicacion:
-        "Debe tener calidad de trabajador dependiente, contratado solo por el Organizador o el Propietario del recinto.",
+        "El Responsable de Seguridad debe tener calidad de trabajador dependiente, contratado SOLO por el Organizador del evento o por el Propietario del recinto. Una empresa de seguridad, el municipio o la productora no pueden ser su empleador según la ley.",
     },
     {
       id: "m12_a8",
@@ -114,7 +114,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "Los del Artículo 46 de la Ley 21.659, excepto el numeral 11",
       explicacion:
-        "Debe cumplir las exigencias del Artículo 46 de la Ley 21.659, excepto el numeral 11.",
+        "El Responsable de Seguridad debe cumplir las exigencias del Artículo 46 de la Ley 21.659, EXCEPTO el numeral 11. No está exento de requisitos, no necesita ser funcionario de Carabineros ni tener título universitario.",
     },
     {
       id: "m12_a9",
@@ -129,7 +129,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "El Plan de Seguridad; las directivas de funcionamiento OS-10 se incluyen como anexos",
       explicacion:
-        "El Plan de Seguridad es el instrumento rector; las directivas de funcionamiento OS-10 van como anexos.",
+        "El Plan de Seguridad es el instrumento rector del evento, y las directivas de funcionamiento y autorizaciones OS-10 se incluyen como ANEXOS de ese plan. El contrato de arriendo, el reglamento interno de la empresa o la autorización municipal no cumplen esa función rectora.",
     },
     {
       id: "m12_a10",
@@ -144,7 +144,7 @@ export const bancoModulo12: BancoModulo = {
       respuestaCorrecta:
         "Exclusivamente por la Plataforma Informática del Artículo 60 de la Ley 21.659",
       explicacion:
-        "Todo se centraliza en la Plataforma Informática establecida en el Artículo 60 de la Ley 21.659.",
+        "Todo el trámite de solicitudes y autorizaciones se centraliza EXCLUSIVAMENTE en la Plataforma Informática establecida en el Artículo 60 de la Ley 21.659. No se tramita en papel, por teléfono ni por correo electrónico a la municipalidad.",
     },
   ],
   vf: [
@@ -154,7 +154,7 @@ export const bancoModulo12: BancoModulo = {
         "La Ley 21.659 aplica a eventos recreativos y culturales.",
       respuestaCorrecta: true,
       explicacion:
-        "Organizadores, productores, asistentes y administradores deben someterse a esta ley en eventos recreativos o culturales.",
+        "Es VERDADERA: los organizadores, productores, asistentes y administradores deben someterse a esta ley en los eventos recreativos o culturales.",
     },
     {
       id: "m12_vf2",
@@ -162,7 +162,7 @@ export const bancoModulo12: BancoModulo = {
         "Uno de los objetivos de la ley es proteger los bienes dentro del recinto.",
       respuestaCorrecta: true,
       explicacion:
-        "La ley busca proteger los bienes dentro del recinto, además de la integridad de los asistentes y el orden público.",
+        "Es VERDADERA: la ley busca proteger los bienes dentro del recinto, además de la integridad de los asistentes y el orden público.",
     },
     {
       id: "m12_vf3",
@@ -170,7 +170,7 @@ export const bancoModulo12: BancoModulo = {
         "Todo evento de más de 300 personas se considera evento masivo.",
       respuestaCorrecta: false,
       explicacion:
-        "El umbral es de MÁS de 3.000 personas de concurrencia estimada.",
+        "Es FALSA: el umbral es de MÁS de 3.000 personas de concurrencia estimada para considerar un evento como masivo, no 300.",
     },
     {
       id: "m12_vf4",
@@ -178,7 +178,7 @@ export const bancoModulo12: BancoModulo = {
         "Un evento con menos de 3.000 personas puede requerir medidas especiales según la Delegación Presidencial.",
       respuestaCorrecta: true,
       explicacion:
-        "Si tiene menos de 3.000 personas pero requiere medidas especiales, es evaluado por la Delegación Presidencial.",
+        "Es VERDADERA: si el evento tiene menos de 3.000 personas pero requiere medidas especiales, también es evaluado por la Delegación Presidencial.",
     },
     {
       id: "m12_vf5",
@@ -186,7 +186,7 @@ export const bancoModulo12: BancoModulo = {
         "El organizador de eventos solo puede tener fines de lucro.",
       respuestaCorrecta: false,
       explicacion:
-        "El organizador coordina los medios, promoción y desarrollo con o sin fines de lucro.",
+        "Es FALSA: el organizador coordina los medios, la promoción y el desarrollo del evento con o sin fines de lucro.",
     },
     {
       id: "m12_vf6",
@@ -194,7 +194,7 @@ export const bancoModulo12: BancoModulo = {
         "El productor ejecuta el evento basándose en el presupuesto y lineamientos del organizador.",
       respuestaCorrecta: true,
       explicacion:
-        "El productor es el brazo operativo que ejecuta según presupuesto y lineamientos del organizador.",
+        "Es VERDADERA: el productor es el brazo operativo que ejecuta el evento basándose en el presupuesto y los lineamientos del organizador.",
     },
     {
       id: "m12_vf7",
@@ -202,7 +202,7 @@ export const bancoModulo12: BancoModulo = {
         "El organizador y el productor nunca pueden ser la misma persona.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual indica que pueden ser la misma persona.",
+        "Es FALSA: el manual indica que el organizador y el productor PUEDEN ser la misma persona.",
     },
     {
       id: "m12_vf8",
@@ -210,7 +210,7 @@ export const bancoModulo12: BancoModulo = {
         "Se es organizador habitual al celebrar más de 5 eventos masivos en 12 meses corridos.",
       respuestaCorrecta: true,
       explicacion:
-        "Ese es el umbral de habitualidad definido por el documento.",
+        "Es VERDADERA: ese es el umbral de habitualidad definido por el documento: más de 5 eventos masivos en un plazo de 12 meses corridos.",
     },
     {
       id: "m12_vf9",
@@ -218,7 +218,7 @@ export const bancoModulo12: BancoModulo = {
         "El registro del organizador habitual está a cargo de la Subsecretaría de Prevención del Delito (Art. 84).",
       respuestaCorrecta: true,
       explicacion:
-        "El Registro de Seguridad Privada del Art. 84 está a cargo de la Subsecretaría de Prevención del Delito.",
+        "Es VERDADERA: el Registro de Seguridad Privada del Artículo 84 está a cargo de la Subsecretaría de Prevención del Delito.",
     },
     {
       id: "m12_vf10",
@@ -226,7 +226,7 @@ export const bancoModulo12: BancoModulo = {
         "El Responsable de Seguridad puede ser contratado por cualquier empresa de seguridad.",
       respuestaCorrecta: false,
       explicacion:
-        "Solo puede estar contratado por el Organizador del evento o por el Propietario del recinto.",
+        "Es FALSA: el Responsable de Seguridad solo puede estar contratado por el Organizador del evento o por el Propietario del recinto, no por cualquier empresa de seguridad.",
     },
     {
       id: "m12_vf11",
@@ -234,7 +234,7 @@ export const bancoModulo12: BancoModulo = {
         "El Responsable de Seguridad debe tener calidad de trabajador dependiente.",
       respuestaCorrecta: true,
       explicacion:
-        "El contrato exige calidad de trabajador dependiente.",
+        "Es VERDADERA: el contrato del Responsable de Seguridad exige calidad de trabajador dependiente del Organizador o del Propietario del recinto.",
     },
     {
       id: "m12_vf12",
@@ -242,7 +242,7 @@ export const bancoModulo12: BancoModulo = {
         "El Responsable de Seguridad debe cumplir todos los requisitos del Artículo 46 de la Ley 21.659, incluido el numeral 11.",
       respuestaCorrecta: false,
       explicacion:
-        "Debe cumplirlos EXCEPTO el numeral 11.",
+        "Es FALSA: debe cumplir los requisitos del Artículo 46 de la Ley 21.659 EXCEPTO el numeral 11.",
     },
     {
       id: "m12_vf13",
@@ -250,7 +250,7 @@ export const bancoModulo12: BancoModulo = {
         "El Plan de Seguridad es el instrumento rector con las medidas para proteger vida, integridad y bienes.",
       respuestaCorrecta: true,
       explicacion:
-        "El Plan de Seguridad es el instrumento rector del evento.",
+        "Es VERDADERA: el Plan de Seguridad es el instrumento rector del evento, con las medidas para proteger la vida, la integridad y los bienes.",
     },
     {
       id: "m12_vf14",
@@ -258,7 +258,7 @@ export const bancoModulo12: BancoModulo = {
         "Las directivas de funcionamiento OS-10 se incluyen como anexos dentro del Plan de Seguridad.",
       respuestaCorrecta: true,
       explicacion:
-        "Las directivas y autorizaciones OS-10 se incluyen como anexos del Plan de Seguridad.",
+        "Es VERDADERA: las directivas de funcionamiento y las autorizaciones OS-10 se incluyen como ANEXOS dentro del Plan de Seguridad.",
     },
     {
       id: "m12_vf15",
@@ -266,7 +266,7 @@ export const bancoModulo12: BancoModulo = {
         "El Plan de Seguridad reemplaza todas las obligaciones previas en materia de seguridad privada.",
       respuestaCorrecta: false,
       explicacion:
-        "El instrumento NO reemplaza ninguna de las obligaciones previas en seguridad privada.",
+        "Es FALSA: el Plan de Seguridad NO reemplaza ninguna de las obligaciones previas en materia de seguridad privada; las complementa.",
     },
     {
       id: "m12_vf16",
@@ -274,7 +274,7 @@ export const bancoModulo12: BancoModulo = {
         "Las solicitudes y autorizaciones se tramitan exclusivamente por la Plataforma Informática del Artículo 60.",
       respuestaCorrecta: true,
       explicacion:
-        "El canal único es la Plataforma Informática establecida en el Artículo 60 de la Ley 21.659.",
+        "Es VERDADERA: el canal único de tramitación es la Plataforma Informática establecida en el Artículo 60 de la Ley 21.659.",
     },
     {
       id: "m12_vf17",
@@ -282,7 +282,7 @@ export const bancoModulo12: BancoModulo = {
         "La ley castiga severamente ocultar o disfrazar la identidad del organizador para eludir la ley.",
       respuestaCorrecta: true,
       explicacion:
-        "La alteración, simulación o subterfugio para ocultar la identidad del organizador es severamente castigada.",
+        "Es VERDADERA: la alteración, simulación o subterfugio para ocultar o disfrazar la identidad del organizador y eludir la ley es severamente castigada.",
     },
     {
       id: "m12_vf18",
@@ -290,7 +290,7 @@ export const bancoModulo12: BancoModulo = {
         "En los vacíos no regulados por este reglamento aplica supletoriamente la Ley 19.880.",
       respuestaCorrecta: true,
       explicacion:
-        "La nota táctica del documento indica la aplicación supletoria de la Ley 19.880.",
+        "Es VERDADERA: la nota táctica del documento indica la aplicación supletoria de la Ley 19.880 (procedimientos administrativos) en los vacíos no regulados.",
     },
     {
       id: "m12_vf19",
@@ -298,7 +298,7 @@ export const bancoModulo12: BancoModulo = {
         "La presentación personal impecable infunde respeto inmediato y exige un trato correcto de los demás.",
       respuestaCorrecta: true,
       explicacion:
-        "Una persona impecable, limpia y ordenada infunde respeto inmediato.",
+        "Es VERDADERA: una persona impecable, limpia y ordenada infunde respeto inmediato y exige un trato correcto de los demás.",
     },
     {
       id: "m12_vf20",
@@ -306,7 +306,7 @@ export const bancoModulo12: BancoModulo = {
         "El encubrimiento y el abuso de confianza son conductas del 'escudo', es decir, conductas deseables del guardia.",
       respuestaCorrecta: false,
       explicacion:
-        "Son fallas éticas: el encubrimiento y el abuso de confianza quiebran la honradez y la lealtad.",
+        "Es FALSA: el encubrimiento y el abuso de confianza son FALLAS éticas que quiebran la honradez y la lealtad; no son conductas del 'escudo' deseable.",
     },
   ],
 };

@@ -20,7 +20,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "Un documento elaborado por las entidades obligadas conforme a la Ley N° 21.659 que concluye con una apreciación de vulnerabilidades y análisis de áreas de riesgo",
       explicacion:
-        "El manual define así el Estudio de Seguridad, elaborado por entidades bancarias, financieras, públicas, de transporte de valores, estratégicas y de utilidad pública. El marco legal vigente es la Ley N° 21.659 (que reemplazó al antiguo D.L. 3.607).",
+        "El Estudio de Seguridad es un documento elaborado por las entidades obligadas (bancarias, financieras, públicas, de transporte de valores, estratégicas y de utilidad pública) conforme a la Ley N° 21.659, que basado en sus políticas de seguridad concluye con una apreciación de vulnerabilidades y un análisis de causas, objeto y áreas de riesgo. No es un formulario de turno del guardia, ni un certificado individual de Carabineros, ni un registro mensual de incidentes.",
     },
     {
       id: "m2_a2",
@@ -35,7 +35,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "De la Gerencia de la entidad, suscrito por su representante legal",
       explicacion:
-        "El manual señala que el Estudio de Seguridad es de responsabilidad de la Gerencia de la entidad y debe ser suscrito por su representante legal.",
+        "El manual señala que el Estudio de Seguridad es de responsabilidad de la Gerencia de la entidad y debe ser suscrito por su representante legal. El guardia jefe de turno no tiene esa responsabilidad gerencial; Carabineros solo fiscaliza y aprueba el documento, no lo elabora; y la empresa de seguridad contratada tampoco lo suscribe, pues el estudio pertenece a la entidad obligada.",
     },
     {
       id: "m2_a3",
@@ -50,7 +50,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "Porque es la única barrera capaz de detectar al intruso, dar la alarma, detenerlo, obtener su identidad y neutralizarlo",
       explicacion:
-        "El manual destaca que la barrera humana es la más importante y que aún no ha sido reemplazada por ningún elemento artificial.",
+        "La barrera humana es la más importante porque es la única capaz de detectar al intruso, dar la alarma, detenerlo, obtener su identidad y neutralizarlo, y aún no ha sido reemplazada por ningún elemento artificial. No es por su costo (una persona bien capacitada cuesta), no reemplaza la tecnología sino que la complementa, y sí exige capacitación permanente.",
     },
     {
       id: "m2_a4",
@@ -65,7 +65,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "El registro, porque deja constancia escrita y auditable",
       explicacion:
-        "El manual define el registro como la fase más importante del ciclo de control de accesos.",
+        "El manual define el registro como la fase más importante del ciclo de control de accesos, porque deja constancia escrita y auditable de quién ingresó, cuándo y a qué lugar. La verificación de identidad y la autorización de acceso son fases necesarias del ciclo, pero no la más importante, y la escolta de visitas es una medida complementaria, no una fase del ciclo.",
     },
     {
       id: "m2_a5",
@@ -80,7 +80,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "La ronda es un control móvil con detenimiento, recorridos cortos y misiones específicas al interior; el patrullaje es el control general de zonas más extensas",
       explicacion:
-        "Así distingue el manual ambos conceptos; el patrullaje además requiere puntos de control para supervisar el desplazamiento.",
+        "El manual distingue ambos conceptos: la ronda es un control móvil con detenimiento, recorridos cortos y misiones específicas al interior de la instalación, mientras que el patrullaje es el control general de zonas más extensas y requiere puntos de control para supervisar el desplazamiento. La diferencia no está en el vehículo (puede ser a pie en ambos), ni en el horario, y sí existe una diferencia técnica entre ambos.",
     },
     {
       id: "m2_a6",
@@ -95,7 +95,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "Al recibirse del turno; es la más importante de todas",
       explicacion:
-        "El manual indica que la primera ronda se efectúa al recibirse del turno y es la más importante.",
+        "El manual indica que la primera ronda se efectúa al recibirse del turno y es la más importante de todas, pues permite conocer el estado real de la instalación que se asume. Al entregar el turno se hace la rendición final, no la primera ronda; la medianoche no tiene esa jerarquía; y las rondas son preventivas, no solo ante anomalías.",
     },
     {
       id: "m2_a7",
@@ -110,7 +110,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "NO TOCAR, NO MOVER, NO LEVANTAR; observar, anotar y avisar de inmediato",
       explicacion:
-        "El manual lo resume con la regla 'NO TOCAR, NO MOVER, NO LEVANTAR; al tocar puede explotar'.",
+        "El manual lo resume con la regla 'NO TOCAR, NO MOVER, NO LEVANTAR; al tocar puede explotar'. Abrirlo o trasladarlo puede detonar el artefacto y exponer a las personas; cubrirlo con una manta no elimina el riesgo ni cumple el protocolo, que ordena observar, anotar y avisar de inmediato a las autoridades.",
     },
     {
       id: "m2_a8",
@@ -119,7 +119,7 @@ export const bancoModulo2: BancoModulo = {
       opciones: ["A 30°C", "A 100°C", "Aproximadamente a 57°C", "Al detectar humo visible"],
       respuestaCorrecta: "Aproximadamente a 57°C",
       explicacion:
-        "El manual indica que los sprinklers se activan por la temperatura del incendio, generalmente 57°C, proyectando agua sobre la zona del fuego.",
+        "El manual indica que los sprinklers se activan por la temperatura del incendio, generalmente a 57°C, proyectando agua sobre la zona del fuego. 30°C es una temperatura ambiente normal y no activaría el rociador; 100°C es la temperatura del agua en ebullición y ya sería un incendio avanzado; y la detección de humo es función del detector de humo fotoeléctrico, no del rociador.",
     },
     {
       id: "m2_a9",
@@ -133,7 +133,7 @@ export const bancoModulo2: BancoModulo = {
       ],
       respuestaCorrecta: "De afuera hacia adentro y de abajo hacia arriba",
       explicacion:
-        "El manual establece ese orden: de afuera hacia adentro y de abajo hacia arriba.",
+        "El manual establece ese orden: de afuera hacia adentro y de abajo hacia arriba, para cubrir sistemáticamente toda la instalación. Los otros sentidos invierten la secuencia recomendada, y restringir la búsqueda solo a las zonas de público dejaría sin revisar las áreas interiores donde también pueden ocultarse artefactos.",
     },
     {
       id: "m2_a10",
@@ -148,7 +148,7 @@ export const bancoModulo2: BancoModulo = {
       respuestaCorrecta:
         "Todo lugar con huellas, rastros o indicios relacionados directa o indirectamente con el hecho investigado",
       explicacion:
-        "Así define el manual el Sitio del Suceso.",
+        "El manual define el Sitio del Suceso como todo lugar con huellas, rastros o indicios relacionados directa o indirectamente con el hecho investigado. No se limita a accidentes laborales; no es la oficina donde se redacta el informe (ese es un lugar administrativo); y tampoco es la dependencia policial donde se entrega al detenido.",
     },
   ],
   vf: [
@@ -158,7 +158,7 @@ export const bancoModulo2: BancoModulo = {
         "El Estudio de Seguridad debe contener las cantidades mínimas y máximas de recurso humano con proyección de crecimiento dentro del plazo de dos años de vigencia del decreto.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual exige incluir cantidades mínimas y máximas de personal con proyección a dos años.",
+        "Es VERDADERA: el manual exige que el Estudio de Seguridad incluya las cantidades mínimas y máximas de recurso humano, con proyección de crecimiento dentro del plazo de dos años de vigencia del decreto.",
     },
     {
       id: "m2_v2",
@@ -166,7 +166,7 @@ export const bancoModulo2: BancoModulo = {
         "El Estudio de Seguridad es elaborado por Carabineros de Chile y firmado por el guardia de turno.",
       respuestaCorrecta: false,
       explicacion:
-        "Es de responsabilidad de la Gerencia de la entidad y lo suscribe su representante legal; Carabineros solo fiscaliza y aprueba.",
+        "Es FALSA: el Estudio de Seguridad es de responsabilidad de la Gerencia de la entidad y lo suscribe su representante legal. Carabineros solo fiscaliza y aprueba el documento, y el guardia de turno no tiene participación en su elaboración ni firma.",
     },
     {
       id: "m2_v3",
@@ -174,7 +174,7 @@ export const bancoModulo2: BancoModulo = {
         "La Directiva de Funcionamiento regula el objetivo del servicio, las tareas, los medios empleados, el espacio físico limitado y el tipo de uniforme.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual enumera esos elementos que se regulan mediante la aprobación de la Directiva de Funcionamiento.",
+        "Es VERDADERA: mediante la aprobación de la Directiva de Funcionamiento la Autoridad Fiscalizadora regula el objetivo del servicio contratado, sus tareas, los medios empleados, el espacio físico limitado y el tipo de uniforme.",
     },
     {
       id: "m2_v4",
@@ -182,7 +182,7 @@ export const bancoModulo2: BancoModulo = {
         "El Jefe de Seguridad es el máximo responsable gerencial de la seguridad de una empresa privada y solo puede existir uno por empresa.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual define al Jefe de Seguridad como máximo responsable, cargo gerencial, existiendo solo uno por empresa.",
+        "Es VERDADERA: el manual define al Jefe de Seguridad como el máximo responsable gerencial de la seguridad de la empresa privada, existiendo solo uno por empresa.",
     },
     {
       id: "m2_v5",
@@ -190,7 +190,7 @@ export const bancoModulo2: BancoModulo = {
         "La autorización del Jefe de Seguridad lo acredita por un período de dos años renovable.",
       respuestaCorrecta: true,
       explicacion:
-        "El texto indica que la autorización acredita por dos años renovables.",
+        "Es VERDADERA: el texto indica que la autorización del Jefe de Seguridad lo acredita por un período de dos años renovable.",
     },
     {
       id: "m2_v6",
@@ -198,7 +198,7 @@ export const bancoModulo2: BancoModulo = {
         "Una barrera de seguridad es todo obstáculo activo o pasivo que impide, retarda, disminuye o evita daños a personas o bienes.",
       respuestaCorrecta: true,
       explicacion:
-        "Es la definición literal de barrera de seguridad del manual.",
+        "Es VERDADERA: es la definición literal de barrera de seguridad del manual: todo obstáculo activo o pasivo que impide, retarda, disminuye o evita daños a personas o bienes.",
     },
     {
       id: "m2_v7",
@@ -206,7 +206,7 @@ export const bancoModulo2: BancoModulo = {
         "Las barreras físicas dinámicas son los muros, paredes y rejas de una instalación.",
       respuestaCorrecta: false,
       explicacion:
-        "Muros, paredes y rejas son barreras físicas ESTÁTICAS; las dinámicas son puertas, ventanas, rejas de correderas y cortinas.",
+        "Es FALSA: los muros, paredes y rejas fijas son barreras físicas ESTÁTICAS. Las barreras dinámicas son aquellas que se desplazan, como puertas, ventanas, rejas correderas y cortinas.",
     },
     {
       id: "m2_v8",
@@ -214,7 +214,7 @@ export const bancoModulo2: BancoModulo = {
         "Los sensores PIR (infrarrojo pasivo) detectan la temperatura corporal de un ser vivo y se ubican en la parte superior de las esquinas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe así el funcionamiento y ubicación de los PIR.",
+        "Es VERDADERA: el manual describe así el funcionamiento de los sensores PIR: detectan la temperatura corporal de un ser vivo y se instalan en la parte superior de las esquinas del recinto.",
     },
     {
       id: "m2_v9",
@@ -222,7 +222,7 @@ export const bancoModulo2: BancoModulo = {
         "La barrera humana puede ser reemplazada por sistemas electrónicos modernos sin pérdida de eficacia.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual afirma que el elemento humano aún no ha sido reemplazado por ningún elemento artificial y es la barrera más importante.",
+        "Es FALSA: el manual afirma que el elemento humano aún no ha sido reemplazado por ningún elemento artificial, y que la barrera humana es la más importante del sistema de seguridad.",
     },
     {
       id: "m2_v10",
@@ -230,7 +230,7 @@ export const bancoModulo2: BancoModulo = {
         "NADIE puede quedar exento del control de accesos, aun tratándose de personas conocidas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo establece expresamente al describir el control de accesos.",
+        "Es VERDADERA: el manual lo establece expresamente: nadie puede quedar exento del control de accesos, aun cuando se trate de personas conocidas, porque el control es la base de la seguridad del recinto.",
     },
     {
       id: "m2_v11",
@@ -238,7 +238,7 @@ export const bancoModulo2: BancoModulo = {
         "La fase más importante del ciclo de control de accesos es la verificación de identidad.",
       respuestaCorrecta: false,
       explicacion:
-        "La fase más importante es el REGISTRO, que deja constancia escrita.",
+        "Es FALSA: la fase más importante del ciclo de control de accesos es el REGISTRO, porque deja constancia escrita y auditable. La verificación de identidad es necesaria, pero el manual destaca al registro como la fase más importante.",
     },
     {
       id: "m2_v12",
@@ -246,7 +246,7 @@ export const bancoModulo2: BancoModulo = {
         "Al cerrar la instalación, el guardia debe revisar toda el área para evitar el ocultamiento de intrusos o paquetes sospechosos y tener especial cuidado con ceniceros, estufas y máquinas eléctricas.",
       respuestaCorrecta: true,
       explicacion:
-        "Son medidas expresas del protocolo de cierre del manual.",
+        "Es VERDADERA: son medidas expresas del protocolo de cierre del manual: revisar toda el área (evitando intrusos o paquetes ocultos) y prestar especial atención a ceniceros, estufas y máquinas eléctricas que puedan generar incendios.",
     },
     {
       id: "m2_v13",
@@ -254,7 +254,7 @@ export const bancoModulo2: BancoModulo = {
         "Las rondas rutinarias, con los mismos horarios y recorridos, son recomendables porque dan previsibilidad al personal.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual dice lo contrario: las rondas rutinarias deben evitarse porque vulneran un principio básico de la seguridad; se deben usar rutas diferentes.",
+        "Es FALSA: el manual dice lo contrario: las rondas rutinarias con horarios y recorridos fijos deben evitarse, porque vulneran un principio básico de la seguridad (la imprevisibilidad) y facilitan la planificación del delito. Se deben usar rutas y horarios diferentes.",
     },
     {
       id: "m2_v14",
@@ -262,7 +262,7 @@ export const bancoModulo2: BancoModulo = {
         "Durante las rondas, el guardia puede salir de la instalación para observar vehículos sospechosos en las inmediaciones.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual indica observar vehículos sospechosos SIN salir de la instalación.",
+        "Es FALSA: el manual indica que los vehículos sospechosos deben observarse SIN salir de la instalación. Salir del perímetro abandona el puesto y puede exponer al guardia innecesariamente.",
     },
     {
       id: "m2_v15",
@@ -270,7 +270,7 @@ export const bancoModulo2: BancoModulo = {
         "Ante amenaza de bomba, se debe cortar el fluido eléctrico y el agua, aislar el área evacuando personas y desviar o cortar el tránsito de vehículos.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual enumera esas medidas ante amenaza de artefacto explosivo.",
+        "Es VERDADERA: el manual enumera esas medidas ante amenaza de artefacto explosivo: cortar el fluido eléctrico y el agua, aislar el área evacuando personas y desviar o cortar el tránsito de vehículos.",
     },
     {
       id: "m2_v16",
@@ -278,7 +278,7 @@ export const bancoModulo2: BancoModulo = {
         "El rociador automático (sprinkler) se activa al detectar humo mediante una célula fotoeléctrica.",
       respuestaCorrecta: false,
       explicacion:
-        "El sprinkler reacciona a la temperatura (generalmente 57°C); la célula fotoeléctrica corresponde al detector de humo.",
+        "Es FALSA: el sprinkler reacciona a la TEMPERATURA (generalmente 57°C) y proyecta agua sobre la zona del fuego. La célula fotoeléctrica corresponde al detector de humo, un dispositivo distinto.",
     },
     {
       id: "m2_v17",
@@ -286,7 +286,7 @@ export const bancoModulo2: BancoModulo = {
         "En un siniestro o incendio, el guardia debe recomendar el uso de ascensores para evacuar más rápido.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual es categórico: NO USAR ASCENSORES en un siniestro.",
+        "Es FALSA: el manual es categórico: NO USAR ASCENSORES en un siniestro, porque pueden detenerse por el corte de energía o quedar atrapadas personas. La evacuación se hace por las escaleras.",
     },
     {
       id: "m2_v18",
@@ -294,7 +294,7 @@ export const bancoModulo2: BancoModulo = {
         "La CRA (Central Receptora de Alarmas) recibe las señales de intrusión, alarmas técnicas o pánico; su personal confirma la alarma y avisa a la policía y/o al usuario.",
       respuestaCorrecta: true,
       explicacion:
-        "Así describe el manual el funcionamiento de la CRA.",
+        "Es VERDADERA: así describe el manual el funcionamiento de la Central Receptora de Alarmas: recibe las señales de intrusión, alarmas técnicas o de pánico, su personal confirma la alarma y avisa a la policía y/o al usuario.",
     },
     {
       id: "m2_v19",
@@ -302,7 +302,7 @@ export const bancoModulo2: BancoModulo = {
         "El robo se diferencia del hurto porque el robo emplea violencia, intimidación o fuerza para apropiarse de cosa mueble ajena.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual cita los Arts. 432 y 439 del Código Penal: si faltan la violencia, intimidación o fuerza, es hurto.",
+        "Es VERDADERA: el manual cita los Arts. 432 y 439 del Código Penal: si la apropiación de cosa mueble ajena emplea violencia, intimidación o fuerza, es robo; si faltan esos elementos, es hurto.",
     },
     {
       id: "m2_v20",
@@ -310,7 +310,7 @@ export const bancoModulo2: BancoModulo = {
         "La seguridad privada en una empresa debe verse como un gasto inevitable más que como una inversión.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual afirma lo contrario: la seguridad no debe verse como gasto, sino como inversión.",
+        "Es FALSA: el manual afirma lo contrario: la seguridad no debe verse como un gasto, sino como una inversión, porque protege las personas, los bienes y la continuidad operativa de la empresa.",
     },
   ],
 };

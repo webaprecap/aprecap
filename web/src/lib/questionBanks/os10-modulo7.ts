@@ -20,7 +20,7 @@ export const bancoModulo7: BancoModulo = {
       respuestaCorrecta:
         "Una rama de la psicología laboral cuyo objetivo es cambiar actitudes y modificar conductas inadecuadas para lograr un trabajo seguro",
       explicacion:
-        "El manual define la psicoprevención como complemento de la prevención de riesgos, rama de la psicología laboral.",
+        "El manual define la psicoprevención como complemento de la prevención de riesgos: una rama de la psicología laboral que busca cambiar actitudes y modificar conductas inadecuadas para lograr un trabajo seguro. No es una técnica de primeros auxilios psicológicos (esa es una herramienta de emergencia), no estudia trastornos mentales como la psicopatología, ni es una norma legal.",
     },
     {
       id: "m7_a2",
@@ -35,7 +35,7 @@ export const bancoModulo7: BancoModulo = {
       respuestaCorrecta:
         "Conseguir diferenciar la percepción de riesgo y el riesgo real",
       explicacion:
-        "El manual lista entre los objetivos de la psicoprevención diferenciar la percepción de riesgo del riesgo real.",
+        "El manual lista entre los objetivos de la psicoprevención diferenciar la percepción de riesgo del riesgo real, para que la persona evalúe correctamente las amenazas. Aumentar la productividad sin importar la seguridad contradice su fin; eliminar todos los riesgos es imposible en la práctica; y la psicoprevención complementa la capacitación técnica, no la reemplaza.",
     },
     {
       id: "m7_a3",
@@ -49,7 +49,7 @@ export const bancoModulo7: BancoModulo = {
       ],
       respuestaCorrecta: "La osadía, la imprudencia",
       explicacion:
-        "El manual indica que los impulsos autodestructivos se disfrazan de múltiples formas, y una de las que produce más accidentes es la osadía, la imprudencia.",
+        "El manual indica que los impulsos autodestructivos se disfrazan de múltiples formas y una de las que produce más accidentes es la osadía, la imprudencia. El exceso de capacitación, la prudencia excesiva y el trabajo en equipo son conductas seguras o positivas, no formas de autodestrucción.",
     },
     {
       id: "m7_a4",
@@ -64,7 +64,7 @@ export const bancoModulo7: BancoModulo = {
       respuestaCorrecta:
         "La probabilidad de que en una condición se produzca una pérdida determinada",
       explicacion:
-        "El manual define el riesgo como la probabilidad de que en una condición se produzca una pérdida determinada.",
+        "El manual define el riesgo como la probabilidad de que en una condición se produzca una pérdida determinada: es una posibilidad, no un peligro genérico. 'Todo peligro presente' confunde peligro con riesgo; 'el daño efectivamente ocurrido' es el accidente o la pérdida ya materializada; y la suma de accidentes del año es una estadística, no el riesgo.",
     },
     {
       id: "m7_a5",
@@ -79,7 +79,7 @@ export const bancoModulo7: BancoModulo = {
       respuestaCorrecta:
         "Fundamentalmente subjetiva, mediada por la idea propia del riesgo y la amenaza experimentada",
       explicacion:
-        "El manual señala que la percepción del riesgo es fundamentalmente subjetiva, no una evaluación objetiva.",
+        "El manual señala que la percepción del riesgo es fundamentalmente SUBJETIVA, no una evaluación objetiva ni medible: cada persona la construye según su propia idea del riesgo y la amenaza que ha experimentado. Por eso no es idéntica en todas las personas ni se reduce a una evaluación técnica de especialistas.",
     },
     {
       id: "m7_a6",
@@ -93,7 +93,7 @@ export const bancoModulo7: BancoModulo = {
       ],
       respuestaCorrecta: "Pueden bloquear el desempeño intelectual",
       explicacion:
-        "El manual advierte que en una emergencia el miedo y la angustia pueden bloquear el desempeño intelectual.",
+        "El manual advierte que en una emergencia el miedo y la angustia pueden bloquear el desempeño intelectual, impidiendo decidir correctamente. No mejoran la capacidad de decisión (la bloquean), no son neutros, y no aceleran los reflejos: los desorganizan.",
     },
     {
       id: "m7_a7",
@@ -102,7 +102,7 @@ export const bancoModulo7: BancoModulo = {
       opciones: ["El rasgo depresivo", "El rasgo histérico", "El rasgo obsesivo", "El rasgo pasivo"],
       respuestaCorrecta: "El rasgo histérico",
       explicacion:
-        "El manual describe el rasgo histérico con conductas escandalosas, exageradas, infantiles y primitivas; su nocividad es el riesgo de contagio.",
+        "El manual describe el rasgo histérico con conductas escandalosas, exageradas, infantiles y primitivas, cuya nocividad es el riesgo de contagio. El depresivo se caracteriza por pesimismo y desmoralización; el obsesivo por ideas fijas e irrechazables; y el pasivo no presenta ese cuadro de exageración emocional.",
     },
     {
       id: "m7_a8",
@@ -117,7 +117,7 @@ export const bancoModulo7: BancoModulo = {
       respuestaCorrecta:
         "Aislándolo del público (sin espectadores) o administrándole un estímulo fuerte",
       explicacion:
-        "El manual indica aislar al sujeto sin espectadores o administrar un estímulo fuerte para evitar el contagio.",
+        "El manual indica aislar al sujeto histérico del público (sin espectadores) o administrarle un estímulo fuerte, para cortar la conducta y evitar el contagio al resto. Razonar con él rara vez funciona en plena crisis; dejarlo solo puede intensificar la conducta; y reunirlo con más personas multiplica el riesgo de contagio.",
     },
     {
       id: "m7_a9",
@@ -131,7 +131,7 @@ export const bancoModulo7: BancoModulo = {
       ],
       respuestaCorrecta: "A mayor instrucción académica, más autocontrol",
       explicacion:
-        "El manual señala que a mayor instrucción académica hay más autocontrol; en bajos niveles de formación hay inseguridad, desconcierto y menor cooperativismo.",
+        "El manual señala que a mayor instrucción académica hay más autocontrol en las emergencias; en bajos niveles de formación se observa inseguridad, desconcierto y menor cooperativismo. Las otras alternativas invierten o niegan esa relación: la instrucción aumenta el cooperativismo, sí existe relación, y las personas con estudios reaccionan mejor, no peor.",
     },
     {
       id: "m7_a10",
@@ -146,7 +146,7 @@ export const bancoModulo7: BancoModulo = {
       respuestaCorrecta:
         "La influencia de un espacio cerrado sobre la conducta de las personas allí congregadas",
       explicacion:
-        "El manual define la territorialidad como la influencia de un espacio cerrado sobre la conducta de las personas congregadas.",
+        "El manual define la territorialidad como la influencia de un espacio cerrado sobre la conducta de las personas allí congregadas. El temor a responsabilizarse es el anonimato; la agresividad por frustración es la frustración misma; y el instinto de reunirse en grupo es el gregarismo.",
     },
   ],
   vf: [
@@ -156,7 +156,7 @@ export const bancoModulo7: BancoModulo = {
         "La psicoprevención pretende que las personas tomen conciencia permanente de su seguridad.",
       respuestaCorrecta: true,
       explicacion:
-        "Es uno de los objetivos de la psicoprevención listados en el manual.",
+        "Es VERDADERA: es uno de los objetivos de la psicoprevención listados en el manual: lograr que las personas tomen conciencia permanente de su seguridad.",
     },
     {
       id: "m7_v2",
@@ -164,7 +164,7 @@ export const bancoModulo7: BancoModulo = {
         "Las personas son portadoras únicamente de impulsos constructivos en el subconsciente.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual señala que las personas son portadoras de impulsos constructivos Y destructivos.",
+        "Es FALSA: el manual señala que las personas son portadoras de impulsos constructivos Y destructivos, y que estos últimos se disfrazan de múltiples formas, como la osadía o el sueño.",
     },
     {
       id: "m7_v3",
@@ -172,7 +172,7 @@ export const bancoModulo7: BancoModulo = {
         "La mente humana tiende a eliminar o rechazar lo negativo o amenazante, haciendo ver como distantes las situaciones de accidente.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe así el mecanismo de rechazo de lo amenazante.",
+        "Es VERDADERA: el manual describe así el mecanismo de rechazo de lo amenazante: la mente tiende a eliminar o rechazar lo negativo, haciendo ver los accidentes como situaciones distantes que 'no me tocan'.",
     },
     {
       id: "m7_v4",
@@ -180,7 +180,7 @@ export const bancoModulo7: BancoModulo = {
         "La autodestrucción puede vestirse de sueño, llevando a la persona a dormirse y realizar una acción imprudente.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual menciona el sueño como una forma sutil de autodestrucción.",
+        "Es VERDADERA: el manual menciona el sueño como una forma sutil de autodestrucción, que lleva a la persona a dormirse y luego realizar una acción imprudente.",
     },
     {
       id: "m7_v5",
@@ -188,7 +188,7 @@ export const bancoModulo7: BancoModulo = {
         "Los comportamientos ante el peligro van desde una actitud de calma hasta el verdadero pánico.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe esa gama de comportamientos ante el peligro inminente.",
+        "Es VERDADERA: el manual describe esa gama de comportamientos ante el peligro inminente: desde la calma hasta el pánico, con estados intermedios.",
     },
     {
       id: "m7_v6",
@@ -196,7 +196,7 @@ export const bancoModulo7: BancoModulo = {
         "Los factores socioculturales son la base de las reacciones de la población ante fenómenos naturales.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual afirma que la percepción de los fenómenos naturales incluye actitudes, temores, conocimientos, creencias y mitos.",
+        "Es VERDADERA: el manual afirma que la percepción de los fenómenos naturales incluye actitudes, temores, conocimientos, creencias y mitos, es decir, factores socioculturales que condicionan las reacciones de la población.",
     },
     {
       id: "m7_v7",
@@ -204,7 +204,7 @@ export const bancoModulo7: BancoModulo = {
         "La conducta colectiva es ejecutada por un grupo con organización formal y jerarquía estable.",
       respuestaCorrecta: false,
       explicacion:
-        "Los grupos de conducta colectiva son generalmente transitorios y carecen de organización formal.",
+        "Es FALSA: los grupos que ejecutan conducta colectiva son generalmente transitorios y carecen de organización formal ni jerarquía estable; esa es la característica de los grupos formales.",
     },
     {
       id: "m7_v8",
@@ -212,7 +212,7 @@ export const bancoModulo7: BancoModulo = {
         "Las normas de la conducta colectiva son creadas por los mismos participantes y pueden incluso ser opuestas a las de la sociedad.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo señala expresamente.",
+        "Es VERDADERA: el manual lo señala expresamente: las normas de la conducta colectiva son creadas por los propios participantes y pueden incluso oponerse a las normas sociales establecidas.",
     },
     {
       id: "m7_v9",
@@ -220,7 +220,7 @@ export const bancoModulo7: BancoModulo = {
         "La personalidad determina un grado de predictibilidad en las reacciones personales.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual relaciona la personalidad con la predictibilidad de las reacciones.",
+        "Es VERDADERA: el manual relaciona la personalidad con la predictibilidad: conocer la personalidad permite anticipar en cierto grado cómo reaccionará una persona.",
     },
     {
       id: "m7_v10",
@@ -228,7 +228,7 @@ export const bancoModulo7: BancoModulo = {
         "El rasgo DEPRESIVO se caracteriza por ideas fijas e irrechazables.",
       respuestaCorrecta: false,
       explicacion:
-        "Las ideas fijas e irrechazables corresponden al rasgo OBSESIVO; el depresivo presenta conductas pesimistas y desmoralizantes con riesgo de conductas suicidas.",
+        "Es FALSA: las ideas fijas e irrechazables corresponden al rasgo OBSESIVO. El rasgo depresivo presenta conductas pesimistas y desmoralizantes, con riesgo de conductas suicidas.",
     },
     {
       id: "m7_v11",
@@ -236,7 +236,7 @@ export const bancoModulo7: BancoModulo = {
         "Las personas con buenas condiciones físicas pueden asumir riesgos excesivos por la confianza en sus propios recursos.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo advierte expresamente.",
+        "Es VERDADERA: el manual lo advierte expresamente: las buenas condiciones físicas pueden generar exceso de confianza y llevar a asumir riesgos excesivos.",
     },
     {
       id: "m7_v12",
@@ -244,7 +244,7 @@ export const bancoModulo7: BancoModulo = {
         "El apoyo de un ser conocido hace más probable conductas adaptadas en una emergencia.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual señala que la soledad es coadyuvante de inseguridad, incertidumbre y conductas descontroladas.",
+        "Es VERDADERA: el manual señala que la soledad es coadyuvante de inseguridad, incertidumbre y conductas descontroladas; por lo tanto, la compañía de un ser conocido favorece conductas adaptadas.",
     },
     {
       id: "m7_v13",
@@ -252,7 +252,7 @@ export const bancoModulo7: BancoModulo = {
         "La frustración es el origen de conductas agresivas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual define la frustración como la interferencia de un instigador externo que impide conseguir el objetivo, origen de conductas agresivas.",
+        "Es VERDADERA: el manual define la frustración como la interferencia de un instigador externo que impide conseguir el objetivo, y la identifica como el origen de conductas agresivas.",
     },
     {
       id: "m7_v14",
@@ -260,7 +260,7 @@ export const bancoModulo7: BancoModulo = {
         "La tendencia al gregarismo implica temor a decidir y refugiarse instintivamente en el grupo.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe así la tendencia al gregarismo.",
+        "Es VERDADERA: el manual describe así la tendencia al gregarismo: temor a decidir individualmente y refugio instintivo en el grupo.",
     },
     {
       id: "m7_v15",
@@ -268,7 +268,7 @@ export const bancoModulo7: BancoModulo = {
         "El liderazgo en emergencias exige prudencia, estrategia, planificación, dominio de sí mismo y órdenes enérgicas y decididas.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual enumera esas cualidades del liderazgo.",
+        "Es VERDADERA: el manual enumera esas cualidades del liderazgo en emergencias: prudencia, estrategia, planificación, dominio de sí mismo y órdenes enérgicas y decididas.",
     },
     {
       id: "m7_v16",
@@ -276,7 +276,7 @@ export const bancoModulo7: BancoModulo = {
         "Los programas de prevención integrados deben abarcar desde el nivel gerencial hasta el operativo, destacando al personal de seguridad como nivel básico.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual lo indica al describir los programas de prevención integrados.",
+        "Es VERDADERA: el manual lo indica al describir los programas de prevención integrados: deben abarcar desde el nivel gerencial hasta el operativo, destacando al personal de seguridad como nivel básico.",
     },
     {
       id: "m7_v17",
@@ -284,7 +284,7 @@ export const bancoModulo7: BancoModulo = {
         "La información sobre riesgos debe difundirse solo mediante documentos escritos dirigidos a los jefes.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual exige difundirla por todos los canales posibles: folletos, instrucciones, charlas, reuniones y carteles.",
+        "Es FALSA: el manual exige difundir la información sobre riesgos por todos los canales posibles: folletos, instrucciones, charlas, reuniones y carteles, para que llegue a todo el personal, no solo a los jefes.",
     },
     {
       id: "m7_v18",
@@ -292,7 +292,7 @@ export const bancoModulo7: BancoModulo = {
         "Los planes de formación y adiestramiento buscan automatizar las conductas y controlar la emotividad.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual incluye la automatización de conductas y el control de la emotividad en los planes de formación.",
+        "Es VERDADERA: el manual incluye entre los planes de formación y adiestramiento la automatización de las conductas y el control de la emotividad.",
     },
     {
       id: "m7_v19",
@@ -300,7 +300,7 @@ export const bancoModulo7: BancoModulo = {
         "Al percibir la amenaza, la persona evalúa la posibilidad de que el peligro se produzca, su gravedad y su inminencia.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual describe ese balance inmediato que realiza la persona al percibir la amenaza.",
+        "Es VERDADERA: el manual describe ese balance inmediato que realiza la persona al percibir la amenaza: evalúa la posibilidad de que el peligro se produzca, su gravedad y su inminencia.",
     },
     {
       id: "m7_v20",
@@ -308,7 +308,7 @@ export const bancoModulo7: BancoModulo = {
         "Existen ejercicios de fácil aplicación y buenos resultados para familiarizarse con situaciones de estrés.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual los menciona como forma de preparación ante emergencias.",
+        "Es VERDADERA: el manual los menciona como forma de preparación ante emergencias: ejercicios de fácil aplicación y buenos resultados para familiarizarse con las situaciones de estrés.",
     },
   ],
 };

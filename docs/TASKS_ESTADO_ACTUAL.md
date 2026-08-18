@@ -90,6 +90,14 @@
 39. **Verificación**: tsc OK; Chrome headless OK (examen renderiza contador "Respondidas 0 de 60", dots de navegación y opciones; curso sin tag "Formato OS-10" y con botón de examen en sidebar).
 40. **Pendiente**: commit+push de esta sesión.
 
+### L. Fundamentos de calidad en las 420 preguntas OS-10 (2026-08-18)
+41. **Auditoría previa**: script de análisis sobre los 14 bancos `os10-modulo1..14.ts` → **420 preguntas** (10 alternativas + 20 V/F por módulo) con explicaciones vacías o genéricas ("El manual señala/enumera..."), solo 4 con "por qué" y ninguna explicando por qué los distractores estaban mal. El cliente aprobó reescribir las 420 completas.
+42. **Reescritura total de `explicacion`** (solo ese campo; `id`, `pregunta`/`afirmacion`, `opciones` y `respuestaCorrecta` intactos):
+    - **Alternativas**: por qué la correcta es correcta (citas normativas: Arts. 19 N°7/130 CPP, 432/439 CP, Código del Trabajo, Decretos 54/594, Leyes 16.744/21.659/19.628/21.719, Belém do Pará, etc.) + **por qué cada opción incorrecta está mal**, descartándola una a una.
+    - **V/F**: formato "Es VERDADERA/FALSA: ..." con la razón; se corrigieron errores de contenido detectados (ahogado azul/blanco invertido, cargador lento/rápido invertido, causas inmediatas/básicas invertidas, rasgo depresivo/obsesivo, 20.000 vs 10.000 UTM, etc.).
+43. **Verificación**: tsc OK; 14 bancos con 10 + 20 (420 en total) y 0 explicaciones vacías; muestreo por archivo sin textos genéricos; cuestionarios oficiales y examen CCTV intactos (`FinalExam.tsx` de OS-10 quedó huérfano: solo `CCTVFinalExam` se renderiza en `/evaluaciones/[slug]`).
+44. **Pendiente**: commit+push de esta sesión.
+
 ### G. Curso Bastón y Esposas — MDs listos (nuevo)
 22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
     - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).

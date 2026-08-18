@@ -14,7 +14,7 @@ export const bancoModulo13: BancoModulo = {
       opciones: ["Ley 21.659", "Ley 16.744", "Ley 19.628", "Ley 19.880"],
       respuestaCorrecta: "Ley 16.744",
       explicacion:
-        "La Ley 16.744 establece el Seguro Obligatorio financiado por el empleador (cotización básica y adicional).",
+        "La Ley 16.744 establece el Seguro Obligatorio contra accidentes del trabajo y enfermedades profesionales, financiado por el empleador (cotización básica y adicional). La Ley 21.659 regula la seguridad privada; la 19.628 protege los datos personales; y la 19.880 es la ley de procedimientos administrativos.",
     },
     {
       id: "m13_a2",
@@ -23,7 +23,7 @@ export const bancoModulo13: BancoModulo = {
       opciones: ["5 trabajadores", "10 trabajadores", "20 trabajadores", "50 trabajadores"],
       respuestaCorrecta: "10 trabajadores",
       explicacion:
-        "El reglamento interno es obligatorio desde 10 trabajadores y establece normas de orden e higiene.",
+        "El reglamento interno de orden, higiene y seguridad es obligatorio desde los 10 trabajadores, y establece las normas de orden e higiene del lugar de trabajo. Con 5, 20 o 50 trabajadores la obligación ya está vigente desde antes en los dos últimos casos, pero el umbral legal es 10.",
     },
     {
       id: "m13_a3",
@@ -37,7 +37,7 @@ export const bancoModulo13: BancoModulo = {
       respuestaCorrecta:
         "Atributos inherentes, universales e inalienables basados en la dignidad humana",
       explicacion:
-        "Son inherentes a la persona: no pueden ser arrebatados, vendidos ni renunciados (Declaración de 1948).",
+        "Los derechos humanos son inherentes a la persona: no pueden ser arrebatados, vendidos ni renunciados (Declaración Universal de 1948). No los otorga el Estado (este solo los reconoce y protege), no son beneficios negociables ni privilegios de grupos: pertenecen a todas las personas por igual.",
     },
     {
       id: "m13_a4",
@@ -51,7 +51,7 @@ export const bancoModulo13: BancoModulo = {
       respuestaCorrecta:
         "Un sistema jurídico donde gobernantes y gobernados están sometidos a leyes justas",
       explicacion:
-        "Requiere supremacía constitucional, separación de poderes y legalidad.",
+        "El Estado de Derecho es un sistema jurídico donde gobernantes y gobernados están sometidos a leyes justas, y requiere supremacía constitucional, separación de poderes y legalidad. Un régimen donde el gobernante está por sobre la ley es su negación; no es un modelo económico ni una institución policial.",
     },
     {
       id: "m13_a5",
@@ -66,7 +66,7 @@ export const bancoModulo13: BancoModulo = {
       respuestaCorrecta:
         "Exigir límites al Estado (libertades individuales frente al poder estatal)",
       explicacion:
-        "Los civiles y políticos exigen límites al Estado: vida, igualdad, libertad de expresión, propiedad.",
+        "Los derechos civiles y políticos exigen LÍMITES al Estado: vida, igualdad, libertad de expresión, propiedad. La acción positiva y las prestaciones del Estado son los derechos de SEGUNDA generación (salud, educación, seguridad social); la cooperación internacional es la TERCERA generación; y los derechos humanos aplican a todos, no solo a empresas privadas.",
     },
     {
       id: "m13_a6",
@@ -80,7 +80,7 @@ export const bancoModulo13: BancoModulo = {
       ],
       respuestaCorrecta: "Derecho a la salud, seguridad social, educación y trabajo",
       explicacion:
-        "La segunda generación exige acción positiva del Estado: prestaciones y servicios.",
+        "La segunda generación exige acción POSITIVA del Estado: prestaciones y servicios como salud, seguridad social, educación y trabajo. El derecho a la vida y la libertad de expresión son de primera generación (civiles); el medio ambiente sano y la paz son de tercera; y el voto y la propiedad son civiles-políticos.",
     },
     {
       id: "m13_a7",
@@ -94,7 +94,7 @@ export const bancoModulo13: BancoModulo = {
       respuestaCorrecta:
         "La libertad individual frente a detenciones o arrestos arbitrarios",
       explicacion:
-        "El Hábeas Corpus protege directa e inmediatamente la libertad individual.",
+        "El Hábeas Corpus (recurso de amparo) protege directa e inmediatamente la libertad individual frente a detenciones o arrestos arbitrarios. El derecho de propiedad y la educación se protegen por otras vías (como el Recurso de Protección en su caso), y los contratos laborales no son materia de este recurso.",
     },
     {
       id: "m13_a8",
@@ -108,7 +108,7 @@ export const bancoModulo13: BancoModulo = {
       respuestaCorrecta:
         "La restitución inmediata de derechos fundamentales (vida, propiedad, igualdad) cuando son vulnerados",
       explicacion:
-        "Es la acción jurídica orientada a la restitución inmediata de derechos fundamentales.",
+        "El Recurso de Protección es la acción jurídica orientada a la restitución inmediata de derechos fundamentales como la vida, la propiedad y la igualdad cuando son vulnerados. No castiga delitos (eso es la acción penal), no revisa sentencias (eso es la casación) ni modifica la Constitución.",
     },
     {
       id: "m13_a9",
@@ -123,7 +123,7 @@ export const bancoModulo13: BancoModulo = {
       respuestaCorrecta:
         "Reconoce la violencia contra la mujer como una violación a los DDHH y un obstáculo para el desarrollo",
       explicacion:
-        "Es un tratado interamericano que obliga a prevenir, sancionar y erradicar la violencia contra la mujer.",
+        "La Convención de Belém do Pará es un tratado interamericano que reconoce la violencia contra la mujer como una violación a los derechos humanos y un obstáculo para el desarrollo, obligando a prevenirla, sancionarla y erradicarla. No regula el comercio, no crea tribunales laborales ni regula la seguridad privada.",
     },
     {
       id: "m13_a10",
@@ -137,7 +137,7 @@ export const bancoModulo13: BancoModulo = {
       ],
       respuestaCorrecta: "Únicamente para fines específicos, explícitos y legítimos",
       explicacion:
-        "El tratamiento debe basarse en la ley, ejecutarse de buena fe y solo para fines específicos, explícitos y legítimos.",
+        "El tratamiento de datos personales debe basarse en la ley, ejecutarse de buena fe y realizarse únicamente para fines específicos, explícitos y legítimos (principio de finalidad). Recogerlos para cualquier fin, almacenarlos sin límite o compartirlos con cualquiera vulnera la protección de datos.",
     },
   ],
   vf: [
@@ -147,14 +147,15 @@ export const bancoModulo13: BancoModulo = {
         "La Ley 16.744 cubre los accidentes del trabajo y las enfermedades profesionales.",
       respuestaCorrecta: true,
       explicacion:
-        "El Seguro Obligatorio cubre accidentes del trabajo y enfermedades profesionales.",
+        "Es VERDADERA: la Ley 16.744 establece el Seguro Obligatorio que cubre los accidentes del trabajo y las enfermedades profesionales, financiado por el empleador.",
     },
     {
       id: "m13_vf2",
       afirmacion:
         "El reglamento interno es obligatorio desde 5 trabajadores.",
       respuestaCorrecta: false,
-      explicacion: "Es obligatorio desde 10 trabajadores.",
+      explicacion:
+        "Es FALSA: el reglamento interno de orden, higiene y seguridad es obligatorio desde los 10 trabajadores, no desde 5.",
     },
     {
       id: "m13_vf3",
@@ -162,7 +163,7 @@ export const bancoModulo13: BancoModulo = {
         "Durante la capacitación ocupacional, el trabajador tiene derecho a remuneración íntegra.",
       respuestaCorrecta: true,
       explicacion:
-        "El trabajador tiene derecho a remuneración íntegra durante la formación (sin pago de horas extras).",
+        "Es VERDADERA: el trabajador tiene derecho a remuneración íntegra durante la capacitación ocupacional, aunque no se paguen horas extras por ese período de formación.",
     },
     {
       id: "m13_vf4",
@@ -170,7 +171,7 @@ export const bancoModulo13: BancoModulo = {
         "Los accidentes de estudio están cubiertos por la Ley 16.744.",
       respuestaCorrecta: true,
       explicacion:
-        "Los accidentes de estudio también están cubiertos por la Ley 16.744.",
+        "Es VERDADERA: los accidentes de estudio también están cubiertos por la Ley 16.744, junto con los accidentes del trabajo y las enfermedades profesionales.",
     },
     {
       id: "m13_vf5",
@@ -178,7 +179,7 @@ export const bancoModulo13: BancoModulo = {
         "Los derechos humanos pueden ser vendidos o renunciados por su titular.",
       respuestaCorrecta: false,
       explicacion:
-        "Son inalienables: no pueden ser arrebatados, vendidos ni renunciados.",
+        "Es FALSA: los derechos humanos son inalienables: no pueden ser arrebatados, vendidos ni renunciados, según la Declaración Universal de 1948.",
     },
     {
       id: "m13_vf6",
@@ -186,14 +187,15 @@ export const bancoModulo13: BancoModulo = {
         "Los DDHH se basan en la dignidad humana según la Declaración de 1948.",
       respuestaCorrecta: true,
       explicacion:
-        "Su fundamento es la dignidad humana (Declaración de 1948).",
+        "Es VERDADERA: el fundamento de los derechos humanos es la dignidad humana, según la Declaración Universal de Derechos Humanos de 1948.",
     },
     {
       id: "m13_vf7",
       afirmacion:
         "El Estado de Derecho requiere supremacía constitucional, separación de poderes y legalidad.",
       respuestaCorrecta: true,
-      explicacion: "Son los elementos del modelo de orden del Estado de Derecho.",
+      explicacion:
+        "Es VERDADERA: son los elementos del modelo de orden del Estado de Derecho: supremacía constitucional, separación de poderes y legalidad.",
     },
     {
       id: "m13_vf8",
@@ -201,14 +203,15 @@ export const bancoModulo13: BancoModulo = {
         "Sin Estado de Derecho, los derechos humanos no pueden ser protegidos ni exigidos.",
       respuestaCorrecta: true,
       explicacion:
-        "El Estado de Derecho provee los mecanismos legales de exigibilidad judicial.",
+        "Es VERDADERA: el Estado de Derecho provee los mecanismos legales de exigibilidad judicial; sin él, los derechos humanos no pueden ser protegidos ni exigidos.",
     },
     {
       id: "m13_vf9",
       afirmacion:
         "Los derechos civiles y políticos son de segunda generación.",
       respuestaCorrecta: false,
-      explicacion: "Los civiles y políticos son de PRIMERA generación.",
+      explicacion:
+        "Es FALSA: los derechos civiles y políticos son de PRIMERA generación. La segunda generación corresponde a los económicos, sociales y culturales.",
     },
     {
       id: "m13_vf10",
@@ -216,7 +219,7 @@ export const bancoModulo13: BancoModulo = {
         "El derecho a la salud, seguridad social, educación y trabajo pertenecen a la segunda generación.",
       respuestaCorrecta: true,
       explicacion:
-        "Son derechos económicos, sociales y culturales (segunda generación).",
+        "Es VERDADERA: son derechos económicos, sociales y culturales, es decir, de segunda generación, que exigen acción positiva del Estado.",
     },
     {
       id: "m13_vf11",
@@ -224,7 +227,7 @@ export const bancoModulo13: BancoModulo = {
         "El derecho a un medio ambiente sano y a la paz son de tercera generación (derechos de los pueblos o de solidaridad).",
       respuestaCorrecta: true,
       explicacion:
-        "La tercera generación exige cooperación y protección colectiva e internacional.",
+        "Es VERDADERA: la tercera generación, de los pueblos o de solidaridad, exige cooperación y protección colectiva e internacional, e incluye el medio ambiente sano y la paz.",
     },
     {
       id: "m13_vf12",
@@ -232,21 +235,22 @@ export const bancoModulo13: BancoModulo = {
         "Los tratados ratificados por Chile forman junto a la Constitución el 'Bloque Constitucional'.",
       respuestaCorrecta: true,
       explicacion:
-        "Ratificados por Chile, forman junto a la Constitución el Bloque Constitucional y obligan a poderes públicos y privados.",
+        "Es VERDADERA: los tratados ratificados por Chile forman junto a la Constitución el 'Bloque Constitucional' y obligan tanto a los poderes públicos como a los privados.",
     },
     {
       id: "m13_vf13",
       afirmacion:
         "Las garantías constitucionales son mecanismos procesales para proteger bienes jurídicos superiores y restablecer el orden constitucional.",
       respuestaCorrecta: true,
-      explicacion: "Es la definición de garantías constitucionales del documento.",
+      explicacion:
+        "Es VERDADERA: es la definición de garantías constitucionales del documento: mecanismos procesales para proteger bienes jurídicos superiores y restablecer el orden constitucional.",
     },
     {
       id: "m13_vf14",
       afirmacion: "El Hábeas Corpus protege el derecho de propiedad.",
       respuestaCorrecta: false,
       explicacion:
-        "El Hábeas Corpus protege la libertad individual frente a detenciones arbitrarias.",
+        "Es FALSA: el Hábeas Corpus protege la libertad individual frente a detenciones o arrestos arbitrarios, no el derecho de propiedad.",
     },
     {
       id: "m13_vf15",
@@ -254,14 +258,15 @@ export const bancoModulo13: BancoModulo = {
         "El Recurso de Protección restituye derechos como la vida, la propiedad y la igualdad.",
       respuestaCorrecta: true,
       explicacion:
-        "Busca la restitución inmediata de derechos fundamentales vulnerados.",
+        "Es VERDADERA: el Recurso de Protección busca la restitución inmediata de derechos fundamentales vulnerados, como la vida, la propiedad y la igualdad.",
     },
     {
       id: "m13_vf16",
       afirmacion:
         "El debido proceso asegura que toda persona sea juzgada bajo un proceso justo, transparente y conforme a las leyes preestablecidas.",
       respuestaCorrecta: true,
-      explicacion: "Es la garantía procedimental del debido proceso.",
+      explicacion:
+        "Es VERDADERA: es la garantía procedimental del debido proceso: toda persona debe ser juzgada bajo un proceso justo, transparente y conforme a las leyes preestablecidas.",
     },
     {
       id: "m13_vf17",
@@ -269,7 +274,7 @@ export const bancoModulo13: BancoModulo = {
         "La protección de Belém do Pará aplica solo en el espacio público.",
       respuestaCorrecta: false,
       explicacion:
-        "Aplica en el espacio público y privado: familia, relaciones interpersonales o violencia perpetrada por el Estado.",
+        "Es FALSA: la protección de Belém do Pará aplica tanto en el espacio público como en el PRIVADO: en la familia, las relaciones interpersonales o la violencia perpetrada por el Estado.",
     },
     {
       id: "m13_vf18",
@@ -277,7 +282,7 @@ export const bancoModulo13: BancoModulo = {
         "El Estado tiene la obligación irrenunciable de prevenir, sancionar y erradicar la violencia contra la mujer.",
       respuestaCorrecta: true,
       explicacion:
-        "Es la obligación estatal (y privada) establecida por Belém do Pará.",
+        "Es VERDADERA: es la obligación estatal (y privada) establecida por la Convención de Belém do Pará: prevenir, sancionar y erradicar la violencia contra la mujer.",
     },
     {
       id: "m13_vf19",
@@ -285,7 +290,7 @@ export const bancoModulo13: BancoModulo = {
         "Los datos personales deben recogerse únicamente para fines específicos, explícitos y legítimos.",
       respuestaCorrecta: true,
       explicacion:
-        "El principio de finalidad exige fines específicos, explícitos y legítimos.",
+        "Es VERDADERA: el principio de finalidad exige que los datos personales se recojan únicamente para fines específicos, explícitos y legítimos.",
     },
     {
       id: "m13_vf20",
@@ -293,7 +298,7 @@ export const bancoModulo13: BancoModulo = {
         "El guardia de seguridad es un agente de primera línea en la materialización del Estado de Derecho.",
       respuestaCorrecta: true,
       explicacion:
-        "El documento concluye que el guardia materializa el Estado de Derecho en la práctica.",
+        "Es VERDADERA: el documento concluye que el guardia de seguridad es un agente de primera línea que materializa el Estado de Derecho en la práctica diaria.",
     },
   ],
 };

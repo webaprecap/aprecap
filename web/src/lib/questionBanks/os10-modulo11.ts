@@ -21,7 +21,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "Como una inversión estratégica que previene pérdidas y asegura la continuidad operativa",
       explicacion:
-        "El manual rompe el mito del gasto: la seguridad es una inversión estratégica que asegura continuidad operativa.",
+        "El manual rompe el mito del gasto: la seguridad es una inversión estratégica que previene pérdidas y asegura la continuidad operativa. No es un gasto inevitable ni un servicio opcional de lujo; y aunque Carabineros colabora, la seguridad de la instalación es responsabilidad de la propia entidad.",
     },
     {
       id: "m11_a2",
@@ -34,7 +34,7 @@ export const bancoModulo11: BancoModulo = {
       ],
       respuestaCorrecta: "Mediante la combinación inteligente de múltiples medidas",
       explicacion:
-        "La seguridad física se obtiene combinando múltiples medidas: ninguna barrera es impenetrable por sí sola.",
+        "La seguridad física se obtiene combinando inteligentemente múltiples medidas: ninguna barrera es impenetrable por sí sola. Ni una única barrera, ni solo guardias armados, ni solo tecnología electrónica bastan: la eficacia nace de la suma coordinada de barreras humanas, físicas, mecánicas, electrónicas y animales.",
     },
     {
       id: "m11_a3",
@@ -48,7 +48,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "Analizar vulnerabilidades y riesgos, y definir la cantidad de guardias y armamento",
       explicacion:
-        "El Estudio de Seguridad analiza vulnerabilidades y riesgos (accidentes, robos, terrorismo) y define guardias y armamento.",
+        "El Estudio de Seguridad analiza las vulnerabilidades y riesgos (accidentes, robos, terrorismo) y, en base a ellos, define la cantidad de guardias y el armamento necesario. Las tareas específicas las regula la Directiva de Funcionamiento; la apertura del recinto y el registro de visitas son funciones operativas del turno.",
     },
     {
       id: "m11_a4",
@@ -62,7 +62,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "Las tareas específicas, los medios del guardia y el espacio físico limitado de acción",
       explicacion:
-        "La Directiva de Funcionamiento regula tareas, medios y espacio físico de acción; es aprobada y fiscalizada por Carabineros.",
+        "La Directiva de Funcionamiento regula las tareas específicas, los medios del guardia y el espacio físico limitado de acción, y es aprobada y fiscalizada por Carabineros. Los sueldos, el presupuesto y los contratos con proveedores son materias administrativas de la empresa, ajenas a la Directiva.",
     },
     {
       id: "m11_a5",
@@ -77,7 +77,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "Una porción de terreno físicamente limitada (murallas, cercos, alambradas)",
       explicacion:
-        "El recinto es la porción de terreno físicamente limitada donde la entidad desarrolla sus actividades.",
+        "El manual define el recinto como una porción de terreno físicamente limitada (murallas, cercos, alambradas) donde la entidad desarrolla sus actividades. El terreno sin delimitación física es el 'sitio'; y el espacio público o la vía pública no forman parte del recinto.",
     },
     {
       id: "m11_a6",
@@ -90,7 +90,7 @@ export const bancoModulo11: BancoModulo = {
       ],
       respuestaCorrecta: "Quebradas, ríos y vegetación",
       explicacion:
-        "Las barreras naturales provienen de la topografía: quebradas, ríos y vegetación.",
+        "Las barreras naturales provienen de la topografía del terreno: quebradas, ríos y vegetación. Los muros y portones son barreras físicas artificiales; los candados y pasadores son barreras mecánicas; y el CCTV con control por PC es una barrera electrónica.",
     },
     {
       id: "m11_a7",
@@ -103,7 +103,7 @@ export const bancoModulo11: BancoModulo = {
       ],
       respuestaCorrecta: "La barrera humana: guardias y vigilantes",
       explicacion:
-        "La barrera humana es la más importante e insustituible porque, a diferencia de las estáticas, es evolutiva.",
+        "La barrera humana es la más importante e insustituible del sistema porque, a diferencia de las barreras estáticas, es evolutiva: detecta, da la alarma, obtiene la identidad y neutraliza. El CCTV, las barreras físicas estáticas y las mecánicas son complementos valiosos, pero no pueden reemplazar la capacidad de decisión humana.",
     },
     {
       id: "m11_a8",
@@ -118,7 +118,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "Observar el área circundante, revisar barreras y vías, y verificar los sistemas de comunicación",
       explicacion:
-        "La apertura es proactiva: observar el entorno, revisar barreras y vías, y verificar comunicaciones.",
+        "La apertura es un procedimiento proactivo: observar el área circundante, revisar el estado de barreras y vías, y verificar el funcionamiento de los sistemas de comunicación. Revisar por intrusos es parte del CIERRE; apagar gas, agua y electricidad es una medida de cierre; y el informe final corresponde al término del turno.",
     },
     {
       id: "m11_a9",
@@ -133,7 +133,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "El registro: dejar constancia escrita (fecha, hora, RUT, persona a visitar, hora de salida)",
       explicacion:
-        "El registro escrito es la fase más importante: sirve de base para cualquier investigación futura.",
+        "El registro escrito es la fase más importante del ciclo de control de acceso, porque deja constancia de fecha, hora, RUT, persona a visitar y hora de salida, sirviendo de base para cualquier investigación futura. La verificación de identidad y la autorización son fases necesarias, y la bienvenida no forma parte del ciclo.",
     },
     {
       id: "m11_a10",
@@ -148,7 +148,7 @@ export const bancoModulo11: BancoModulo = {
       respuestaCorrecta:
         "La apropiación de cosa ajena sin violencia, sin intimidación y sin fuerza en las cosas",
       explicacion:
-        "La ausencia de violencia, intimidación y fuerza en las cosas distingue el hurto del robo.",
+        "La ausencia de violencia, intimidación y fuerza en las cosas es lo que distingue el hurto del robo: si están presentes esos elementos, la figura legal es el robo. El uso de armas y la retención de personas son agravantes del robo, no características del hurto.",
     },
   ],
   vf: [
@@ -157,14 +157,14 @@ export const bancoModulo11: BancoModulo = {
       afirmacion: "La seguridad es un gasto administrativo inevitable.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual afirma que la seguridad es una inversión estratégica, no un gasto.",
+        "Es FALSA: el manual afirma que la seguridad es una inversión estratégica que previene pérdidas y asegura la continuidad operativa, no un gasto inevitable.",
     },
     {
       id: "m11_vf2",
       afirmacion: "Ninguna barrera es impenetrable por sí sola.",
       respuestaCorrecta: true,
       explicacion:
-        "La seguridad real se logra con la combinación inteligente de múltiples medidas.",
+        "Es VERDADERA: la seguridad real se logra con la combinación inteligente de múltiples medidas, porque ninguna barrera individual es impenetrable.",
     },
     {
       id: "m11_vf3",
@@ -172,7 +172,7 @@ export const bancoModulo11: BancoModulo = {
         "El Estudio de Seguridad define la cantidad de guardias y el armamento.",
       respuestaCorrecta: true,
       explicacion:
-        "El Estudio de Seguridad analiza vulnerabilidades y define cantidad de guardias y armamento.",
+        "Es VERDADERA: el Estudio de Seguridad analiza las vulnerabilidades y riesgos de la entidad y, con base en ellos, define la cantidad de guardias y el armamento.",
     },
     {
       id: "m11_vf4",
@@ -180,7 +180,7 @@ export const bancoModulo11: BancoModulo = {
         "La Directiva de Funcionamiento es aprobada y fiscalizada por Carabineros.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual indica que la Directiva de Funcionamiento es aprobada y fiscalizada por Carabineros.",
+        "Es VERDADERA: el manual indica que la Directiva de Funcionamiento, que regula tareas, medios y espacio físico del servicio, es aprobada y fiscalizada por Carabineros.",
     },
     {
       id: "m11_vf5",
@@ -188,7 +188,7 @@ export const bancoModulo11: BancoModulo = {
         "El recinto es un terreno sin delimitación física alguna.",
       respuestaCorrecta: false,
       explicacion:
-        "El terreno sin delimitación física es el 'sitio'; el recinto está físicamente limitado.",
+        "Es FALSA: el terreno sin delimitación física es el 'SITIO'. El recinto es una porción de terreno físicamente limitada por murallas, cercos o alambradas.",
     },
     {
       id: "m11_vf6",
@@ -196,7 +196,7 @@ export const bancoModulo11: BancoModulo = {
         "El sitio puede ser un lugar de tránsito obligado según el Estudio de Seguridad aprobado.",
       respuestaCorrecta: true,
       explicacion:
-        "El sitio es terreno no delimitado físicamente, ocupado habitualmente o de tránsito obligado.",
+        "Es VERDADERA: el sitio es un terreno no delimitado físicamente, ocupado habitualmente o de tránsito obligado, según lo determine el Estudio de Seguridad aprobado.",
     },
     {
       id: "m11_vf7",
@@ -204,7 +204,7 @@ export const bancoModulo11: BancoModulo = {
         "Las barreras artificiales son construidas por el hombre.",
       respuestaCorrecta: true,
       explicacion:
-        "Las barreras artificiales son las construidas por el hombre, a diferencia de las naturales.",
+        "Es VERDADERA: las barreras artificiales son las construidas por el hombre (físicas, mecánicas, electrónicas), a diferencia de las naturales que provienen de la topografía.",
     },
     {
       id: "m11_vf8",
@@ -212,7 +212,7 @@ export const bancoModulo11: BancoModulo = {
         "Las cerraduras, candados y pasadores son barreras de tipo mecánico.",
       respuestaCorrecta: true,
       explicacion:
-        "Las barreras mecánicas incluyen cerraduras (candados) y bloqueos (pasadores).",
+        "Es VERDADERA: las barreras mecánicas incluyen las cerraduras (candados) y los bloqueos (pasadores).",
     },
     {
       id: "m11_vf9",
@@ -220,7 +220,7 @@ export const bancoModulo11: BancoModulo = {
         "Los perros de seguridad se clasifican como barreras de tipo animal.",
       respuestaCorrecta: true,
       explicacion:
-        "La taxonomía del manual incluye barreras animales: perros de seguridad.",
+        "Es VERDADERA: la taxonomía del manual incluye las barreras animales, como los perros de seguridad.",
     },
     {
       id: "m11_vf10",
@@ -228,7 +228,7 @@ export const bancoModulo11: BancoModulo = {
         "La barrera humana es evolutiva, a diferencia de las barreras estáticas.",
       respuestaCorrecta: true,
       explicacion:
-        "La vigilancia humana es evolutiva: detecta, da la alarma, obtiene identidad y neutraliza.",
+        "Es VERDADERA: la barrera humana es evolutiva porque detecta, da la alarma, obtiene la identidad y neutraliza, capacidades que las barreras estáticas no tienen.",
     },
     {
       id: "m11_vf11",
@@ -236,7 +236,7 @@ export const bancoModulo11: BancoModulo = {
         "En la apertura se debe verificar el funcionamiento de los sistemas de comunicación.",
       respuestaCorrecta: true,
       explicacion:
-        "Verificar los sistemas de comunicación es una de las tareas de apertura.",
+        "Es VERDADERA: verificar los sistemas de comunicación es una de las tareas del procedimiento de apertura, junto con observar el entorno y revisar barreras y vías.",
     },
     {
       id: "m11_vf12",
@@ -244,7 +244,7 @@ export const bancoModulo11: BancoModulo = {
         "En el cierre, el guardia debe dejar estufas y máquinas encendidas para calefaccionar.",
       respuestaCorrecta: false,
       explicacion:
-        "El cierre exige neutralizar riesgos de incendio: apagar estufas y máquinas encendidas.",
+        "Es FALSA: el cierre exige neutralizar los riesgos de incendio, por lo que se deben apagar las estufas y máquinas encendidas, además de revisar que no queden personas o paquetes ocultos.",
     },
     {
       id: "m11_vf13",
@@ -252,7 +252,7 @@ export const bancoModulo11: BancoModulo = {
         "En el control de acceso, el personal conocido de la empresa queda exento de verificación.",
       respuestaCorrecta: false,
       explicacion:
-        "El manual es claro: nadie queda exento, ni siquiera el personal conocido.",
+        "Es FALSA: el manual es claro: NADIE queda exento del control de accesos, ni siquiera el personal conocido de la empresa.",
     },
     {
       id: "m11_vf14",
@@ -260,7 +260,7 @@ export const bancoModulo11: BancoModulo = {
         "El registro de acceso debe consignar fecha, hora, RUT, persona a visitar y hora de salida.",
       respuestaCorrecta: true,
       explicacion:
-        "El registro escrito es la fase más importante y sirve para investigaciones futuras.",
+        "Es VERDADERA: el registro escrito es la fase más importante del control de acceso y debe consignar fecha, hora, RUT, persona a visitar y hora de salida, sirviendo para investigaciones futuras.",
     },
     {
       id: "m11_vf15",
@@ -268,7 +268,7 @@ export const bancoModulo11: BancoModulo = {
         "El hurto se caracteriza por la ausencia de violencia e intimidación.",
       respuestaCorrecta: true,
       explicacion:
-        "Sin violencia, sin intimidación y sin fuerza en las cosas: esa es la ausencia clave del hurto.",
+        "Es VERDADERA: sin violencia, sin intimidación y sin fuerza en las cosas, la apropiación de cosa ajena es hurto (Arts. 432 y 439 del Código Penal); con esos elementos es robo.",
     },
     {
       id: "m11_vf16",
@@ -276,7 +276,7 @@ export const bancoModulo11: BancoModulo = {
         "Ante un artefacto sospechoso, se debe levantarlo para inspeccionarlo.",
       respuestaCorrecta: false,
       explicacion:
-        "El protocolo prohíbe tocar o levantar el artefacto sospechoso.",
+        "Es FALSA: el protocolo prohíbe tocar o levantar el artefacto sospechoso: la regla es NO TOCAR, NO MOVER, NO LEVANTAR.",
     },
     {
       id: "m11_vf17",
@@ -284,7 +284,7 @@ export const bancoModulo11: BancoModulo = {
         "Cerca de un artefacto sospechoso no deben usarse radios ni celulares.",
       respuestaCorrecta: true,
       explicacion:
-        "El protocolo indica no usar radios ni celulares cerca del artefacto.",
+        "Es VERDADERA: el protocolo indica no usar radios ni celulares cerca del artefacto sospechoso, porque sus señales podrían activar el detonador.",
     },
     {
       id: "m11_vf18",
@@ -292,7 +292,7 @@ export const bancoModulo11: BancoModulo = {
         "En caso de siniestro está prohibido el uso de ascensores.",
       respuestaCorrecta: true,
       explicacion:
-        "El manual indica expresamente: prohibido el uso de ascensores en caso de siniestro.",
+        "Es VERDADERA: el manual indica expresamente que está prohibido el uso de ascensores en caso de siniestro, porque pueden detenerse y atrapar personas.",
     },
     {
       id: "m11_vf19",
@@ -300,7 +300,7 @@ export const bancoModulo11: BancoModulo = {
         "Si un hecho no está documentado, para efectos de la investigación no ocurrió.",
       respuestaCorrecta: true,
       explicacion:
-        "El registro escrito es la base de la investigación futura: lo no documentado, no ocurrió.",
+        "Es VERDADERA: el registro escrito es la base de la investigación futura: si un hecho no está documentado, para efectos de la investigación no ocurrió.",
     },
     {
       id: "m11_vf20",
@@ -308,7 +308,7 @@ export const bancoModulo11: BancoModulo = {
         "El retrato hablado es una descripción subjetiva del sospechoso.",
       respuestaCorrecta: false,
       explicacion:
-        "El retrato hablado exige una descripción OBJETIVA de rasgos, vestimenta, joyas y forma de actuar.",
+        "Es FALSA: el retrato hablado exige una descripción OBJETIVA del sospechoso: rasgos, vestimenta, joyas y forma de actuar, sin opiniones ni apreciaciones personales.",
     },
   ],
 };
