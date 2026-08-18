@@ -13,6 +13,16 @@ export interface PreguntaVF {
   explicacion: string
 }
 
+export interface ExamQuestion {
+  id: string
+  moduleTitle: string
+  question: string
+  options: string[]
+  correctAnswer: string
+  /** Fundamenta la respuesta correcta y explica por qué las demás opciones están mal. */
+  explicacion: string
+}
+
 export interface BancoModulo {
   numero: number
   titulo: string

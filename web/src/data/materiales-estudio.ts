@@ -22,7 +22,7 @@ export interface CursoMaterial {
   title: string;
   categoria: string;
   pdfUrl?: string;
-  banco?: "os10" | "cctv";
+  banco?: "os10" | "cctv" | "baston";
   modulos: ModuloData[];
 }
 
@@ -764,6 +764,7 @@ export const materialesEstudio: CursoMaterial[] = [
     slug: "baston-y-esposas",
     title: "Curso de Bastón y Esposas",
     categoria: "Técnicas de Control y Defensa Personal",
+    banco: "baston",
     modulos: [
       {
         nombre: "Módulo 1: Defensa Personal Policial",

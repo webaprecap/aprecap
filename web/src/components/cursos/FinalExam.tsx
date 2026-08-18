@@ -1,128 +1,111 @@
-'use client'
+"use client";
 
-import { useMemo, useState, useSyncExternalStore } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import confetti from 'canvas-confetti'
-import Link from 'next/link'
-import {
-  EXAMEN_UMBRAL_APROBACION,
-  calcularPorcentaje,
-  getExamenFinalPreguntas,
-  type PreguntaExamenFinal,
-} from '@/lib/questionBanks/os10'
-import styles from './FinalExam.module.css'
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
+import Link from "next/link";
+import { barajarOpciones, seleccionarBalanceadas } from "@/lib/questionBanks/helpers";
+import type { ExamQuestion } from "@/lib/questionBanks/types";
+import styles from "./FinalExam.module.css";
 
 interface FinalExamProps {
-  cursoSlug?: string
-  cursoTitulo?: string
-  volverHref?: string
-  modoDemo?: boolean
-}
-
-interface PreguntaOrdenada extends PreguntaExamenFinal {
-  ordenVF: boolean[]
-}
-
-const PREGUNTAS_POR_PAGINA = 10
-
-const emptySubscribe = () => () => {}
-let preguntasCache: PreguntaOrdenada[] | null = null
-
-function getClientSnapshot(): PreguntaOrdenada[] {
-  if (!preguntasCache) {
-    preguntasCache = getExamenFinalPreguntas().map((p) => ({
-      ...p,
-      ordenVF: Math.random() < 0.5 ? [true, false] : [false, true],
-    }))
-  }
-  return preguntasCache
-}
-
-function getServerSnapshot(): PreguntaOrdenada[] | null {
-  return null
+  cursoSlug: string;
+  cursoTitulo: string;
+  volverHref?: string;
+  modoDemo?: boolean;
+  banco: ExamQuestion[];
+  totalPreguntas: number;
+  umbral: number;
+  tag: string;
 }
 
 interface ModuleFeedback {
-  titulo: string
-  falladas: number
-  total: number
+  titulo: string;
+  falladas: number;
+  total: number;
 }
 
+const LETRAS = ["A", "B", "C", "D"];
+const PREGUNTAS_POR_PAGINA = 10;
+
 function getFailedModules(
-  preguntas: PreguntaOrdenada[],
-  respuestas: Record<string, boolean>
+  preguntas: ExamQuestion[],
+  respuestas: Record<string, string>
 ): ModuleFeedback[] {
-  const mapa: Record<string, { falladas: number; total: number }> = {}
+  const mapa: Record<string, { falladas: number; total: number }> = {};
   for (const p of preguntas) {
-    if (!mapa[p.tituloModulo]) mapa[p.tituloModulo] = { falladas: 0, total: 0 }
-    mapa[p.tituloModulo].total++
-    if (respuestas[p.id] !== p.respuestaCorrecta) mapa[p.tituloModulo].falladas++
+    if (!mapa[p.moduleTitle]) mapa[p.moduleTitle] = { falladas: 0, total: 0 };
+    mapa[p.moduleTitle].total++;
+    if (respuestas[p.id] !== p.correctAnswer) mapa[p.moduleTitle].falladas++;
   }
   return Object.entries(mapa)
     .filter(([, v]) => v.falladas > 0)
     .map(([titulo, v]) => ({ titulo, falladas: v.falladas, total: v.total }))
-    .sort((a, b) => b.falladas - a.falladas)
+    .sort((a, b) => b.falladas - a.falladas);
 }
 
-export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo = false }: FinalExamProps) {
-  const preguntas = useSyncExternalStore(
-    emptySubscribe,
-    getClientSnapshot,
-    getServerSnapshot
-  )
-  const [currentPage, setCurrentPage] = useState(0)
-  const [respuestas, setRespuestas] = useState<Record<string, boolean>>({})
-  const [submitted, setSubmitted] = useState(false)
-  const [score, setScore] = useState(0)
-  const [percentage, setPercentage] = useState(0)
-  const [passed, setPassed] = useState(false)
-  const [failedModules, setFailedModules] = useState<ModuleFeedback[]>([])
-  const [showMissingWarning, setShowMissingWarning] = useState(false)
+export default function FinalExam({
+  cursoSlug,
+  cursoTitulo,
+  volverHref,
+  modoDemo = false,
+  banco,
+  totalPreguntas,
+  umbral,
+  tag,
+}: FinalExamProps) {
+  const [preguntas] = useState<ExamQuestion[]>(() =>
+    seleccionarBalanceadas(banco, totalPreguntas).map(barajarOpciones)
+  );
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [respuestas, setRespuestas] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [percentage, setPercentage] = useState(0);
+  const [passed, setPassed] = useState(false);
+  const [failedModules, setFailedModules] = useState<ModuleFeedback[]>([]);
+  const [showMissingWarning, setShowMissingWarning] = useState(false);
+  const [modoRevision, setModoRevision] = useState(false);
+  const [revisionPage, setRevisionPage] = useState(0);
+  const [explicacionesAbiertas, setExplicacionesAbiertas] = useState<Record<string, boolean>>({});
 
-  const totalPaginas = Math.ceil((preguntas?.length ?? 0) / PREGUNTAS_POR_PAGINA)
-  const preguntasPagina = useMemo(() => {
-    if (!preguntas) return []
-    const inicio = currentPage * PREGUNTAS_POR_PAGINA
-    return preguntas.slice(inicio, inicio + PREGUNTAS_POR_PAGINA)
-  }, [preguntas, currentPage])
+  const respondidas = Object.keys(respuestas).length;
+  const allAnswered = respondidas === preguntas.length;
 
-  const respondidas = Object.keys(respuestas).length
-  const isAllAnswered = preguntas !== null && respondidas === preguntas.length
+  const totalPaginasRevision = Math.ceil(preguntas.length / PREGUNTAS_POR_PAGINA);
+  const preguntasRevision = useMemo(() => {
+    const inicio = revisionPage * PREGUNTAS_POR_PAGINA;
+    return preguntas.slice(inicio, inicio + PREGUNTAS_POR_PAGINA);
+  }, [preguntas, revisionPage]);
 
-  const handleSelect = (id: string, val: boolean) => {
-    if (submitted) return
-    setRespuestas((prev) => ({ ...prev, [id]: val }))
-  }
+  const handleSelect = (id: string, option: string) => {
+    if (submitted) return;
+    setRespuestas((prev) => ({ ...prev, [id]: option }));
+    setShowMissingWarning(false);
+  };
 
   const attemptSubmit = () => {
-    if (isAllAnswered) {
-      submitExam()
-    } else {
-      setShowMissingWarning(true)
-    }
-  }
+    if (allAnswered) submitExam();
+    else setShowMissingWarning(true);
+  };
 
   const submitExam = () => {
-    if (!preguntas) return
-    let correctCount = 0
+    let correctCount = 0;
     for (const p of preguntas) {
-      if (respuestas[p.id] === p.respuestaCorrecta) correctCount++
+      if (respuestas[p.id] === p.correctAnswer) correctCount++;
     }
-    const pct = calcularPorcentaje(correctCount, preguntas.length)
-    const aprobado = modoDemo || pct >= EXAMEN_UMBRAL_APROBACION
+    const pct = Math.round((correctCount / preguntas.length) * 100);
+    const aprobado = modoDemo || pct >= umbral;
 
-    setScore(correctCount)
-    setPercentage(pct)
-    setPassed(aprobado)
-    setFailedModules(getFailedModules(preguntas, respuestas))
-    setSubmitted(true)
+    setScore(correctCount);
+    setPercentage(pct);
+    setPassed(aprobado);
+    setFailedModules(getFailedModules(preguntas, respuestas));
+    setSubmitted(true);
 
     try {
-      localStorage.setItem(`aprecap_examen_${cursoSlug || 'curso'}_pct`, String(pct))
-      localStorage.setItem(
-        `aprecap_examen_${cursoSlug || 'curso'}_aprobado`,
-        aprobado ? 'true' : 'false'
-      )
+      localStorage.setItem(`aprecap_examen_${cursoSlug}_pct`, String(pct));
+      localStorage.setItem(`aprecap_examen_${cursoSlug}_aprobado`, aprobado ? "true" : "false");
     } catch {
       /* localStorage no disponible */
     }
@@ -132,52 +115,24 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
         particleCount: 160,
         spread: 100,
         origin: { y: 0.6 },
-        colors: ['#00e5ff', '#22c55e', '#ff1212', '#ffffff'],
-      })
+        colors: ["#00e5ff", "#22c55e", "#ff1212", "#ffffff"],
+      });
     }
-  }
-
-  const aprobarDemo = () => {
-    if (!preguntas) return
-    setScore(preguntas.length)
-    setPercentage(100)
-    setPassed(true)
-    setFailedModules([])
-    setSubmitted(true)
-    try {
-      localStorage.setItem(`aprecap_examen_${cursoSlug || 'curso'}_pct`, '100')
-      localStorage.setItem(
-        `aprecap_examen_${cursoSlug || 'curso'}_aprobado`,
-        'true'
-      )
-    } catch {
-      /* localStorage no disponible */
-    }
-    confetti({
-      particleCount: 160,
-      spread: 100,
-      origin: { y: 0.6 },
-      colors: ['#00e5ff', '#22c55e', '#ff1212', '#ffffff'],
-    })
-  }
+  };
 
   const handleRetry = () => {
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
-  if (!preguntas) {
-    return (
-      <div className={styles.examContainer}>
-        <p className={styles.feedbackText}>Cargando banco de preguntas...</p>
-      </div>
-    )
-  }
+  const toggleExplicacion = (id: string) => {
+    setExplicacionesAbiertas((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
-  if (submitted) {
+  if (submitted && !modoRevision) {
     return (
       <div className={styles.examContainer}>
         <div className={`${styles.resultCard} ${passed ? styles.resultSuccess : styles.resultFail}`}>
-          <h2 className={styles.resultTitle}>{passed ? '¡Felicitaciones!' : 'Lo sentimos'}</h2>
+          <h2 className={styles.resultTitle}>{passed ? "¡Felicitaciones!" : "Lo sentimos"}</h2>
 
           <div className={styles.scoreCircle}>
             <svg viewBox="0 0 36 36" className={styles.circularChart}>
@@ -203,9 +158,8 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
           {passed ? (
             <>
               <p className={styles.feedbackText}>
-                Has aprobado el Examen Final de{' '}
-                <strong>{cursoTitulo || 'Guardia de Seguridad OS-10'}</strong> con un{' '}
-                <strong>{percentage}%</strong> de logro (mínimo {EXAMEN_UMBRAL_APROBACION}%).
+                Has aprobado el Examen Final de <strong>{cursoTitulo}</strong> con un{" "}
+                <strong>{percentage}%</strong> de logro (mínimo {umbral}%).
               </p>
               {modoDemo && (
                 <p className={styles.feedbackHint}>
@@ -216,20 +170,13 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
                 Te recomendamos guardar una captura de pantalla de este resultado como respaldo
                 de tu avance en el curso.
               </p>
-              <div className={styles.resultActions}>
-                {volverHref && (
-                  <Link href={volverHref} className={styles.btnPrimary}>
-                    🎓 Volver al Curso
-                  </Link>
-                )}
-              </div>
             </>
           ) : (
             <>
               <p className={styles.feedbackText}>
-                No has superado el examen. Tu porcentaje fue del{' '}
-                <strong>{percentage}%</strong> y necesitas un {EXAMEN_UMBRAL_APROBACION}% para
-                aprobar.
+                No has superado el examen. Tu porcentaje fue del{" "}
+                <strong>{percentage}%</strong> y necesitas un {umbral}% para
+                aprobar. Puedes intentarlo nuevamente las veces que necesites.
               </p>
 
               {failedModules.length > 0 && (
@@ -241,48 +188,166 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
                         <strong>{m.titulo}</strong>
                         <span>
                           Fallaste {m.falladas} de {m.total} pregunta
-                          {m.falladas !== 1 ? 's' : ''} de este módulo
+                          {m.falladas !== 1 ? "s" : ""} de este módulo
                         </span>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
+            </>
+          )}
 
-              <p className={styles.feedbackHint}>
-                Te recomendamos volver a los módulos indicados y repasar el material antes de
-                intentarlo nuevamente.
-              </p>
+          <div className={styles.resultActions}>
+            <button onClick={() => setModoRevision(true)} className={styles.btnSecondary}>
+              🔍 Revisar mis respuestas y fundamentos
+            </button>
+            {volverHref && (
+              <Link href={volverHref} className={styles.btnPrimary}>
+                🎓 Volver al Curso
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-              <div className={styles.resultActions}>
-                <button onClick={handleRetry} className={styles.btnPrimary}>
-                  ↻ Reintentar Examen
-                </button>
-                {volverHref && (
-                  <Link href={volverHref} className={styles.btnSecondary}>
-                    📖 Volver al Curso
-                  </Link>
+  if (submitted && modoRevision) {
+    return (
+      <div className={styles.examContainer}>
+        <div className={styles.header}>
+          <div>
+            <span className={styles.headerTag}>Revisión del Examen Final</span>
+            <h3 className={styles.headerTitle}>{cursoTitulo}</h3>
+          </div>
+          <div className={styles.headerProgress}>
+            <span className={styles.counter}>
+              Página {revisionPage + 1} de {totalPaginasRevision} · {score}/{preguntas.length} correctas
+            </span>
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{ width: `${(respondidas / preguntas.length) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.questionsList}>
+          {preguntasRevision.map((p, idx) => {
+            const numeroGlobal = revisionPage * PREGUNTAS_POR_PAGINA + idx;
+            const userResp = respuestas[p.id];
+            const isCorrect = userResp === p.correctAnswer;
+            const isIncorrect = userResp !== undefined && !isCorrect;
+            const mostrarExplicacion = explicacionesAbiertas[p.id] || isIncorrect;
+
+            return (
+              <div
+                key={p.id}
+                className={`${styles.questionCard} ${
+                  isCorrect ? styles.cardCorrect : isIncorrect ? styles.cardWrong : ""
+                }`}
+              >
+                <div className={styles.questionHeader}>
+                  <div className={styles.questionNumber}>{numeroGlobal + 1}</div>
+                  <div className={styles.questionBody}>
+                    <p className={styles.questionText}>{p.question}</p>
+                    <span className={styles.questionModule}>{p.moduleTitle}</span>
+                  </div>
+                  <button onClick={() => toggleExplicacion(p.id)} className={styles.infoBtn}>
+                    ℹ️ Fundamento
+                  </button>
+                </div>
+
+                <div className={styles.optionsGrid}>
+                  {p.options.map((opcion, i) => {
+                    const isSelected = userResp === opcion;
+                    const isAnswer = opcion === p.correctAnswer;
+
+                    let btnClass = styles.optionBtn;
+                    if (isAnswer) btnClass += ` ${styles.optionCorrect}`;
+                    else if (isSelected) btnClass += ` ${styles.optionWrong}`;
+
+                    return (
+                      <div key={i} className={btnClass}>
+                        <span className={styles.optionLetter}>{LETRAS[i]}</span>
+                        <span className={styles.optionText}>{opcion}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {mostrarExplicacion && (
+                  <div className={styles.explainBox}>
+                    <div className={styles.explainAnswer}>
+                      ✅ Respuesta Correcta: <strong>{p.correctAnswer}</strong>
+                    </div>
+                    <div className={styles.explainText}>
+                      <strong>Fundamento:</strong> {p.explicacion}
+                    </div>
+                  </div>
                 )}
               </div>
-            </>
+            );
+          })}
+        </div>
+
+        <div className={styles.footerControls}>
+          <button
+            onClick={() => setRevisionPage((pg) => Math.max(0, pg - 1))}
+            disabled={revisionPage === 0}
+            className={styles.navBtn}
+          >
+            ← Página anterior
+          </button>
+          <div className={styles.gridMap}>
+            {Array.from({ length: totalPaginasRevision }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setRevisionPage(i)}
+                className={`${styles.dot} ${i === revisionPage ? styles.dotActive : ""}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setRevisionPage((pg) => Math.min(totalPaginasRevision - 1, pg + 1))}
+            disabled={revisionPage === totalPaginasRevision - 1}
+            className={styles.navBtn}
+          >
+            Página siguiente →
+          </button>
+        </div>
+
+        <div className={styles.resultActions}>
+          <button onClick={() => setModoRevision(false)} className={styles.btnSecondary}>
+            ← Volver al resultado
+          </button>
+          {!passed && (
+            <button onClick={handleRetry} className={styles.btnPrimary}>
+              ↻ Reintentar Examen
+            </button>
           )}
         </div>
       </div>
-    )
+    );
   }
+
+  const currentQ = preguntas[currentIdx];
+  const isLastQuestion = currentIdx === preguntas.length - 1;
 
   return (
     <div className={styles.examContainer}>
       <div className={styles.header}>
         <div>
-          <span className={styles.headerTag}>Examen Final OS-10 — Verdadero / Falso</span>
-          <h3 className={styles.headerTitle}>
-            {cursoTitulo || 'Evaluación de Certificación Final'}
-          </h3>
+          <span className={styles.headerTag}>{tag}</span>
+          <h3 className={styles.headerTitle}>{cursoTitulo}</h3>
         </div>
         <div className={styles.headerProgress}>
           <span className={styles.counter}>
-            Respondidas: {respondidas} / {preguntas.length}
+            Respondidas {respondidas} de {preguntas.length} · Pregunta {currentIdx + 1}
           </span>
           <div className={styles.progressBar}>
             <div
@@ -293,62 +358,37 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
         </div>
       </div>
 
-      {modoDemo && (
-        <div className={styles.demoBox}>
-          <span className={styles.demoBadge}>🧪 MODO DEMO</span>
-          <p className={styles.demoText}>
-            Demostración para clientes: puedes responder el examen normalmente o aprobar de
-            inmediato sin responder.
-          </p>
-          <button onClick={aprobarDemo} className={styles.demoPassBtn}>
-            🏆 Aprobar sin responder (Demo)
-          </button>
-        </div>
-      )}
-
       <AnimatePresence mode="wait">
         <motion.div
-          key={currentPage}
+          key={currentIdx}
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -24 }}
           transition={{ duration: 0.25 }}
+          className={styles.questionCard}
         >
-          <div className={styles.questionsList}>
-            {preguntasPagina.map((p, i) => {
-              const num = currentPage * PREGUNTAS_POR_PAGINA + i + 1
-              const userResp = respuestas[p.id]
+          <div className={styles.questionHeader}>
+            <div className={styles.questionNumber}>{currentIdx + 1}</div>
+            <div className={styles.questionBody}>
+              <p className={styles.questionText}>{currentQ.question}</p>
+              <span className={styles.questionModule}>{currentQ.moduleTitle}</span>
+            </div>
+          </div>
+
+          <div className={styles.optionsGrid}>
+            {currentQ.options.map((opcion, i) => {
+              const isSelected = respuestas[currentQ.id] === opcion;
               return (
-                <div key={p.id} className={styles.questionCard}>
-                  <div className={styles.questionHeader}>
-                    <span className={styles.questionNumber}>{num}</span>
-                    <div className={styles.questionBody}>
-                      <p className={styles.questionText}>{p.afirmacion}</p>
-                      <span className={styles.questionModule}>
-                        {p.tituloModulo} · Módulo {p.modulo}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={styles.vfButtons}>
-                    {p.ordenVF.map((val, k) => (
-                      <button
-                        key={k}
-                        disabled={submitted}
-                        onClick={() => handleSelect(p.id, val)}
-                        className={`${styles.vfBtn} ${
-                          userResp === val
-                            ? val
-                              ? styles.vfVerdaderoSel
-                              : styles.vfFalsoSel
-                            : ''
-                        }`}
-                      >
-                        {val ? '✓ VERDADERO' : '✗ FALSO'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )
+                <button
+                  key={i}
+                  disabled={submitted}
+                  onClick={() => handleSelect(currentQ.id, opcion)}
+                  className={`${styles.optionBtn} ${isSelected ? styles.optionSelected : ""}`}
+                >
+                  <span className={styles.optionLetter}>{LETRAS[i]}</span>
+                  <span className={styles.optionText}>{opcion}</span>
+                </button>
+              );
             })}
           </div>
         </motion.div>
@@ -356,46 +396,35 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
 
       <div className={styles.footerControls}>
         <button
-          onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
-          disabled={currentPage === 0}
+          onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
+          disabled={currentIdx === 0}
           className={styles.navBtn}
         >
           ← Anterior
         </button>
-
         <div className={styles.gridMap}>
-          {Array.from({ length: totalPaginas }).map((_, i) => {
-            const inicio = i * PREGUNTAS_POR_PAGINA
-            const fin = Math.min(inicio + PREGUNTAS_POR_PAGINA, preguntas.length)
-            const respondidasPagina = preguntas
-              .slice(inicio, fin)
-              .filter((p) => respuestas[p.id] !== undefined).length
-            const completa = respondidasPagina === fin - inicio
+          {preguntas.map((q, i) => {
+            const respondida = !!respuestas[q.id];
+            let dotClass = styles.dot;
+            if (respondida) dotClass += ` ${styles.dotAnswered}`;
+            if (currentIdx === i) dotClass += ` ${styles.dotActive}`;
             return (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i)}
-                className={`${styles.dot} ${completa ? styles.dotAnswered : ''} ${
-                  currentPage === i ? styles.dotActive : ''
-                }`}
-                aria-label={`Ir a página ${i + 1}`}
-              >
+              <button key={q.id} onClick={() => setCurrentIdx(i)} className={dotClass}>
                 {i + 1}
               </button>
-            )
+            );
           })}
         </div>
-
-        {currentPage < totalPaginas - 1 ? (
+        {!isLastQuestion ? (
           <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPaginas - 1, p + 1))}
-            className={`${styles.navBtn} ${styles.navBtnPrimary}`}
+            onClick={() => setCurrentIdx((i) => Math.min(preguntas.length - 1, i + 1))}
+            className={styles.navBtnPrimary}
           >
             Siguiente →
           </button>
         ) : (
           <button onClick={attemptSubmit} className={styles.submitBtn}>
-            {isAllAnswered ? 'ENTREGAR EXAMEN' : 'Faltan preguntas por responder'}
+            {allAnswered ? "ENTREGAR EXAMEN" : `Faltan ${preguntas.length - respondidas} por responder`}
           </button>
         )}
       </div>
@@ -405,14 +434,11 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
           <div className={styles.warningModal}>
             <h3>Preguntas sin responder</h3>
             <p>
-              Te quedan {preguntas.length - respondidas} preguntas por responder. Puedes
-              navegar por las páginas del examen para revisarlas. ¿Deseas entregar igualmente?
+              Te quedan {preguntas.length - respondidas} preguntas por responder. Puedes navegar
+              por los números para revisarlas. ¿Deseas entregar igualmente?
             </p>
             <div className={styles.warningBtns}>
-              <button
-                onClick={() => setShowMissingWarning(false)}
-                className={styles.warningBtnSecondary}
-              >
+              <button onClick={() => setShowMissingWarning(false)} className={styles.warningBtnSecondary}>
                 Regresar a revisar
               </button>
               <button onClick={submitExam} className={styles.warningBtnPrimary}>
@@ -423,5 +449,5 @@ export default function FinalExam({ cursoSlug, cursoTitulo, volverHref, modoDemo
         </div>
       )}
     </div>
-  )
+  );
 }

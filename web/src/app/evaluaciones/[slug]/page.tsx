@@ -1,6 +1,16 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import CCTVFinalExam from "@/components/cursos/CCTVFinalExam";
+import FinalExam from "@/components/cursos/FinalExam";
+import {
+  CCTV_QUESTION_BANK,
+  EXAMEN_FINAL_PREGUNTAS_CCTV,
+  EXAMEN_FINAL_UMBRAL_CCTV,
+} from "@/lib/questionBanks/cctv";
+import {
+  BASTON_QUESTION_BANK,
+  EXAMEN_FINAL_PREGUNTAS_BASTON,
+  EXAMEN_FINAL_UMBRAL_BASTON,
+} from "@/lib/questionBanks/baston";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -20,10 +30,30 @@ async function Contenido({ params }: PageProps) {
   if (slug === "operador-cctv-y-alarmas") {
     return (
       <div className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10">
-        <CCTVFinalExam
+        <FinalExam
           cursoSlug={slug}
           cursoTitulo="Curso de Operador de CCTV y Alarmas"
           volverHref={`/materiales/${slug}`}
+          banco={CCTV_QUESTION_BANK}
+          totalPreguntas={EXAMEN_FINAL_PREGUNTAS_CCTV}
+          umbral={EXAMEN_FINAL_UMBRAL_CCTV}
+          tag="Examen Final CCTV"
+        />
+      </div>
+    );
+  }
+
+  if (slug === "baston-y-esposas") {
+    return (
+      <div className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10">
+        <FinalExam
+          cursoSlug={slug}
+          cursoTitulo="Curso de Bastón y Esposas"
+          volverHref={`/materiales/${slug}`}
+          banco={BASTON_QUESTION_BANK}
+          totalPreguntas={EXAMEN_FINAL_PREGUNTAS_BASTON}
+          umbral={EXAMEN_FINAL_UMBRAL_BASTON}
+          tag="Examen Final Bastón y Esposas"
         />
       </div>
     );

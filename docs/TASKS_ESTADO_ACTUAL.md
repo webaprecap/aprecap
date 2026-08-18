@@ -106,6 +106,14 @@
 49. **Verificación**: tsc OK; headless en `/materiales/baston-y-esposas` (banner, 4 módulos, submódulos del M1, iframe YouTube, PDF vía proxy) y `/panel/alumno/certificado` (opción 8 horas). `/panel/alumno` requiere login.
 50. **Pendiente**: commit+push de esta sesión; los MP4 locales del cliente son copias (se usan los links de YouTube).
 
+### N. Quizzes y Examen Final del curso Bastón y Esposas (2026-08-18)
+51. **Banco `baston.ts`**: **33 preguntas** (M1: 12, M2: 9, M3: 6, M4: 6; 3 por submódulo) con fundamentos de calidad (correcta + descarte de distractores), basadas en los 11 MDs del curso. Helpers `getMiniQuizBancoBaston`/`getPreguntasPorModulo`/`getExamenFinalBaston`; constantes 5/20/80.
+52. **Refactor compartido**: `ExamQuestion` → `questionBanks/types.ts`; `seleccionarBalanceadas`/`barajarOpciones` → `questionBanks/helpers.ts`; examen APRECAP unificado en `components/cursos/FinalExam.tsx` (genérico por banco/total/umbral/tag). Se eliminaron `CCTVFinalExam.tsx` y el `FinalExam.tsx` huérfano de OS-10; CCTV mantiene su comportamiento (60/80%, keys localStorage intactas).
+53. **MiniQuiz por módulo**: curso con `banco: "baston"`, 5 preguntas al azar, umbral 60%, fundamento al fallar, flujo video → PDF → quiz con progreso; link sidebar "📝 Examen Final Bastón y Esposas".
+54. **Examen final** `/evaluaciones/baston-y-esposas`: 20 preguntas balanceadas (5 por módulo), umbral 80%, reintentos ilimitados, revisión post-entrega paginada con fundamentos, resultado en `localStorage` (`aprecap_examen_baston-y-esposas_*`).
+55. **Verificación**: tsc OK; 33 preguntas sin defectos (0 vacías, 4 opciones c/u, módulos ≥5); headless OK en examen bastón (20 preguntas), examen CCTV (sin regresión, 60) y materiales bastón (paso quiz + link examen).
+56. **Pendiente**: commit+push de esta sesión.
+
 ### G. Curso Bastón y Esposas — MDs listos (nuevo)
 22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
     - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).
