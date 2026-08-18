@@ -98,6 +98,14 @@
 43. **Verificación**: tsc OK; 14 bancos con 10 + 20 (420 en total) y 0 explicaciones vacías; muestreo por archivo sin textos genéricos; cuestionarios oficiales y examen CCTV intactos (`FinalExam.tsx` de OS-10 quedó huérfano: solo `CCTVFinalExam` se renderiza en `/evaluaciones/[slug]`).
 44. **Pendiente**: commit+push de esta sesión.
 
+### M. Curso Bastón y Esposas montado en la plataforma (2026-08-18)
+45. **Materiales del cliente**: `C:\Users\Vickoto\Downloads\baston y esposas aprecap\` (4 carpetas de módulo, 11 MP4 + 11 PDFs + `videos modulos.txt` con los links de YouTube).
+46. **11 PDFs subidos a Sanity** (`mwwotgjc/production`) con `scripts/upload-baston-pdfs-sanity.mjs` (idempotente, mapeo local `scripts/sanity-baston-pdf-urls.json`; los PDFs no tienen capa de texto, emparejados con videos por nombre de carpeta).
+47. **Curso `baston-y-esposas` en `materiales-estudio.ts`**: 4 módulos / 11 submódulos (nombres de los MDs), `videoUrl` YouTube + `pdfUrl` Sanity, flujo **video → PDF → completado** sin quiz (decisión del cliente): 1.1 DPP · 1.2 Tiempo-Distancia · 1.3 Conciencia Situacional · 1.4 Legítima Defensa · 2.1 Comunicación/Desescalada · 2.2 Palancas y Torsiones · 2.3 Técnicas vs Tácticas · 3.1 Línea de Evolución · 3.2 Marco Legal · 4.1 Bastón Telescópico · 4.2 Esposas.
+48. **Panel alumno**: 5ª tarjeta "Curso Bastón y Esposas" (🥋) → `/materiales/baston-y-esposas`. **Diploma**: "CURSO DE BASTÓN Y ESPOSAS · 8 horas" agregado a `CURSOS_CERTIFICADO`.
+49. **Verificación**: tsc OK; headless en `/materiales/baston-y-esposas` (banner, 4 módulos, submódulos del M1, iframe YouTube, PDF vía proxy) y `/panel/alumno/certificado` (opción 8 horas). `/panel/alumno` requiere login.
+50. **Pendiente**: commit+push de esta sesión; los MP4 locales del cliente son copias (se usan los links de YouTube).
+
 ### G. Curso Bastón y Esposas — MDs listos (nuevo)
 22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
     - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).

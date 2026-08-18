@@ -759,5 +759,109 @@ export const materialesEstudio: CursoMaterial[] = [
         ]
       }
     ]
+  },
+  {
+    slug: "baston-y-esposas",
+    title: "Curso de Bastón y Esposas",
+    categoria: "Técnicas de Control y Defensa Personal",
+    modulos: [
+      {
+        nombre: "Módulo 1: Defensa Personal Policial",
+        subModulos: [
+          {
+            id: "baston-1-1",
+            codigo: "1.1",
+            nombre: "Defensa Personal Policial y Factor Sorpresa",
+            videoUrl: "https://youtu.be/6YCBsH29R9s",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/33987fa1ae1e3505da3e371f8dcf2203721b9b9c.pdf"
+          },
+          {
+            id: "baston-1-2",
+            codigo: "1.2",
+            nombre: "Tiempo, Distancia y Distancia Preventiva",
+            videoUrl: "https://youtu.be/n7VQspOgJYw",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/14d4eb95bf840afe813b128f9ed567a2f8945585.pdf"
+          },
+          {
+            id: "baston-1-3",
+            codigo: "1.3",
+            nombre: "Conciencia Situacional y Aplicación",
+            videoUrl: "https://youtu.be/IbCYF_MTHWM",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c01d90de6bd99765e1279cbec41ca99bada7ac5e.pdf"
+          },
+          {
+            id: "baston-1-4",
+            codigo: "1.4",
+            nombre: "Legítima Defensa",
+            videoUrl: "https://youtu.be/WVBOoEUrees",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/3c0242a96e097fa4f963269d696b8be4fcbdab92.pdf"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 2: Comunicación y Técnicas de Control",
+        subModulos: [
+          {
+            id: "baston-2-1",
+            codigo: "2.1",
+            nombre: "Comunicación Persuasiva y Desescalada",
+            videoUrl: "https://youtu.be/nHXye4YVCpg",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/0c9a01687c7d2c2de6f7cdd7c96923f13b66944f.pdf"
+          },
+          {
+            id: "baston-2-2",
+            codigo: "2.2",
+            nombre: "Palancas y Torsiones",
+            videoUrl: "https://youtu.be/RppFH2g-AwE",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/150a996404ee96594323db59c54392e4844a11c8.pdf"
+          },
+          {
+            id: "baston-2-3",
+            codigo: "2.3",
+            nombre: "Técnicas vs Tácticas",
+            videoUrl: "https://youtu.be/nCcOtL8oTks",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/6a287083a6e4d400de2c34450eb7b0d768f85280.pdf"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 3: Uso de la Fuerza y Marco Legal",
+        subModulos: [
+          {
+            id: "baston-3-1",
+            codigo: "3.1",
+            nombre: "Línea de Evolución y Niveles de Uso de la Fuerza",
+            videoUrl: "https://youtu.be/2La8Un0FRb0",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/1c0b5a64e394660613a80152402366e27f3ba712.pdf"
+          },
+          {
+            id: "baston-3-2",
+            codigo: "3.2",
+            nombre: "Marco Legal (Ley 21.659 y Decreto 209)",
+            videoUrl: "https://youtu.be/JmG9mIF9IQA",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/87593684512166b2bc530f953c33bc64f4cc7740.pdf"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 4: Implementos (Bastón y Esposas)",
+        subModulos: [
+          {
+            id: "baston-4-1",
+            codigo: "4.1",
+            nombre: "Bastón Telescópico: Partes y Zonas de Golpeo",
+            videoUrl: "https://youtu.be/rzlK94mwXXA",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c812e3de5fa4c52c5665a6ac5919d1d11d8e8c75.pdf"
+          },
+          {
+            id: "baston-4-2",
+            codigo: "4.2",
+            nombre: "Esposas: Partes, Tipos y Uso",
+            videoUrl: "https://youtu.be/JsiJ_fQyLE4",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/0530588c7c3285ff445adc2261f01364145f182f.pdf"
+          }
+        ]
+      }
+    ]
   }
 ];

@@ -313,6 +313,29 @@ export default function PanelAlumno() {
                 </div>
               </div>
 
+              {/* CURSO 5: BASTÓN Y ESPOSAS */}
+              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl mb-2">🥋</div>
+                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
+                  </div>
+                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Bastón y Esposas</h3>
+                  <p className="mt-1 text-xs text-gray-600">
+                    Técnicas de control, defensa personal y uso racional de la fuerza (4 Módulos).
+                  </p>
+                </div>
+
+                <div className="mt-6">
+                  <Link
+                    href="/materiales/baston-y-esposas"
+                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
+                  >
+                    ENTRAR AL CURSO BASTÓN Y ESPOSAS
+                  </Link>
+                </div>
+              </div>
+
               {/* CURSO 3: SUPERVISOR DE SEGURIDAD */}
               <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                 <div>

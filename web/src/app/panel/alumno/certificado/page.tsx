@@ -25,6 +25,11 @@ const CURSOS_CERTIFICADO = [
     nombre: "CURSO DE JEFE DE SEGURIDAD PRIVADA",
     horas: "140",
   },
+  {
+    slug: "baston-y-esposas",
+    nombre: "CURSO DE BASTÓN Y ESPOSAS",
+    horas: "8",
+  },
 ];
 
 function fechaHoyLarga(): string {

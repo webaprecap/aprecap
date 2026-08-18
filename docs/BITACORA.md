@@ -159,3 +159,15 @@
   - Se mantuvieron intactos `id`, `pregunta`/`afirmacion`, `opciones` y `respuestaCorrecta` (solo cambió `explicacion`).
 - **Verificación**: tsc OK; 14 bancos con 10 alternativas + 20 V/F (420 en total), 0 explicaciones vacías; muestreo de las 30 preguntas por archivo confirma fundamentos sustantivos y ningún texto genérico; examen OS-10 y cuestionarios intactos (el componente `FinalExam.tsx` antiguo quedó huérfano: solo `CCTVFinalExam` se usa en `/evaluaciones/[slug]`).
 - **Pendiente**: commit+push de esta sesión, borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.
+
+## Sesión 2026-08-18 (6) · Curso Bastón y Esposas montado en la plataforma (11 submódulos)
+- **Materiales del cliente**: `C:\Users\Vickoto\Downloads\baston y esposas aprecap\` con 4 carpetas de módulo (11 MP4 + 11 PDFs) y lista de links de YouTube en `videos modulos.txt`.
+- **11 PDFs subidos a Sanity** (`mwwotgjc/production`) con nuevo script idempotente `scripts/upload-baston-pdfs-sanity.mjs` (mapeo local `scripts/sanity-baston-pdf-urls.json`, fuera de git por `scripts/*.json`). Los PDFs no tienen capa de texto (extracción pypdf vacía); se emparejaron con videos por nombre dentro de cada carpeta.
+- **Curso en plataforma** (`web/src/data/materiales-estudio.ts`): slug `baston-y-esposas`, 4 módulos / **11 submódulos** con `videoUrl` (YouTube del cliente) + `pdfUrl` (Sanity), flujo **video → PDF → completado** (sin banco, sin MiniQuiz, decisión del cliente):
+  - M1 Defensa Personal Policial: 1.1 DPP y Factor Sorpresa (6YCBsH29R9s / Professional_Physical_Defense_Tactics) · 1.2 Tiempo-Distancia (n7VQspOgJYw / Tactical_Distance_Management) · 1.3 Conciencia Situacional (IbCYF_MTHWM / Estrategias_de_Seguridad_Preventiva) · 1.4 Legítima Defensa (WVBOoEUrees / Marco_Legal_de_la_Legítima_Defensa).
+  - M2 Comunicación y Técnicas de Control: 2.1 Comunicación Persuasiva y Desescalada (nHXye4YVCpg / APRECAP_Tactical_De-escalation) · 2.2 Palancas y Torsiones (RppFH2g-AwE / APRECAP_Secure_Apprehension_Manual) · 2.3 Técnicas vs Tácticas (nCcOtL8oTks / Tactical_Defense_Mastery).
+  - M3 Uso de la Fuerza y Marco Legal: 3.1 Línea de Evolución y Niveles (2La8Un0FRb0 / Protocolo_de_Uso_de_la_Fuerza) · 3.2 Marco Legal Ley 21.659/D.S. 209 (JmG9mIF9IQA / Marco_Legal_Seguridad_Privada).
+  - M4 Implementos: 4.1 Bastón Telescópico (rzlK94mwXXA / Tactical_Baton_Protocol) · 4.2 Esposas (JsiJ_fQyLE4 / Protocolo_Técnico_de_Grilletes).
+- **Panel alumno**: 5ª tarjeta "Curso Bastón y Esposas" (🥋) → `/materiales/baston-y-esposas`. **Diploma**: entrada "CURSO DE BASTÓN Y ESPOSAS · 8 horas" en `CURSOS_CERTIFICADO`.
+- **Verificación**: tsc OK; Chrome headless en `/materiales/baston-y-esposas` (banner, 4 módulos, 4 submódulos visibles del M1 expandido, iframe YouTube del video activo, PDF Sanity vía proxy) y en `/panel/alumno/certificado` (opción "CURSO DE BASTÓN Y ESPOSAS (8 horas)"). `/panel/alumno` requiere login (tarjeta verificada por tsc + patrón de las otras 4).
+- **Pendiente**: commit+push de esta sesión, borrado manual de assets viejos M1 (opcional), prueba manual de Zoom.
