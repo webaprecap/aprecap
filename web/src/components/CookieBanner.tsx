@@ -37,7 +37,7 @@ export default function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[70] p-4">
+    <div className="fixed inset-x-0 bottom-0 z-[70] p-4 print:hidden">
       <div className="mx-auto max-w-3xl rounded-2xl border border-gray-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start gap-3">
           <span className="text-2xl">🍪</span>

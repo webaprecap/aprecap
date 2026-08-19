@@ -7,13 +7,18 @@ export const SITE_TAGLINE =
 export const CONTACTO: DatosContacto = {
   direccion: "Santo Domingo 1160, oficina 407",
   metro: "Metro Plaza de Armas, salida línea 3, Catedral con Bandera",
-  telefono: "+569 5402 4935",
-  telefono2: "+562 24367 0572",
-  whatsapp: "+569 5402 4935",
-  whatsappLink: "https://wa.me/56954024935",
+  telefono: "+56 9 6504 2143",
+  telefono2: "+56 9 6504 2143",
+  whatsapp: "+56 9 6504 2143",
+  whatsappLink: "https://wa.me/56965042143",
   email: "contacto@institutoaprecap.cl",
   email2: "contacto@aprecap.cl",
   horario: "Lunes a viernes, 09:00 a 17:00 hrs",
+};
+
+export const REDES_SOCIALES = {
+  instagram: "https://www.instagram.com/aprecapcapacitaciones/",
+  facebook: "https://www.facebook.com/p/Aprecap-Capacitaciones-61551079025667/",
 };
 
 export const NAV_LINKS = [
@@ -24,3 +29,4 @@ export const NAV_LINKS = [
   { href: "/blog", label: "Blog" },
   { href: "/contacto", label: "Contacto" },
 ];
+

@@ -153,6 +153,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         found = { ...found, uid: u.uid };
       }
 
+      // Si el email tiene un rol administrativo por configuración y su doc no lo tenía, actualizar
+      const expectedRole = roleForEmail(email);
+      if (expectedRole && found && found.rol !== expectedRole) {
+        found = { ...found, rol: expectedRole, activo: true };
+        await setDoc(doc(db, "usuarios", found.uid || u.uid), { rol: expectedRole, activo: true }, { merge: true }).catch(() => {});
+      }
+
       setUserData(found);
       setError(null);
     },

@@ -20,3 +20,92 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-33.333333%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+  display: flex;
+}
+
+/* ==========================================================================
+   ESTILOS DE IMPRESIÓN EXCLUSIVA DE DIPLOMAS / CERTIFICADOS
+   ========================================================================== */
+@media print {
+  @page {
+    size: landscape;
+    margin: 6mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ocultar todos los elementos de navegación, botones flotantes y WhatsApp */
+  header,
+  footer,
+  aside,
+  nav,
+  button,
+  input,
+  select,
+  textarea,
+  a[aria-label*="WhatsApp"],
+  a[href*="wa.me"],
+  .fixed,
+  .no-print,
+  .print\:hidden {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Mostrar exclusivamente el diploma ocupando toda la hoja horizontal */
+  #diploma-impresion {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #diploma-impresion * {
+    visibility: visible !important;
+  }
+
+  #diploma-impresion .border-4 {
+    border-width: 3.5px !important;
+    padding: 14px 20px !important;
+  }
+}
+
+

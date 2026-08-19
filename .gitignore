@@ -20,11 +20,12 @@ scripts/*.json
 .env
 .env.local
 .env.*.local
+docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md
 
 # Contenido rescatado y videos (respaldo local del cliente, no se sube)
 content/
 
-# Logo descargado en la raíz (se regenera con el script); el de web/ se sube
+# Logo descargado en la raÃ­z (se regenera con el script); el de web/ se sube
 /public/logo/
 
 # PDFs generados localmente
@@ -41,5 +42,5 @@ Thumbs.db
 npm-debug.log*
 pnpm-debug.log*
 
-# Media del curso OS-10 (videos/PDFs del cliente, respaldo local; se subir�n a Sanity)
+# Media del curso OS-10 (videos/PDFs del cliente, respaldo local; se subirán a Sanity)
 web/public/materiales/

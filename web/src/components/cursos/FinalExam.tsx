@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
+import { getFirestoreDb } from "@/lib/firebase";
 import ResultadoExamen from "./ResultadoExamen";
 import { barajarOpciones, seleccionarBalanceadas } from "@/lib/questionBanks/helpers";
 import type { ExamQuestion } from "@/lib/questionBanks/types";
@@ -53,6 +56,7 @@ export default function FinalExam({
   umbral,
   tag,
 }: FinalExamProps) {
+  const { user, userData } = useAuth();
   const [preguntas] = useState<ExamQuestion[]>(() =>
     seleccionarBalanceadas(banco, totalPreguntas).map(barajarOpciones)
   );
@@ -79,7 +83,7 @@ export default function FinalExam({
     else setShowMissingWarning(true);
   };
 
-  const submitExam = () => {
+  const submitExam = async () => {
     let correctCount = 0;
     for (const p of preguntas) {
       if (respuestas[p.id] === p.correctAnswer) correctCount++;
@@ -98,6 +102,28 @@ export default function FinalExam({
       localStorage.setItem(`aprecap_examen_${cursoSlug}_aprobado`, aprobado ? "true" : "false");
     } catch {
       /* localStorage no disponible */
+    }
+
+    const db = getFirestoreDb();
+    if (db && user) {
+      try {
+        await addDoc(collection(db, "resultados_evaluaciones"), {
+          userId: user.uid,
+          nombreUsuario: userData?.nombre || user.displayName || "Alumno",
+          userEmail: user.email || "",
+          userRut: userData?.rut || "",
+          courseSlug: cursoSlug,
+          moduloNombre: `Examen Final - ${cursoTitulo}`,
+          correctas: correctCount,
+          total: preguntas.length,
+          porcentaje: pct,
+          aprobado,
+          esExamenFinal: true,
+          fecha: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("Error guardando examen final en Firestore:", err);
+      }
     }
 
     if (aprobado) {

@@ -1,8 +1,13 @@
 "use client";
 
-import { Suspense, use, useState } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
+import { getFirestoreDb } from "@/lib/firebase";
+import { canAccessCourse, getCourseFieldKey, getCourseStatus } from "@/lib/courseAccess";
+import CursoAccessGate from "@/components/CursoAccessGate";
 import CuestionarioVFView from "@/components/cuestionarios/CuestionarioVFView";
 import { getCuestionarios } from "@/data/cuestionarios";
 import type { PreguntaCuestionario } from "@/data/cuestionarios";
@@ -21,12 +26,60 @@ export default function CuestionariosPage({ params }: PageProps) {
 
 function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const { user, userData, loading: authLoading } = useAuth();
+  const [enrollments, setEnrollments] = useState<{ courseSlug?: string }[]>([]);
+  const [solicitando, setSolicitando] = useState(false);
   const [activoIdx, setActivoIdx] = useState(0);
 
   const cursoCuestionarios = getCuestionarios(slug);
 
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db || !user) return;
+    const q = query(collection(db, "enrollments"), where("uid", "==", user.uid));
+    const unsub = onSnapshot(q, (snap) => {
+      setEnrollments(snap.docs.map((d) => ({ courseSlug: d.data().courseSlug })));
+    });
+    return unsub;
+  }, [user]);
+
+  const handleRequestAccess = async () => {
+    if (!user) return;
+    setSolicitando(true);
+    try {
+      const db = getFirestoreDb();
+      if (db) {
+        const fieldKey = getCourseFieldKey(slug);
+        await updateDoc(doc(db, "usuarios", user.uid), {
+          [fieldKey]: "pendiente",
+        });
+      }
+    } catch (err) {
+      console.error("Error solicitando acceso:", err);
+    } finally {
+      setSolicitando(false);
+    }
+  };
+
   if (!cursoCuestionarios) {
     notFound();
+  }
+
+  // Verificación de acceso
+  const status = getCourseStatus(userData, slug, enrollments);
+  const hasAccess = canAccessCourse(userData, slug, enrollments);
+
+  if (!authLoading && !hasAccess) {
+    return (
+      <CursoAccessGate
+        cursoTitulo={cursoCuestionarios.titulo}
+        cursoSlug={slug}
+        status={status}
+        isNotLoggedIn={!user}
+        solicitando={solicitando}
+        onRequestAccess={handleRequestAccess}
+      />
+    );
   }
 
   const activo = cursoCuestionarios.cuestionarios[activoIdx] ?? cursoCuestionarios.cuestionarios[0];

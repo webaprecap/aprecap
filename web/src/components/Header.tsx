@@ -2,24 +2,46 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { NAV_LINKS } from "@/data/site";
 import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "./Logo";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const { userData, loading } = useAuth();
+  const { userData, loading, signOut } = useAuth();
+  const router = useRouter();
   const sesionActiva = !loading && !!userData;
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/login");
+  };
 
   const loginBtn = (
     <>
       {sesionActiva ? (
-        <Link
-          href="/panel"
-          className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white transition hover:bg-apre-blue-light"
-        >
-          Mi Panel {userData.nombre?.split(" ")[0] ? `· ${userData.nombre.split(" ")[0]}` : ""}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/panel"
+            className="flex items-center gap-1.5 rounded-lg bg-apre-blue px-3.5 py-2 text-sm font-bold text-white transition hover:bg-apre-blue-light shadow-sm"
+          >
+            <span>👤</span>
+            <span>Mi Panel</span>
+            {userData.nombre?.split(" ")[0] && (
+              <span className="opacity-85 font-normal">· {userData.nombre.split(" ")[0]}</span>
+            )}
+          </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="Cerrar sesión"
+            className="flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-600 transition hover:bg-red-100 hover:border-red-300"
+          >
+            <span>🚪</span>
+            <span className="hidden sm:inline">Salir</span>
+          </button>
+        </div>
       ) : (
         <Link
           href="/login"
@@ -32,7 +54,7 @@ export default function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur print:hidden">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
         <Logo />
 
@@ -46,12 +68,6 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/prueba-felicitaciones"
-            className="text-xs font-bold text-apre-red/60 transition hover:text-apre-red"
-          >
-            🧪 Vista previa exámenes
-          </Link>
           <Link
             href="/contacto"
             className="rounded-lg bg-apre-red px-4 py-2 text-sm font-bold text-white transition hover:bg-apre-red-dark"
@@ -91,13 +107,6 @@ export default function Header() {
           ))}
           <div className="mt-3 grid gap-2">
             <Link
-              href="/prueba-felicitaciones"
-              onClick={() => setOpen(false)}
-              className="block rounded-lg border border-gray-200 px-4 py-2 text-center text-sm font-bold text-apre-red/70"
-            >
-              🧪 Vista previa exámenes
-            </Link>
-            <Link
               href="/contacto"
               onClick={() => setOpen(false)}
               className="block rounded-lg bg-apre-red px-4 py-2 text-center text-sm font-bold text-white"
@@ -105,13 +114,25 @@ export default function Header() {
               Inscribirme
             </Link>
             {sesionActiva ? (
-              <Link
-                href="/panel"
-                onClick={() => setOpen(false)}
-                className="block rounded-lg bg-apre-blue px-4 py-2 text-center text-sm font-bold text-white"
-              >
-                Mi Panel
-              </Link>
+              <>
+                <Link
+                  href="/panel"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-lg bg-apre-blue px-4 py-2.5 text-center text-sm font-bold text-white"
+                >
+                  <span>👤</span> Mi Panel {userData.nombre?.split(" ")[0] ? `(${userData.nombre.split(" ")[0]})` : ""}
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    handleLogout();
+                  }}
+                  className="flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-center text-sm font-bold text-red-600 hover:bg-red-100 hover:border-red-300"
+                >
+                  <span>🚪</span> Cerrar sesión
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"

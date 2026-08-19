@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
+import NuestraEsenciaCards from "@/components/NuestraEsenciaCards";
 
 export const metadata: Metadata = {
   title: "Carta del Director — OTEC APRECAP",
@@ -169,57 +170,18 @@ export default function CartaDirectorPage() {
         </div>
       </section>
 
-      <section className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-3xl font-extrabold text-apre-blue">
-            Nuestra Esencia
-          </h2>
-          <p className="mt-2 max-w-3xl text-gray-600">
-            Nos guía el respeto por las personas: creemos en una seguridad
-            privada que protege derechos, dignidad y convivencia.
+      {/* Nuestra Esencia en 4 Cards */}
+      <NuestraEsenciaCards />
+
+      <section className="bg-white py-12 border-t border-gray-100">
+        <div className="mx-auto max-w-6xl px-4 text-center">
+          <h3 className="text-2xl font-extrabold text-apre-blue">
+            Conoce nuestra oferta académica
+          </h3>
+          <p className="mt-2 text-sm text-gray-600">
+            Cursos presenciales y online con certificación oficial y validación legal en todo Chile.
           </p>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-2xl border border-gray-200 bg-white p-8">
-              <span className="text-xs font-black uppercase tracking-widest text-apre-red">
-                Misión
-              </span>
-              <p className="mt-3 leading-relaxed text-gray-700">
-                Formar profesionales de la seguridad privada con excelencia
-                técnica y un profundo respeto por los{" "}
-                <strong>derechos humanos</strong>, la{" "}
-                <strong>dignidad de las personas</strong> y el Estado de
-                Derecho, entregando herramientas, experiencia y valores para
-                desempeñarse con seguridad, responsabilidad y profesionalismo.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-8">
-              <span className="text-xs font-black uppercase tracking-widest text-apre-red">
-                Visión
-              </span>
-              <p className="mt-3 leading-relaxed text-gray-700">
-                Llegar a ser líderes en la capacitación y asesoría de seguridad
-                privada, reconocidos por formar profesionales íntegros que
-                protegen a las personas, sus bienes e información con{" "}
-                <strong>responsabilidad, respeto y compromiso social</strong>,
-                contribuyendo a un país más seguro y equitativo.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-8">
-              <span className="text-xs font-black uppercase tracking-widest text-apre-red">
-                Valores
-              </span>
-              <p className="mt-3 leading-relaxed text-gray-700">
-                Nos guían la <strong>honestidad</strong>, la{" "}
-                <strong>transparencia</strong>, la{" "}
-                <strong>responsabilidad social</strong> y la{" "}
-                <strong>inclusión</strong>. Promovemos el respeto por los
-                derechos humanos y la dignidad de todas las personas,{" "}
-                <strong>rechazando toda forma de discriminación</strong>, y la
-                mejora continua como pilar de nuestra cultura.
-              </p>
-            </div>
-          </div>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-6 flex justify-center gap-4">
             <Boton href="/cursos" variant="red">
               Ver nuestros cursos
             </Boton>
@@ -230,3 +192,4 @@ export default function CartaDirectorPage() {
     </>
   );
 }
+

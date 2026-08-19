@@ -16,6 +16,11 @@ export default function PanelProfesor() {
   const router = useRouter();
   const [tab, setTab] = useState<"reuniones" | "alumnos">("reuniones");
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/login");
+  };
+
   useEffect(() => {
     if (!loading && (!userData || userData.rol !== "profesor")) {
       router.push("/login");
@@ -37,10 +42,12 @@ export default function PanelProfesor() {
             </h1>
           </div>
           <button
-            onClick={() => signOut()}
-            className="rounded-xl bg-white/10 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/20"
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/20 shadow-xs"
           >
-            Cerrar sesión
+            <span>🚪</span>
+            <span>Cerrar sesión</span>
           </button>
         </div>
         <div className="mx-auto max-w-6xl px-4">
@@ -82,6 +89,22 @@ export default function PanelProfesor() {
             </Link>
           </div>
 
+          {/* Barra de sesión y salida */}
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+            <div>
+              <p className="text-sm font-bold text-apre-blue">Sesión de Profesor Activa</p>
+              <p className="text-xs text-gray-500">{userData.nombre} ({userData.email})</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-600 transition hover:bg-red-100 hover:border-red-300 shadow-xs"
+            >
+              <span>🚪</span>
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+
           <PrivacidadPanel />
         </div>
       </section>
@@ -90,8 +113,8 @@ export default function PanelProfesor() {
   );
 }
 
-/* ---------- Clase activa iniciada por el admin ---------- */
-function ClaseActivaProfesor() {
+/* ---------- Clases en vivo iniciadas por el admin ---------- */
+function ReunionesProfesor() {
   const db = getFirestoreDb();
   const [clases, setClases] = useState<any[]>([]);
 
@@ -103,155 +126,50 @@ function ClaseActivaProfesor() {
     );
   }, [db]);
 
-  if (clases.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-6 text-center">
-        <p className="text-gray-600">
-          No hay clases en vivo. Cuando el administrador inicie una clase,
-          aparecerá aquí con su enlace.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-3">
-      {clases.map((c) => (
-        <div
-          key={c.id}
-          className="relative rounded-2xl border-2 border-whatsapp bg-white p-5"
-        >
-          <span className="absolute -top-2 right-4 animate-pulse rounded-full bg-whatsapp px-2 py-0.5 text-xs font-bold text-white">
-            🔴 EN VIVO
-          </span>
-          <p className="font-extrabold text-apre-blue">{c.nombre}</p>
-          {c.descripcion && <p className="mt-1 text-sm text-gray-600">{c.descripcion}</p>}
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <a
-              href={c.joinUrl || "/contacto"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg bg-whatsapp px-4 py-2 text-sm font-bold text-white"
-            >
-              Unirse a la clase
-            </a>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ---------- Reuniones Zoom ---------- */
-function ReunionesProfesor() {
-  const [meetings, setMeetings] = useState<any[]>([]);
-  const [form, setForm] = useState({ topic: "", start_time: "", duration: "60" });
-  const [msg, setMsg] = useState("");
-  const [busy, setBusy] = useState(false);
-
-  const cargar = useCallback(() => {
-    fetch("/api/zoom", { method: "GET" })
-      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) setMeetings(data.meetings ?? []);
-        else setMsg(data.error || "Error al listar reuniones");
-      })
-      .catch(() => setMsg("Zoom no configurado aún (falta la app Server-to-Server)."));
-  }, []);
-
-  useEffect(() => {
-    cargar();
-  }, [cargar]);
-
-  const crear = async () => {
-    setBusy(true);
-    setMsg("");
-    try {
-      const res = await fetch("/api/zoom", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setMsg(`Reunión creada: ${data.join_url}`);
-        setForm({ topic: "", start_time: "", duration: "60" });
-        cargar();
-      } else {
-        setMsg(data.error || "Error al crear reunión");
-      }
-    } catch {
-      setMsg("Zoom no configurado aún (falta la app Server-to-Server).");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   return (
     <div className="space-y-6">
-      <ClaseActivaProfesor />
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="text-xl font-extrabold text-apre-blue">Crear clase en vivo</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <input
-            value={form.topic}
-            onChange={(e) => setForm({ ...form, topic: e.target.value })}
-            placeholder="Tema de la clase (ej. Módulo 1: Legislación)"
-            className="rounded-xl border border-gray-300 px-4 py-3 text-sm sm:col-span-2"
-          />
-          <input
-            type="datetime-local"
-            value={form.start_time}
-            onChange={(e) => setForm({ ...form, start_time: e.target.value })}
-            className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
-          />
-          <input
-            value={form.duration}
-            onChange={(e) => setForm({ ...form, duration: e.target.value })}
-            placeholder="Duración (min)"
-            className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
-          />
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
+        <div className="inline-flex items-center gap-2 rounded-full bg-apre-pink/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-pink">
+          <span>📹</span> Sala de Clases en Vivo
         </div>
-        <button
-          onClick={crear}
-          disabled={busy}
-          className="mt-4 rounded-xl bg-apre-pink px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
-        >
-          {busy ? "Creando…" : "Crear clase"}
-        </button>
-        {msg && <p className="mt-3 text-sm text-gray-600">{msg}</p>}
+        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Transmisión de Clases Virtuales</h2>
+        <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+          Las salas virtuales son abiertas y gestionadas directamente por la administración de APRECAP.
+          Cuando la clase sea iniciada por el administrador, aparecerá a continuación para que puedas unirte como docente.
+        </p>
       </div>
 
       <div className="space-y-3">
-        {meetings.map((m) => (
+        {clases.map((c) => (
           <div
-            key={m.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5"
+            key={c.id}
+            className="relative rounded-2xl border-2 border-whatsapp bg-white p-6 shadow-md"
           >
-            <div>
-              <p className="font-extrabold text-apre-blue">{m.topic}</p>
-              <p className="text-sm text-gray-600">
-                {m.start_time ? new Date(m.start_time).toLocaleString("es-CL") : "Sin fecha"} ·{" "}
-                {m.duration} min
-              </p>
-            </div>
-            {m.join_url && (
-              <a
-                href={m.join_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg bg-whatsapp px-4 py-2 text-sm font-bold text-white"
+            <span className="absolute -top-3 right-4 animate-pulse rounded-full bg-whatsapp px-3 py-0.5 text-xs font-black text-white shadow-sm">
+              🔴 EN VIVO (SALA ABIERTA)
+            </span>
+            <p className="font-extrabold text-apre-blue text-lg">{c.nombre}</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Curso: <strong>{c.cursoSlug || "Todos los cursos (Global)"}</strong>
+            </p>
+            {c.descripcion && <p className="mt-2 text-xs text-gray-600 leading-relaxed">{c.descripcion}</p>}
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Link
+                href={`/aula-en-vivo?id=${c.id}`}
+                className="rounded-xl bg-whatsapp px-5 py-3 text-xs font-black text-white transition hover:brightness-105 shadow-sm inline-flex items-center gap-2"
               >
-                Unirse
-              </a>
-            )}
+                <span>🚀</span>
+                <span>Entrar al Aula Virtual como Docente</span>
+              </Link>
+            </div>
           </div>
         ))}
-        {meetings.length === 0 && (
-          <p className="text-gray-500">
-            Sin clases programadas. (Requiere ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID y
-            ZOOM_CLIENT_SECRET en .env)
-          </p>
+        {clases.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
+            <p className="text-gray-600 text-xs">
+              No hay clases en vivo activas en este momento. Cuando la administración inicie una sesión, aparecerá aquí automáticamente.
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -41,7 +41,7 @@ service cloud.firestore {
           request.resource.data.email == request.auth.token.email &&
           (
             request.resource.data.rol in ['alumno', 'profesor'] ||
-            (request.resource.data.rol == 'admin' && request.auth.token.email == 'web.aprecap@gmail.com') ||
+            (request.resource.data.rol == 'admin' && request.auth.token.email in ['web.aprecap@gmail.com', 'conysaavedra.o@gmail.com', 'erciosaavedra@gmail.com']) ||
             (request.resource.data.rol == 'superadmin' && request.auth.token.email == 'contacto.digitalup@gmail.com')
           )
         )

@@ -34,15 +34,10 @@ export default function ContactoPage() {
               <p className="mt-1 text-sm text-gray-500">{CONTACTO.metro}</p>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
-              <h2 className="font-extrabold text-apre-blue">Teléfonos</h2>
-              <p className="mt-2 text-gray-700">
+              <h2 className="font-extrabold text-apre-blue">Teléfono de Contacto</h2>
+              <p className="mt-2 text-gray-700 font-semibold">
                 <a href={`tel:${CONTACTO.telefono.replace(/\s/g, "")}`} className="hover:text-apre-red">
                   {CONTACTO.telefono}
-                </a>
-              </p>
-              <p className="mt-1 text-gray-700">
-                <a href={`tel:${CONTACTO.telefono2.replace(/\s/g, "")}`} className="hover:text-apre-red">
-                  {CONTACTO.telefono2}
                 </a>
               </p>
             </div>
@@ -57,6 +52,28 @@ export default function ContactoPage() {
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
               <h2 className="font-extrabold text-apre-blue">Horario</h2>
               <p className="mt-2 text-gray-700">{CONTACTO.horario}</p>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+              <h2 className="font-extrabold text-apre-blue">Redes Sociales</h2>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <a
+                  href="https://www.instagram.com/aprecapcapacitaciones/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-xl bg-pink-50 border border-pink-200 px-3.5 py-2 text-xs font-bold text-pink-700 hover:bg-pink-100 transition"
+                >
+                  <span>📷</span> Instagram
+                </a>
+                <a
+                  href="https://www.facebook.com/p/Aprecap-Capacitaciones-61551079025667/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200 px-3.5 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100 transition"
+                >
+                  <span>👥</span> Facebook
+                </a>
+              </div>
             </div>
           </div>
 

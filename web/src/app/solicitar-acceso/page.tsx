@@ -6,8 +6,10 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirebaseAuth, getFirestoreDb } from "@/lib/firebase";
 import { collection, addDoc, query, where, getDocs, serverTimestamp } from "firebase/firestore";
+import { formatRut, validateRut } from "@/lib/rut";
+import { CURSOS_LISTA } from "@/lib/courseAccess";
 
-const SOLICITUD_VERSION = "v1.0-Ley21719";
+const SOLICITUD_VERSION = "v1.1-Ley21719-RUT";
 
 export default function SolicitarAccesoPage() {
   const { user, userData, loading, signInGoogle } = useAuth();
@@ -17,8 +19,10 @@ export default function SolicitarAccesoPage() {
     nombres: "",
     apellidoPaterno: "",
     apellidoMaterno: "",
+    rut: "",
     telefono: "",
     tipoSolicitud: "alumno",
+    cursoDeseado: "guardia-de-seguridad",
     mensaje: "",
   });
   const [consentimientoDatos, setConsentimientoDatos] = useState(false);
@@ -39,6 +43,11 @@ export default function SolicitarAccesoPage() {
     }
   }, [userData, loading, router]);
 
+  const handleRutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatRut(e.target.value);
+    setForm((prev) => ({ ...prev, rut: formatted }));
+  };
+
   const handleSubmit = async () => {
     setErr("");
     if (!user) {
@@ -49,13 +58,20 @@ export default function SolicitarAccesoPage() {
       !form.nombres.trim() ||
       !form.apellidoPaterno.trim() ||
       !form.apellidoMaterno.trim() ||
+      !form.rut.trim() ||
       !form.telefono.trim()
     ) {
-      setErr("Completa nombres, apellidos y teléfono.");
+      setErr("Completa nombres, apellidos, RUT y teléfono.");
       return;
     }
+
+    if (!validateRut(form.rut)) {
+      setErr("El RUT ingresado no es válido. Verifica el número y dígito verificador.");
+      return;
+    }
+
     if (!consentimientoDatos) {
-      setErr("Debes aceptar el consentimiento de datos personales (Ley 21.719).");
+      setErr("Debes aceptar el consentimiento de datos personales (Ley 19.628 y Ley 21.719).");
       return;
     }
     const db = getFirestoreDb();
@@ -63,7 +79,7 @@ export default function SolicitarAccesoPage() {
 
     setEnviando(true);
     try {
-      // Bloquea solicitudes pendientes duplicadas por email (como SARMAT)
+      // Bloquea solicitudes pendientes duplicadas por email
       const q = query(
         collection(db, "solicitudes"),
         where("email", "==", user.email),
@@ -74,13 +90,16 @@ export default function SolicitarAccesoPage() {
         setErr("Ya tienes una solicitud pendiente con este correo. Espera la respuesta del administrador.");
         return;
       }
+
       await addDoc(collection(db, "solicitudes"), {
         email: user.email,
         nombres: form.nombres.trim(),
         apellidoPaterno: form.apellidoPaterno.trim(),
         apellidoMaterno: form.apellidoMaterno.trim(),
+        rut: form.rut.trim(),
         telefono: form.telefono.trim(),
         tipoSolicitud: form.tipoSolicitud,
+        cursoDeseado: form.cursoDeseado,
         mensaje: form.mensaje.trim(),
         estado: "pendiente",
         fechaSolicitud: serverTimestamp(),
@@ -89,6 +108,7 @@ export default function SolicitarAccesoPage() {
           fecha: new Date().toISOString(),
           version: SOLICITUD_VERSION,
           userAgent: navigator.userAgent,
+          finalidad: "Certificación académica oficial y acreditación ante Carabineros OS-10, SPD y SENCE",
         },
         consentimientoPromo: {
           aceptado: consentimientoPromo,
@@ -116,25 +136,35 @@ export default function SolicitarAccesoPage() {
     <section className="bg-gray-50 py-16">
       <div className="mx-auto max-w-lg px-4">
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-          <h1 className="text-3xl font-extrabold text-apre-blue">Solicitud de Acceso</h1>
-          <p className="mt-2 text-gray-600">
-            Completa el formulario para solicitar acceso al sistema de OTEC APRECAP.
+          <div className="inline-flex items-center gap-2 rounded-full bg-apre-blue/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-blue">
+            <span>🛡️</span> Matrícula y Aula Virtual
+          </div>
+          <h1 className="mt-3 text-3xl font-extrabold text-apre-blue">Solicitud de Acceso</h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Completa tus datos oficiales para solicitar tu matrícula y acceso al aula virtual de OTEC APRECAP.
           </p>
 
           {ok ? (
-            <div className="mt-6 rounded-xl bg-green-50 p-5 text-green-800">
-              <p className="font-bold">¡Solicitud enviada!</p>
-              <p className="mt-1 text-sm">
-                Un administrador revisará tu solicitud y te contactaremos cuando
-                tu acceso esté aprobado.
+            <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-6 text-emerald-900 text-center">
+              <div className="text-4xl mb-2">🎉</div>
+              <p className="font-black text-lg">¡Solicitud enviada con éxito!</p>
+              <p className="mt-2 text-xs text-emerald-800 leading-relaxed">
+                Un administrador de APRECAP revisará tus antecedentes y habilitará tu cuenta y curso solicitado a la brevedad.
               </p>
-              <Link href="/" className="mt-4 inline-block font-bold text-apre-blue hover:underline">
+              <Link
+                href="/"
+                className="mt-5 inline-block rounded-xl bg-apre-blue px-6 py-2.5 text-xs font-bold text-white transition hover:bg-apre-blue/90"
+              >
                 Volver al inicio
               </Link>
             </div>
           ) : (
             <div className="mt-6 space-y-4">
-              {err && <p className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{err}</p>}
+              {err && (
+                <p className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-bold text-red-700">
+                  ⚠️ {err}
+                </p>
+              )}
 
               {!user ? (
                 <div>
@@ -146,7 +176,7 @@ export default function SolicitarAccesoPage() {
                       const u = await signInGoogle();
                       if (!u) setErr("No se pudo iniciar sesión con Google.");
                     }}
-                    className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl bg-apre-blue px-5 py-3 font-bold text-white transition hover:bg-apre-blue-light"
+                    className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl bg-apre-blue px-5 py-3 font-bold text-white transition hover:bg-apre-blue-light shadow-sm"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -161,35 +191,40 @@ export default function SolicitarAccesoPage() {
                   </p>
                 </div>
               ) : (
-                <p className="rounded-xl bg-gray-100 p-3 text-sm text-gray-700">
-                  ✅ Correo verificado: <strong>{user.email}</strong>{" "}
+                <div className="rounded-xl bg-gray-100 p-3 text-xs text-gray-700 flex items-center justify-between">
+                  <span>
+                    ✅ Correo verificado: <strong>{user.email}</strong>
+                  </span>
                   <button
                     onClick={async () => {
                       const auth = getFirebaseAuth();
                       if (auth) await import("firebase/auth").then(({ signOut }) => signOut(auth));
                     }}
-                    className="ml-2 text-xs font-bold text-apre-red hover:underline"
+                    className="text-xs font-bold text-apre-red hover:underline"
                   >
                     Cambiar
                   </button>
-                </p>
+                </div>
               )}
 
               {user && (
                 <>
                   <div>
-                    <label className="text-sm font-semibold text-apre-blue">Nombres *</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
+                      Nombres *
+                    </label>
                     <input
                       type="text"
                       value={form.nombres}
                       onChange={set("nombres")}
                       placeholder="Ej: Juan Carlos"
-                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-3"
+                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
                     />
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
+
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="text-sm font-semibold text-apre-blue">
+                      <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
                         Apellido Paterno *
                       </label>
                       <input
@@ -197,11 +232,11 @@ export default function SolicitarAccesoPage() {
                         value={form.apellidoPaterno}
                         onChange={set("apellidoPaterno")}
                         placeholder="Ej: González"
-                        className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-3"
+                        className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-semibold text-apre-blue">
+                      <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
                         Apellido Materno *
                       </label>
                       <input
@@ -209,81 +244,124 @@ export default function SolicitarAccesoPage() {
                         value={form.apellidoMaterno}
                         onChange={set("apellidoMaterno")}
                         placeholder="Ej: Pérez"
-                        className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-3"
+                        className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
                       />
                     </div>
                   </div>
-                  <div>
-                    <label className="text-sm font-semibold text-apre-blue">Teléfono *</label>
-                    <input
-                      type="tel"
-                      value={form.telefono}
-                      onChange={set("telefono")}
-                      placeholder="Ej: +56 9 1234 5678"
-                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-3"
-                    />
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
+                        RUT (requerido para certificado) *
+                      </label>
+                      <input
+                        type="text"
+                        value={form.rut}
+                        onChange={handleRutChange}
+                        placeholder="12.345.678-9"
+                        maxLength={12}
+                        className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 font-mono text-sm focus:border-apre-blue focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
+                        Teléfono / WhatsApp *
+                      </label>
+                      <input
+                        type="tel"
+                        value={form.telefono}
+                        onChange={set("telefono")}
+                        placeholder="+56 9 1234 5678"
+                        className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
+                      />
+                    </div>
                   </div>
+
                   <div>
-                    <label className="text-sm font-semibold text-apre-blue">
-                      Tipo de Solicitud *
+                    <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
+                      ¿Qué curso deseas realizar? *
+                    </label>
+                    <select
+                      value={form.cursoDeseado}
+                      onChange={set("cursoDeseado")}
+                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
+                    >
+                      {CURSOS_LISTA.map((c) => (
+                        <option key={c.slug} value={c.slug}>
+                          {c.icono} {c.nombre} ({c.horas} hrs)
+                        </option>
+                      ))}
+                    </select>
+                    <p className="mt-1 text-[11px] text-gray-500">
+                      Al aprobarte, este curso quedará habilitado en tu aula virtual.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
+                      Tipo de Perfil *
                     </label>
                     <select
                       value={form.tipoSolicitud}
                       onChange={set("tipoSolicitud")}
-                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-3"
+                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
                     >
-                      <option value="alumno">Quiero ser Alumno</option>
-                      <option value="profesor">Quiero ser Profesor</option>
+                      <option value="alumno">Estudiante / Alumno</option>
+                      <option value="profesor">Docente / Profesor</option>
                     </select>
                   </div>
+
                   <div>
-                    <label className="text-sm font-semibold text-apre-blue">
-                      Mensaje (opcional)
+                    <label className="text-xs font-bold uppercase tracking-wider text-apre-blue">
+                      Mensaje adicional (opcional)
                     </label>
                     <textarea
                       value={form.mensaje}
                       onChange={set("mensaje")}
-                      placeholder="Información adicional que quieras agregar..."
-                      rows={3}
-                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-3"
+                      placeholder="Indica información adicional, empresa o detalles de tu postulación..."
+                      rows={2}
+                      className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-apre-blue focus:outline-none"
                     />
                   </div>
 
-                  <label className="flex items-start gap-3 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      checked={consentimientoDatos}
-                      onChange={(e) => setConsentimientoDatos(e.target.checked)}
-                      className="mt-1 h-4 w-4"
-                    />
-                    <span>
-                      Autorizo de manera expresa, libre e informada el tratamiento de mis datos
-                      personales (Nombre, RUT, Correo) de acuerdo con la{" "}
-                      <Link href="/privacidad" className="font-bold text-apre-red hover:underline">
-                        Política de Privacidad
-                      </Link>
-                      . Entiendo que puedo ejercer mis derechos ARCO en todo momento. *
-                    </span>
-                  </label>
-                  <label className="flex items-start gap-3 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      checked={consentimientoPromo}
-                      onChange={(e) => setConsentimientoPromo(e.target.checked)}
-                      className="mt-1 h-4 w-4"
-                    />
-                    <span>
-                      Autorizo el envío de correos informativos o promocionales por parte de
-                      APRECAP. (Opcional)
-                    </span>
-                  </label>
+                  <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 space-y-2">
+                    <label className="flex items-start gap-2.5 text-xs text-gray-700 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consentimientoDatos}
+                        onChange={(e) => setConsentimientoDatos(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 accent-apre-blue"
+                      />
+                      <span>
+                        Autorizo de manera expresa e informada el tratamiento de mis datos personales
+                        (Nombre completo, <strong>RUT</strong>, Correo y Teléfono) con fines de matrícula,
+                        emisión de diplomas y acreditación oficial conforme a la{" "}
+                        <Link href="/privacidad" className="font-bold text-apre-red hover:underline">
+                          Política de Privacidad
+                        </Link>{" "}
+                        y las Leyes N° 19.628 y N° 21.719. *
+                      </span>
+                    </label>
+
+                    <label className="flex items-start gap-2.5 text-xs text-gray-700 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consentimientoPromo}
+                        onChange={(e) => setConsentimientoPromo(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 accent-apre-blue"
+                      />
+                      <span>
+                        Autorizo el envío de notificaciones sobre clases en vivo y cursos de seguridad privada de APRECAP. (Opcional)
+                      </span>
+                    </label>
+                  </div>
 
                   <button
                     onClick={handleSubmit}
                     disabled={enviando}
-                    className="w-full rounded-xl bg-apre-red px-5 py-3 font-bold text-white transition hover:bg-apre-red-dark disabled:opacity-50"
+                    className="w-full rounded-xl bg-apre-red py-3 text-sm font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm disabled:opacity-50"
                   >
-                    {enviando ? "Enviando..." : "Enviar Solicitud"}
+                    {enviando ? "Enviando solicitud…" : "🚀 Enviar Solicitud de Acceso"}
                   </button>
                 </>
               )}
@@ -291,7 +369,7 @@ export default function SolicitarAccesoPage() {
           )}
 
           <p className="mt-6 text-center">
-            <Link href="/login" className="text-sm text-gray-500 hover:underline">
+            <Link href="/login" className="text-xs font-bold text-gray-500 hover:underline">
               ← Volver al inicio de sesión
             </Link>
           </p>

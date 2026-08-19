@@ -1,9 +1,14 @@
 "use client";
 
-import { Suspense, use, useState, useSyncExternalStore } from "react";
+import { Suspense, use, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
+import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
+import { getFirestoreDb } from "@/lib/firebase";
+import { canAccessCourse, getCourseFieldKey, getCourseStatus } from "@/lib/courseAccess";
+import CursoAccessGate from "@/components/CursoAccessGate";
 import PPTSlideViewer from "@/components/PPTSlideViewer";
 import VideoTracker from "@/components/cursos/VideoTracker";
 import MiniQuiz from "@/components/cursos/MiniQuiz";
@@ -85,6 +90,9 @@ export default function CursoMaterialesPage({ params }: PageProps) {
 function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const modoDemo = useModoDemo();
+  const { user, userData, loading: authLoading } = useAuth();
+  const [enrollments, setEnrollments] = useState<{ courseSlug?: string }[]>([]);
+  const [solicitando, setSolicitando] = useState(false);
 
   const cursoActual = materialesEstudio.find((c) => c.slug === slug);
 
@@ -92,6 +100,16 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const [selectedSubModuloIdx, setSelectedSubModuloIdx] = useState<number>(0);
   const [paso, setPaso] = useState<PasoModulo>(PASO_INICIAL);
   const [completados, setCompletados] = useStoredProgress(slug);
+
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db || !user) return;
+    const q = query(collection(db, "enrollments"), where("uid", "==", user.uid));
+    const unsub = onSnapshot(q, (snap) => {
+      setEnrollments(snap.docs.map((d) => ({ courseSlug: d.data().courseSlug })));
+    });
+    return unsub;
+  }, [user]);
 
   const tieneQuiz =
     cursoActual?.banco === "os10" ||
@@ -105,8 +123,43 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     setPaso(PASO_INICIAL);
   };
 
+  const handleRequestAccess = async () => {
+    if (!user) return;
+    setSolicitando(true);
+    try {
+      const db = getFirestoreDb();
+      if (db) {
+        const fieldKey = getCourseFieldKey(slug);
+        await updateDoc(doc(db, "usuarios", user.uid), {
+          [fieldKey]: "pendiente",
+        });
+      }
+    } catch (err) {
+      console.error("Error solicitando acceso:", err);
+    } finally {
+      setSolicitando(false);
+    }
+  };
+
   if (!cursoActual) {
     notFound();
+  }
+
+  // Verificación de acceso
+  const status = getCourseStatus(userData, slug, enrollments);
+  const hasAccess = modoDemo || canAccessCourse(userData, slug, enrollments);
+
+  if (!authLoading && !hasAccess) {
+    return (
+      <CursoAccessGate
+        cursoTitulo={cursoActual.title}
+        cursoSlug={slug}
+        status={status}
+        isNotLoggedIn={!user}
+        solicitando={solicitando}
+        onRequestAccess={handleRequestAccess}
+      />
+    );
   }
 
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];

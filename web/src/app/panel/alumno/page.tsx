@@ -9,6 +9,7 @@ import { getFirestoreDb } from "@/lib/firebase";
 import { CONTACTO } from "@/data/site";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
+import { canAccessCourse, getCourseFieldKey, getCourseStatus, CURSOS_LISTA } from "@/lib/courseAccess";
 
 interface Enroll {
   id: string;
@@ -35,6 +36,7 @@ interface HistorialNota {
   correctas: number;
   total: number;
   aprobado: boolean;
+  courseSlug?: string;
   fecha?: { toDate?: () => Date };
 }
 
@@ -50,6 +52,11 @@ export default function PanelAlumno() {
   const [solicitandoCurso, setSolicitandoCurso] = useState<string | null>(null);
 
   const avisados = useRef<Set<string>>(new Set());
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/login");
+  };
 
   useEffect(() => {
     if (!loading && (!userData || userData.rol !== "alumno")) {
@@ -79,16 +86,18 @@ export default function PanelAlumno() {
     return unsub;
   }, [user]);
 
-  const cursosDeAlumno = enrolls.map((e) => e.courseSlug);
-
+  // Filtro estricto de clases en vivo: Solo se muestran si el alumno tiene acceso al curso de la clase
   useEffect(() => {
     const db = getFirestoreDb();
-    if (!db) return;
+    if (!db || !userData) return;
     const q = query(collection(db, "clases"), where("estado", "==", "activa"));
     const unsub = onSnapshot(q, (snap) => {
       const activas = snap.docs
         .map((d) => ({ id: d.id, ...d.data() } as Clase))
-        .filter((c) => !c.cursoSlug || cursosDeAlumno.includes(c.cursoSlug));
+        .filter((c) => {
+          if (!c.cursoSlug) return true;
+          return canAccessCourse(userData, c.cursoSlug, enrolls);
+        });
       setClases(activas);
       const nuevas = activas.filter((c) => !avisados.current.has(c.id));
       if (nuevas.length > 0) {
@@ -97,8 +106,7 @@ export default function PanelAlumno() {
       }
     });
     return unsub;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enrolls.length > 0, cursosDeAlumno.join(",")]);
+  }, [userData, enrolls]);
 
   const solicitarAccesoCurso = async (fieldKey: string, nombreCurso: string) => {
     if (!user) return;
@@ -108,7 +116,7 @@ export default function PanelAlumno() {
       if (db) {
         const userRef = doc(db, "usuarios", user.uid);
         await updateDoc(userRef, {
-          [fieldKey]: "pendiente"
+          [fieldKey]: "pendiente",
         });
         setCursoSolicitadoNombre(nombreCurso);
         setShowModalSolicitud(true);
@@ -154,10 +162,12 @@ export default function PanelAlumno() {
               💬 WhatsApp Soporte
             </a>
             <button
-              onClick={() => signOut()}
-              className="rounded-xl bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-white/20 border border-white/10"
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-white/20 shadow-xs"
             >
-              Cerrar sesión
+              <span>🚪</span>
+              <span>Cerrar sesión</span>
             </button>
           </div>
         </div>
@@ -193,14 +203,12 @@ export default function PanelAlumno() {
                     : "Reuniones virtuales y webinars en directo"}
                 </p>
                 {clases.length > 0 ? (
-                  <a
-                    href={clases[0].joinUrl || "/contacto"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 block rounded-xl bg-whatsapp py-2.5 text-center text-xs font-bold text-white transition hover:brightness-105 shadow-sm"
+                  <Link
+                    href={`/aula-en-vivo?id=${clases[0].id}`}
+                    className="mt-4 block rounded-xl bg-whatsapp py-2.5 text-center text-xs font-black text-white transition hover:brightness-105 shadow-sm"
                   >
-                    🚀 Unirse a la Clase en Vivo
-                  </a>
+                    🚀 Entrar al Aula Virtual en Vivo
+                  </Link>
                 ) : (
                   <span className="mt-4 inline-block text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg">
                     Sin clases activas ahora
@@ -252,127 +260,150 @@ export default function PanelAlumno() {
             </div>
           </div>
 
-          {/* SECCIÓN DE CURSOS INDIVIDUALES (ESTILO SARMAT: OS10 DESBLOQUEADO, OTROS BLOQUEADOS CON SOLICITUD) */}
+          {/* SECCIÓN DE CURSOS INDIVIDUALES (ESTILO SARMAT: CADA CURSO CON SU ACCESO O SOLICITUD) */}
           <div>
             <h2 className="text-xl font-extrabold text-apre-blue mb-4">
               📚 Catálogo de Cursos y Accesos Acreditados
             </h2>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* CURSO 1: GUARDIA OS-10 (DESBLOQUEADO PARA TODOS) */}
-              <div className="rounded-2xl border-2 border-emerald-500 bg-white p-6 shadow-md relative flex flex-col justify-between">
-                <span className="absolute -top-3 right-4 rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-bold text-white shadow-sm">
-                  DESBLOQUEADO ✓
-                </span>
-                <div>
-                  <div className="text-3xl mb-2">🛡️</div>
-                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Guardia de Seguridad (OS-10)</h3>
-                  <p className="mt-1 text-xs text-gray-600">
-                    Formación y Reacreditación oficial de 90h/36h normada por Carabineros de Chile. 8 Módulos de estudio.
-                  </p>
-                </div>
-                <div className="mt-6 space-y-2">
-                  <Link
-                    href="/materiales/guardia-de-seguridad"
-                    className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
-                  >
-                    ENTRAR AL CURSO OS-10
-                  </Link>
-                  <Link
-                    href="/cuestionarios/guardia-de-seguridad"
-                    className="block w-full rounded-xl bg-apre-red py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
-                  >
-                    📋 CUESTIONARIOS OFICIALES
-                  </Link>
-                </div>
-              </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+              {CURSOS_LISTA.map((c) => {
+                const status = getCourseStatus(userData, c.slug, enrolls);
+                const isDesbloqueado = status === "desbloqueado";
+                const isPendiente = status === "pendiente";
+                const isRechazado = status === "rechazado";
 
-              {/* CURSO 2: OPERADOR CCTV Y ALARMAS */}
-              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl mb-2">📹</div>
-                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
+                return (
+                  <div
+                    key={c.slug}
+                    className={`rounded-2xl bg-white p-6 shadow-sm relative flex flex-col justify-between transition-all ${
+                      isDesbloqueado
+                        ? "border-2 border-emerald-500 shadow-md"
+                        : isPendiente
+                        ? "border-2 border-amber-400/60 bg-amber-50/20"
+                        : isRechazado
+                        ? "border-2 border-red-300 bg-red-50/20"
+                        : "border border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`absolute -top-3 right-4 rounded-full px-3 py-0.5 text-xs font-bold shadow-xs ${
+                        isDesbloqueado
+                          ? "bg-emerald-500 text-white"
+                          : isPendiente
+                          ? "bg-amber-500 text-white"
+                          : isRechazado
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
+                    >
+                      {isDesbloqueado
+                        ? "DESBLOQUEADO ✓"
+                        : isPendiente
+                        ? "EN REVISIÓN ⏳"
+                        : isRechazado
+                        ? "NO APROBADO ❌"
+                        : "BLOQUEADO 🔒"}
+                    </span>
+
+                    <div>
+                      <div className="text-3xl mb-2">{c.icono}</div>
+                      <h3 className="font-extrabold text-apre-blue text-lg">{c.nombre}</h3>
+                      <p className="mt-1 text-xs text-gray-600">
+                        Duración: {c.horas} horas pedagógicas con certificación oficial.
+                      </p>
+                      {!isDesbloqueado && (
+                        <p className="mt-2 text-xs font-semibold text-gray-500">
+                          {isPendiente
+                            ? "⏳ Solicitud enviada a la administración. En breve se habilitará tu ingreso."
+                            : isRechazado
+                            ? "🚫 Solicitud de curso no aprobada. Contáctanos si requieres ayuda."
+                            : "🔒 Requiere autorización o matrícula previa para ingresar al aula."}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-6 space-y-2">
+                      {isDesbloqueado ? (
+                        <>
+                          <Link
+                            href={`/materiales/${c.slug}`}
+                            className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
+                          >
+                            🚀 ENTRAR AL CURSO {c.shortName.toUpperCase()}
+                          </Link>
+                          {c.slug === "guardia-de-seguridad" && (
+                            <Link
+                              href="/cuestionarios/guardia-de-seguridad"
+                              className="block w-full rounded-xl bg-apre-red py-2.5 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                            >
+                              📋 CUESTIONARIOS OFICIALES OS-10
+                            </Link>
+                          )}
+                        </>
+                      ) : isPendiente ? (
+                        <button
+                          disabled
+                          className="w-full rounded-xl bg-amber-500/30 text-amber-900 py-3 text-center text-xs font-bold cursor-not-allowed"
+                        >
+                          ⏳ Solicitud en Revisión por Administración
+                        </button>
+                      ) : isRechazado ? (
+                        <a
+                          href={CONTACTO.whatsappLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block w-full rounded-xl bg-apre-blue py-3 text-center text-xs font-bold text-white transition hover:bg-apre-blue/90"
+                        >
+                          💬 Contactar Administración
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => solicitarAccesoCurso(c.fieldKey, c.nombre)}
+                          disabled={solicitandoCurso === c.fieldKey}
+                          className="w-full rounded-xl bg-apre-blue py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-blue/90 shadow-sm disabled:opacity-50"
+                        >
+                          {solicitandoCurso === c.fieldKey ? "Enviando…" : "🔒 Solicitar Acceso al Curso"}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Operador CCTV y Alarmas</h3>
-                  <p className="mt-1 text-xs text-gray-600">
-                    Capacitación en monitoreo de videovigilancia IP, cámaras PTZ y sensores de intrusión (3 Módulos).
-                  </p>
-                </div>
-
-                <div className="mt-6">
-                  <Link
-                    href="/materiales/operador-cctv-y-alarmas"
-                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
-                  >
-                    ENTRAR AL CURSO CCTV
-                  </Link>
-                </div>
-              </div>
-
-              {/* CURSO 5: BASTÓN Y ESPOSAS */}
-              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl mb-2">🥋</div>
-                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
-                  </div>
-                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Bastón y Esposas</h3>
-                  <p className="mt-1 text-xs text-gray-600">
-                    Técnicas de control, defensa personal y uso racional de la fuerza (4 Módulos).
-                  </p>
-                </div>
-
-                <div className="mt-6">
-                  <Link
-                    href="/materiales/baston-y-esposas"
-                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
-                  >
-                    ENTRAR AL CURSO BASTÓN Y ESPOSAS
-                  </Link>
-                </div>
-              </div>
-
-              {/* CURSO 3: SUPERVISOR DE SEGURIDAD */}
-              <div className="rounded-2xl border border-cyan-500/40 bg-white p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl mb-2">⭐</div>
-                    <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white">DESBLOQUEADO ✓</span>
-                  </div>
-                  <h3 className="font-extrabold text-apre-blue text-lg">Curso Supervisor de Seguridad</h3>
-                  <p className="mt-1 text-xs text-gray-600">
-                    Liderazgo operativo, supervisión de guardias, estudios de seguridad y gestión de crisis (5 Módulos).
-                  </p>
-                </div>
-
-                <div className="mt-6">
-                  <Link
-                    href="/materiales/supervisor-de-seguridad"
-                    className="block w-full rounded-xl bg-cyan-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-cyan-600 shadow-sm"
-                  >
-                    ENTRAR AL CURSO SUPERVISOR
-                  </Link>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Certificados y Diplomas */}
+          {/* Certificados y Diplomas Oficiales */}
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-extrabold text-apre-blue">📜 Certificados y Diplomas</h2>
-                <p className="mt-1 text-xs text-gray-500">
-                  Genera tu diploma digital de los cursos aprobados, con tus datos y la fecha de emisión.
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 rounded-full bg-apre-blue/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-blue">
+                  <span>📜</span> Certificación Oficial APRECAP
+                </div>
+                <h2 className="mt-2 text-xl font-extrabold text-apre-blue">
+                  Emisión de Diplomas y Certificados
+                </h2>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  Los diplomas oficiales con firmas acreditadas, RUT y código QR institucional son
+                  generados y emitidos exclusivamente por la administración de APRECAP una vez que apruebas
+                  el examen final de tu curso.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-emerald-700">
+                  📍 Para retirar tu certificado físico o solicitar el PDF oficial timbrado, acércate a{" "}
+                  <strong>{CONTACTO.direccion}</strong> ({CONTACTO.metro}) o contáctanos por WhatsApp.
                 </p>
               </div>
-              <Link
-                href="/panel/alumno/certificado"
-                className="rounded-xl bg-apre-blue px-5 py-3 text-xs font-extrabold text-white transition hover:bg-apre-blue/90 shadow-sm"
+              <a
+                href={`${CONTACTO.whatsappLink}?text=${encodeURIComponent(
+                  "Hola APRECAP, quisiera consultar sobre la emisión y retiro de mi Certificado Oficial de curso."
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-whatsapp px-5 py-3 text-xs font-extrabold text-white transition hover:brightness-105 shadow-sm inline-flex items-center gap-2"
               >
-                🎓 Generar mi Diploma
-              </Link>
+                <span>💬</span>
+                <span>Consultar por mi Certificado</span>
+              </a>
             </div>
           </div>
 
@@ -441,6 +472,22 @@ export default function PanelAlumno() {
             )}
           </div>
 
+          {/* Barra de sesión y salida del estudiante */}
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+            <div>
+              <p className="text-sm font-bold text-apre-blue">Sesión de Estudiante Activa</p>
+              <p className="text-xs text-gray-500">{userData.nombre} ({userData.email})</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-600 transition hover:bg-red-100 hover:border-red-300 shadow-xs"
+            >
+              <span>🚪</span>
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+
           {/* Privacidad & Cumplimiento Ley 21.719 */}
           <PrivacidadPanel />
         </div>
@@ -481,20 +528,18 @@ export default function PanelAlumno() {
             <h3 className="mt-4 text-2xl font-extrabold text-apre-blue">{aviso.nombre}</h3>
             {aviso.descripcion && <p className="mt-2 text-xs text-gray-600">{aviso.descripcion}</p>}
             <div className="mt-6 grid gap-2">
-              <a
-                href={aviso.joinUrl || "/contacto"}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={`/aula-en-vivo?id=${aviso.id}`}
                 onClick={() => setAviso(null)}
-                className="rounded-xl bg-whatsapp px-4 py-3 text-center text-sm font-bold text-white hover:brightness-95 shadow-md"
+                className="rounded-xl bg-whatsapp px-4 py-3 text-center text-sm font-black text-white hover:brightness-95 shadow-md"
               >
-                🚀 Unirme a la clase ahora
-              </a>
+                🚀 Entrar al Aula Virtual en Vivo
+              </Link>
               <button
                 onClick={() => setAviso(null)}
                 className="rounded-xl bg-gray-100 px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-200"
               >
-                Ahora no
+                Cerrar aviso
               </button>
             </div>
           </div>

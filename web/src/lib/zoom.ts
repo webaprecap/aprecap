@@ -83,3 +83,38 @@ export async function listMeetings(): Promise<ZoomMeeting[]> {
 export async function getMeeting(meetingId: number): Promise<ZoomMeeting> {
   return zoomFetch<ZoomMeeting>(`/meetings/${meetingId}`);
 }
+
+async function zoomDelete(path: string): Promise<boolean> {
+  if (!zoomEnabled()) throw new Error("Zoom no configurado");
+  const token = await getZoomToken();
+  const res = await fetch(`https://api.zoom.us/v2${path}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+
+  if (res.status === 204 || res.status === 200 || res.status === 404) {
+    return true;
+  }
+
+  let errorDetail = "";
+  try {
+    const json = await res.json();
+    if (json.code === 3001 || json.code === 300) {
+      // La reunión ya no existe en Zoom o ha expirado
+      return true;
+    }
+    errorDetail = json.message || JSON.stringify(json);
+  } catch {
+    errorDetail = await res.text();
+  }
+
+  throw new Error(errorDetail || `Zoom API ${res.status}`);
+}
+
+export async function deleteMeeting(meetingId: number | string): Promise<boolean> {
+  const cleanId = String(meetingId).trim();
+  return zoomDelete(`/meetings/${encodeURIComponent(cleanId)}`);
+}
+
+
