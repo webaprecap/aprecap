@@ -1,7 +1,7 @@
 # 📐 Plan del Proyecto - Instituto APRECAP
 
 ## 🎯 Estrategia y Visión General
-El proyecto APRECAP busca construir una plataforma educativa y campus virtual moderno (estilo SARMAT) para la formación de profesionales en Seguridad Privada en Chile (Guardia OS-10, Operador CCTV, Supervisor de Seguridad y Jefe de Seguridad Privada).
+El proyecto APRECAP busca construir una plataforma educativa y campus virtual moderno (estilo SARMAT) para la formación de profesionales en Seguridad Privada en Chile (Guardia OS-10, Operador CCTV, Supervisor de Seguridad).
 
 ---
 
@@ -21,4 +21,4 @@ El proyecto APRECAP busca construir una plataforma educativa y campus virtual mo
 
 ### 4. Control de Permisos y Pase a Producción
 - **En Desarrollo Local:** Todos los cursos se mantienen desbloqueados para previsualización inmediata.
-- **Antes de Producción:** Se re-activará la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`, `accesoJefe`) en `web/src/app/panel/alumno/page.tsx` para requerir solicitud y aprobación administrativa previa.
+- **Antes de Producción:** Se re-activará la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx` para requerir solicitud y aprobación administrativa previa.

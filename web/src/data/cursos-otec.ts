@@ -58,18 +58,6 @@ export const cursosOtec: CursoOtec[] = [
       "https://aprecap.cl/wp-content/uploads/2023/10/Curso-supervisor-de-seguridad-privada-edited-1.jpg",
   },
   {
-    slug: "jefe-de-seguridad-otec",
-    title: "Curso de Jefe de Seguridad",
-    duracion: "400 horas",
-    modalidad: "Online",
-    acreditado: true,
-    financiadoSence: true,
-    description:
-      "El curso de Jefe de Seguridad es una formación completa y profunda para aquellos que desean asumir roles de liderazgo en el ámbito de la seguridad. Con nuestro programa en línea acreditado por OS-10, proporcionamos el conocimiento y las habilidades necesarias para ser un jefe de seguridad altamente competente.",
-    image:
-      "https://aprecap.cl/wp-content/uploads/2023/10/scott-graham-5fnmwej4taa-unsplash-1--e1707442324516.jpg",
-  },
-  {
     slug: "operador-cctv-y-alarmas",
     title: "Curso de Operador de CCTV y Alarmas",
     duracion: "40 horas",

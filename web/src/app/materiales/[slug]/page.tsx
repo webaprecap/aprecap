@@ -10,6 +10,7 @@ import MiniQuiz from "@/components/cursos/MiniQuiz";
 import { getBancoModulo } from "@/lib/questionBanks/os10";
 import { getMiniQuizBancoCctv } from "@/lib/questionBanks/cctv";
 import { getMiniQuizBancoBaston } from "@/lib/questionBanks/baston";
+import { getMiniQuizBancoSupervisor } from "@/lib/questionBanks/supervisor";
 import { useModoDemo } from "@/lib/useModoDemo";
 import { materialesEstudio } from "@/data/materiales-estudio";
 
@@ -95,7 +96,8 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const tieneQuiz =
     cursoActual?.banco === "os10" ||
     cursoActual?.banco === "cctv" ||
-    cursoActual?.banco === "baston";
+    cursoActual?.banco === "baston" ||
+    cursoActual?.banco === "supervisor";
 
   const cambiarModulo = (idx: number) => {
     setExpandedModuloIdx(idx);
@@ -127,9 +129,11 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
       ? { alternativas: getMiniQuizBancoCctv(expandedModuloIdx) }
       : cursoActual?.banco === "baston"
         ? { alternativas: getMiniQuizBancoBaston(expandedModuloIdx) }
-        : tieneQuiz
-          ? getBancoModulo(expandedModuloIdx)
-          : null;
+        : cursoActual?.banco === "supervisor"
+          ? { alternativas: getMiniQuizBancoSupervisor(expandedModuloIdx) }
+          : tieneQuiz
+            ? getBancoModulo(expandedModuloIdx)
+            : null;
   const esUltimoModulo = expandedModuloIdx >= cursoActual.modulos.length - 1;
   const modulosEvaluables = cursoActual.modulos.filter((m) => m.videoUrl);
 
@@ -254,15 +258,32 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                       style={{ width: `${(completados.length / Math.max(1, modulosEvaluables.length)) * 100}%` }}
                     />
                   </div>
-                  {cursoActual.banco === "cctv" || cursoActual.banco === "baston" ? (
-                    <Link
-                      href={`/evaluaciones/${cursoActual.slug}`}
-                      className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
-                    >
-                      {cursoActual.banco === "baston"
-                        ? "📝 Examen Final Bastón y Esposas"
-                        : "📝 Examen Final CCTV"}
-                    </Link>
+                  {cursoActual.banco === "cctv" ||
+                  cursoActual.banco === "baston" ||
+                  cursoActual.banco === "supervisor" ||
+                  cursoActual.banco === "os10" ? (
+                    <>
+                      <Link
+                        href={`/evaluaciones/${cursoActual.slug}`}
+                        className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
+                      >
+                        {cursoActual.banco === "supervisor"
+                          ? "📝 Examen Final Supervisor de Seguridad"
+                          : cursoActual.banco === "os10"
+                            ? "📝 Examen Final OS-10"
+                            : cursoActual.banco === "baston"
+                              ? "📝 Examen Final Bastón y Esposas"
+                              : "📝 Examen Final CCTV"}
+                      </Link>
+                      {cursoActual.banco === "os10" && (
+                        <Link
+                          href={`/cuestionarios/${cursoActual.slug}`}
+                          className="mt-2 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800"
+                        >
+                          📋 Cuestionarios Oficiales
+                        </Link>
+                      )}
+                    </>
                   ) : (
                     <Link
                       href={`/cuestionarios/${cursoActual.slug}`}
@@ -331,14 +352,21 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   >
                     Continuar al Módulo {expandedModuloIdx + 2} →
                   </button>
-                ) : cursoActual.banco === "cctv" || cursoActual.banco === "baston" ? (
+                ) : cursoActual.banco === "cctv" ||
+                  cursoActual.banco === "baston" ||
+                  cursoActual.banco === "supervisor" ||
+                  cursoActual.banco === "os10" ? (
                   <Link
                     href={`/evaluaciones/${cursoActual.slug}`}
                     className="inline-block rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark"
                   >
-                    {cursoActual.banco === "baston"
-                      ? "📝 Rendir Examen Final Bastón y Esposas"
-                      : "📝 Rendir Examen Final CCTV"}
+                    {cursoActual.banco === "supervisor"
+                      ? "📝 Rendir Examen Final Supervisor de Seguridad"
+                      : cursoActual.banco === "os10"
+                        ? "📝 Rendir Examen Final OS-10"
+                        : cursoActual.banco === "baston"
+                          ? "📝 Rendir Examen Final Bastón y Esposas"
+                          : "📝 Rendir Examen Final CCTV"}
                   </Link>
                 ) : (
                   <Link

@@ -120,7 +120,7 @@
 | 1 | **Host user/pass** | DNS `aprecap.cl` → Cloudflare · tema custom Moodle (boost child con colores) · Google OAuth2 SSO en Moodle · revisar archivos del servidor |
 | 2 | **WordPress user/pass** | Rescatar contenido de las lecciones de los 3 cursos LP → recrear en Moodle |
 | 3 | ~~Zoom: app Server-to-Server~~ | ✅ **HECHO 2026-08-08**: app creada y activada por el cliente, verificada por API, claves en `web/.env`. Falta probar desde el panel admin |
-| 4 | **Horas Jefe de Seguridad** | Definir la cifra correcta (420 LP / 140 jefe-seguridad-privada / 400 catálogo OTEC) |
+| 4 | ~~**Horas Jefe de Seguridad**~~ | ~~Definir la cifra correcta (420 LP / 140 jefe-seguridad-privada / 400 catálogo OTEC)~~ ✅ **CANCELADA 2026-08-19**: el curso de Jefe de Seguridad dejó de ofrecerse y se retiró de la plataforma |
 | 5 | **Firebase backups** | Programar exportaciones periódicas de Firestore (Ley 21.663) |
 | 6 | **WebPay en producción** | Commerce code + API key reales de Transbank → `web/.env` (`WEBPAY_MODE=production`) |
 

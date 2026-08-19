@@ -25,7 +25,7 @@ const servicios = [
   },
   {
     title: "Acreditaciones",
-    desc: "Acreditación de Supervisores y Jefes de Seguridad.",
+    desc: "Acreditación de Supervisores de Seguridad.",
   },
   {
     title: "Credenciales de Guardias",

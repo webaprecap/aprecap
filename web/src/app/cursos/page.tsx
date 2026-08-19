@@ -6,7 +6,7 @@ import { cursosOtec } from "@/data/cursos-otec";
 export const metadata: Metadata = {
   title: "Cursos y Capacitación — OTEC APRECAP",
   description:
-    "Cursos de seguridad privada acreditados por SENCE y OS-10: Guardia de Seguridad, Supervisor, Jefe de Seguridad, CCTV y más.",
+    "Cursos de seguridad privada acreditados por SENCE y OS-10: Guardia de Seguridad, Supervisor, CCTV y más.",
 };
 
 export default function CursosPage() {

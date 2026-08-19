@@ -4,17 +4,16 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import Link from "next/link";
-import { barajarOpciones, seleccionarBalanceadas } from "@/lib/questionBanks/helpers";
-import type { ExamQuestion } from "@/lib/questionBanks/types";
+import type { PreguntaExamenFinal } from "@/lib/questionBanks/os10";
+import { shuffleArray } from "@/lib/questionBanks/types";
 import styles from "./FinalExam.module.css";
 
-interface FinalExamProps {
+interface FinalExamVFProps {
   cursoSlug: string;
   cursoTitulo: string;
   volverHref?: string;
   modoDemo?: boolean;
-  banco: ExamQuestion[];
-  totalPreguntas: number;
+  preguntas: PreguntaExamenFinal[];
   umbral: number;
   tag: string;
 }
@@ -25,17 +24,16 @@ interface ModuleFeedback {
   total: number;
 }
 
-const LETRAS = ["A", "B", "C", "D"];
-
 function getFailedModules(
-  preguntas: ExamQuestion[],
-  respuestas: Record<string, string>
+  preguntas: PreguntaExamenFinal[],
+  respuestas: Record<string, boolean>
 ): ModuleFeedback[] {
   const mapa: Record<string, { falladas: number; total: number }> = {};
   for (const p of preguntas) {
-    if (!mapa[p.moduleTitle]) mapa[p.moduleTitle] = { falladas: 0, total: 0 };
-    mapa[p.moduleTitle].total++;
-    if (respuestas[p.id] !== p.correctAnswer) mapa[p.moduleTitle].falladas++;
+    const mod = p.tituloModulo || `Módulo ${p.modulo}`;
+    if (!mapa[mod]) mapa[mod] = { falladas: 0, total: 0 };
+    mapa[mod].total++;
+    if (respuestas[p.id] !== p.respuestaCorrecta) mapa[mod].falladas++;
   }
   return Object.entries(mapa)
     .filter(([, v]) => v.falladas > 0)
@@ -43,21 +41,18 @@ function getFailedModules(
     .sort((a, b) => b.falladas - a.falladas);
 }
 
-export default function FinalExam({
+export default function FinalExamVF({
   cursoSlug,
   cursoTitulo,
   volverHref,
   modoDemo = false,
-  banco,
-  totalPreguntas,
+  preguntas: preguntasIniciales,
   umbral,
   tag,
-}: FinalExamProps) {
-  const [preguntas] = useState<ExamQuestion[]>(() =>
-    seleccionarBalanceadas(banco, totalPreguntas).map(barajarOpciones)
-  );
+}: FinalExamVFProps) {
+  const [preguntas] = useState<PreguntaExamenFinal[]>(() => shuffleArray(preguntasIniciales));
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [respuestas, setRespuestas] = useState<Record<string, string>>({});
+  const [respuestas, setRespuestas] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [percentage, setPercentage] = useState(0);
@@ -68,9 +63,9 @@ export default function FinalExam({
   const respondidas = Object.keys(respuestas).length;
   const allAnswered = respondidas === preguntas.length;
 
-  const handleSelect = (id: string, option: string) => {
+  const handleSelect = (id: string, valor: boolean) => {
     if (submitted) return;
-    setRespuestas((prev) => ({ ...prev, [id]: option }));
+    setRespuestas((prev) => ({ ...prev, [id]: valor }));
     setShowMissingWarning(false);
   };
 
@@ -82,7 +77,7 @@ export default function FinalExam({
   const submitExam = () => {
     let correctCount = 0;
     for (const p of preguntas) {
-      if (respuestas[p.id] === p.correctAnswer) correctCount++;
+      if (respuestas[p.id] === p.respuestaCorrecta) correctCount++;
     }
     const pct = Math.round((correctCount / preguntas.length) * 100);
     const aprobado = modoDemo || pct >= umbral;
@@ -207,6 +202,7 @@ export default function FinalExam({
 
   const currentQ = preguntas[currentIdx];
   const isLastQuestion = currentIdx === preguntas.length - 1;
+  const respuestaActual = respuestas[currentQ.id];
 
   return (
     <div className={styles.examContainer}>
@@ -240,26 +236,30 @@ export default function FinalExam({
           <div className={styles.questionHeader}>
             <div className={styles.questionNumber}>{currentIdx + 1}</div>
             <div className={styles.questionBody}>
-              <p className={styles.questionText}>{currentQ.question}</p>
-              <span className={styles.questionModule}>{currentQ.moduleTitle}</span>
+              <p className={styles.questionText}>{currentQ.afirmacion}</p>
+              <span className={styles.questionModule}>
+                {currentQ.tituloModulo || `Módulo ${currentQ.modulo}`}
+              </span>
             </div>
           </div>
 
           <div className={styles.optionsGrid}>
-            {currentQ.options.map((opcion, i) => {
-              const isSelected = respuestas[currentQ.id] === opcion;
-              return (
-                <button
-                  key={i}
-                  disabled={submitted}
-                  onClick={() => handleSelect(currentQ.id, opcion)}
-                  className={`${styles.optionBtn} ${isSelected ? styles.optionSelected : ""}`}
-                >
-                  <span className={styles.optionLetter}>{LETRAS[i]}</span>
-                  <span className={styles.optionText}>{opcion}</span>
-                </button>
-              );
-            })}
+            <button
+              disabled={submitted}
+              onClick={() => handleSelect(currentQ.id, true)}
+              className={`${styles.optionBtn} ${respuestaActual === true ? styles.optionSelected : ""}`}
+            >
+              <span className={styles.optionLetter}>V</span>
+              <span className={styles.optionText}>VERDADERO</span>
+            </button>
+            <button
+              disabled={submitted}
+              onClick={() => handleSelect(currentQ.id, false)}
+              className={`${styles.optionBtn} ${respuestaActual === false ? styles.optionSelected : ""}`}
+            >
+              <span className={styles.optionLetter}>F</span>
+              <span className={styles.optionText}>FALSO</span>
+            </button>
           </div>
         </motion.div>
       </AnimatePresence>
@@ -273,13 +273,13 @@ export default function FinalExam({
           ← Anterior
         </button>
         <div className={styles.gridMap}>
-          {preguntas.map((q, i) => {
-            const respondida = !!respuestas[q.id];
+          {preguntas.map((p, i) => {
+            const respondida = !!respuestas[p.id];
             let dotClass = styles.dot;
             if (respondida) dotClass += ` ${styles.dotAnswered}`;
             if (currentIdx === i) dotClass += ` ${styles.dotActive}`;
             return (
-              <button key={q.id} onClick={() => setCurrentIdx(i)} className={dotClass}>
+              <button key={p.id} onClick={() => setCurrentIdx(i)} className={dotClass}>
                 {i + 1}
               </button>
             );

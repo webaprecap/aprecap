@@ -25,7 +25,7 @@
 ## 🔜 Pendientes generales (sesiones anteriores, aún vivos)
 
 - [ ] **WordPress user/pass** (cliente): rescatar lecciones reales de los 3 cursos LearnPress → recrear en Moodle
-- [ ] **Confirmar horas Jefe de Seguridad**: 3 cifras distintas en el sitio (420 LP / 140 jefe-seguridad-privada / 400 catálogo OTEC) — definir cuál es la correcta
+- [x] ~~**Confirmar horas Jefe de Seguridad**~~ → ✅ **CANCELADA 2026-08-19**: el curso de Jefe de Seguridad dejó de ofrecerse; se eliminó de la plataforma (secciones, catálogo y certificado). PDFs y MDs se conservan para uso futuro
 - [ ] **PDF del acuerdo firmado** (entregado, falta firma)
 - [ ] Decidir si se usa **Sanity** o se deja el contenido estático
 - [ ] Verificación manual del pack (sección "Próxima sesión" arriba)
@@ -156,4 +156,4 @@
 - [ ] ELIMINAR modo demo antes de producción (`Header.tsx` TEMP-TEST, `useModoDemo`, badges demo)
 - [ ] CORS Sanity (localhost + Cloudflare en sanity.io/manage)
 - [ ] Persistencia en Firestore de progreso y puntajes (hoy localStorage)
-- [ ] Pase a producción: candados de módulos + permisos Firestore (accesoCCTV/Supervisor/Jefe)
+- [ ] Pase a producción: candados de módulos + permisos Firestore (accesoCCTV/Supervisor)

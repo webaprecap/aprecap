@@ -21,11 +21,6 @@ const CURSOS_CERTIFICADO = [
     horas: "140",
   },
   {
-    slug: "jefe-de-seguridad-privada",
-    nombre: "CURSO DE JEFE DE SEGURIDAD PRIVADA",
-    horas: "140",
-  },
-  {
     slug: "baston-y-esposas",
     nombre: "CURSO DE BASTÓN Y ESPOSAS",
     horas: "8",

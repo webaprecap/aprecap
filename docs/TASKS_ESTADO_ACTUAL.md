@@ -1,7 +1,7 @@
 # 📌 Estado de Tareas y Transferencia de Contexto (Agent Handoff)
 
 > **Documento de Control y Continuidad para Agentes IA y Desarrolladores.**
-> Última actualización: 2026-08-18
+> Última actualización: 2026-08-19
 
 ---
 
@@ -130,6 +130,15 @@
 67. **Verificación**: tsc OK; headless en server temporal (3001) → 6 módulos, iframe video activo y PDF Sanity por submódulo; sin paso quiz. Server dev del usuario (3000) restaurado con el contenido nuevo (estaba con datos viejos en caché).
 68. **Pendiente**: commit+push de esta sesión.
 
+### Q. Quizzes y Examen Final Supervisor + justificaciones OS-10 + baja Jefe de Seguridad (2026-08-19)
+69. **Decisiones del cliente**: el examen final NO justifica respuestas en ningún curso (solo % + módulos fallados, estilo Sarmat CCTV); examen Supervisor **60 preguntas / 80%** con banco de **72 únicas** (4 por submódulo, sin duplicados); OS-10: **307 V/F justificadas + fundamentos reales en las 82 alternativas**; **Examen Final OS-10 de 140 V/F (10 × 14 módulos, 80%)**; **curso Jefe de Seguridad dado de baja** (solo plataforma; PDFs, MDs y script de copia se conservan).
+70. **Banco Supervisor** (`questionBanks/supervisor.ts`): 72 preguntas (M1: 22, M2: 14, M3–M5: 8 c/u, M6: 12), helpers `getExamenFinalSupervisor`/`getPreguntasPorModulo`/`getMiniQuizBancoSupervisor`, constantes 5/60/80.
+71. **Examen Final sin fundamentos**: `FinalExam.tsx` perdió la revisión post-entrega (aplica Supervisor 60, CCTV 60, Bastón 20). **`FinalExamVF.tsx` nuevo** para OS-10 (140 V/F, random, sin justificación, keys `aprecap_examen_guardia-de-seguridad_*`). Wiring en `evaluaciones/[slug]` (casos supervisor y guardia-de-seguridad) y `materiales/[slug]` (links sidebar + CTA; OS-10 conserva Cuestionarios Oficiales secundario).
+72. **Cuestionarios OS-10 justificados**: `vf()` con 4º argumento → 307 explicaciones; `alt()` con `explicacion` obligatoria → 82 fundamentos reales + 5 alt() de la Prueba de 150 (g-21/24/25/33/34) rotas por tsc. Verificado: 307 V/F + 87 alt() con explicación, 0 vacías.
+73. **Baja Jefe de Seguridad**: `materiales-estudio.ts` (entrada completa), `cursos.ts` (2 entradas; la de "Supervisor de Seguridad" reincorporada con slug `supervisor-de-seguridad`), `cursos-otec.ts`, tarjeta CURSO 4 e import en `panel/alumno`, `CURSOS_CERTIFICADO`, meta `/cursos`, sección marketing en `pages.ts` + imagen, `/asesorias`. Se conservan PDFs (`web/public/materiales/`), `docs/markdown_cursos/4_Jefe_de_Seguridad/` y `scripts/copy-jefe-pdfs-to-public.mjs`. Docs: AGENTS.md/CHECKLIST 4→3 cursos; tareas horas Jefe canceladas (TASKS/TAREAS/PLAN).
+74. **Verificación**: tsc 0 errores; script de checks (72 únicas; 307+87 con explicación; sin jefe en data); headless en 3001 → 22 checks OK (home/cursos/panel sin Jefe, exámenes 60/140/60/20 sin revisión); server 3000 reiniciado con contenido nuevo.
+75. **Pendiente**: commit+push de esta sesión.
+
 ### G. Curso Bastón y Esposas — MDs listos (nuevo)
 22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
     - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).
@@ -143,7 +152,7 @@
 - [ ] **Verificar certificado digital con datos reales** (el alumno imprime su diploma; validar nombre/RUT/fecha/curso y la impresión a PDF en navegador).
 - [ ] **Editor de certificados estilo Sarmat para admin** (pendiente): replicar `CertificadosTab` (WYSIWYG: textos/colores/imágenes arrastrables + PDF con `@react-pdf/renderer`) en `/panel/admin` de Aprecap. Ruta de referencia verificada: Sarmat `/admin` → pestaña "🎓 Generar Certificados".
 - [ ] **Curso de Bastón y Esposas (en curso):** los 11 MDs de submódulos ya están listos en `docs/markdown_cursos/5_Baston_y_Esposas/`. Falta: cliente genera PDFs (NotebookLM) + graba/aporta videos del curso → luego se monta en la plataforma (Sanity + YouTube, flujo video → PDF como CCTV).
-- [ ] **Curso Supervisor — montaje en plataforma (en curso):** ✅ **MDs completados (2026-08-18)**: 18 submódulos (Módulo 1 reordenado con Reglamento 209, Ley 21.659, Derecho penal y DD.HH.) + 6 consolidados, docx de revisión `Curso_Supervisor_Consolidado_v2.docx` — ver sección O. ✅ **Plataforma montada (2026-08-18)**: 18 submódulos con video YouTube + PDF Sanity, `videos supervisor.txt` arreglado — ver sección P. Queda pendiente solo si el cliente pide quizzes/examen.
+- [ ] **Curso Supervisor — montaje en plataforma (en curso):** ✅ **MDs completados (2026-08-18)**: 18 submódulos (Módulo 1 reordenado con Reglamento 209, Ley 21.659, Derecho penal y DD.HH.) + 6 consolidados, docx de revisión `Curso_Supervisor_Consolidado_v2.docx` — ver sección O. ✅ **Plataforma montada (2026-08-18)**: 18 submódulos con video YouTube + PDF Sanity, `videos supervisor.txt` arreglado — ver sección P. ✅ **Quizzes y Examen Final (2026-08-19)**: MiniQuiz 5 por módulo + Examen Final 60 preguntas (80%) — ver sección Q.
 - [ ] **Quizzes/Cuestionarios del curso CCTV** ✅ **COMPLETADO (2026-08-18)**: banco de 63 preguntas, MiniQuiz de 5 por módulo y Examen Final de 60 preguntas (80%, reintentos ilimitados) — ver sección J.
 - [ ] **ELIMINAR MODO DEMO ANTES DE PRODUCCIÓN (importante):**
   - Quitar el botón temporal "🧪 Test Curso OS-10" del `Header.tsx` (comentario `TEMP-TEST`, menú escritorio y móvil).
@@ -152,10 +161,10 @@
 - [ ] **Persistencia de resultados en Firestore** (hoy puntajes de cuestionarios y progreso se guardan en localStorage): replicar Sarmat (Firestore + límite de intentos + candados de módulos).
 - [ ] **Configuración de CORS (producción):** agregar URLs de `localhost` y Cloudflare en **Sanity** y **Firebase**.
 - [ ] **Pase a Producción (Restricción de Permisos):**
-  - Reactivar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`, `accesoJefe`) en `web/src/app/panel/alumno/page.tsx`.
+  - Reactivar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx`.
   - Añadir candados de módulos/examen estilo Sarmat.
 - [ ] **Ejercicios Prácticos Interactivos:** compilar `docs/EJERCICIOS_PRACTICOS_INTERACTIVOS.md` (Libro de Novedades, Informes OS-10, Pautas de Puesto).
-- [ ] **Tareas del cliente anteriores aún vivas:** WP user/pass (rescatar lecciones LearnPress), confirmar horas del Jefe de Seguridad (420/140/400), PDF del acuerdo firmado.
+- [ ] **Tareas del cliente anteriores aún vivas:** WP user/pass (rescatar lecciones LearnPress), ~~confirmar horas del Jefe de Seguridad~~ ✅ **CANCELADA 2026-08-19:** el curso de Jefe de Seguridad dejó de ofrecerse y se retiró de la plataforma (los PDFs y MDs se conservan en el repo), PDF del acuerdo firmado.
 
 ---
 
