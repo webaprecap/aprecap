@@ -1,4 +1,4 @@
-# Submódulo 1.3: Decreto Supremo N° 594 — Higiene y Seguridad en los Lugares de Trabajo
+# Submódulo 1.7: Decreto Supremo N° 594 — Higiene y Seguridad en los Lugares de Trabajo
 
 ## 1. Objetivo del decreto
 

@@ -1,4 +1,4 @@
-# Submódulo 1.2: Ley N° 16.744 — Accidentes del Trabajo y Enfermedades Profesionales
+# Submódulo 1.6: Ley N° 16.744 — Accidentes del Trabajo y Enfermedades Profesionales
 
 ## 1. Objetivo de la ley
 

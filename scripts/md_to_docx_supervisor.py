@@ -9,12 +9,16 @@ from docx.shared import Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 SRC_DIR = r"D:\aprecap\docs\markdown_cursos\3_Supervisor_de_Seguridad"
-OUT_PATH = r"C:\Users\Vickoto\Desktop\Curso_Supervisor_Consolidado.docx"
+OUT_PATH = r"C:\Users\Vickoto\Desktop\Curso_Supervisor_Consolidado_v2.docx"
 
 SUBMODULOS = [
     "Modulo_1.1_Contrato_de_Trabajo_y_Jornada_Laboral.md",
-    "Modulo_1.2_Ley_16744_Accidentes_y_Enfermedades.md",
-    "Modulo_1.3_Decreto_594_Higiene_y_Seguridad.md",
+    "Modulo_1.2_Reglamento_209_Ley_21659.md",
+    "Modulo_1.3_Ley_21659_Seguridad_Privada_en_la_Practica.md",
+    "Modulo_1.4_Derecho_Penal_y_Detencion.md",
+    "Modulo_1.5_Derechos_Humanos_Uso_de_la_Fuerza_y_Datos_Personales.md",
+    "Modulo_1.6_Ley_16744_Accidentes_y_Enfermedades.md",
+    "Modulo_1.7_Decreto_594_Higiene_y_Seguridad.md",
     "Modulo_2.1_Prevencion_de_Riesgos_en_el_Puesto.md",
     "Modulo_2.2_Control_de_Incendios_y_Emergencias.md",
     "Modulo_3.1_Directivas_de_Funcionamiento_y_OS10.md",
@@ -75,7 +79,7 @@ def main():
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r = p.add_run(
-        "Este documento reúne el contenido completo de los 14 submódulos del curso, "
+        "Este documento reúne el contenido completo de los 18 submódulos del curso, "
         "con la normativa chilena vigente, para su revisión y comentarios."
     )
     r.italic = True

@@ -35,7 +35,19 @@ La reducción no puede afectar las remuneraciones de los trabajadores. Las empre
 - **Descanso semanal:** a lo menos un día de descanso semanal.
 - **Feriado anual:** 15 días hábiles por cada año con más de un año de servicio, proporcional para períodos menores.
 
-## 6. Ley Karin: acoso y violencia en el trabajo (Ley N° 21.643)
+## 6. Jornada especial de los guardias de seguridad
+
+Para guardias de seguridad y vigilantes privados existe un **sistema excepcional de jornada** autorizado por la Dirección del Trabajo (Resolución N° 1.185), consistente en turnos rotativos y continuos con las siguientes alternativas:
+
+- **4 días de trabajo x 4 días de descanso, turnos de 12 horas.**
+- **5 días x 5 días de descanso, turnos de 12 horas.**
+- **6 días x 6 días de descanso, turnos de 12 horas.**
+- **7 días x 7 días de descanso, turnos de 12 horas.**
+- **6 días x 2 días de descanso, turnos de 8 horas**, más **6 días de descanso anuales adicionales**, distribuibles durante el período anual.
+
+La empresa debe solicitar a la Dirección del Trabajo la **autorización específica** para aplicar este sistema. El supervisor verifica que los turnos respeten el esquema autorizado y los descansos compensatorios.
+
+## 7. Ley Karin: acoso y violencia en el trabajo (Ley N° 21.643)
 
 La Ley N° 21.643, vigente desde 2024, modificó el Código del Trabajo en materia de **prevención, investigación y sanción del acoso laboral, sexual y de la violencia en el trabajo**:
 
@@ -45,14 +57,14 @@ La Ley N° 21.643, vigente desde 2024, modificó el Código del Trabajo en mater
 
 El supervisor debe conocer el protocolo de su empresa y derivar cualquier denuncia o situación de acoso por el canal oficial, sin investigar por cuenta propia.
 
-## 7. Rol del supervisor en materia laboral
+## 8. Rol del supervisor en materia laboral
 
 - Verificar que el personal cuente con contrato vigente y jornadas respetadas.
 - Controlar asistencia, turnos y descansos conforme a la ley.
 - Informar a la jefatura cualquier irregularidad (horas extra impagas, jornadas excesivas).
 - Promover un ambiente laboral de respeto, aplicando y difundiendo el protocolo de la Ley Karin.
 
-## 8. Reglas de oro
+## 9. Reglas de oro
 
 1. La ley laboral protege al trabajador y también a la empresa que la cumple.
 2. El supervisor no puede modificar jornadas ni pagos: informa y deriva.

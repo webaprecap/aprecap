@@ -46,19 +46,36 @@ La ley castiga severamente la alteración, simulación o uso de subterfugios par
 - Las **directivas de funcionamiento y autorizaciones del personal OS-10** se incluyen como anexos dentro del Plan de Seguridad.
 - El plan **no reemplaza** ninguna de las obligaciones previas en materia de seguridad privada.
 
-## 8. Tramitación digital
+## 8. Derechos y deberes de los asistentes
+
+**Derechos:**
+
+- Participar del evento en los términos y condiciones ofrecidos por el organizador, con **seguridad en el consumo** (condiciones básicas de higiene, salubridad y prevención de riesgos).
+- Ser **informados de manera veraz y oportuna** sobre las condiciones y restricciones de ingreso al evento y su permanencia en él.
+- Contar con información veraz y oportuna sobre las **medidas de seguridad y orden público** adoptadas.
+
+**Deberes:**
+
+- Respetar las condiciones de ingreso y permanencia.
+- No afectar ni poner en peligro su propia seguridad, la de los demás asistentes ni la del evento.
+- Respetar el espacio público, el medio ambiente y el patrimonio histórico, artístico y cultural del país.
+- No realizar conductas ofensivas o **discriminatorias** contra otros asistentes o terceros (Ley N° 20.609).
+- Seguir las **instrucciones del responsable de seguridad**, principalmente en caso de emergencia.
+- Tratar respetuosamente al personal de seguridad del evento.
+
+## 9. Tramitación digital
 
 - Las solicitudes, autorizaciones y procedimientos administrativos exigidos se centralizan y se llevan a cabo exclusivamente a través de la **Plataforma Informática** establecida por la ley.
 - Esto permite comunicación en tiempo real con las autoridades y un registro histórico de eventos y organizadores.
 
-## 9. Rol del supervisor
+## 10. Rol del supervisor
 
 - Conocer el plan de seguridad del evento y su propio rol dentro de él.
 - Coordinar al personal de seguridad en accesos, control de aforo y evacuación.
 - Mantener comunicación permanente con el responsable de seguridad y la autoridad.
 - Documentar incidentes y novedades durante y después del evento.
 
-## 10. Reglas de oro
+## 11. Reglas de oro
 
 1. La planificación previa define el éxito de un evento masivo.
 2. El plan de seguridad se cumple, no se improvisa.

@@ -13,9 +13,13 @@ La visión global de la seguridad exige conocer los riesgos y peligros a los que
 
 ## 2. Marco normativo vigente
 
-El marco actual de la seguridad privada es la **Ley N° 21.659** (2024) y su reglamento, el **Decreto Supremo N° 209** (2024), que reemplazaron el antiguo régimen del Decreto Ley N° 3.607 y sus reglamentos (Decretos N° 867, N° 1.773 y otros), los que rigen solo en lo que no sea contrario a la nueva ley.
+El marco actual de la seguridad privada es la **Ley N° 21.659** (publicada en 2024) y su reglamento, el **Decreto Supremo N° 209** (publicado el 27 de mayo de 2025), que reemplazaron el antiguo régimen del Decreto Ley N° 3.607 y sus reglamentos (Decretos N° 867, N° 1.773 y otros), los que rigen solo en lo que no sea contrario a la nueva ley.
 
-La autoridad fiscalizadora de la seguridad privada es la **Prefectura de Seguridad Privada de Carabineros de Chile (OS-10)**, con participación de la **Subsecretaría de Prevención del Delito**.
+El reglamento detalla, en 136 artículos, la operación de la seguridad privada: entidades obligadas y estudios de seguridad (artículos 7 a 20), jefe y encargado de seguridad (artículos 22 a 24), vigilantes privados y armas (artículos 26 a 31), empresas de seguridad privada (artículos 47 a 53), transporte de valores (artículos 54 a 75) y seguridad electrónica (artículos 76 a 86).
+
+Los **guardias de seguridad** se regulan en los artículos 87 a 94: el empleador debe contratarles un **seguro de vida con cobertura mínima de 132 UF** (artículo 88), la capacitación se gradúa según el nivel de riesgo (artículo 89), el uniforme y la credencial son obligatorios (artículos 90 y 91), los servicios se comunican en la **directiva de funcionamiento** (artículo 92), solo pueden usar los elementos defensivos autorizados (artículo 93) y los de riesgo alto deben contar con registro audiovisual (artículo 94). Los **porteros, nocheros y rondines** cursan una capacitación especializada (artículos 95 a 99) y la **capacitación** se regula en los artículos 100 a 107. El reglamento reconoce además la función del **supervisor de seguridad privada** (artículo 108), la **plataforma informática** de trámites (artículo 115) y el **Registro de Seguridad Privada** (artículos 118 a 127), condición para ejercer.
+
+La autoridad fiscalizadora de la seguridad privada es la **Prefectura de Seguridad Privada de Carabineros de Chile (OS-10)** (artículos 128 a 136), con participación de la **Subsecretaría de Prevención del Delito**.
 
 ## 3. La Directiva de Funcionamiento
 

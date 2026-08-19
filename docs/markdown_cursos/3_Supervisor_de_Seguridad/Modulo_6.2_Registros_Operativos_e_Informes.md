@@ -50,14 +50,23 @@ Los registros cumplen tres funciones:
 - Registrar cada entrega: quién, a quién, cuándo y qué se entregó.
 - Mantener el original resguardado y con acceso restringido.
 
-## 7. Buenas prácticas del supervisor
+## 7. Datos personales en los registros
+
+Los libros, informes y grabaciones contienen **datos personales**, protegidos por la **Ley N° 21.719** sobre Protección de Datos Personales y por la Ley N° 19.628:
+
+- **Finalidad:** los datos se recogen para fines de seguridad y no pueden usarse para otros; las imágenes de las cámaras se emplean exclusivamente para proteger el recinto.
+- **Proporcionalidad:** se registra solo lo necesario para el fin del servicio.
+- **Confidencialidad:** el acceso a registros y grabaciones está restringido al personal autorizado; no se entrega información a terceros salvo las excepciones legales (autoridad competente).
+- **Seguridad:** los registros se custodian y resguardan contra pérdida, filtración o acceso no autorizado.
+
+## 8. Buenas prácticas del supervisor
 
 - Revisar el libro de novedades al inicio y término de cada turno.
 - Corregir de inmediato los registros incompletos o ilegibles.
 - Guardar respaldo de los informes en el sistema de la empresa.
 - Tratar la información con confidencialidad: los registros contienen datos personales.
 
-## 8. Reglas de oro
+## 9. Reglas de oro
 
 1. Todo hecho relevante se escribe, con fecha y hora.
 2. Los hechos se describen, no se interpretan.

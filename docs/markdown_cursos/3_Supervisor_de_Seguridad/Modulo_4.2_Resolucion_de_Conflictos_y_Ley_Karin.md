@@ -28,7 +28,11 @@ La resolución de conflictos permite **sistematizar la solución** a los problem
 
 ## 4. Ley Karin: prevención del acoso y la violencia en el trabajo
 
-La **Ley N° 21.643** (vigente desde 2024) modificó el Código del Trabajo en materia de **prevención, investigación y sanción del acoso laboral, sexual y de la violencia en el trabajo**:
+La **Ley N° 21.643** (vigente desde 2024) modificó el Código del Trabajo en materia de **prevención, investigación y sanción del acoso laboral, sexual y de la violencia en el trabajo**, con el objetivo de erradicar estas conductas y proteger el derecho a un ambiente de trabajo libre de violencia:
+
+- **Violencia en el trabajo:** toda violencia que se comete con ocasión de la prestación de servicios, ejercida por **terceros ajenos** a la relación laboral (clientes, proveedores, usuarios), que el empleador no controla.
+- **Acoso laboral:** conductas que excluyen, aíslan o someten a una persona dentro del equipo; ninguna persona puede quedar fuera de la información, el apoyo o la participación en el grupo de trabajo.
+- **Acoso sexual:** insinuaciones, miradas lascivas, gestos o comentarios sobre la vestimenta o el aspecto físico, y contacto físico no consentido.
 
 - **Protocolo de prevención:** toda empresa debe contar con uno, elaborado con participación de los trabajadores.
 - **Procedimiento de investigación:** con principios de confidencialidad, imparcialidad y celeridad.
