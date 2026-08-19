@@ -16,7 +16,8 @@ export default function PrivacidadPage() {
           <p>
             En OTEC APRECAP respetamos tu privacidad y protegemos tus datos
             personales de conformidad con la Ley N° 19.628 y la nueva Ley N°
-            21.719 sobre Protección de Datos Personales.
+            21.719 sobre Protección de Datos Personales, así como con la Ley N°
+            21.663 sobre Ciberseguridad.
           </p>
           <h2 className="text-xl font-extrabold text-apre-blue">
             1. Datos que recopilamos
@@ -53,14 +54,30 @@ export default function PrivacidadPage() {
             definitiva, escribiendo a {CONTACTO.email}.
           </p>
           <h2 className="text-xl font-extrabold text-apre-blue">
-            5. Seguridad
+            5. Seguridad de la información
           </h2>
           <p>
             Implementamos medidas técnicas y organizativas para proteger tus
-            datos, incluyendo cifrado en tránsito (TLS) y control de acceso.
+            datos, incluyendo cifrado en tránsito (TLS), control de acceso por
+            roles, registro de auditoría de eventos sensibles y reglas de
+            seguridad en la base de datos.
           </p>
           <h2 className="text-xl font-extrabold text-apre-blue">
-            6. Contacto
+            6. Ciberseguridad (Ley N° 21.663)
+          </h2>
+          <p>
+            Acatando también la Ley N° 21.663 sobre Ciberseguridad, APRECAP
+            protege sus datos mediante:
+          </p>
+          <ul className="list-disc space-y-1 pl-6">
+            <li>Autenticación en dos factores (MFA) para cuentas administrativas.</li>
+            <li>Cifrado de las comunicaciones y almacenamiento seguro.</li>
+            <li>Auditoría de eventos críticos (accesos, consentimientos y cambios).</li>
+            <li>Reglas de acceso a datos por rol y mínimo privilegio.</li>
+            <li>Revisión y mejora continua de los controles de seguridad.</li>
+          </ul>
+          <h2 className="text-xl font-extrabold text-apre-blue">
+            7. Contacto
           </h2>
           <p>
             Ante cualquier consulta sobre esta política, escríbenos a{" "}

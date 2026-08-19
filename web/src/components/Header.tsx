@@ -46,19 +46,11 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
-          {/* TEMP-TEST: botón temporal de acceso directo al curso OS-10 en MODO DEMO (aprueba todo) para pruebas con clientes. ELIMINAR ANTES DE PRODUCCIÓN */}
           <Link
-            href="/materiales/guardia-de-seguridad?demo=1"
-            onClick={() => {
-              try {
-                sessionStorage.setItem("aprecap_demo", "1");
-              } catch {
-                /* sessionStorage no disponible */
-              }
-            }}
-            className="rounded-lg border-2 border-dashed border-apre-red px-4 py-2 text-sm font-bold text-apre-red transition hover:bg-apre-red hover:text-white"
+            href="/prueba-felicitaciones"
+            className="text-xs font-bold text-apre-red/60 transition hover:text-apre-red"
           >
-            🧪 Test Curso OS-10
+            🧪 Vista previa exámenes
           </Link>
           <Link
             href="/contacto"
@@ -98,20 +90,12 @@ export default function Header() {
             </Link>
           ))}
           <div className="mt-3 grid gap-2">
-            {/* TEMP-TEST: botón temporal de acceso directo al curso OS-10 en MODO DEMO (aprueba todo) para pruebas con clientes. ELIMINAR ANTES DE PRODUCCIÓN */}
             <Link
-              href="/materiales/guardia-de-seguridad?demo=1"
-              onClick={() => {
-                setOpen(false);
-                try {
-                  sessionStorage.setItem("aprecap_demo", "1");
-                } catch {
-                  /* sessionStorage no disponible */
-                }
-              }}
-              className="block rounded-lg border-2 border-dashed border-apre-red px-4 py-2 text-center text-sm font-bold text-apre-red"
+              href="/prueba-felicitaciones"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg border border-gray-200 px-4 py-2 text-center text-sm font-bold text-apre-red/70"
             >
-              🧪 Test Curso OS-10
+              🧪 Vista previa exámenes
             </Link>
             <Link
               href="/contacto"

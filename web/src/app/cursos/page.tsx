@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CursoCard } from "@/components/CursoCard";
-import { cursosLP } from "@/data/cursos";
-import { cursosOtec } from "@/data/cursos-otec";
+import { CURSOS_PRESENCIAL_ONLINE, CURSOS_ONLINE } from "@/data/cursos-home";
 
 export const metadata: Metadata = {
   title: "Cursos y Capacitación — OTEC APRECAP",
@@ -30,10 +29,14 @@ export default function CursosPage() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-extrabold text-apre-blue">
-            Cursos de Seguridad Privada
+            Cursos Presenciales + Online
           </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {cursosOtec.map((c) => (
+          <p className="mt-2 text-gray-600">
+            Formación mixta: clases presenciales y material de estudio en
+            nuestra plataforma en línea.
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {CURSOS_PRESENCIAL_ONLINE.map((c) => (
               <CursoCard
                 key={c.slug}
                 slug={c.slug}
@@ -52,21 +55,21 @@ export default function CursosPage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-extrabold text-apre-blue">
-            Cursos en Línea
+            Cursos Online
           </h2>
           <p className="mt-2 text-gray-600">
-            Cursos completos en línea con certificación OS-10.
+            Cursos completos en línea con certificación.
           </p>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {cursosLP.map((c) => (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {CURSOS_ONLINE.map((c) => (
               <CursoCard
                 key={c.slug}
                 slug={c.slug}
                 title={c.title}
                 image={c.image}
-                duracion={c.duration}
-                modalidad="Online"
-                acreditado
+                duracion={c.duracion}
+                modalidad={c.modalidad}
+                acreditado={c.acreditado}
                 href={`/cursos/${c.slug}`}
               />
             ))}

@@ -8,6 +8,22 @@ export const metadata: Metadata = {
     "Artículos sobre seguridad privada, formación y novedades de OTEC APRECAP.",
 };
 
+function extractPreview(body: string): string {
+  return body
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l && !/^#{1,6}\s/.test(l) && !/^!\[/.test(l))
+    .join(" ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/#{1,6}\s*/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 260);
+}
+
 export default function BlogPage() {
   return (
     <>
@@ -42,12 +58,7 @@ export default function BlogPage() {
                       {p.title}
                     </h2>
                     <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-600">
-                      {p.body
-                        .split(/\r?\n/)
-                        .filter((l) => l.trim() && !l.startsWith("#"))
-                        .join(" ")
-                        .slice(0, 260)}
-                      …
+                      {extractPreview(p.body)}…
                     </p>
                     <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-apre-red">
                       Leer artículo

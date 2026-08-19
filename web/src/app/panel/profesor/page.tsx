@@ -8,7 +8,6 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { cursosLP } from "@/data/cursos";
-import { cursosMoodle } from "@/data/moodle";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
 
@@ -75,14 +74,6 @@ export default function PanelProfesor() {
           {tab === "reuniones" ? <ReunionesProfesor /> : <AlumnosProfesor />}
 
           <div className="flex flex-wrap gap-3">
-            <a
-              href="https://aprecap.cl/campus"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-xl bg-apre-blue px-6 py-3 text-sm font-bold text-white transition hover:bg-apre-blue-light"
-            >
-              Entrar al Campus (Moodle)
-            </a>
             <Link
               href="/cursos"
               className="rounded-xl border-2 border-apre-blue px-6 py-3 text-sm font-bold text-apre-blue transition hover:bg-apre-blue hover:text-white"
@@ -137,7 +128,7 @@ function ClaseActivaProfesor() {
           {c.descripcion && <p className="mt-1 text-sm text-gray-600">{c.descripcion}</p>}
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <a
-              href={c.joinUrl || "https://aprecap.cl/campus"}
+              href={c.joinUrl || "/contacto"}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-lg bg-whatsapp px-4 py-2 text-sm font-bold text-white"
@@ -288,7 +279,7 @@ function AlumnosProfesor() {
   }, [db]);
 
   const cursoDe = (slug?: string) =>
-    cursosLP.find((c) => c.slug === slug) || cursosMoodle.find((c) => c.slug === slug);
+    cursosLP.find((c) => c.slug === slug);
 
   const alumnos = enrolls.map((e) => {
     const u = usuarios.find((x) => x.id === e.uid || x.uid === e.uid);

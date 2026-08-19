@@ -139,6 +139,17 @@
 74. **Verificación**: tsc 0 errores; script de checks (72 únicas; 307+87 con explicación; sin jefe en data); headless en 3001 → 22 checks OK (home/cursos/panel sin Jefe, exámenes 60/140/60/20 sin revisión); server 3000 reiniciado con contenido nuevo.
 75. **Pendiente**: commit+push de esta sesión.
 
+### R. Refactor home + Carta del Director + admin sarmat + legal (2026-08-19)
+76. **Decisiones del cliente**: Moodle eliminado de TODA la página (se conservan solo los PDFs rescatados); hero "Tu futuro en Seguridad Privada"; home con los 4 cursos en 2 secciones (Presenciales+Online: OS-10 y Bastón · Online: Supervisor y CCTV) con cards a `/cursos/{slug}`; ocultar cursos no trabajados en todo el sitio; "Carta del Director" en el navbar; Misión/Visión/Valores con enfoque DDHH (contra la discriminación) como info pública; **intentos ILIMITADOS** en todos los cursos; sin códigos/claims de sarmat; panel admin con sidebar sarmat (sin Tablón de Chat, con Excel y editor de diplomas); Ley 21.719/21.663 (CookieBanner + privacidad/términos + firestore.rules); MD pre-producción con candados/flujo/seguridad.
+77. **Moodle fuera del código**: `data/moodle.ts`, `lib/moodle.ts`, tipos, `/campus`, `/cursos-asincronicos`, sección home, link navbar/footer y referencias en panel alumno/profesor/admin. PDFs conservados.
+78. **Felicitaciones**: `ResultadoExamen` extraído de FinalExam/FinalExamVF (tarjeta con fondo oscuro corregido); página `/prueba-felicitaciones` con 4 botones (un curso c/u) que previsualizan la pantalla de examen final aprobado; botón "🧪 Vista previa exámenes" en navbar (quitar antes de producción).
+79. **Home/Cursos/Blog**: `data/cursos-home.ts` nuevo (4 cards); `/cursos` con las 2 secciones; hero y secciones home; NAV_LINKS con "Carta del Director"; `/carta-del-director` creada (historia completa + Misión/Visión/Valores DDHH); `pages.ts` inicio con misión/visión/valores renovados; blog con `extractPreview()` (fix del markdown crudo en el excerpt).
+80. **Panel admin sarmat**: sidebar izquierda (grupos + badges dorados) con Pendientes/Historial/Alumnos/Profesores/Clases/Reuniones/Diplomas/Reportes/Pagos/Contacto/Auditoría; `DiplomaCertificado` compartido (alumno + admin); export Excel de notas en Reportes.
+81. **Legal**: `CookieBanner` global en layout; `/privacidad` y `/terminos` con Ley 21.663; `firestore.rules` en la raíz (por rol, `audit_logs` inmutable) — deploy pendiente documentado.
+82. **MD pre-producción**: `docs/PRE_PRODUCCION_FLUJO_CURSOS.md` (candados por módulo, examen bloqueado, VideoTracker, progreso Firestore, acceso aprobado por admin, intentos ilimitados, requisitos Art. 46, quitar vista previa antes de producción).
+83. **Verificación**: tsc 0 errores; headless 3000 → **38 checks OK** (home/cursos/carta/prueba/404s/privacidad/blog/regresiones).
+84. **Pendiente**: commit+push de esta sesión.
+
 ### G. Curso Bastón y Esposas — MDs listos (nuevo)
 22. **MDs del curso Bastón y Esposas** creados en `docs/markdown_cursos/5_Baston_y_Esposas/` con las mismas reglas que CCTV (solo info de estudio, sin menciones a plataformas externas, sin actividades prácticas ni quizzes):
     - **11 submódulos** (1.1 DPP y factor sorpresa · 1.2 Tiempo/distancia y distancia preventiva · 1.3 Conciencia situacional · 1.4 Legítima defensa · 2.1 Comunicación persuasiva y desescalada · 2.2 Palancas y torsiones · 2.3 Técnicas vs tácticas · 3.1 Línea y niveles del uso de la fuerza · 3.2 Marco legal (Ley 21.659, D.S. 209, Código Penal) · 4.1 Bastón telescópico y zonas de golpeo · 4.2 Esposas) + **4 MDs consolidados** por módulo (referencia).
@@ -150,19 +161,20 @@
 ## ⏳ TAREAS PENDIENTES Y PRÓXIMOS PASOS
 
 - [ ] **Verificar certificado digital con datos reales** (el alumno imprime su diploma; validar nombre/RUT/fecha/curso y la impresión a PDF en navegador).
-- [ ] **Editor de certificados estilo Sarmat para admin** (pendiente): replicar `CertificadosTab` (WYSIWYG: textos/colores/imágenes arrastrables + PDF con `@react-pdf/renderer`) en `/panel/admin` de Aprecap. Ruta de referencia verificada: Sarmat `/admin` → pestaña "🎓 Generar Certificados".
+- [x] **Editor de certificados estilo Sarmat para admin** ✅ **COMPLETADO (2026-08-19)**: pestaña "🎓 Diplomas y Certificados" en el nuevo panel admin con selector de alumno + curso e impresión del diploma (componente compartido `DiplomaCertificado`) — ver sección R. (El editor WYSIWYG drag&drop de sarmat no se replica por decisión del cliente.)
 - [ ] **Curso de Bastón y Esposas (en curso):** los 11 MDs de submódulos ya están listos en `docs/markdown_cursos/5_Baston_y_Esposas/`. Falta: cliente genera PDFs (NotebookLM) + graba/aporta videos del curso → luego se monta en la plataforma (Sanity + YouTube, flujo video → PDF como CCTV).
 - [ ] **Curso Supervisor — montaje en plataforma (en curso):** ✅ **MDs completados (2026-08-18)**: 18 submódulos (Módulo 1 reordenado con Reglamento 209, Ley 21.659, Derecho penal y DD.HH.) + 6 consolidados, docx de revisión `Curso_Supervisor_Consolidado_v2.docx` — ver sección O. ✅ **Plataforma montada (2026-08-18)**: 18 submódulos con video YouTube + PDF Sanity, `videos supervisor.txt` arreglado — ver sección P. ✅ **Quizzes y Examen Final (2026-08-19)**: MiniQuiz 5 por módulo + Examen Final 60 preguntas (80%) — ver sección Q.
 - [ ] **Quizzes/Cuestionarios del curso CCTV** ✅ **COMPLETADO (2026-08-18)**: banco de 63 preguntas, MiniQuiz de 5 por módulo y Examen Final de 60 preguntas (80%, reintentos ilimitados) — ver sección J.
 - [ ] **ELIMINAR MODO DEMO ANTES DE PRODUCCIÓN (importante):**
-  - Quitar el botón temporal "🧪 Test Curso OS-10" del `Header.tsx` (comentario `TEMP-TEST`, menú escritorio y móvil).
+  - ✅ Botón temporal "🧪 Test Curso OS-10" eliminado del `Header.tsx` (2026-08-19, sección R). Ahora existe "🧪 Vista previa exámenes" → `/prueba-felicitaciones`, que también hay que quitar antes de producción.
   - Quitar el modo demo (`?demo=1` + sessionStorage `aprecap_demo`): `lib/useModoDemo.ts`, prop `modoDemo` en `MiniQuiz.tsx` y `FinalExam.tsx`, badges "🧪 DEMO" y estilos `.demoBox`.
 - [ ] **Registrar origins en CORS de Sanity** (panel sanity.io/manage): `http://localhost:3000` y el dominio Cloudflare, para poder usar `cdn.sanity.io` directo sin el proxy `/api/pdf`.
-- [ ] **Persistencia de resultados en Firestore** (hoy puntajes de cuestionarios y progreso se guardan en localStorage): replicar Sarmat (Firestore + límite de intentos + candados de módulos).
+- [ ] **Persistencia de resultados en Firestore** (hoy puntajes de cuestionarios y progreso se guardan en localStorage): replicar Sarmat (Firestore + candados de módulos) — checklist detallado en `docs/PRE_PRODUCCION_FLUJO_CURSOS.md`. Intentos: **ILIMITADOS** (decisión del cliente, a diferencia de sarmat).
 - [ ] **Configuración de CORS (producción):** agregar URLs de `localhost` y Cloudflare en **Sanity** y **Firebase**.
 - [ ] **Pase a Producción (Restricción de Permisos):**
   - Reactivar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx`.
-  - Añadir candados de módulos/examen estilo Sarmat.
+  - Añadir candados de módulos/examen estilo Sarmat — checklist en `docs/PRE_PRODUCCION_FLUJO_CURSOS.md`.
+  - Deploy de `firestore.rules` (`firebase deploy --only firestore:rules`).
 - [ ] **Ejercicios Prácticos Interactivos:** compilar `docs/EJERCICIOS_PRACTICOS_INTERACTIVOS.md` (Libro de Novedades, Informes OS-10, Pautas de Puesto).
 - [ ] **Tareas del cliente anteriores aún vivas:** WP user/pass (rescatar lecciones LearnPress), ~~confirmar horas del Jefe de Seguridad~~ ✅ **CANCELADA 2026-08-19:** el curso de Jefe de Seguridad dejó de ofrecerse y se retiró de la plataforma (los PDFs y MDs se conservan en el repo), PDF del acuerdo firmado.
 

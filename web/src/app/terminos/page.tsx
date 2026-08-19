@@ -55,7 +55,26 @@ export default function TerminosPage() {
             a nuestro equipo en {CONTACTO.email} o al {CONTACTO.telefono}.
           </p>
           <h2 className="text-xl font-extrabold text-apre-blue">
-            6. Ley aplicable
+            6. Privacidad y Datos (Ley N° 21.719)
+          </h2>
+          <p>
+            El tratamiento de tus datos personales se rige por nuestra Política
+            de Privacidad y por la Ley N° 21.719 sobre Protección de Datos
+            Personales. Puedes ejercer tus derechos de acceso, rectificación,
+            cancelación, oposición y portabilidad escribiendo a {CONTACTO.email}.
+          </p>
+          <h2 className="text-xl font-extrabold text-apre-blue">
+            7. Ciberseguridad (Ley N° 21.663)
+          </h2>
+          <p>
+            Adoptamos medidas de ciberseguridad conforme a la Ley N° 21.663:
+            autenticación en dos factores para cuentas administrativas,
+            cifrado en tránsito, auditoría de eventos críticos y control de
+            acceso por roles. Te pedimos no compartir tus credenciales y
+            notificarnos cualquier incidente de seguridad a {CONTACTO.email}.
+          </p>
+          <h2 className="text-xl font-extrabold text-apre-blue">
+            8. Ley aplicable
           </h2>
           <p>
             Estos términos se rigen por la legislación de la República de

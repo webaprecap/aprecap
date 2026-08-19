@@ -6,7 +6,6 @@ import Link from "next/link";
 import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
-import { cursosMoodle } from "@/data/moodle";
 import { CONTACTO } from "@/data/site";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
@@ -15,7 +14,6 @@ interface Enroll {
   id: string;
   uid: string;
   courseSlug?: string;
-  moodleCourseId?: number;
   modulosCompletados?: string[];
   fecha?: unknown;
 }
@@ -196,7 +194,7 @@ export default function PanelAlumno() {
                 </p>
                 {clases.length > 0 ? (
                   <a
-                    href={clases[0].joinUrl || "https://aprecap.cl/campus"}
+                    href={clases[0].joinUrl || "/contacto"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-4 block rounded-xl bg-whatsapp py-2.5 text-center text-xs font-bold text-white transition hover:brightness-105 shadow-sm"
@@ -484,7 +482,7 @@ export default function PanelAlumno() {
             {aviso.descripcion && <p className="mt-2 text-xs text-gray-600">{aviso.descripcion}</p>}
             <div className="mt-6 grid gap-2">
               <a
-                href={aviso.joinUrl || "https://aprecap.cl/campus"}
+                href={aviso.joinUrl || "/contacto"}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setAviso(null)}

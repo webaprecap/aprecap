@@ -1,0 +1,142 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- FUNCIONES AUXILIARES ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+
+    function userExists() {
+      return exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userExists() && userDoc().data.rol in ['admin', 'superadmin'];
+    }
+
+    function isTeacher() {
+      return isSignedIn() && userExists() && userDoc().data.rol == 'profesor';
+    }
+
+    // --- REGLAS POR COLECCIÓN ---
+
+    // 1. USUARIOS
+    match /usuarios/{userId} {
+      allow get: if isSignedIn() && (
+        userId == request.auth.uid ||
+        isAdmin() ||
+        isTeacher()
+      );
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && (
+        isAdmin() ||
+        (
+          userId == request.auth.uid &&
+          request.resource.data.email == request.auth.token.email &&
+          (
+            request.resource.data.rol in ['alumno', 'profesor'] ||
+            (request.resource.data.rol == 'admin' && request.auth.token.email == 'web.aprecap@gmail.com') ||
+            (request.resource.data.rol == 'superadmin' && request.auth.token.email == 'contacto.digitalup@gmail.com')
+          )
+        )
+      );
+      // El usuario solo puede editar sus datos básicos; rol/activo/email los cambia el admin
+      allow update: if isSignedIn() && (
+        isAdmin() ||
+        (
+          userId == request.auth.uid &&
+          request.resource.data.rol == resource.data.rol &&
+          request.resource.data.activo == resource.data.activo &&
+          request.resource.data.email == resource.data.email
+        )
+      );
+      allow delete: if isSignedIn() && (
+        isAdmin() ||
+        resource.data.email == request.auth.token.email
+      );
+    }
+
+    // 2. SOLICITUDES DE ACCESO
+    match /solicitudes/{solicitudId} {
+      allow read: if isSignedIn() && (
+        resource.data.email == request.auth.token.email ||
+        isAdmin()
+      );
+      allow create: if isSignedIn() && (
+        request.resource.data.email == request.auth.token.email
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // 3. MATRÍCULAS (ENROLLMENTS)
+    match /enrollments/{enrollmentId} {
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        isTeacher() ||
+        resource.data.uid == request.auth.uid
+      );
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 4. CLASES EN VIVO
+    match /clases/{claseId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 5. RESULTADOS DE EVALUACIONES
+    match /resultados_evaluaciones/{resultadoId} {
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        isTeacher() ||
+        resource.data.userId == request.auth.uid
+      );
+      allow create: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. PAGOS (WEBPAY) — se crean solo desde el servidor (Admin SDK)
+    match /pagos/{pagoId} {
+      allow read: if isAdmin();
+      allow create: if false;
+      allow update, delete: if isAdmin();
+    }
+
+    // 7. MENSAJES DE CONTACTO (formulario público)
+    match /contact_submissions/{docId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // 8. CONSENTIMIENTOS (LEY 21.719) — registro inmutable
+    match /consents/{consentId} {
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        resource.data.uid == request.auth.uid
+      );
+      allow create: if isSignedIn() && (
+        request.resource.data.uid == request.auth.uid
+      );
+      allow update, delete: if false;
+    }
+
+    // 9. AUDITORÍA DE CIBERSEGURIDAD (LEY 21.663) — estricta e inmutable
+    match /audit_logs/{logId} {
+      // Solo administradores pueden revisar los logs
+      allow read: if isAdmin();
+      // Nadie crea logs desde el front: solo el Admin SDK (API server) lo hace saltando estas reglas
+      allow create: if false;
+      // Prohibido editar o borrar (INMUTABILIDAD)
+      allow update, delete: if false;
+    }
+  }
+}

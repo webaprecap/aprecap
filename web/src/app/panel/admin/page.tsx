@@ -18,34 +18,102 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
-import { cursosMoodle } from "@/data/moodle";
 import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
 import ConsentModal from "@/components/ConsentModal";
+import DiplomaCertificado, { CURSOS_CERTIFICADO } from "@/components/DiplomaCertificado";
 
 type Tab =
-  | "solicitudes"
-  | "usuarios"
-  | "reuniones"
+  | "pendientes"
+  | "historial"
+  | "alumnos"
+  | "profesores"
   | "clases"
+  | "reuniones"
+  | "diplomas"
+  | "reportes"
+  | "pagos"
   | "contacto"
-  | "auditoria"
-  | "pagos";
+  | "auditoria";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "solicitudes", label: "Solicitudes" },
-  { id: "usuarios", label: "Usuarios y Matrículas" },
-  { id: "pagos", label: "Pagos 💳" },
-  { id: "reuniones", label: "Reuniones Zoom" },
-  { id: "clases", label: "Clases en Vivo" },
-  { id: "contacto", label: "Contacto" },
-  { id: "auditoria", label: "Auditoría" },
+const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: string }[] }[] = [
+  {
+    section: "Solicitudes",
+    items: [
+      { id: "pendientes", label: "Pendientes", emoji: "📋" },
+      { id: "historial", label: "Historial", emoji: "📁" },
+    ],
+  },
+  {
+    section: "Usuarios",
+    items: [
+      { id: "alumnos", label: "Alumnos y Matrículas", emoji: "👨‍🎓" },
+      { id: "profesores", label: "Profesores", emoji: "👔" },
+    ],
+  },
+  {
+    section: "Clases",
+    items: [
+      { id: "clases", label: "En Vivo", emoji: "📹" },
+      { id: "reuniones", label: "Reuniones Zoom", emoji: "🔁" },
+    ],
+  },
+  {
+    section: "Cursos",
+    items: [{ id: "diplomas", label: "Diplomas y Certificados", emoji: "🎓" }],
+  },
+  {
+    section: "Reportes",
+    items: [{ id: "reportes", label: "Notas y Evaluaciones", emoji: "📊" }],
+  },
+  {
+    section: "Gestión",
+    items: [
+      { id: "pagos", label: "Pagos", emoji: "💳" },
+      { id: "contacto", label: "Contacto", emoji: "✉️" },
+      { id: "auditoria", label: "Auditoría", emoji: "🛡️" },
+    ],
+  },
 ];
+
+const CURSOS_PLATAFORMA = cursosOtec.filter((c) =>
+  [
+    "guardia-de-seguridad",
+    "baston-y-esposas",
+    "supervisor-de-seguridad",
+    "operador-cctv-y-alarmas",
+  ].includes(c.slug)
+);
+
+function cursoNombreDe(slug: string) {
+  return (
+    [...cursosLP, ...cursosOtec].find((c) => c.slug === slug)?.title ?? slug
+  );
+}
+
+function useCount(coleccion: string, campo?: string, valor?: string) {
+  const db = getFirestoreDb();
+  const [n, setN] = useState<number | null>(null);
+  useEffect(() => {
+    if (!db) return;
+    const q =
+      campo && valor
+        ? query(collection(db, coleccion), where(campo, "==", valor))
+        : query(collection(db, coleccion));
+    return onSnapshot(q, (snap) => setN(snap.size));
+  }, [db, coleccion, campo, valor]);
+  return n;
+}
 
 export default function PanelAdmin() {
   const { userData, loading, signOut } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("solicitudes");
+  const [tab, setTab] = useState<Tab>("pendientes");
+
+  const pendientesCount = useCount("solicitudes", "estado", "pendiente");
+  const usuariosCount = useCount("usuarios");
+  const profesoresCount = useCount("usuarios", "rol", "profesor");
+  const clasesActivasCount = useCount("clases", "estado", "activa");
 
   useEffect(() => {
     if (!loading && (!userData || (userData.rol !== "admin" && userData.rol !== "superadmin"))) {
@@ -55,62 +123,116 @@ export default function PanelAdmin() {
 
   if (loading || !userData) return <p className="p-8 text-center text-gray-500">Cargando…</p>;
 
+  const badgeDe = (id: Tab): number | null => {
+    switch (id) {
+      case "pendientes":
+        return pendientesCount;
+      case "alumnos":
+        return usuariosCount;
+      case "profesores":
+        return profesoresCount;
+      case "clases":
+        return clasesActivasCount;
+      default:
+        return null;
+    }
+  };
+
+  const tituloTab = NAV_GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
+
   return (
     <>
-      <section className="bg-apre-blue text-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-10">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-widest text-apre-red">
-              Panel de Administración
-            </p>
-            <h1 className="mt-2 text-3xl font-extrabold">
-              {userData.rol === "superadmin" ? "Superadmin" : "Admin"} · {userData.nombre}
-            </h1>
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        {/* Sidebar izquierda estilo sarmat */}
+        <aside className="w-full shrink-0 border-b border-apre-blue-light bg-apre-blue lg:fixed lg:bottom-0 lg:left-0 lg:top-20 lg:z-40 lg:flex lg:w-[280px] lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r">
+          <div className="border-b border-white/10 p-4">
+            <p className="text-sm font-black text-white">🛡️ Panel de Administración</p>
+            <p className="text-xs text-white/60">OTEC APRECAP</p>
           </div>
-          <button
-            onClick={() => signOut()}
-            className="rounded-xl bg-white/10 px-5 py-2.5 text-sm font-bold transition hover:bg-white/20"
-          >
-            Cerrar sesión
-          </button>
-        </div>
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex flex-wrap gap-2 pb-4">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
-                  tab === t.id
-                    ? "bg-apre-red text-white"
-                    : "bg-white/10 text-white hover:bg-white/20"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="bg-gray-50 py-10">
-        <div className="mx-auto max-w-6xl px-4">
-          {tab === "solicitudes" && <SolicitudesTab />}
-          {tab === "usuarios" && <UsuariosTab />}
-          {tab === "pagos" && <PagosTab />}
-          {tab === "reuniones" && <ReunionesTab />}
-          {tab === "clases" && <ClasesTab />}
-          {tab === "contacto" && <ContactoTab />}
-          {tab === "auditoria" && <AuditoriaTab />}
-        </div>
-      </section>
+          <nav className="flex-1 space-y-5 p-3">
+            {NAV_GROUPS.map((g) => (
+              <div key={g.section}>
+                <p className="px-3 pb-1 text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {g.section}
+                </p>
+                <div className="space-y-1">
+                  {g.items.map((i) => {
+                    const active = tab === i.id;
+                    const badge = badgeDe(i.id);
+                    return (
+                      <button
+                        key={i.id}
+                        onClick={() => setTab(i.id)}
+                        className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
+                          active
+                            ? "border-l-4 border-[#c9a227] bg-white/10 text-white"
+                            : "border-l-4 border-transparent text-white/75 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        <span className="truncate">
+                          {i.emoji} {i.label}
+                        </span>
+                        {badge !== null && (
+                          <span className="shrink-0 rounded-full bg-[#c9a227] px-2 py-0.5 text-[10px] font-black text-apre-blue">
+                            {badge}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </nav>
+
+          <div className="border-t border-white/10 p-4">
+            <p className="truncate text-sm font-bold text-white">{userData.nombre}</p>
+            <p className="truncate text-xs text-white/50">{userData.email}</p>
+            <button
+              onClick={() => signOut()}
+              className="mt-3 w-full rounded-lg bg-white/10 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/20"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </aside>
+
+        {/* Contenido */}
+        <main className="flex-1 lg:pl-[280px]">
+          <div className="px-4 py-6 md:px-8">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4">
+              <div>
+                <h1 className="text-2xl font-extrabold text-apre-blue">
+                  {tituloTab?.emoji} {tituloTab?.label}
+                </h1>
+                <p className="mt-1 text-xs text-gray-500">
+                  {userData.rol === "superadmin" ? "Superadmin" : "Admin"} · {userData.nombre}
+                </p>
+              </div>
+            </div>
+
+            {tab === "pendientes" && <PendientesTab />}
+            {tab === "historial" && <HistorialTab />}
+            {tab === "alumnos" && <UsuariosTab filtroRol="alumno" />}
+            {tab === "profesores" && <UsuariosTab filtroRol="profesor" />}
+            {tab === "clases" && <ClasesTab />}
+            {tab === "reuniones" && <ReunionesTab />}
+            {tab === "diplomas" && <DiplomasTab />}
+            {tab === "reportes" && <ReportesTab />}
+            {tab === "pagos" && <PagosTab />}
+            {tab === "contacto" && <ContactoTab />}
+            {tab === "auditoria" && <AuditoriaTab />}
+          </div>
+        </main>
+      </div>
       <ConsentModal />
     </>
   );
 }
 
-/* ---------- Solicitudes ---------- */
-function SolicitudesTab() {
+/* ---------- Solicitudes Pendientes ---------- */
+function PendientesTab() {
   const db = getFirestoreDb();
   const [items, setItems] = useState<any[]>([]);
 
@@ -199,8 +321,52 @@ function SolicitudesTab() {
   );
 }
 
-/* ---------- Usuarios y Matrículas ---------- */
-function UsuariosTab() {
+/* ---------- Historial de Solicitudes ---------- */
+function HistorialTab() {
+  const db = getFirestoreDb();
+  const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "solicitudes"), where("estado", "!=", "pendiente"));
+    return onSnapshot(q, (snap) =>
+      setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  if (items.length === 0) return <p className="text-gray-500">Sin solicitudes revisadas.</p>;
+  return (
+    <div className="space-y-3">
+      {items.map((s) => (
+        <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="font-extrabold text-apre-blue">
+              {[s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ")}
+            </p>
+            <span
+              className={`rounded-full px-2 py-0.5 text-xs font-bold text-white ${
+                s.estado === "aprobada" ? "bg-whatsapp" : "bg-apre-red"
+              }`}
+            >
+              {s.estado === "aprobada" ? "✅ Aprobada" : "❌ Rechazada"}
+            </span>
+          </div>
+          <p className="text-sm text-gray-600">
+            {s.email} · {s.tipoSolicitud === "profesor" ? "Profesor" : "Alumno"}
+          </p>
+          {s.fechaRevision?.toDate && (
+            <p className="mt-1 text-xs text-gray-400">
+              Revisada: {s.fechaRevision.toDate().toLocaleString("es-CL")}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- Usuarios y Matrículas (Alumnos / Profesores) ---------- */
+function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
   const db = getFirestoreDb();
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [enrolls, setEnrolls] = useState<any[]>([]);
@@ -222,6 +388,8 @@ function UsuariosTab() {
     };
   }, [db]);
 
+  const lista = usuarios.filter((u) => u.rol === filtroRol);
+
   const toggleActivo = async (u: any) => {
     await updateDoc(doc(db!, "usuarios", u.id), { activo: !u.activo });
   };
@@ -236,11 +404,9 @@ function UsuariosTab() {
 
   const matricular = async (u: any) => {
     if (!selCurso) return;
-    const curso = [...cursosLP, ...cursosMoodle].find((c) => c.slug === selCurso);
     await setDoc(doc(collection(db!, "enrollments"), `${u.id}_${selCurso}`), {
       uid: u.id,
       courseSlug: selCurso,
-      moodleCourseId: (curso as any)?.moodleId ? Number((curso as any).moodleId) : null,
       modulosCompletados: [],
       fecha: serverTimestamp(),
     });
@@ -260,15 +426,16 @@ function UsuariosTab() {
     await updateDoc(doc(db!, "enrollments", e.id), { modulosCompletados: nuevo });
   };
 
-  const cursoNombre = (slug: string) =>
-    [...cursosLP, ...cursosMoodle, ...cursosOtec].find((c) => c.slug === slug)?.title ?? slug;
-
   const cursoCurriculum = (slug: string) =>
-    [...cursosLP, ...cursosMoodle].find((c) => c.slug === slug)?.curriculum ?? null;
+    cursosLP.find((c) => c.slug === slug)?.curriculum ?? null;
+
+  if (lista.length === 0) {
+    return <p className="text-gray-500">No hay {filtroRol === "profesor" ? "profesores" : "alumnos"} registrados.</p>;
+  }
 
   return (
     <div className="space-y-4">
-      {usuarios.map((u) => {
+      {lista.map((u) => {
         const susEnrolls = enrolls.filter((e) => e.uid === u.id);
         return (
           <div key={u.id} className="rounded-2xl border border-gray-200 bg-white p-5">
@@ -319,7 +486,7 @@ function UsuariosTab() {
                   return (
                     <li key={e.id} className="rounded-lg bg-gray-50 px-3 py-2">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-sm">{cursoNombre(e.courseSlug)}</span>
+                        <span className="text-sm">{cursoNombreDe(e.courseSlug)}</span>
                         <div className="flex items-center gap-2">
                           {curriculum && curriculum.length > 0 && (
                             <>
@@ -375,44 +542,240 @@ function UsuariosTab() {
               </ul>
             )}
 
-            {selUid === u.id ? (
-              <div className="mt-3 flex gap-2">
-                <select
-                  value={selCurso}
-                  onChange={(e) => setSelCurso(e.target.value)}
-                  className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                >
-                  <option value="">Selecciona un curso…</option>
-                  {[...cursosLP, ...cursosMoodle].map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.title}
-                    </option>
-                  ))}
-                </select>
+            {filtroRol === "alumno" &&
+              (selUid === u.id ? (
+                <div className="mt-3 flex gap-2">
+                  <select
+                    value={selCurso}
+                    onChange={(e) => setSelCurso(e.target.value)}
+                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                  >
+                    <option value="">Selecciona un curso…</option>
+                    {CURSOS_PLATAFORMA.map((c) => (
+                      <option key={c.slug} value={c.slug}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => matricular(u)}
+                    className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white"
+                  >
+                    Matricular
+                  </button>
+                  <button
+                    onClick={() => setSelUid(null)}
+                    className="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-700"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              ) : (
                 <button
-                  onClick={() => matricular(u)}
-                  className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white"
+                  onClick={() => setSelUid(u.id)}
+                  className="mt-3 rounded-lg bg-apre-blue/10 px-3 py-1.5 text-xs font-bold text-apre-blue hover:bg-apre-blue/20"
                 >
-                  Matricular
+                  + Matricular en curso
                 </button>
-                <button
-                  onClick={() => setSelUid(null)}
-                  className="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-700"
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setSelUid(u.id)}
-                className="mt-3 rounded-lg bg-apre-blue/10 px-3 py-1.5 text-xs font-bold text-apre-blue hover:bg-apre-blue/20"
-              >
-                + Matricular en curso
-              </button>
-            )}
+              ))}
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/* ---------- Diplomas y Certificados ---------- */
+function DiplomasTab() {
+  const db = getFirestoreDb();
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [selUid, setSelUid] = useState("");
+  const [cursoSlug, setCursoSlug] = useState(CURSOS_CERTIFICADO[0].slug);
+
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "usuarios"), where("rol", "==", "alumno"));
+    return onSnapshot(q, (snap) =>
+      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+  }, [db]);
+
+  const alumno = usuarios.find((u) => u.id === selUid);
+  const curso =
+    CURSOS_CERTIFICADO.find((c) => c.slug === cursoSlug) ?? CURSOS_CERTIFICADO[0];
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 print:hidden">
+        <h2 className="text-xl font-extrabold text-apre-blue">
+          Generar diploma de alumno
+        </h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Selecciona el alumno y el curso aprobado. El diploma se genera con sus datos y
+          puedes imprimirlo o guardarlo como PDF.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <select
+            value={selUid}
+            onChange={(e) => setSelUid(e.target.value)}
+            className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
+          >
+            <option value="">Selecciona un alumno…</option>
+            {usuarios.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.nombre} · {u.email}
+              </option>
+            ))}
+          </select>
+          <select
+            value={cursoSlug}
+            onChange={(e) => setCursoSlug(e.target.value)}
+            className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
+          >
+            {CURSOS_CERTIFICADO.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.nombre} ({c.horas} horas)
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            onClick={() => window.print()}
+            disabled={!alumno}
+            className="rounded-xl bg-apre-red px-5 py-2.5 text-sm font-bold text-white disabled:opacity-40"
+          >
+            🖨 Imprimir / Guardar como PDF
+          </button>
+        </div>
+      </div>
+
+      {alumno ? (
+        <DiplomaCertificado
+          nombre={alumno.nombre || ""}
+          rut={typeof alumno.rut === "string" ? alumno.rut : "—"}
+          curso={curso}
+        />
+      ) : (
+        <p className="text-gray-500">Selecciona un alumno para previsualizar el diploma.</p>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Reportes: Notas y Evaluaciones ---------- */
+function ReportesTab() {
+  const db = getFirestoreDb();
+  const [resultados, setResultados] = useState<any[]>([]);
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!db) return;
+    const un1 = onSnapshot(collection(db, "resultados_evaluaciones"), (snap) =>
+      setResultados(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    const un2 = onSnapshot(collection(db, "usuarios"), (snap) =>
+      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+    };
+  }, [db]);
+
+  const nombreDe = (uid?: string) => {
+    if (!uid) return "—";
+    const u = usuarios.find((x) => x.id === uid || x.uid === uid);
+    return u?.nombre ? `${u.nombre} (${u.email ?? ""})` : uid;
+  };
+
+  const exportarCsv = () => {
+    const filas = [
+      ["Fecha", "Alumno", "Módulo/Evaluación", "Correctas", "Total", "%", "Aprobado"],
+      ...resultados.map((r) => [
+        r.fecha?.toDate ? r.fecha.toDate().toISOString() : "",
+        nombreDe(r.userId),
+        r.moduloNombre || r.evaluacion || "",
+        String(r.correctas ?? ""),
+        String(r.total ?? ""),
+        String(r.porcentaje ?? ""),
+        r.aprobado ? "Sí" : "No",
+      ]),
+    ];
+    const csv =
+      "\uFEFF" +
+      filas
+        .map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";"))
+        .join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `notas-aprecap-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-gray-600">
+          Historial de notas y porcentajes de las evaluaciones de los alumnos.
+        </p>
+        <button
+          onClick={exportarCsv}
+          disabled={resultados.length === 0}
+          className="rounded-lg bg-apre-blue px-4 py-2 text-sm font-bold text-white hover:bg-apre-blue-light disabled:opacity-40"
+        >
+          ⬇ Descargar Notas y % (Excel)
+        </button>
+      </div>
+
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-gray-200 text-xs font-bold uppercase tracking-wide text-gray-500">
+              <th className="px-4 py-3">Fecha</th>
+              <th className="px-4 py-3">Alumno</th>
+              <th className="px-4 py-3">Módulo/Evaluación</th>
+              <th className="px-4 py-3">Correctas</th>
+              <th className="px-4 py-3">%</th>
+              <th className="px-4 py-3">Aprobado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {resultados.map((r) => (
+              <tr key={r.id} className="border-b border-gray-100 last:border-0">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-600">
+                  {r.fecha?.toDate ? r.fecha.toDate().toLocaleString("es-CL") : "—"}
+                </td>
+                <td className="px-4 py-3 text-gray-700">{nombreDe(r.userId)}</td>
+                <td className="px-4 py-3 font-semibold text-apre-blue">
+                  {r.moduloNombre || r.evaluacion || "—"}
+                </td>
+                <td className="px-4 py-3 text-gray-600">
+                  {r.correctas ?? "—"} / {r.total ?? "—"}
+                </td>
+                <td className="px-4 py-3 font-bold">{r.porcentaje ?? "—"}%</td>
+                <td className="px-4 py-3">
+                  {r.aprobado ? (
+                    <span className="text-green-600">✅ Sí</span>
+                  ) : (
+                    <span className="text-apre-red">❌ No</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {resultados.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                  Sin resultados registrados.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -572,11 +935,6 @@ function ClasesTab() {
     await deleteDoc(doc(db!, "clases", c.id));
   };
 
-  const cursoNombre = (slug: string) => {
-    if (!slug) return "Todos los cursos";
-    return [...cursosLP, ...cursosMoodle, ...cursosOtec].find((c) => c.slug === slug)?.title ?? slug;
-  };
-
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-6">
@@ -604,7 +962,7 @@ function ClasesTab() {
             className="rounded-xl border border-gray-300 px-4 py-3 text-sm"
           >
             <option value="">Todos los cursos (global)</option>
-            {[...cursosLP, ...cursosMoodle].map((c) => (
+            {CURSOS_PLATAFORMA.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {c.title}
               </option>
@@ -633,7 +991,7 @@ function ClasesTab() {
               <div>
                 <p className="font-extrabold text-apre-blue">{c.nombre}</p>
                 <p className="text-sm text-gray-600">
-                  {cursoNombre(c.cursoSlug)} ·{" "}
+                  {c.cursoSlug ? cursoNombreDe(c.cursoSlug) : "Todos los cursos"} ·{" "}
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-bold text-white ${
                       c.estado === "activa"

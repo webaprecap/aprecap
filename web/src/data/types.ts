@@ -41,24 +41,6 @@ export interface CursoLP {
   faq: { q: string; a: string }[];
 }
 
-export interface ActividadMoodle {
-  type: "forum" | "resource" | "url" | "quiz";
-  name: string;
-  url: string;
-}
-
-export interface CursoMoodle {
-  slug: string;
-  title: string;
-  url: string;
-  moodleId: string;
-  activities: ActividadMoodle[];
-  files: string[];
-  filePaths: string[];
-  videos: string[];
-  curriculum?: CurriculumItem[];
-}
-
 export interface DatosContacto {
   direccion: string;
   metro: string;
