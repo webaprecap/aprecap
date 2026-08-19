@@ -393,144 +393,164 @@ export const materialesEstudio: CursoMaterial[] = [
       }
     ]
   },
-  {
+{
     slug: "supervisor-de-seguridad",
     title: "Curso de Supervisor de Seguridad Privada",
     categoria: "Liderazgo y Supervisión Operativa",
-    pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
     modulos: [
       {
-        nombre: "Módulo 1: Normativa Laboral y Prevención de Riesgos",
-        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
+        nombre: "Módulo 1: Normativa Laboral y Legislación de la Seguridad Privada",
         subModulos: [
           {
             id: "sup-1-1",
             codigo: "1.1",
-            nombre: "Supervisión de Turnos y Normativa Laboral",
-            pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
-            slides: [
-              {
-                id: "sup-1-1-1",
-                courseSlug: "supervisor-de-seguridad",
-                moduleName: "Módulo 1.1: Normativa Laboral",
-                slideNumber: 1,
-                title: "Control de Asistencia y Fiscalización EPP",
-                contentBullets: [
-                  "Fiscalización de dotaciones y turnos de trabajo.",
-                  "Control de cumplimiento del reglamento interno.",
-                  "Supervisión del uso adecuado de EPP en terreno."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Contrato de Trabajo y Jornada Laboral",
+            videoUrl: "https://youtu.be/kzuNrJpBI6Q",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/339b8aaf88e4e56ad5b062881ce339c6bd96f268.pdf"
+          },
+          {
+            id: "sup-1-2",
+            codigo: "1.2",
+            nombre: "Decreto Supremo N° 209 — Reglamento de la Seguridad Privada",
+            videoUrl: "https://youtu.be/zLtQda89Vs0",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/5e14861c68302516bfd887c0fdf495b66855a038.pdf"
+          },
+          {
+            id: "sup-1-3",
+            codigo: "1.3",
+            nombre: "Ley N° 21.659 — Seguridad Privada en la Práctica",
+            videoUrl: "https://youtu.be/WAI-nfqYTyM",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/a41fd78f787a7b24936064bc3bca2b1f4eb196f5.pdf"
+          },
+          {
+            id: "sup-1-4",
+            codigo: "1.4",
+            nombre: "Derecho Penal y Detención",
+            videoUrl: "https://youtu.be/4pxJhttFdxk",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/8131a476fe12f4250d09809348b52bd410787756.pdf"
+          },
+          {
+            id: "sup-1-5",
+            codigo: "1.5",
+            nombre: "Derechos Humanos, Uso de la Fuerza y Datos Personales",
+            videoUrl: "https://youtu.be/y8YYNMskLJc",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/315fd91e3ff984740e99d3e1a7c9f43cc0922706.pdf"
+          },
+          {
+            id: "sup-1-6",
+            codigo: "1.6",
+            nombre: "Ley N° 16.744 — Accidentes del Trabajo y Enfermedades Profesionales",
+            videoUrl: "https://youtu.be/y7pRiIaBH7o",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/34fa984f0cc26d9af4ad59ebb893a4b5462dd0cb.pdf"
+          },
+          {
+            id: "sup-1-7",
+            codigo: "1.7",
+            nombre: "Decreto Supremo N° 594 — Higiene y Seguridad",
+            videoUrl: "https://youtu.be/k-aQSMYdK5c",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/9b177d6f050d783be0d50e75a3b9961cf3b509fc.pdf"
           }
         ]
       },
       {
         nombre: "Módulo 2: Prevención de Riesgos y Control de Emergencias",
-        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         subModulos: [
           {
             id: "sup-2-1",
             codigo: "2.1",
-            nombre: "Liderazgo en Evacuaciones y Planes de Contingencia",
-            pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
-            slides: [
-              {
-                id: "sup-2-1-1",
-                courseSlug: "supervisor-de-seguridad",
-                moduleName: "Módulo 2.1: Gestión de Emergencias",
-                slideNumber: 1,
-                title: "Comando de Incidentes en Puestos de Trabajo",
-                contentBullets: [
-                  "Coordinación con Carabineros, Bomberos y SAMU.",
-                  "Ejecución de simulacros de evacuación masiva.",
-                  "Informes técnicos posteriores al siniestro."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Prevención de Riesgos en el Puesto",
+            videoUrl: "https://youtu.be/-vXHx6DdEvg",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7a1e489ff6e94c49fa7fb03b0cb219cfd1670dc6.pdf"
+          },
+          {
+            id: "sup-2-2",
+            codigo: "2.2",
+            nombre: "Control de Incendios y Emergencias",
+            videoUrl: "https://youtu.be/7jFHf8I_vNw",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/01d6221450e3c7713aaf2d5781607b01371493e5.pdf"
           }
         ]
       },
       {
-        nombre: "Módulo 3: Procedimientos de Gestión de Seguridad y Administración",
-        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
+        nombre: "Módulo 3: Procedimientos de Gestión de Seguridad",
         subModulos: [
           {
             id: "sup-3-1",
             codigo: "3.1",
-            nombre: "Directivas de Funcionamiento ante OS-10",
-            pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
-            slides: [
-              {
-                id: "sup-3-1-1",
-                courseSlug: "supervisor-de-seguridad",
-                moduleName: "Módulo 3.1: Directivas de Funcionamiento",
-                slideNumber: 1,
-                title: "Tramitación de Estudios de Seguridad",
-                contentBullets: [
-                  "Elaboración de pautas de puesto de vigilancia.",
-                  "Auditoría de vulnerabilidades físicas e inspecciones.",
-                  "Presentación formal ante la Autoridad Fiscalizadora."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Directivas de Funcionamiento y Relación con OS-10",
+            videoUrl: "https://youtu.be/Mh6vSchtoYU",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/f69c41e52591534c24bedc7678fd0ddcd50481d1.pdf"
+          },
+          {
+            id: "sup-3-2",
+            codigo: "3.2",
+            nombre: "Estudios de Seguridad y Pautas de Puesto",
+            videoUrl: "https://youtu.be/V6B4G5hJjWk",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/6b3b9f1a5b4fc16ec48bf6f68f447651d8535cc5.pdf"
           }
         ]
       },
       {
         nombre: "Módulo 4: Liderazgo y Resolución de Conflictos",
-        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         subModulos: [
           {
             id: "sup-4-1",
             codigo: "4.1",
-            nombre: "Conducción de Equipos de Vigilancia",
-            pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
-            slides: [
-              {
-                id: "sup-4-1-1",
-                courseSlug: "supervisor-de-seguridad",
-                moduleName: "Módulo 4.1: Liderazgo Operativo",
-                slideNumber: 1,
-                title: "Motivación y Gestión de Equipos",
-                contentBullets: [
-                  "Resolución asertiva de controversias internas.",
-                  "Evaluaciones de desempeño al personal a cargo.",
-                  "Relaciones humanas con clientes mandantes."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Liderazgo y Supervisión de Equipos",
+            videoUrl: "https://youtu.be/e9sq1wgoHkU",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/59fb17e011ceffa65d125e0add5bd98e418841ca.pdf"
+          },
+          {
+            id: "sup-4-2",
+            codigo: "4.2",
+            nombre: "Resolución de Conflictos y Protocolo de la Ley Karin",
+            videoUrl: "https://youtu.be/loNAVaURqbQ",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/a7cc1051740d559398180af73bb39c56d3ab7a5a.pdf"
           }
         ]
       },
       {
         nombre: "Módulo 5: Sistemas de Alarma, Comunicación y Enlace",
-        pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
         subModulos: [
           {
             id: "sup-5-1",
             codigo: "5.1",
-            nombre: "Monitoreo Remoto y Control de Rondas",
-            pdfUrl: "/materiales/FORMACION-SUPERVISOR-DE-SEGURIDAD-PRIVADA.pdf",
-            slides: [
-              {
-                id: "sup-5-1-1",
-                courseSlug: "supervisor-de-seguridad",
-                moduleName: "Módulo 5.1: Control Tecnológico",
-                slideNumber: 1,
-                title: "Sistemas de Reloj y Marcas GPS",
-                contentBullets: [
-                  "Auditoría en tiempo real de marcaciones de rondas.",
-                  "Sistemas de red cerrada VHF/UHF repetidoras.",
-                  "Mantenimiento preventivo de enlaces de emergencia."
-                ],
-                imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80"
-              }
-            ]
+            nombre: "Sistemas de Alarma y Monitoreo",
+            videoUrl: "https://youtu.be/7GS3lHbmskE",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/1833afaad6987fc12383590d3a8a8b3e748df972.pdf"
+          },
+          {
+            id: "sup-5-2",
+            codigo: "5.2",
+            nombre: "Comunicación y Enlace",
+            videoUrl: "https://youtu.be/kuUjS00c7n0",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/c6b7a8ac509431153156b42d8e9e20dde2b45bc7.pdf"
+          }
+        ]
+      },
+      {
+        nombre: "Módulo 6: Eventos Masivos, Registros Operativos y Manejo de Incidentes",
+        subModulos: [
+          {
+            id: "sup-6-1",
+            codigo: "6.1",
+            nombre: "Gestión de Eventos Masivos (Ley N° 21.659 y Decreto N° 208)",
+            videoUrl: "https://youtu.be/xTVi0FO-J2U",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/138bcdfc0443d5f9ddbba26995a1db2726af8fed.pdf"
+          },
+          {
+            id: "sup-6-2",
+            codigo: "6.2",
+            nombre: "Registros Operativos e Informes",
+            videoUrl: "https://youtu.be/w6IbgLZuS4E",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/2eb8cae4b5e47f9bd2eea214ac04f94473dd612d.pdf"
+          },
+          {
+            id: "sup-6-3",
+            codigo: "6.3",
+            nombre: "Manejo de Incidentes del Supervisor",
+            videoUrl: "https://youtu.be/MnJXr2iHIU4",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7a0e112ac297b8c98548dc3c393fd9b380b48783.pdf"
           }
         ]
       }
@@ -866,3 +886,4 @@ export const materialesEstudio: CursoMaterial[] = [
     ]
   }
 ];
+
