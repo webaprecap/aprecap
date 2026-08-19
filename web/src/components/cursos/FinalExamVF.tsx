@@ -84,7 +84,7 @@ export default function FinalExamVF({
       if (respuestas[p.id] === p.respuestaCorrecta) correctCount++;
     }
     const pct = Math.round((correctCount / preguntas.length) * 100);
-    const aprobado = modoDemo || pct >= umbral;
+    const aprobado = pct >= umbral;
 
     setScore(correctCount);
     setPercentage(pct);
@@ -143,9 +143,9 @@ export default function FinalExamVF({
         score={score}
         totalPreguntas={preguntas.length}
         cursoTitulo={cursoTitulo}
+        cursoSlug={cursoSlug}
         umbral={umbral}
         volverHref={volverHref}
-        modoDemo={modoDemo}
         failedModules={failedModules}
         onRetry={handleRetry}
       />

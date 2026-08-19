@@ -383,14 +383,17 @@ export default function PanelAlumno() {
                 <h2 className="mt-2 text-xl font-extrabold text-apre-blue">
                   Emisión de Diplomas y Certificados
                 </h2>
-                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-                  Los diplomas oficiales con firmas acreditadas, RUT y código QR institucional son
-                  generados y emitidos exclusivamente por la administración de APRECAP una vez que apruebas
-                  el examen final de tu curso.
-                </p>
-                <p className="mt-2 text-xs font-semibold text-emerald-700">
-                  📍 Para retirar tu certificado físico o solicitar el PDF oficial timbrado, acércate a{" "}
-                  <strong>{CONTACTO.direccion}</strong> ({CONTACTO.metro}) o contáctanos por WhatsApp.
+                <div className="mt-2 space-y-2 text-xs text-gray-600 leading-relaxed">
+                  <p>
+                    • <strong>Cursos Presenciales (Guardia OS-10 y Bastón y Esposas):</strong> Tu Certificado Oficial y Credencial son emitidos y entregados directamente por APRECAP de forma presencial una vez completadas tus horas de capacitación práctica y evaluaciones ante la autoridad fiscalizadora.
+                  </p>
+                  <p>
+                    • <strong>Cursos Online (CCTV y Alarmas / Supervisor de Seguridad):</strong> Los diplomas con firmas acreditadas, RUT y código QR institucional se emiten tras aprobar la evaluación final en el aula virtual.
+                  </p>
+                </div>
+                <p className="mt-3 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                  📍 Para retirar tu certificado físico o coordinar tu entrega presencial, acércate a{" "}
+                  <strong>{CONTACTO.direccion}</strong> ({CONTACTO.metro}) en horario de {CONTACTO.horario} o contáctanos por WhatsApp.
                 </p>
               </div>
               <a

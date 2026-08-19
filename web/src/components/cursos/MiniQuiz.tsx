@@ -85,7 +85,7 @@ export default function MiniQuiz({ banco, tituloModulo, onPass, onFail, modoDemo
     })
 
     const pct = calcularPorcentaje(correctCount, preguntas.length)
-    const isApproved = modoDemo || pct >= MINIQUIZ_UMBRAL_APROBACION
+    const isApproved = pct >= MINIQUIZ_UMBRAL_APROBACION
 
     setScore(correctCount)
     setPercentage(pct)
@@ -138,18 +138,6 @@ export default function MiniQuiz({ banco, tituloModulo, onPass, onFail, modoDemo
         </div>
       </div>
 
-      {modoDemo && !submitted && (
-        <div className={styles.demoBox}>
-          <span className={styles.demoBadge}>🧪 MODO DEMO</span>
-          <p className={styles.demoText}>
-            Demostración para clientes: puedes responder normalmente o continuar sin evaluar.
-          </p>
-          <button onClick={onPass} className={styles.demoPassBtn}>
-            ✅ Pasar al siguiente módulo sin responder (Demo)
-          </button>
-        </div>
-      )}
-
       {submitted && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -165,9 +153,7 @@ export default function MiniQuiz({ banco, tituloModulo, onPass, onFail, modoDemo
           </div>
           <p className={styles.resultHint}>
             {passed
-              ? modoDemo
-                ? 'Modo demo: aprobación habilitada para la demostración. Puedes avanzar al siguiente módulo.'
-                : 'Dominas este módulo. Puedes avanzar al siguiente.'
+              ? 'Dominas este módulo. Puedes avanzar al siguiente.'
               : `Necesitas al menos un ${MINIQUIZ_UMBRAL_APROBACION}% para aprobar. Repasa el material y vuelve a intentarlo.`}
           </p>
           <div className={styles.resultActions}>
@@ -176,16 +162,9 @@ export default function MiniQuiz({ banco, tituloModulo, onPass, onFail, modoDemo
                 Avanzar al Siguiente Módulo →
               </button>
             ) : (
-              <>
-                <button onClick={handleRetry} className={styles.btnRetry}>
-                  ↻ Reintentar Quiz
-                </button>
-                {modoDemo && (
-                  <button onClick={onPass} className={styles.demoPassBtn}>
-                    ✅ Avanzar al siguiente módulo (Demo)
-                  </button>
-                )}
-              </>
+              <button onClick={handleRetry} className={styles.btnRetry}>
+                ↻ Reintentar Quiz
+              </button>
             )}
           </div>
         </motion.div>

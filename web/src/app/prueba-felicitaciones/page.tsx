@@ -121,6 +121,7 @@ export default function PruebaFelicitacionesPage() {
               score={sel.score}
               totalPreguntas={sel.totalPreguntas}
               cursoTitulo={sel.titulo}
+              cursoSlug={sel.slug}
               umbral={sel.umbral}
               volverHref={sel.volverHref}
             />

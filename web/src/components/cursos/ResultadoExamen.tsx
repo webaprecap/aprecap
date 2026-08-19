@@ -18,9 +18,9 @@ interface ResultadoExamenProps {
   score: number;
   totalPreguntas: number;
   cursoTitulo: string;
+  cursoSlug?: string;
   umbral: number;
   volverHref?: string;
-  modoDemo?: boolean;
   failedModules?: ModuloFeedback[];
   onRetry?: () => void;
 }
@@ -31,9 +31,9 @@ export default function ResultadoExamen({
   score,
   totalPreguntas,
   cursoTitulo,
+  cursoSlug,
   umbral,
   volverHref,
-  modoDemo = false,
   failedModules = [],
   onRetry,
 }: ResultadoExamenProps) {
@@ -52,8 +52,13 @@ export default function ResultadoExamen({
     }
   }, [aprobado]);
 
+  const esCursoPresencial =
+    cursoSlug === "guardia-de-seguridad" || cursoSlug === "baston-y-esposas";
+
   const whatsappLogroUrl = `${CONTACTO.whatsappLink}?text=${encodeURIComponent(
-    `Hola OTEC APRECAP, aprobé exitosamente el Examen Final de "${cursoTitulo}" con un ${percentage}% de logro y deseo coordinar la entrega de mi Certificado/Diploma Oficial.`
+    esCursoPresencial
+      ? `Hola OTEC APRECAP, completé la evaluación teórica de "${cursoTitulo}" con un ${percentage}% de logro y deseo coordinar mis clases presenciales y certificado.`
+      : `Hola OTEC APRECAP, aprobé exitosamente el Examen Final de "${cursoTitulo}" con un ${percentage}% de logro y deseo coordinar la entrega de mi Certificado/Diploma Oficial.`
   )}`;
 
   return (
@@ -62,7 +67,11 @@ export default function ResultadoExamen({
         <div className="text-center">
           <span className="text-4xl">{aprobado ? "🎉" : "📚"}</span>
           <h2 className={styles.resultTitle}>
-            {aprobado ? "¡Felicitaciones! Curso Aprobado" : "Evaluación No Superada"}
+            {aprobado
+              ? esCursoPresencial
+                ? "¡Felicitaciones! Módulo Teórico Finalizado"
+                : "¡Felicitaciones! Curso Aprobado"
+              : "Evaluación No Superada"}
           </h2>
         </div>
 
@@ -90,61 +99,86 @@ export default function ResultadoExamen({
         {aprobado ? (
           <div className="space-y-4">
             <p className={styles.feedbackText}>
-              Has aprobado el Examen Final de <strong>{cursoTitulo}</strong> con un{" "}
-              <strong>{percentage}%</strong> de logro (mínimo requerido: {umbral}%).
+              Has respondido la evaluación de <strong>{cursoTitulo}</strong> con un{" "}
+              <strong>{percentage}%</strong> de logro (mínimo referencial: {umbral}%).
             </p>
             <p className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
-              ✅ Tu aprobación académica ha quedado registrada exitosamente en el sistema de OTEC APRECAP.
+              ✅ Tu avance académico ha quedado registrado exitosamente en el sistema de OTEC APRECAP.
             </p>
 
-            {modoDemo && (
-              <p className={styles.feedbackHint}>
-                🧪 Resultado generado en modo demostración para presentación a clientes.
-              </p>
+            {esCursoPresencial ? (
+              /* Instrucciones para cursos presenciales (OS-10 y Bastón y Esposas) */
+              <div className="rounded-2xl border-2 border-apre-blue/20 bg-slate-50 p-5 text-left space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🏢</span>
+                  <h3 className="text-sm font-extrabold text-apre-blue uppercase tracking-wide">
+                    Certificación Presencial Oficial APRECAP
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Para este curso (<strong>{cursoTitulo}</strong>), el Certificado Oficial y tu Credencial
+                  son entregados directamente por APRECAP al término de tus clases presenciales y prácticas
+                  (junto a tu examen oficial ante la autoridad fiscalizadora OS-10 de Carabineros de Chile).
+                </p>
+                <div className="rounded-xl bg-cyan-50 border border-cyan-200 p-3 text-xs text-cyan-900">
+                  📍 <strong>Sede de Clases y Retiro:</strong> {CONTACTO.direccion} ({CONTACTO.metro}), horario {CONTACTO.horario}.
+                </div>
+                <div className="pt-2">
+                  <a
+                    href={whatsappLogroUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-whatsapp py-3 text-xs font-black text-white transition hover:brightness-105 shadow-sm"
+                  >
+                    <span>💬</span>
+                    <span>Coordinar Mis Clases Presenciales por WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            ) : (
+              /* Instrucciones para cursos 100% online (CCTV y Supervisor) */
+              <div className="rounded-2xl border-2 border-apre-blue/20 bg-slate-50 p-5 text-left space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">📜</span>
+                  <h3 className="text-sm font-extrabold text-apre-blue uppercase tracking-wide">
+                    Emisión y Retiro de tu Diploma Oficial
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Los diplomas y certificados oficiales son emitidos por la administración de APRECAP con
+                  firmas acreditadas y código QR institucional. Para coordinar la emisión y entrega:
+                </p>
+
+                <div className="space-y-2 text-xs text-gray-800">
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-apre-red">1.</span>
+                    <div>
+                      <strong>Notifica tu logro por WhatsApp:</strong> Envía un mensaje directo a nuestra
+                      coordinación académica para preparar tu certificado.
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-apre-red">2.</span>
+                    <div>
+                      <strong>Retiro en oficinas centrales:</strong> Puedes acudir presencialmente a{" "}
+                      <strong>{CONTACTO.direccion}</strong> ({CONTACTO.metro}), en horario de {CONTACTO.horario}.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href={whatsappLogroUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-whatsapp py-3 text-xs font-black text-white transition hover:brightness-105 shadow-sm"
+                  >
+                    <span>💬</span>
+                    <span>Avisar mi Aprobación por WhatsApp</span>
+                  </a>
+                </div>
+              </div>
             )}
-
-            {/* Cuadro de Instrucciones para la Entrega del Certificado */}
-            <div className="rounded-2xl border-2 border-apre-blue/20 bg-slate-50 p-5 text-left space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">📜</span>
-                <h3 className="text-sm font-extrabold text-apre-blue uppercase tracking-wide">
-                  Emisión y Retiro de tu Diploma Oficial
-                </h3>
-              </div>
-              <p className="text-xs text-gray-700 leading-relaxed">
-                Los diplomas y certificados oficiales son emitidos por la administración de APRECAP con
-                firmas acreditadas y código QR institucional. Para coordinar la emisión y entrega:
-              </p>
-
-              <div className="space-y-2 text-xs text-gray-800">
-                <div className="flex items-start gap-2">
-                  <span className="font-bold text-apre-red">1.</span>
-                  <div>
-                    <strong>Notifica tu logro por WhatsApp:</strong> Envía un mensaje directo a nuestra
-                    coordinación académica para preparar tu certificado.
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="font-bold text-apre-red">2.</span>
-                  <div>
-                    <strong>Retiro en oficinas centrales:</strong> Puedes acudir presencialmente a{" "}
-                    <strong>{CONTACTO.direccion}</strong> ({CONTACTO.metro}), en horario de {CONTACTO.horario}.
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <a
-                  href={whatsappLogroUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-whatsapp py-3 text-xs font-black text-white transition hover:brightness-105 shadow-sm"
-                >
-                  <span>💬</span>
-                  <span>Avisar mi Aprobación por WhatsApp</span>
-                </a>
-              </div>
-            </div>
           </div>
         ) : (
           <>

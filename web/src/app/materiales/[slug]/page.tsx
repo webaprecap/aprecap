@@ -16,7 +16,6 @@ import { getBancoModulo } from "@/lib/questionBanks/os10";
 import { getMiniQuizBancoCctv } from "@/lib/questionBanks/cctv";
 import { getMiniQuizBancoBaston } from "@/lib/questionBanks/baston";
 import { getMiniQuizBancoSupervisor } from "@/lib/questionBanks/supervisor";
-import { useModoDemo } from "@/lib/useModoDemo";
 import { materialesEstudio } from "@/data/materiales-estudio";
 
 const PDFSwipeViewer = dynamic(() => import("@/components/cursos/PDFSwipeViewer"), {
@@ -89,7 +88,6 @@ export default function CursoMaterialesPage({ params }: PageProps) {
 
 function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const modoDemo = useModoDemo();
   const { user, userData, loading: authLoading } = useAuth();
   const [enrollments, setEnrollments] = useState<{ courseSlug?: string }[]>([]);
   const [solicitando, setSolicitando] = useState(false);
@@ -147,7 +145,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
 
   // Verificación de acceso
   const status = getCourseStatus(userData, slug, enrollments);
-  const hasAccess = modoDemo || canAccessCourse(userData, slug, enrollments);
+  const hasAccess = canAccessCourse(userData, slug, enrollments);
 
   if (!authLoading && !hasAccess) {
     return (
@@ -206,7 +204,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
         <div className="mx-auto max-w-7xl px-4 flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-apre-red border border-apre-red/30">
-              <span>🛡️</span> Aula Virtual APRECAP{modoDemo ? " · 🧪 DEMO" : ""}
+              <span>🛡️</span> Aula Virtual APRECAP
             </div>
             <h1 className="mt-2 text-2xl md:text-3xl font-black">{cursoActual.title}</h1>
             <p className="mt-1 text-xs text-white/80">
@@ -448,7 +446,6 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                     banco={bancoQuiz.alternativas}
                     tituloModulo={moduloActual.nombre}
                     onPass={manejarQuizAprobado}
-                    modoDemo={modoDemo}
                   />
                 ) : (
                   <PDFSwipeViewer
