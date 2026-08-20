@@ -3,19 +3,18 @@
 > Checklist para ir marcando avance. Usa `- [x]` cuando la tarea esté terminada.
 > Última actualización: 2026-08-19 · Enfoque: **Next.js en Cloudflare Workers + Sanity CDN + Firebase Auth/Firestore**
 
-## 🌐 Pendientes de Configuración de Dominio y Producción
-
+## 🌐 Pendientes de Configuración de Dominio e Infraestructura
 - [ ] **Cambiar Nameservers en NIC Chile (`nic.cl`):** Apuntar `aprecap.cl` a Cloudflare.
 - [ ] **Asignar Custom Domain en Cloudflare Workers:** `aprecap.cl` y `www.aprecap.cl` a la worker `aprecap`.
 - [ ] **Configurar Registros Zoho Mail en Cloudflare DNS:** MX y TXT SPF según `docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md`.
 - [ ] **CORS en Sanity CMS (`manage.sanity.io`):** Agregar `https://aprecap.cl` y `https://www.aprecap.cl`.
 - [ ] **Dominios autorizados en Firebase Auth:** Agregar `aprecap.cl` y `www.aprecap.cl`.
 - [ ] **Publicar reglas de Firestore (`firestore.rules`):** Desplegar o actualizar reglas en consola de Firebase.
-- [ ] **Pase a Producción (Restricción de Cursos):** Reactivar bloqueo condicional de cursos en `web/src/app/panel/alumno/page.tsx` al abrir a alumnos reales.
 - [ ] **Firma de acuerdo PDF:** Entregado al cliente (`acuerdo-aprecap-digitalup.pdf`).
 
-## ✔️ Hecho en la sesión actual (2026-08-19)
-
+## ✔️ Hecho en la plataforma / código (100% Listo para Producción)
+- [x] **Control de accesos y bloqueo de cursos:** `courseAccess.ts` y `materiales/[slug]/page.tsx` con control estricto por matrícula y permisos en Firestore.
+- [x] **Header y Navegación limpia:** `Header.tsx` sin botones de demo ni vistas previas internas.
 - [x] **Guía de Despliegue de Dominio Cloudflare + Zoho Mail:** `docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md` generada y protegida en `.gitignore`.
 - [x] **Administradores Saavedra integrados:** `conysaavedra.o@gmail.com` y `erciosaavedra@gmail.com` añadidos a `roles.ts`, `AuthContext.tsx` y `firestore.rules`.
 - [x] **Modo Demo eliminado:** Bypasses, cuadros y etiquetas de prueba desactivados en todo el flujo de cursos y evaluaciones.

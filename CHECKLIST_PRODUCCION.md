@@ -29,10 +29,9 @@
 
 ---
 
-### 🎓 3. Flujo de Cursos y Evaluaciones:
-- [x] **Modo Demo eliminado:** Se removieron los bypasses y botones de prueba; ahora rigen las evaluaciones reales con nota mínima de aprobación (60% en quizzes).
-- [x] **Certificación diferenciada:** Se ajustó para que OS-10 y Bastón indiquen retiro presencial en sede APRECAP tras completar las horas prácticas y examen de Carabineros, mientras que CCTV y Supervisor mantienen su certificación online.
-- [x] **Favicon e Iconos oficiales:** Escudo oficial de APRECAP reemplazado en `favicon.ico`, `icon.png`, `apple-icon.png` y metadatos de `layout.tsx`.
-- [ ] **Restricción de Accesos / Bloqueo de Cursos en el Panel del Alumno:**
-  - Durante el desarrollo local se mantienen desbloqueados para revisión.
-  - **Antes del lanzamiento final:** Asegurar que los cursos que requieran matrícula administrativa activen el bloqueo condicional (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx`.
+### 🎓 3. Flujo de Cursos, Evaluaciones y Accesos (100% Completado):
+- [x] **Restricción de Accesos / Bloqueo de Cursos en el Panel del Alumno:** 100% activo en `courseAccess.ts`, `panel/alumno/page.tsx` y `materiales/[slug]/page.tsx` (exige matrícula o aprobación de solicitud en Firestore para alumnos).
+- [x] **Quitar herramientas internas del navbar:** El botón "🧪 Vista previa exámenes" y botones de demo fueron completamente removidos del `Header.tsx`.
+- [x] **Modo Demo eliminado:** Se removieron los bypasses y botones de prueba; rigen las evaluaciones reales con umbrales oficiales.
+- [x] **Certificación diferenciada:** OS-10 y Bastón indican retiro presencial en sede física tras completar horas prácticas y examen de Carabineros; CCTV y Supervisor mantienen emisión digital.
+- [x] **Favicon e Iconos oficiales:** Escudo oficial de APRECAP en `favicon.ico`, `icon.png`, `apple-icon.png` y metadatos de `layout.tsx`.

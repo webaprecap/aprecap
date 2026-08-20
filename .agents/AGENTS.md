@@ -1,5 +1,6 @@
 # Reglas del Proyecto APRECAP
 
 ## Control de Accesos a Cursos en Producción
-- Durante el desarrollo local, todos los cursos (Guardia OS-10, Operador CCTV, Supervisor de Seguridad) se mantienen desbloqueados para previsualización inmediata del cliente.
-- **IMPORTANTE ANTES DE PRODUCCIÓN:** Volver a activar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx` para que requieran solicitud y aprobación administrativa.
+- El control de accesos y permisos por Firestore (`accesoOS10`, `accesoCCTV`, `accesoSupervisor`, `accesoBaston` y colección `enrollments`) se encuentra **100% activo en producción**.
+- Los alumnos sin matrícula o permiso aprobado ven los cursos bloqueados y deben solicitar acceso desde el panel del alumno para ser aprobados por la administración.
+- Los roles `admin`, `superadmin` y `profesor` tienen acceso global irrestricto.

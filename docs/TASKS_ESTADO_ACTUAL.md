@@ -168,14 +168,12 @@
 - [ ] **Dominios Autorizados en Firebase Authentication:** Registrar `aprecap.cl` y `www.aprecap.cl` en `console.firebase.google.com` (`aprecap-8aa89`).
 - [ ] **Publicar reglas de Firestore (`firestore.rules`):** Desplegar o actualizar reglas en Firebase Console con los nuevos administradores Saavedra.
 
-### B. Tareas en Plataforma / Código antes de Alumnos Reales:
+### B. Tareas en Plataforma / Código (100% Completado):
 - [x] **Eliminación de Modo Demo:** ✅ COMPLETADO (2026-08-19). `useModoDemo.ts` desactivado y removidos todos los cuadros y bypasses de prueba en `MiniQuiz.tsx`, `FinalExam.tsx`, `FinalExamVF.tsx` y `ResultadoExamen.tsx`.
 - [x] **Certificación diferenciada (Presencial vs Online):** ✅ COMPLETADO (2026-08-19). Para OS-10 y Bastón y Esposas se indica la entrega presencial de certificados y credenciales en sede APRECAP; para CCTV y Supervisor se mantiene la emisión online tras aprobar.
 - [x] **Favicon e Iconos oficiales:** ✅ COMPLETADO (2026-08-19). Se sobrescribió `favicon.ico`, `icon.png`, `apple-icon.png` y metadatos de `layout.tsx` con el escudo oficial de APRECAP.
-- [ ] **Pase a Producción (Restricción de Permisos de Cursos):**
-  - Durante desarrollo se mantienen desbloqueados para revisión.
-  - Al abrir a alumnos reales: reactivar el bloqueo condicional de cursos (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx` para exigir matrícula administrativa.
-- [ ] **Quitar botón de vista previa del navbar:** Ocultar el botón "🧪 Vista previa exámenes" de `Header.tsx` antes del lanzamiento público.
+- [x] **Control de Accesos y Bloqueo de Cursos en Producción:** ✅ COMPLETADO. `canAccessCourse` y `getCourseStatus` en `courseAccess.ts` y `materiales/[slug]/page.tsx` controlan estrictamente el acceso por matrícula o aprobación en Firestore.
+- [x] **Quitar herramientas internas del navbar:** ✅ COMPLETADO. El navbar `Header.tsx` no tiene botones de prueba ni accesos demo.
 - [ ] **Firma del acuerdo PDF:** Entregado al cliente (`acuerdo-aprecap-digitalup.pdf`), pendiente de firma.
 
 ---
