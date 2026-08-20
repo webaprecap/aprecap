@@ -298,3 +298,37 @@
 
 ### 5. Commits y Despliegue
 - Commits subidos a `main`: `f555128`, `8733466`, `201f177`, `64d88e0`.
+
+## Sesión 2026-08-20 · Diseño del Ecosistema de Clases Grabadas (Zoom ➡️ YouTube ➡️ APRECAP)
+- **Estrategia y Flujo de Negocio**:
+  - Zoom auto-graba todas las clases en la nube de forma 100% automática (`auto_recording: "cloud"`).
+  - El **Administrador** visualiza las grabaciones procesadas desde el panel de APRECAP y descarga los `.MP4` con 1 clic.
+  - El **Administrador** sube los videos a su canal de YouTube en modo **Oculto (Unlisted)** (almacenamiento ilimitado, sin saturar Zoom, streaming adaptativo 1080p).
+  - El **Administrador** publica las clases en APRECAP asignando el curso, fecha, descripción y **temporizadores de disponibilidad** (`disponibleDesde`, `disponibleHasta`).
+  - El **Alumno matriculado** accede a su pestaña "Clases Grabadas" para reproducir las sesiones de su curso vía streaming responsivo, con temporizadores activos y **sin botón de descarga directa** para protección del contenido.
+- **Documentación generada**:
+  - `docs/ECOSISTEMA_CLASES_GRABADAS.md`: Arquitectura, diagramas Mermaid, schema de Firestore (`clases_grabadas`) y especificación técnica de vistas.
+  - `docs/TAREAS.md`: Checklist completo de tareas para ejecución en la siguiente sesión.
+
+## Sesión 2026-08-20 · Modo Auditoría y Explorador de Cursos 100% Desbloqueados para Administradores
+- **Requerimiento**: Permitir a los administradores y clientes acceder a todos los cursos desde su panel con todo el contenido (videos, manuales, diapositivas, miniquizzes y exámenes) 100% desbloqueado para revisión inmediata.
+- **Panel Admin (`/panel/admin`)**:
+  - Nueva pestaña `"👁️ Ver Cursos Desbloqueados"` (`cursos-explorar`) en la sección *Cursos y Alumnos*.
+  - Tarjetas interactivas para los 4 cursos oficiales (Guardia OS-10, Operador CCTV, Bastón y Esposas, Supervisor) con enlaces directos al aula virtual, examen final y cuestionarios.
+  - Banner de acceso directo integrado en la pestaña `"Gestión y Matrículas"` (`cursos-gestion`).
+- **Panel Profesor (`/panel/profesor`)**:
+  - Nueva pestaña `"👁️ Explorar Cursos (Aula Desbloqueada)"` para acceso docente irrestricto.
+- **Aula Virtual (`/materiales/[slug]`)**:
+  - Banner superior de *Modo Auditoría / Vista Previa Administrador*.
+  - Barra de herramientas con saltos rápidos entre pasos: `[ 🎥 Video ] [ 📄 PDF / Manual ] [ 📝 MiniQuiz ] [ ✓ Aprobado ]`.
+  - `VideoTracker`: Bypass para administradores sin cuenta regresiva obligatoria (`isAdmin`).
+  - `PDFSwipeViewer`: Botón rápido `⚡ Avanzar (Admin) →` sin obligatoriedad de hojear hasta el final.
+  - Navegación libre por todos los módulos y retorno contextual al panel correspondiente.
+- **Verificación**: `pnpm tsc --noEmit` y `pnpm build` (`@opennextjs/cloudflare`) completados con 0 errores (44 rutas estáticas y dinámicas compiladas exitosamente).
+
+- **Pendiente para la próxima sesión**:
+  - Implementar endpoints `/api/zoom/recordings` y `lib/zoom.ts` (listado y descargas).
+  - Implementar `lib/youtube.ts` (parser de video IDs).
+  - Implementar UI de gestión y temporizadores en `panel/admin/page.tsx`.
+  - Implementar UI de reproducción y visualización en `panel/alumno/page.tsx`.
+  - Actualizar reglas de seguridad en `firestore.rules`.

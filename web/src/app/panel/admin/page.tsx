@@ -29,6 +29,7 @@ import { formatRut } from "@/lib/rut";
 type Tab =
   | "pendientes"
   | "historial"
+  | "cursos-explorar"
   | "cursos-gestion"
   | "alumnos"
   | "profesores"
@@ -51,7 +52,8 @@ const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: str
   {
     section: "Cursos y Alumnos",
     items: [
-      { id: "cursos-gestion", label: "Gestión por Cursos", emoji: "📚" },
+      { id: "cursos-explorar", label: "Ver Cursos Desbloqueados", emoji: "👁️" },
+      { id: "cursos-gestion", label: "Gestión y Matrículas", emoji: "📚" },
       { id: "diplomas", label: "Diplomas de Aprobados", emoji: "🎓" },
     ],
   },
@@ -260,6 +262,7 @@ export default function PanelAdmin() {
 
             {tab === "pendientes" && <PendientesTab />}
             {tab === "historial" && <HistorialTab />}
+            {tab === "cursos-explorar" && <CursosExplorarTab onIrAGestion={() => setTab("cursos-gestion")} />}
             {tab === "cursos-gestion" && <CursosGestionTab onEmitirDiploma={irADiplomaAprobado} />}
             {tab === "alumnos" && <UsuariosTab filtroRol="alumno" />}
             {tab === "profesores" && <UsuariosTab filtroRol="profesor" />}
@@ -441,6 +444,151 @@ function HistorialTab() {
   );
 }
 
+/* ---------- Explorar Cursos Desbloqueados (Vista Administrador) ---------- */
+function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
+  const cursosDetallados = [
+    {
+      slug: "guardia-de-seguridad",
+      nombre: "Curso Guardia de Seguridad (OS-10)",
+      shortName: "Guardia OS-10",
+      horas: "90 hrs",
+      icono: "🛡️",
+      descripcion: "Formación integral para guardias de seguridad privada acreditados ante Carabineros de Chile (OS-10). Incluye 14 módulos teóricos, videos temáticos y cuestionarios.",
+      modulosCount: 14,
+      subTextoModulos: "14 Módulos interactivos",
+      examenUrl: "/evaluaciones/guardia-de-seguridad",
+      examenNombre: "📝 Examen Final OS-10 (140 V/F)",
+      cuestionariosUrl: "/cuestionarios/guardia-de-seguridad",
+    },
+    {
+      slug: "operador-cctv-y-alarmas",
+      nombre: "Curso Operador CCTV y Alarmas",
+      shortName: "Operador CCTV",
+      horas: "40 hrs",
+      icono: "📹",
+      descripcion: "Capacitación en software de monitoreo, videograbación, protocolos ante incidentes y normativa legal para centrales de monitoreo CCTV y alarmas.",
+      modulosCount: 8,
+      subTextoModulos: "8 Módulos interactivos",
+      examenUrl: "/evaluaciones/operador-cctv-y-alarmas",
+      examenNombre: "📝 Examen Final CCTV (60 Preguntas)",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "baston-y-esposas",
+      nombre: "Curso Bastón y Esposas",
+      shortName: "Bastón y Esposas",
+      horas: "8 hrs",
+      icono: "🥋",
+      descripcion: "Técnicas de defensa personal policial, comunicación persuasiva, palancas, torsiones, uso legal de la fuerza, bastón retráctil y grilletes de seguridad.",
+      modulosCount: 4,
+      subTextoModulos: "11 Submódulos temáticos",
+      examenUrl: "/evaluaciones/baston-y-esposas",
+      examenNombre: "📝 Examen Final Bastón (20 Preguntas)",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "supervisor-de-seguridad",
+      nombre: "Curso Supervisor de Seguridad",
+      shortName: "Supervisor de Seguridad",
+      horas: "140 hrs",
+      icono: "⭐",
+      descripcion: "Especialización para jefaturas de turno y supervisores. Gestión de riesgos, legislación laboral y de seguridad privada, liderazgo de equipos e informes.",
+      modulosCount: 6,
+      subTextoModulos: "6 Módulos interactivos",
+      examenUrl: "/evaluaciones/supervisor-de-seguridad",
+      examenNombre: "📝 Examen Final Supervisor (60 Preguntas)",
+      cuestionariosUrl: null,
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Banner Explicativo */}
+      <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-apre-blue to-slate-900 p-6 text-white shadow-md">
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-cyan-400 text-slate-950 px-2.5 py-0.5 text-xs font-black uppercase tracking-wider">
+            👁️ Modo Auditoría y Clientes
+          </span>
+          <span className="text-xs font-bold text-cyan-300">Todo 100% Desbloqueado</span>
+        </div>
+        <h2 className="mt-2 text-xl md:text-2xl font-black text-white">
+          Explorador de Cursos y Evaluaciones APRECAP
+        </h2>
+        <p className="mt-1 text-xs text-slate-200 leading-relaxed max-w-3xl">
+          Como administrador o cliente, al ingresar a cualquiera de estos cursos tendrás <strong>todos los módulos, videos, diapositivas, manuales oficiales en PDF, mini-quizzes y exámenes finales 100% desbloqueados</strong>. Puedes navegar libremente por cualquier parte del contenido sin esperar tiempos de video ni tener que aprobar pasos anteriores.
+        </p>
+      </div>
+
+      {/* Grid de Cursos */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {cursosDetallados.map((c) => (
+          <div
+            key={c.slug}
+            className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-xs hover:shadow-md transition"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{c.icono}</span>
+                  <div>
+                    <h3 className="font-extrabold text-apre-blue text-lg leading-snug">{c.nombre}</h3>
+                    <p className="text-xs font-bold text-gray-500">
+                      {c.horas} oficial · {c.subTextoModulos}
+                    </p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-[10px] font-black uppercase">
+                  ✓ Desbloqueado
+                </span>
+              </div>
+
+              <p className="mt-3 text-xs text-gray-600 leading-relaxed">{c.descripcion}</p>
+            </div>
+
+            <div className="mt-5 space-y-2 pt-4 border-t border-gray-100">
+              {/* Botón Principal: Entrar al Aula */}
+              <Link
+                href={`/materiales/${c.slug}`}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-apre-blue px-4 py-3 text-xs font-black text-white transition hover:bg-apre-blue-dark shadow-sm"
+              >
+                <span>👁️ Entrar al Aula Virtual (Todo Desbloqueado)</span>
+                <span>→</span>
+              </Link>
+
+              {/* Botones Secundarios */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Link
+                  href={c.examenUrl}
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50/80 px-3 py-2 text-center text-[11px] font-bold text-apre-red transition hover:bg-red-100 hover:border-red-300"
+                >
+                  <span>{c.examenNombre}</span>
+                </Link>
+
+                {c.cuestionariosUrl ? (
+                  <Link
+                    href={c.cuestionariosUrl}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-center text-[11px] font-bold text-slate-700 transition hover:bg-slate-100"
+                  >
+                    <span>📋 Cuestionarios Oficiales</span>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={onIrAGestion}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center text-[11px] font-bold text-gray-600 transition hover:bg-gray-100"
+                  >
+                    <span>👥 Ver Matrículas del Curso</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Gestión por Cursos y Alumnos (Estilo SARMAT) ---------- */
 function CursosGestionTab({
   onEmitirDiploma,
@@ -612,6 +760,40 @@ function CursosGestionTab({
             <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-700">Aprobados</p>
             <p className="text-lg font-black text-cyan-900">{aprobadosEsteCurso.length}</p>
           </div>
+        </div>
+      </div>
+
+      {/* Botón destacado para entrar al aula de este curso como Admin */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-cyan-950/20 border border-cyan-500/30 rounded-2xl p-4 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="text-2xl">👁️</span>
+          <div>
+            <p className="text-xs font-black text-cyan-900">Vista Previa Desbloqueada de este Curso</p>
+            <p className="text-[11px] text-gray-600">Entra al aula con todos los videos, manuales y cuestionarios listos para revisión.</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={`/materiales/${cursoInfo.slug}`}
+            className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark text-white px-4 py-2 text-xs font-black transition shadow-xs flex items-center gap-1.5"
+          >
+            <span>Entrar al Aula (Todo Desbloqueado)</span>
+            <span>→</span>
+          </Link>
+          <Link
+            href={
+              cursoInfo.slug === "guardia-de-seguridad"
+                ? "/evaluaciones/guardia-de-seguridad"
+                : cursoInfo.slug === "operador-cctv-y-alarmas"
+                  ? "/evaluaciones/operador-cctv-y-alarmas"
+                  : cursoInfo.slug === "baston-y-esposas"
+                    ? "/evaluaciones/baston-y-esposas"
+                    : "/evaluaciones/supervisor-de-seguridad"
+            }
+            className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-3.5 py-2 text-xs font-bold transition shadow-xs"
+          >
+            📝 Ver Examen
+          </Link>
         </div>
       </div>
 

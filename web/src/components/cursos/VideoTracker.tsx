@@ -10,6 +10,7 @@ interface VideoTrackerProps {
   title?: string
   minWatchSeconds?: number  // segundos mínimos antes de poder avanzar (default: 30)
   isAlreadyCompleted?: boolean // bypass de cuenta regresiva para repasos
+  isAdmin?: boolean // bypass total para administradores y docentes
 }
 
 // Convierte cualquier URL de YouTube al ID del video
@@ -28,10 +29,11 @@ function getYouTubeId(url: string): string | null {
   return null
 }
 
-export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds = 1, isAlreadyCompleted = false }: VideoTrackerProps) {
-  const [hasStarted, setHasStarted] = useState(isAlreadyCompleted)
-  const [unlocked, setUnlocked] = useState(false) // Siempre en false para que el botón de 'Continuar' no se esconda antes de pulsar
-  const [secondsWatched, setSecondsWatched] = useState(isAlreadyCompleted ? minWatchSeconds : 0)
+export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds = 1, isAlreadyCompleted = false, isAdmin = false }: VideoTrackerProps) {
+  const isBypassed = isAlreadyCompleted || isAdmin
+  const [hasStarted, setHasStarted] = useState(isBypassed)
+  const [unlocked, setUnlocked] = useState(false)
+  const [secondsWatched, setSecondsWatched] = useState(isBypassed ? minWatchSeconds : 0)
   const intervalRef = useRef<any>(null)
 
   const videoId = getYouTubeId(url)
@@ -133,8 +135,8 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
       {/* Barra de progreso y botón continuar */}
       <div className={styles.progressContainer}>
 
-        {/* Banner de Advertencia - Oculto si ya se completó */}
-        {hasStarted && !unlocked && !isAlreadyCompleted && (
+        {/* Banner de Advertencia - Oculto si ya se completó o si es Admin */}
+        {hasStarted && !unlocked && !isAlreadyCompleted && !isAdmin && (
           <div className={styles.warningBanner}>
             <span className={styles.warningIcon}>⚠️</span>
             <div className={styles.warningText}>
@@ -144,7 +146,7 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
           </div>
         )}
 
-        {hasStarted && !unlocked && !isAlreadyCompleted && (
+        {hasStarted && !unlocked && !isAlreadyCompleted && !isAdmin && (
           <div className={styles.progressBar}>
             <div
               className={styles.progressFill}
@@ -170,15 +172,15 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
             </>
           )}
 
-          {hasStarted && !isReady && !isAlreadyCompleted && (
+          {hasStarted && !isReady && !isAlreadyCompleted && !isAdmin && (
             <p className={styles.progressText}>
               ⏱ Podrás continuar en <strong style={{ color: '#00f0ff' }}>{remaining}s</strong>
             </p>
           )}
 
-          {hasStarted && (isReady || isAlreadyCompleted) && !unlocked && (
+          {hasStarted && (isReady || isAlreadyCompleted || isAdmin) && !unlocked && (
             <button className={styles.continueBtn} onClick={handleContinue}>
-              Continuar al siguiente paso {isAlreadyCompleted ? '(Repaso)' : '→'}
+              Continuar al siguiente paso {isAdmin ? '(Admin)' : isAlreadyCompleted ? '(Repaso)' : '→'}
             </button>
           )}
 

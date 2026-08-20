@@ -14,7 +14,7 @@ import PrivacidadPanel from "@/components/PrivacidadPanel";
 export default function PanelProfesor() {
   const { userData, loading, signOut } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<"reuniones" | "alumnos">("reuniones");
+  const [tab, setTab] = useState<"reuniones" | "alumnos" | "cursos">("reuniones");
 
   const handleLogout = async () => {
     await signOut();
@@ -72,13 +72,29 @@ export default function PanelProfesor() {
             >
               👨‍🎓 Alumnos matriculados
             </button>
+            <button
+              onClick={() => setTab("cursos")}
+              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                tab === "cursos"
+                  ? "bg-apre-pink text-white"
+                  : "bg-white/10 text-white hover:bg-white/20"
+              }`}
+            >
+              👁️ Explorar Cursos (Aula Desbloqueada)
+            </button>
           </div>
         </div>
       </section>
 
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-6xl space-y-10 px-4">
-          {tab === "reuniones" ? <ReunionesProfesor /> : <AlumnosProfesor />}
+          {tab === "reuniones" ? (
+            <ReunionesProfesor />
+          ) : tab === "alumnos" ? (
+            <AlumnosProfesor />
+          ) : (
+            <CursosProfesorTab />
+          )}
 
           <div className="flex flex-wrap gap-3">
             <Link
@@ -243,6 +259,79 @@ function AlumnosProfesor() {
           </ul>
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ---------- Explorar Cursos para Profesores ---------- */
+function CursosProfesorTab() {
+  const cursos = [
+    {
+      slug: "guardia-de-seguridad",
+      nombre: "Curso Guardia de Seguridad (OS-10)",
+      horas: "90 hrs",
+      icono: "🛡️",
+      descripcion: "14 Módulos interactivos, videos temáticos y cuestionarios oficiales.",
+    },
+    {
+      slug: "operador-cctv-y-alarmas",
+      nombre: "Curso Operador CCTV y Alarmas",
+      horas: "40 hrs",
+      icono: "📹",
+      descripcion: "8 Módulos de monitoreo, videograbación y protocolos de seguridad electrónica.",
+    },
+    {
+      slug: "baston-y-esposas",
+      nombre: "Curso Bastón y Esposas",
+      horas: "8 hrs",
+      icono: "🥋",
+      descripcion: "11 Submódulos de defensa personal policial, bastón retráctil y grilletes.",
+    },
+    {
+      slug: "supervisor-de-seguridad",
+      nombre: "Curso Supervisor de Seguridad",
+      horas: "140 hrs",
+      icono: "⭐",
+      descripcion: "6 Módulos de gestión de seguridad privada, liderazgo de guardias y marco normativo.",
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
+        <div className="inline-flex items-center gap-2 rounded-full bg-apre-pink/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-apre-blue border border-apre-pink/30">
+          <span>👨‍🏫</span> Material de Enseñanza Docente
+        </div>
+        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Aulas Virtuales y Contenido Desbloqueado</h2>
+        <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+          Como docente de APRECAP, tienes acceso total a todas las aulas para proyectar videos, diapositivas y manuales en tus clases.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {cursos.map((c) => (
+          <div key={c.slug} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:shadow-md transition">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">{c.icono}</span>
+                <div>
+                  <h3 className="font-extrabold text-apre-blue text-sm">{c.nombre}</h3>
+                  <p className="text-xs text-gray-500">{c.horas}</p>
+                </div>
+              </div>
+              <p className="mt-2 text-xs text-gray-600">{c.descripcion}</p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-gray-100 flex gap-2">
+              <Link
+                href={`/materiales/${c.slug}`}
+                className="flex-1 rounded-xl bg-apre-blue text-white py-2 text-center text-xs font-bold hover:bg-apre-blue-dark transition shadow-xs"
+              >
+                👁️ Entrar al Aula Virtual
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

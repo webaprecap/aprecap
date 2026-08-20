@@ -97,16 +97,14 @@
 - [ ] Revisar archivos del servidor por si hay material adicional
 - [ ] Rescatar contenido de lecciones LearnPress (user/pass WP) → recrear en Moodle
 
-### Zoom (hecho: app creada, activada y verificada por API)
-- [x] Crear app Server-to-Server OAuth en marketplace.zoom.us con la cuenta Zoom del cliente
-- [x] Claves en `web/.env` (ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET) y verificar token (`users/me/meetings` → 200)
-- [x] Código listo: `lib/zoom.ts`, `/api/zoom`, pestaña "Reuniones Zoom" en admin, botón Unirse en alumno (por ahora con link manual en clases en vivo)
-- [ ] Probar creación de reunión desde el panel admin (dev server reiniciado)
-
-### WebPay (implementado; verificación manual pendiente)
-- [x] Código completo (ver sección "Hecho el 2026-08-08" arriba)
-- [ ] Prueba real en navegador con tarjeta de prueba + revisar tab Pagos/CSV
-- [ ] Credenciales de **producción** de Transbank del cliente (commerce code + API key) → `web/.env`
+### Clases Grabadas y Ecosistema (Zoom ➡️ YouTube ➡️ APRECAP)
+- [x] Documento de arquitectura y diseño redactado (`docs/ECOSISTEMA_CLASES_GRABADAS.md`)
+- [ ] Backend: `listRecordings` y `getRecordingDownloadUrl` en `lib/zoom.ts` + `/api/zoom/recordings`
+- [ ] Backend: Helper `lib/youtube.ts` para sanitizar URLs y extraer `videoId`
+- [ ] Admin: Subpestaña "Grabaciones Zoom (Descargas)" con botón 📥 Descargar MP4
+- [ ] Admin: Subpestaña "Publicar Clase Grabada" con selector de curso, fecha y temporizadores (disponibleDesde / disponibleHasta)
+- [ ] Alumno: Pestaña "📹 Clases Grabadas" con reproductor responsivo protegido por matrícula y temporizadores
+- [ ] Firestore: Reglas de seguridad para `clases_grabadas` en `firestore.rules`
 
 ### Otros
 - [ ] Backups programados de Firestore (Ley 21.663)

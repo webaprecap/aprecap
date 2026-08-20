@@ -26,6 +26,7 @@ interface LogoConfig {
 interface PDFSwipeViewerProps {
   url: string
   onFinishReading: () => void
+  isAdmin?: boolean
 }
 
 // Los PDFs alojados en Sanity se sirven vía proxy local para evitar CORS
@@ -37,11 +38,11 @@ function resolverUrlPdf(url: string): string {
   return url
 }
 
-export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerProps) {
+export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }: PDFSwipeViewerProps) {
   const [numPages, setNumPages] = useState<number>(0)
   const [pageNumber, setPageNumber] = useState(1)
   const [direction, setDirection] = useState(0) // 1 = right, -1 = left
-  const [hasFinishedOnce, setHasFinishedOnce] = useState(false)
+  const [hasFinishedOnce, setHasFinishedOnce] = useState(isAdmin)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [currentScale, setCurrentScale] = useState<number>(1)
   const [pageWidth, setPageWidth] = useState<number>(360)
@@ -447,6 +448,21 @@ export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerP
         >
           Siguiente &#8594;
         </button>
+
+        {isAdmin && (
+          <button
+            onClick={() => {
+              setHasFinishedOnce(true);
+              onFinishReading();
+            }}
+            className={styles.controlBtn}
+            style={{ background: '#00e5ff', color: '#000', fontWeight: 'bold' }}
+            type="button"
+            title="Avanzar directamente al siguiente paso (Modo Administrador)"
+          >
+            ⚡ Avanzar (Admin) →
+          </button>
+        )}
       </div>
     </div>
   )

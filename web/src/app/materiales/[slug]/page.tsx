@@ -160,6 +160,12 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     );
   }
 
+  const isAdmin = Boolean(
+    userData?.rol === "admin" ||
+    userData?.rol === "superadmin" ||
+    userData?.rol === "profesor"
+  );
+
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];
   const hasSubModulos = Boolean(moduloActual.subModulos && moduloActual.subModulos.length > 0);
 
@@ -197,8 +203,42 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     setPaso("completed");
   };
 
+  const volverHref =
+    userData?.rol === "admin" || userData?.rol === "superadmin"
+      ? "/panel/admin"
+      : userData?.rol === "profesor"
+        ? "/panel/profesor"
+        : "/panel/alumno";
+
+  const volverTexto =
+    userData?.rol === "admin" || userData?.rol === "superadmin"
+      ? "← Volver al Panel Admin"
+      : userData?.rol === "profesor"
+        ? "← Volver al Panel Profesor"
+        : "← Volver a mi Panel";
+
   return (
     <>
+      {/* Banner Especial de Modo Administrador / Auditoría */}
+      {isAdmin && (
+        <div className="bg-gradient-to-r from-amber-500/20 via-cyan-500/20 to-amber-500/20 border-b border-amber-400/40 px-4 py-2.5 text-center text-xs font-bold text-amber-200 flex flex-wrap items-center justify-between gap-3 shadow-inner">
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-amber-400 text-slate-950 px-2.5 py-0.5 font-black text-[10px] uppercase tracking-wider shadow-sm">
+              👑 VISTA PREVIA ADMINISTRADOR
+            </span>
+            <span className="text-slate-200">
+              Contenido <strong>100% desbloqueado</strong>. Puedes saltar libremente entre videos, diapositivas, manuales PDF y cuestionarios.
+            </span>
+          </div>
+          <Link
+            href={volverHref}
+            className="rounded-lg bg-white/10 hover:bg-white/20 text-white px-3 py-1 text-[11px] font-bold border border-white/20 transition"
+          >
+            {volverTexto}
+          </Link>
+        </div>
+      )}
+
       {/* Header Banner */}
       <section className="bg-apre-blue text-white py-8">
         <div className="mx-auto max-w-7xl px-4 flex flex-wrap items-center justify-between gap-4">
@@ -212,10 +252,10 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
             </p>
           </div>
           <Link
-            href="/panel/alumno"
+            href={volverHref}
             className="rounded-xl bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-white/20 border border-white/10"
           >
-            ← Volver a mi Panel
+            {volverTexto}
           </Link>
         </div>
       </section>
@@ -365,23 +405,80 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
 
           {/* Main Viewer Area */}
           <main className="lg:col-span-8 space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <span className="text-xs font-bold text-slate-300">
-                Unidad Activa: <strong className="text-cyan-400">{tituloActivo}</strong>
-              </span>
-              <span className="text-xs font-bold text-slate-400">
-                {tieneQuiz && bancoQuiz
-                  ? paso === "video"
-                    ? "Paso 1: Video · Paso 2: Lectura PDF · Paso 3: MiniQuiz"
-                    : paso === "pdf"
-                      ? "Video ✓ · Paso 2: Lectura PDF · Paso 3: MiniQuiz"
-                      : paso === "quiz"
-                        ? "Video ✓ · PDF ✓ · Paso 3: MiniQuiz"
-                        : "Módulo completado ✓"
-                  : videoUrlActivo
-                    ? "Video + Lectura PDF"
-                    : `${slidesActuales.length} Diapositivas disponibles`}
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-300">
+                  Unidad Activa: <strong className="text-cyan-400">{tituloActivo}</strong>
+                </span>
+                {isAdmin && (
+                  <span className="rounded-full bg-amber-400/10 text-amber-300 text-[10px] font-black px-2 py-0.5 border border-amber-400/30">
+                    DESBLOQUEADO
+                  </span>
+                )}
+              </div>
+
+              {/* Barra de Saltos Rápidos para Administradores */}
+              {isAdmin ? (
+                <div className="flex flex-wrap items-center gap-1.5 bg-slate-900/90 p-1 rounded-lg border border-slate-700">
+                  <span className="text-[10px] font-bold text-amber-300 uppercase px-1">Ver Paso:</span>
+                  {videoUrlActivo && (
+                    <button
+                      type="button"
+                      onClick={() => setPaso("video")}
+                      className={`px-2.5 py-1 text-[11px] font-bold rounded transition ${
+                        paso === "video" ? "bg-cyan-400 text-slate-950 font-black shadow" : "text-slate-300 hover:bg-slate-800"
+                      }`}
+                    >
+                      🎥 Video
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setPaso("pdf")}
+                    className={`px-2.5 py-1 text-[11px] font-bold rounded transition ${
+                      paso === "pdf" ? "bg-cyan-400 text-slate-950 font-black shadow" : "text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    📄 PDF / Manual
+                  </button>
+                  {tieneQuiz && bancoQuiz && (
+                    <button
+                      type="button"
+                      onClick={() => setPaso("quiz")}
+                      className={`px-2.5 py-1 text-[11px] font-bold rounded transition ${
+                        paso === "quiz" ? "bg-cyan-400 text-slate-950 font-black shadow" : "text-slate-300 hover:bg-slate-800"
+                      }`}
+                    >
+                      📝 MiniQuiz
+                    </button>
+                  )}
+                  {tieneQuiz && (
+                    <button
+                      type="button"
+                      onClick={() => manejarQuizAprobado()}
+                      className={`px-2.5 py-1 text-[11px] font-bold rounded transition ${
+                        paso === "completed" ? "bg-emerald-400 text-slate-950 font-black shadow" : "text-emerald-400 hover:bg-slate-800"
+                      }`}
+                    >
+                      ✓ Aprobado
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <span className="text-xs font-bold text-slate-400">
+                  {tieneQuiz && bancoQuiz
+                    ? paso === "video"
+                      ? "Paso 1: Video · Paso 2: Lectura PDF · Paso 3: MiniQuiz"
+                      : paso === "pdf"
+                        ? "Video ✓ · Paso 2: Lectura PDF · Paso 3: MiniQuiz"
+                        : paso === "quiz"
+                          ? "Video ✓ · PDF ✓ · Paso 3: MiniQuiz"
+                          : "Módulo completado ✓"
+                    : videoUrlActivo
+                      ? "Video + Lectura PDF"
+                      : `${slidesActuales.length} Diapositivas disponibles`}
+                </span>
+              )}
             </div>
 
             {paso === "completed" && tieneQuiz ? (
@@ -434,11 +531,13 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   <VideoTracker
                     url={videoUrlActivo}
                     title={tituloActivo}
+                    isAdmin={isAdmin}
                     onUnlockNext={() => setPaso("pdf")}
                   />
                 ) : paso === "pdf" ? (
                   <PDFSwipeViewer
                     url={pdfUrlActivo || ""}
+                    isAdmin={isAdmin}
                     onFinishReading={() => setPaso(tieneQuiz ? "quiz" : "completed")}
                   />
                 ) : paso === "quiz" && bancoQuiz ? (
@@ -450,6 +549,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                 ) : (
                   <PDFSwipeViewer
                     url={pdfUrlActivo || ""}
+                    isAdmin={isAdmin}
                     onFinishReading={() => setPaso("completed")}
                   />
                 )}
