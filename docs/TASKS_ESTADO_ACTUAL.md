@@ -160,23 +160,23 @@
 
 ## ⏳ TAREAS PENDIENTES Y PRÓXIMOS PASOS
 
-- [ ] **Verificar certificado digital con datos reales** (el alumno imprime su diploma; validar nombre/RUT/fecha/curso y la impresión a PDF en navegador).
-- [x] **Editor de certificados estilo Sarmat para admin** ✅ **COMPLETADO (2026-08-19)**: pestaña "🎓 Diplomas y Certificados" en el nuevo panel admin con selector de alumno + curso e impresión del diploma (componente compartido `DiplomaCertificado`) — ver sección R. (El editor WYSIWYG drag&drop de sarmat no se replica por decisión del cliente.)
-- [ ] **Curso de Bastón y Esposas (en curso):** los 11 MDs de submódulos ya están listos en `docs/markdown_cursos/5_Baston_y_Esposas/`. Falta: cliente genera PDFs (NotebookLM) + graba/aporta videos del curso → luego se monta en la plataforma (Sanity + YouTube, flujo video → PDF como CCTV).
-- [ ] **Curso Supervisor — montaje en plataforma (en curso):** ✅ **MDs completados (2026-08-18)**: 18 submódulos (Módulo 1 reordenado con Reglamento 209, Ley 21.659, Derecho penal y DD.HH.) + 6 consolidados, docx de revisión `Curso_Supervisor_Consolidado_v2.docx` — ver sección O. ✅ **Plataforma montada (2026-08-18)**: 18 submódulos con video YouTube + PDF Sanity, `videos supervisor.txt` arreglado — ver sección P. ✅ **Quizzes y Examen Final (2026-08-19)**: MiniQuiz 5 por módulo + Examen Final 60 preguntas (80%) — ver sección Q.
-- [ ] **Quizzes/Cuestionarios del curso CCTV** ✅ **COMPLETADO (2026-08-18)**: banco de 63 preguntas, MiniQuiz de 5 por módulo y Examen Final de 60 preguntas (80%, reintentos ilimitados) — ver sección J.
-- [ ] **ELIMINAR MODO DEMO ANTES DE PRODUCCIÓN (importante):**
-  - ✅ Botón temporal "🧪 Test Curso OS-10" eliminado del `Header.tsx` (2026-08-19, sección R). Ahora existe "🧪 Vista previa exámenes" → `/prueba-felicitaciones`, que también hay que quitar antes de producción.
-  - Quitar el modo demo (`?demo=1` + sessionStorage `aprecap_demo`): `lib/useModoDemo.ts`, prop `modoDemo` en `MiniQuiz.tsx` y `FinalExam.tsx`, badges "🧪 DEMO" y estilos `.demoBox`.
-- [ ] **Registrar origins en CORS de Sanity** (panel sanity.io/manage): `http://localhost:3000` y el dominio Cloudflare, para poder usar `cdn.sanity.io` directo sin el proxy `/api/pdf`.
-- [ ] **Persistencia de resultados en Firestore** (hoy puntajes de cuestionarios y progreso se guardan en localStorage): replicar Sarmat (Firestore + candados de módulos) — checklist detallado en `docs/PRE_PRODUCCION_FLUJO_CURSOS.md`. Intentos: **ILIMITADOS** (decisión del cliente, a diferencia de sarmat).
-- [ ] **Configuración de CORS (producción):** agregar URLs de `localhost` y Cloudflare en **Sanity** y **Firebase**.
-- [ ] **Pase a Producción (Restricción de Permisos):**
-  - Reactivar la lógica de bloqueo condicional por permisos Firestore (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx`.
-  - Añadir candados de módulos/examen estilo Sarmat — checklist en `docs/PRE_PRODUCCION_FLUJO_CURSOS.md`.
-  - Deploy de `firestore.rules` (`firebase deploy --only firestore:rules`).
-- [ ] **Ejercicios Prácticos Interactivos:** compilar `docs/EJERCICIOS_PRACTICOS_INTERACTIVOS.md` (Libro de Novedades, Informes OS-10, Pautas de Puesto).
-- [ ] **Tareas del cliente anteriores aún vivas:** WP user/pass (rescatar lecciones LearnPress), ~~confirmar horas del Jefe de Seguridad~~ ✅ **CANCELADA 2026-08-19:** el curso de Jefe de Seguridad dejó de ofrecerse y se retiró de la plataforma (los PDFs y MDs se conservan en el repo), PDF del acuerdo firmado.
+### A. Tareas de Infraestructura y Lanzamiento (Cliente / DevOps):
+- [ ] **Cambiar Nameservers en NIC Chile (`nic.cl`):** Apuntar el dominio `aprecap.cl` a los 2 nameservers de Cloudflare.
+- [ ] **Vincular Dominio en Cloudflare Workers (`aprecap`):** Agregar `aprecap.cl` y `www.aprecap.cl` como Custom Domains en Cloudflare.
+- [ ] **Configurar Registros de Correo (Zoho Mail) en Cloudflare DNS:** Configurar los registros MX (`mx.zoho.com`, `mx2.zoho.com`, `mx3.zoho.com`) y el TXT SPF de Zoho Mail para que no se corte el correo corporativo (ver guía en `docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md`).
+- [ ] **Configurar CORS en Sanity CMS:** Registrar `https://aprecap.cl` y `https://www.aprecap.cl` en `manage.sanity.io` (Proyecto `mwwotgjc`).
+- [ ] **Dominios Autorizados en Firebase Authentication:** Registrar `aprecap.cl` y `www.aprecap.cl` en `console.firebase.google.com` (`aprecap-8aa89`).
+- [ ] **Publicar reglas de Firestore (`firestore.rules`):** Desplegar o actualizar reglas en Firebase Console con los nuevos administradores Saavedra.
+
+### B. Tareas en Plataforma / Código antes de Alumnos Reales:
+- [x] **Eliminación de Modo Demo:** ✅ COMPLETADO (2026-08-19). `useModoDemo.ts` desactivado y removidos todos los cuadros y bypasses de prueba en `MiniQuiz.tsx`, `FinalExam.tsx`, `FinalExamVF.tsx` y `ResultadoExamen.tsx`.
+- [x] **Certificación diferenciada (Presencial vs Online):** ✅ COMPLETADO (2026-08-19). Para OS-10 y Bastón y Esposas se indica la entrega presencial de certificados y credenciales en sede APRECAP; para CCTV y Supervisor se mantiene la emisión online tras aprobar.
+- [x] **Favicon e Iconos oficiales:** ✅ COMPLETADO (2026-08-19). Se sobrescribió `favicon.ico`, `icon.png`, `apple-icon.png` y metadatos de `layout.tsx` con el escudo oficial de APRECAP.
+- [ ] **Pase a Producción (Restricción de Permisos de Cursos):**
+  - Durante desarrollo se mantienen desbloqueados para revisión.
+  - Al abrir a alumnos reales: reactivar el bloqueo condicional de cursos (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx` para exigir matrícula administrativa.
+- [ ] **Quitar botón de vista previa del navbar:** Ocultar el botón "🧪 Vista previa exámenes" de `Header.tsx` antes del lanzamiento público.
+- [ ] **Firma del acuerdo PDF:** Entregado al cliente (`acuerdo-aprecap-digitalup.pdf`), pendiente de firma.
 
 ---
 

@@ -1,34 +1,27 @@
 # TAREAS — OTEC APRECAP · Digital Up SpA
 
 > Checklist para ir marcando avance. Usa `- [x]` cuando la tarea esté terminada.
-> Última actualización: 2026-08-08 · Enfoque: **HÍBRIDO (Moodle backend)** · Pack: textos + WebPay + Zoom (en curso)
-> ⏭️ **Próxima sesión**: verificación manual del pack (abajo) — reiniciar dev server antes, para cargar las claves Zoom.
+> Última actualización: 2026-08-19 · Enfoque: **Next.js en Cloudflare Workers + Sanity CDN + Firebase Auth/Firestore**
 
-## 🔜 Próxima sesión — verificación manual del pack (web en `localhost:3000`)
+## 🌐 Pendientes de Configuración de Dominio y Producción
 
-- [ ] **Reiniciar el dev server** (`pnpm --dir web dev`) para cargar `ZOOM_*` y `WEBPAY_*` recién escritos en `web/.env`
-- [ ] **Pago WebPay completo en navegador**: `/pago/{curso}` → monto libre (≥ $1.000) → consent → Pagar → en WebPay usar tarjeta de prueba VISA `4051 8856 0001 5322`, CVV `123`, RUT `11.111.111-1`, fecha futura → volver y ver `/pago/resultado` aprobado → ver el pago en panel admin > tab Pagos y exportar CSV
-- [ ] **Tab "Pagos 💳"** en `/panel/admin` con usuario admin: listado, filtros, subtotales, CSV con BOM UTF-8
-- [ ] **Zoom**: crear una reunión desde el panel admin (ya no falla env-gated: `ZOOM_ACCOUNT_ID/CLIENT_ID/CLIENT_SECRET` están en `web/.env` y la app fue verificada por API) y que aparezca en alumno/profesor
-- [ ] **WebPay producción**: pedir al cliente commerce code + API key reales de Transbank → `web/.env` (`WEBPAY_MODE=production`)
+- [ ] **Cambiar Nameservers en NIC Chile (`nic.cl`):** Apuntar `aprecap.cl` a Cloudflare.
+- [ ] **Asignar Custom Domain en Cloudflare Workers:** `aprecap.cl` y `www.aprecap.cl` a la worker `aprecap`.
+- [ ] **Configurar Registros Zoho Mail en Cloudflare DNS:** MX y TXT SPF según `docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md`.
+- [ ] **CORS en Sanity CMS (`manage.sanity.io`):** Agregar `https://aprecap.cl` y `https://www.aprecap.cl`.
+- [ ] **Dominios autorizados en Firebase Auth:** Agregar `aprecap.cl` y `www.aprecap.cl`.
+- [ ] **Publicar reglas de Firestore (`firestore.rules`):** Desplegar o actualizar reglas en consola de Firebase.
+- [ ] **Pase a Producción (Restricción de Cursos):** Reactivar bloqueo condicional de cursos en `web/src/app/panel/alumno/page.tsx` al abrir a alumnos reales.
+- [ ] **Firma de acuerdo PDF:** Entregado al cliente (`acuerdo-aprecap-digitalup.pdf`).
 
-## ✔️ Hecho el 2026-08-08 — Pack: textos cliente + WebPay + Zoom activada
+## ✔️ Hecho en la sesión actual (2026-08-19)
 
-- [x] **Fix ruta alumno** ("Redirigiendo…"): `/panel`, `/login`, `/solicitar-acceso` → `/panel/alumno`
-- [x] **Textos del cliente aplicados**: hero "Autoridad Fiscalizadora: OS-10 de Carabineros"; tarjeta ICONTEC (NCh 2728:2015); quitado servicio "Guardias para eventos y empresas"; caption Logo "Capacitaciones y Asesorías"; **precios eliminados** del catálogo (types/cursos/[slug]); cursos OTEC renombrados: **Nochero, Portero y Rondín (32h)** y nuevo **Bastón y Esposas (8h)**
-- [x] **WebPay (Transbank) implementado**: `transbank-sdk@6.1.1`; `lib/webpay.ts` + `lib/admin-firebase.ts` (SDK Admin, `web/service-account.json`, gitignored); POST `/api/webpay` (crea tx, guarda pago + consentimiento Ley 21.719); `/api/webpay/return` (commit y redirect a resultado); páginas `/pago/[slug]` (monto libre, todos los cursos) y `/pago/resultado`; botón "Pagar por WebPay" en cursos OTEC y LP
-- [x] **Panel admin tab Pagos**: listado en vivo, filtros curso/estado, subtotales, **export CSV** (`pagos-aprecap-<fecha>.csv`)
-- [x] **Firestore rules**: colección `pagos` (lectura admin, escritura server-side) — **desplegadas** por CLI
-- [x] **Zoom**: app Server-to-Server OAuth **creada y activada por el cliente y verificada por API** (token 200, scopes `meeting:read:list_meetings:admin` + `meeting:write:meeting:admin`); 3 claves ya en `web/.env`
-- [x] Calidad: `tsc --noEmit` + `eslint` + `next build` (49 rutas) **OK**; smoke test `POST /api/webpay` (transacción creada en sandbox + docs `pagos`/`consents` en Firestore) y return con token inválido → redirect correcto
+- [x] **Guía de Despliegue de Dominio Cloudflare + Zoho Mail:** `docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md` generada y protegida en `.gitignore`.
+- [x] **Administradores Saavedra integrados:** `conysaavedra.o@gmail.com` y `erciosaavedra@gmail.com` añadidos a `roles.ts`, `AuthContext.tsx` y `firestore.rules`.
+- [x] **Modo Demo eliminado:** Bypasses, cuadros y etiquetas de prueba desactivados en todo el flujo de cursos y evaluaciones.
+- [x] **Certificación presencial vs online diferenciada:** OS-10 y Bastón indican retiro en sede física; CCTV y Supervisor mantienen emisión digital.
+- [x] **Favicon e Iconos oficiales:** Sobrescrito `favicon.ico`, `icon.png`, `apple-icon.png` con el escudo oficial de APRECAP.
 
-## 🔜 Pendientes generales (sesiones anteriores, aún vivos)
-
-- [ ] **WordPress user/pass** (cliente): rescatar lecciones reales de los 3 cursos LearnPress → recrear en Moodle
-- [x] ~~**Confirmar horas Jefe de Seguridad**~~ → ✅ **CANCELADA 2026-08-19**: el curso de Jefe de Seguridad dejó de ofrecerse; se eliminó de la plataforma (secciones, catálogo y certificado). PDFs y MDs se conservan para uso futuro
-- [ ] **PDF del acuerdo firmado** (entregado, falta firma)
-- [ ] Decidir si se usa **Sanity** o se deja el contenido estático
-- [ ] Verificación manual del pack (sección "Próxima sesión" arriba)
 
 ## Fase 0 — Acuerdo y preparación (completada)
 

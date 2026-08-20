@@ -1,22 +1,38 @@
 # 🚀 Checklist de Despliegue a Producción - Instituto APRECAP
 
-> Checklist completo de flujo de cursos, candados y seguridad:
-> **`docs/PRE_PRODUCCION_FLUJO_CURSOS.md`** (candados por módulo, examen bloqueado,
-> progreso Firestore, acceso aprobado por admin, intentos ilimitados, legal 21.719/21.663,
-> deploy de `firestore.rules`, requisitos Ley 21.659 Art. 46, quitar vista previa de exámenes).
+> Guía detallada de conexión de dominio, Cloudflare y Zoho Mail:
+> **`docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md`** (local / gitignored por seguridad)
 
-## ⚠️ TAREAS PENDIENTES ANTES DEL PASE A PRODUCCIÓN:
+---
 
+## 📋 ESTADO DE TAREAS Y PENDIENTES ANTES DEL PASE A PRODUCCIÓN:
+
+### 🌐 1. Infraestructura, Dominio y Cloudflare (Pendiente configuración externa):
+- [ ] **Cambiar Nameservers en NIC Chile (`nic.cl`):**
+  - Reemplazar los nameservers antiguos de `servidoresph.com` por los 2 nameservers entregados por Cloudflare.
+- [ ] **Configurar Custom Domain en Cloudflare Workers:**
+  - En Cloudflare > Workers & Pages > `aprecap` > Settings > Custom Domains > Vincular `aprecap.cl` y `www.aprecap.cl`.
+- [ ] **Configurar registros de correo (Zoho Mail) en Cloudflare DNS:**
+  - Agregar los 3 registros MX (`mx.zoho.com`, `mx2.zoho.com`, `mx3.zoho.com`) y el TXT SPF de Zoho Mail para que no se interrumpa el correo corporativo.
+- [ ] **CORS en Sanity CMS:**
+  - En `manage.sanity.io` > Proyecto `mwwotgjc` > API > CORS Origins > Agregar `https://aprecap.cl` y `https://www.aprecap.cl` con *Allow credentials*.
+- [ ] **Dominios autorizados en Firebase Auth:**
+  - En Firebase Console (`aprecap-8aa89`) > Authentication > Settings > Authorized Domains > Agregar `aprecap.cl` y `www.aprecap.cl`.
+
+---
+
+### 🛡️ 2. Seguridad, Reglas y Roles (Código listo, pendiente publicación):
+- [x] **Administradores Saavedra configurados en código:**
+  - `conysaavedra.o@gmail.com` y `erciosaavedra@gmail.com` agregados a `ADMIN_EMAILS` en `lib/roles.ts` y sincronizados en `AuthContext.tsx`.
+- [ ] **Publicar reglas de Firestore en consola / CLI:**
+  - Desplegar o pegar `firestore.rules` en Firebase Console para que apliquen los permisos de los nuevos administradores.
+
+---
+
+### 🎓 3. Flujo de Cursos y Evaluaciones:
+- [x] **Modo Demo eliminado:** Se removieron los bypasses y botones de prueba; ahora rigen las evaluaciones reales con nota mínima de aprobación (60% en quizzes).
+- [x] **Certificación diferenciada:** Se ajustó para que OS-10 y Bastón indiquen retiro presencial en sede APRECAP tras completar las horas prácticas y examen de Carabineros, mientras que CCTV y Supervisor mantienen su certificación online.
+- [x] **Favicon e Iconos oficiales:** Escudo oficial de APRECAP reemplazado en `favicon.ico`, `icon.png`, `apple-icon.png` y metadatos de `layout.tsx`.
 - [ ] **Restricción de Accesos / Bloqueo de Cursos en el Panel del Alumno:**
-  - En modo desarrollo actual, los 4 cursos (OS-10, CCTV y Alarmas, Supervisor de Seguridad y Bastón y Esposas) se dejaron **DESBLOQUEADOS** para facilitar la revisión de contenidos.
-  - **Antes de lanzar a Producción:** Re-activar en `web/src/app/panel/alumno/page.tsx` el control de permisos de Firestore (`accesoCCTV`, `accesoSupervisor`) de modo que solo OS-10 esté desbloqueado por defecto y los demás requieran la aprobación manual del Administrador vía solicitud de permiso.
-
-- [ ] **Candados de módulos y examen final:** ver checklist en `docs/PRE_PRODUCCION_FLUJO_CURSOS.md` (módulo siguiente desbloqueado al aprobar quiz; examen final bloqueado hasta completar módulos; VideoTracker).
-
-- [ ] **Deploy de reglas de Firestore:** `firebase deploy --only firestore:rules` (archivo `firestore.rules` en la raíz).
-
-- [ ] **Quitar herramientas internas antes de producción:** botón "🧪 Vista previa exámenes" del navbar y página `/prueba-felicitaciones`.
-
-- [ ] **Revisión de Variables de Entorno (.env):**
-  - Asegurar `SANITY_API_TOKEN` y `NEXT_PUBLIC_SANITY_PROJECT_ID=mwwotgjc`.
-  - Asegurar credenciales de Webpay Plus y Firebase Firestore en el dashboard de producción.
+  - Durante el desarrollo local se mantienen desbloqueados para revisión.
+  - **Antes del lanzamiento final:** Asegurar que los cursos que requieran matrícula administrativa activen el bloqueo condicional (`accesoCCTV`, `accesoSupervisor`) en `web/src/app/panel/alumno/page.tsx`.
