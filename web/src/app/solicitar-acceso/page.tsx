@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirebaseAuth, getFirestoreDb } from "@/lib/firebase";
@@ -12,8 +12,18 @@ import { CURSOS_LISTA } from "@/lib/courseAccess";
 const SOLICITUD_VERSION = "v1.1-Ley21719-RUT";
 
 export default function SolicitarAccesoPage() {
+  return (
+    <Suspense fallback={null}>
+      <SolicitarAccesoInner />
+    </Suspense>
+  );
+}
+
+function SolicitarAccesoInner() {
   const { user, userData, loading, signInGoogle } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const cursoParam = searchParams.get("curso");
 
   const [form, setForm] = useState({
     nombres: "",
@@ -22,7 +32,7 @@ export default function SolicitarAccesoPage() {
     rut: "",
     telefono: "",
     tipoSolicitud: "alumno",
-    cursoDeseado: "guardia-de-seguridad",
+    cursoDeseado: cursoParam && CURSOS_LISTA.some((c) => c.slug === cursoParam) ? cursoParam : "guardia-de-seguridad",
     mensaje: "",
   });
   const [consentimientoDatos, setConsentimientoDatos] = useState(false);
@@ -30,6 +40,12 @@ export default function SolicitarAccesoPage() {
   const [enviando, setEnviando] = useState(false);
   const [ok, setOk] = useState(false);
   const [err, setErr] = useState("");
+
+  useEffect(() => {
+    if (cursoParam && CURSOS_LISTA.some((c) => c.slug === cursoParam)) {
+      setForm((prev) => ({ ...prev, cursoDeseado: cursoParam }));
+    }
+  }, [cursoParam]);
 
   useEffect(() => {
     if (!loading && userData) {

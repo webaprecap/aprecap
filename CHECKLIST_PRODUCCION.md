@@ -23,7 +23,7 @@
 
 ### 🛡️ 2. Seguridad, Reglas y Roles (Código listo, pendiente publicación):
 - [x] **Administradores Saavedra configurados en código:**
-  - `conysaavedra.o@gmail.com` y `erciosaavedra@gmail.com` agregados a `ADMIN_EMAILS` en `lib/roles.ts` y sincronizados en `AuthContext.tsx`.
+  - `csaavedraaprecap@gmail.com` y `erciosaavedra@gmail.com` agregados a `ADMIN_EMAILS` en `lib/roles.ts` y sincronizados en `AuthContext.tsx`.
 - [ ] **Publicar reglas de Firestore en consola / CLI:**
   - Desplegar o pegar `firestore.rules` en Firebase Console para que apliquen los permisos de los nuevos administradores.
 

@@ -16,7 +16,7 @@
 - [x] **Control de accesos y bloqueo de cursos:** `courseAccess.ts` y `materiales/[slug]/page.tsx` con control estricto por matrícula y permisos en Firestore.
 - [x] **Header y Navegación limpia:** `Header.tsx` sin botones de demo ni vistas previas internas.
 - [x] **Guía de Despliegue de Dominio Cloudflare + Zoho Mail:** `docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md` generada y protegida en `.gitignore`.
-- [x] **Administradores Saavedra integrados:** `conysaavedra.o@gmail.com` y `erciosaavedra@gmail.com` añadidos a `roles.ts`, `AuthContext.tsx` y `firestore.rules`.
+- [x] **Administradores Saavedra integrados:** `csaavedraaprecap@gmail.com` y `erciosaavedra@gmail.com` añadidos a `roles.ts`, `AuthContext.tsx` y `firestore.rules`.
 - [x] **Modo Demo eliminado:** Bypasses, cuadros y etiquetas de prueba desactivados en todo el flujo de cursos y evaluaciones.
 - [x] **Certificación presencial vs online diferenciada:** OS-10 y Bastón indican retiro en sede física; CCTV y Supervisor mantienen emisión digital.
 - [x] **Favicon e Iconos oficiales:** Sobrescrito `favicon.ico`, `icon.png`, `apple-icon.png` con el escudo oficial de APRECAP.

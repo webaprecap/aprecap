@@ -86,8 +86,8 @@ export default async function CursoDetalle({ params }: Props) {
               <Boton href={CONTACTO.whatsappLink} variant="whatsapp">
                 Inscribirme por WhatsApp
               </Boton>
-              <Boton href="/contacto" variant="red">
-                Pedir información
+              <Boton href={`/solicitar-acceso?curso=${c.slug}`} variant="red">
+                Inscribirme online
               </Boton>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default async function CursoDetalle({ params }: Props) {
               </span>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Boton href="/contacto" variant="red">
+              <Boton href={`/solicitar-acceso?curso=${c.slug}`} variant="red">
                 Inscribirme
               </Boton>
               <WhatsAppButton texto={`Hola, quiero inscribirme al curso ${c.title}`} />
@@ -284,7 +284,7 @@ export default async function CursoDetalle({ params }: Props) {
           )}
 
           <div className="mt-12 flex flex-wrap gap-4">
-            <Boton href="/contacto" variant="red">
+            <Boton href={`/solicitar-acceso?curso=${c.slug}`} variant="red">
               Inscribirme a este curso
             </Boton>
             <WhatsAppButton texto={`Hola, quiero inscribirme al curso ${c.title}`} />

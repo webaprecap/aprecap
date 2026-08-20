@@ -69,7 +69,7 @@ export default function Header() {
             </Link>
           ))}
           <Link
-            href="/contacto"
+            href="/solicitar-acceso"
             className="rounded-lg bg-apre-red px-4 py-2 text-sm font-bold text-white transition hover:bg-apre-red-dark"
           >
             Inscribirme
@@ -107,7 +107,7 @@ export default function Header() {
           ))}
           <div className="mt-3 grid gap-2">
             <Link
-              href="/contacto"
+              href="/solicitar-acceso"
               onClick={() => setOpen(false)}
               className="block rounded-lg bg-apre-red px-4 py-2 text-center text-sm font-bold text-white"
             >
