@@ -16,6 +16,13 @@ if (typeof window !== 'undefined' && pdfjs) {
   pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 }
 
+interface LogoConfig {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
 interface PDFSwipeViewerProps {
   url: string
   onFinishReading: () => void
@@ -44,18 +51,18 @@ export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerP
   // -- Configuración de Logo Drag & Drop --
   const { userData } = useAuth();
   const isDevOrSuperAdmin = process.env.NODE_ENV === 'development' || userData?.rol === 'superadmin';
-  const [logoConfig, setLogoConfig] = useState(() => {
+  const [logoConfig, setLogoConfig] = useState<LogoConfig>(() => {
     if (typeof window !== 'undefined') {
       const local = localStorage.getItem('sarmat_logo_config_dev');
       if (local) {
         try {
-          return JSON.parse(local);
+          return JSON.parse(local) as LogoConfig;
         } catch {
-          return defaultLogoConfig;
+          return defaultLogoConfig as LogoConfig;
         }
       }
     }
-    return defaultLogoConfig;
+    return defaultLogoConfig as LogoConfig;
   });
 
   const copyConfigToClipboardOrSave = async () => {
@@ -83,12 +90,12 @@ export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerP
 
   const resetLogoConfig = () => {
     localStorage.removeItem('sarmat_logo_config_dev');
-    setLogoConfig(defaultLogoConfig);
+    setLogoConfig(defaultLogoConfig as LogoConfig);
   };
 
   const adjustSize = (axis: 'w' | 'h', delta: number) => {
-    setLogoConfig(prev => {
-      const nw = { ...prev, [axis]: Math.max(10, prev[axis] + delta) };
+    setLogoConfig((prev: LogoConfig) => {
+      const nw: LogoConfig = { ...prev, [axis]: Math.max(10, prev[axis] + delta) };
       localStorage.setItem('sarmat_logo_config_dev', JSON.stringify(nw));
       return nw;
     });
@@ -256,9 +263,9 @@ export default function PDFSwipeViewer({ url, onFinishReading }: PDFSwipeViewerP
               drag={isDevOrSuperAdmin}
               dragMomentum={false}
               animate={{ x: logoConfig.x, y: logoConfig.y }}
-              onDragEnd={(e, info) => {
-                setLogoConfig(prev => {
-                  const nw = {
+              onDragEnd={(_e, info) => {
+                setLogoConfig((prev: LogoConfig) => {
+                  const nw: LogoConfig = {
                     ...prev,
                     x: prev.x + info.offset.x,
                     y: prev.y + info.offset.y
