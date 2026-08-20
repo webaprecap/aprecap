@@ -2,7 +2,7 @@ export type UserRole = "superadmin" | "admin" | "profesor" | "alumno";
 
 export const ADMIN_EMAILS = [
   "web.aprecap@gmail.com",
-  "conysaavedra.o@gmail.com",
+  "csaavedraaprecap@gmail.com",
   "erciosaavedra@gmail.com",
 ];
 

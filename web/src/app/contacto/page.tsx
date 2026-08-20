@@ -34,12 +34,21 @@ export default function ContactoPage() {
               <p className="mt-1 text-sm text-gray-500">{CONTACTO.metro}</p>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
-              <h2 className="font-extrabold text-apre-blue">Teléfono de Contacto</h2>
-              <p className="mt-2 text-gray-700 font-semibold">
-                <a href={`tel:${CONTACTO.telefono.replace(/\s/g, "")}`} className="hover:text-apre-red">
-                  {CONTACTO.telefono}
-                </a>
-              </p>
+              <h2 className="font-extrabold text-apre-blue">Teléfonos de Contacto Directo</h2>
+              <div className="mt-2 space-y-2">
+                <p className="text-gray-700 font-semibold flex items-center gap-2">
+                  <span>📞</span>
+                  <a href={`tel:${CONTACTO.telefono.replace(/\s/g, "")}`} className="hover:text-apre-red transition">
+                    {CONTACTO.telefono}
+                  </a>
+                </p>
+                <p className="text-gray-700 font-semibold flex items-center gap-2">
+                  <span>📞</span>
+                  <a href={`tel:${CONTACTO.telefono2.replace(/\s/g, "")}`} className="hover:text-apre-red transition">
+                    {CONTACTO.telefono2}
+                  </a>
+                </p>
+              </div>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
               <h2 className="font-extrabold text-apre-blue">Email</h2>

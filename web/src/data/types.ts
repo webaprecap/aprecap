@@ -46,8 +46,11 @@ export interface DatosContacto {
   metro: string;
   telefono: string;
   telefono2: string;
+  telefonos?: string[];
   whatsapp: string;
   whatsappLink: string;
+  whatsapp2?: string;
+  whatsappLink2?: string;
   email: string;
   email2: string;
   horario: string;

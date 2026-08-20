@@ -34,7 +34,7 @@ service cloud.firestore {
         isAdmin() || (
           userId == request.auth.uid && request.resource.data.email == request.auth.token.email &&
           (request.resource.data.rol == 'alumno' || request.resource.data.rol == 'profesor' ||
-            (request.resource.data.rol == 'admin' && request.auth.token.email in ['web.aprecap@gmail.com', 'conysaavedra.o@gmail.com', 'erciosaavedra@gmail.com']) ||
+            (request.resource.data.rol == 'admin' && request.auth.token.email in ['web.aprecap@gmail.com', 'csaavedraaprecap@gmail.com', 'erciosaavedra@gmail.com']) ||
             (request.resource.data.rol == 'superadmin' && request.auth.token.email == 'contacto.digitalup@gmail.com'))
         ));
       allow update: if isSignedIn() && (
