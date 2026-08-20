@@ -16,6 +16,15 @@ export const metadata: Metadata = {
   title: "OTEC APRECAP — Capacitación, Asesorías y Seguridad Privada",
   description:
     "Organismo Técnico de Capacitación acreditado por SENCE y OS-10. Cursos, asesorías y servicios de seguridad privada en todo el territorio nacional.",
+  icons: {
+    icon: [
+      { url: "/logo/logo-icon-512.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo/logo-icon-512.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo/logo-icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/logo/logo-icon-512.png",
+    apple: "/logo/logo-icon-512.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
