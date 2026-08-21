@@ -9,9 +9,9 @@ export default function Footer() {
         <div>
           <Logo light />
           <p className="mt-4 text-sm leading-relaxed text-white/80">
-            Organismo Técnico de Capacitación acreditado por SENCE, la
-            Subsecretaría de Prevención del Delito (Ley N° 21.659) y la
-            Prefectura de Seguridad Privada OS-10.
+            Organismo Técnico de Capacitación acreditado por SENCE, con programas autorizados por la
+            Subsecretaría de Prevención del Delito (SPD) y fiscalizados con examen final por la
+            Prefectura de Seguridad Privada OS-10 de Carabineros de Chile.
           </p>
 
           {/* Redes Sociales Oficiales */}

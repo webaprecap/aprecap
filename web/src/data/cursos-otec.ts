@@ -52,7 +52,7 @@ export const cursosOtec: CursoOtec[] = [
     acreditado: true,
     financiadoSence: true,
     description:
-      "Nuestro curso de Supervisor de Seguridad se imparte en línea o presencial y cuenta con el respaldo de la acreditación OS-10. Preparamos a nuestros alumnos para ejercer funciones de supervisión con responsabilidad y eficacia, garantizando una formación de calidad y adaptada a las necesidades del rubro.",
+      "Nuestro curso de Supervisor de Seguridad se imparte en línea o presencial bajo la normativa de la Ley N° 21.659 y el D.S. N° 209 (SPD). Preparamos a nuestros alumnos para ejercer funciones de supervisión con responsabilidad y eficacia, garantizando una formación de calidad y adaptada a las necesidades del rubro.",
     image: "/images/cursos/supervisor-de-seguridad.png",
   },
   {
@@ -63,7 +63,7 @@ export const cursosOtec: CursoOtec[] = [
     acreditado: true,
     financiadoSence: true,
     description:
-      "Nuestro curso de Alarma y CCTV está diseñado para capacitar a profesionales en el manejo y mantenimiento de sistemas de seguridad electrónicos. A través de la modalidad en línea y presencial con la acreditación OS-10, aseguramos una formación actualizada y acorde a los avances tecnológicos.",
+      "Nuestro curso de Alarma y CCTV está diseñado para capacitar a profesionales en el manejo y supervisión de sistemas de seguridad electrónicos, conforme al marco regulatorio de la Subsecretaría de Prevención del Delito y las normas técnicas vigentes.",
     image: "/images/cursos/operador-cctv-y-alarmas.png",
   },
   {

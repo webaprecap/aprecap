@@ -18,10 +18,10 @@ export default function CursosPage() {
           </p>
           <h1 className="mt-3 text-4xl font-extrabold">Cursos y Capacitación</h1>
           <p className="mt-4 max-w-3xl leading-relaxed text-white/80">
-            Acreditados por SENCE como Organismo de Capacitación y Empleo bajo
-            NCH-2728:2015. Nuestros docentes y capacitadores están acreditados
-            por SENCE y Carabineros de Chile, Prefectura de Seguridad Privada
-            OS-10.
+            Acreditados por SENCE bajo NCh-2728:2015. Nuestros programas de capacitación
+            cuentan con la autorización de la Subsecretaría de Prevención del Delito (SPD) como
+            órgano rector, con fiscalización operativa y examen final rendido ante Carabineros
+            de Chile (Prefectura de Seguridad Privada OS-10).
           </p>
         </div>
       </section>

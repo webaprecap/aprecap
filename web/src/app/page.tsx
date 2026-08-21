@@ -27,12 +27,11 @@ export default function Home() {
                 <span className="text-apre-red">Seguridad Privada</span>
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-white/80">
-                Equipo de profesionales confiables y acreditados por SENCE, la
-                Subsecretaría de Prevención del Delito (Ley N° 21.659) y la
-                Prefectura de Seguridad Privada OS-10, para brindar en todo el
-                territorio nacional capacitación y servicios confiables,
-                empeñados en la búsqueda de soluciones reales y oportunas a
-                nuestros clientes.
+                Equipo de profesionales confiables certificados por SENCE, con
+                programas autorizados por la Subsecretaría de Prevención del Delito
+                (SPD como órgano rector bajo la Ley N° 21.659), y fiscalizados con
+                examen final rendido ante la Prefectura de Seguridad Privada OS-10
+                de Carabineros de Chile.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Boton href="/cursos" variant="red">
@@ -154,24 +153,26 @@ export default function Home() {
               </h2>
               <p className="mt-4 leading-relaxed text-gray-700">
                 La <strong>Ley N° 21.659</strong> (vigente desde noviembre de
-                2025) moderniza la seguridad privada en Chile. Ahora la{" "}
+                2025) moderniza la seguridad privada en Chile. La{" "}
                 <strong>Subsecretaría de Prevención del Delito (SPD)</strong> es
-                la autoridad encargada de regular, fiscalizar y certificar a
-                todos los actores del sector.
+                el órgano rector encargado de <strong>autorizar y regular</strong> a
+                las empresas y entidades, mientras que{" "}
+                <strong>Carabineros de Chile (Prefectura OS-10)</strong> es la
+                autoridad encargada de <strong>fiscalizar en terreno y tomar el examen final</strong> a los guardias.
               </p>
               <ul className="mt-6 space-y-4">
                 {[
                   {
-                    t: "Certificación vigente",
-                    d: "Somos un OTEC autorizado conforme a la Ley 21.659 y su reglamento (D.S. N° 209).",
+                    t: "Órgano Rector (SPD)",
+                    d: "Programas y cursos autorizados conforme a la Ley N° 21.659 y su reglamento (D.S. N° 209).",
+                  },
+                  {
+                    t: "Fiscalización y Examen (OS-10)",
+                    d: "Exámenes finales de acreditación y fiscalización operativa a cargo de Carabineros de Chile.",
                   },
                   {
                     t: "Registro Nacional",
                     d: "Nuestros alumnos egresan aptos para integrar el Registro Nacional de Seguridad Privada de la SPD.",
-                  },
-                  {
-                    t: "Respaldo del Gobierno",
-                    d: "La formación y certificación tienen validez legal en todo el territorio nacional.",
                   },
                 ].map((s) => (
                   <li key={s.t} className="flex gap-3">
@@ -200,7 +201,7 @@ export default function Home() {
                 />
                 <div>
                   <p className="font-extrabold">Subsecretaría de Prevención del Delito</p>
-                  <p className="text-sm text-white/70">Ley N° 21.659 · D.S. N° 209</p>
+                  <p className="text-sm text-white/70">Órgano Rector · Ley N° 21.659 · D.S. N° 209</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -214,7 +215,7 @@ export default function Home() {
                 />
                 <div>
                   <p className="font-extrabold">Carabineros de Chile · OS-10</p>
-                  <p className="text-sm text-white/70">Prefectura de Seguridad Privada</p>
+                  <p className="text-sm text-white/70">Autoridad Fiscalizadora · Examen Final Oficial</p>
                 </div>
               </div>
             </ScrollReveal>

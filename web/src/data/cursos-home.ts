@@ -11,7 +11,7 @@ export const CURSOS_PRESENCIAL_ONLINE: CursoHome[] = [
   {
     slug: "guardia-de-seguridad",
     title: "Guardia de Seguridad (OS-10)",
-    image: "https://aprecap.cl/wp-content/uploads/2023/09/OS10_3-1024x576.png",
+    image: "/images/cursos/guardia-de-seguridad.png",
     duracion: "90 horas (formación) · 36 horas (perfeccionamiento)",
     modalidad: "Presencial + Online",
     acreditado: true,
@@ -19,7 +19,7 @@ export const CURSOS_PRESENCIAL_ONLINE: CursoHome[] = [
   {
     slug: "baston-y-esposas",
     title: "Bastón y Esposas",
-    image: "https://aprecap.cl/wp-content/uploads/2023/10/capacitacion.png",
+    image: "/images/cursos/baston-y-esposas.png",
     duracion: "8 horas",
     modalidad: "Presencial + Online",
     acreditado: false,
@@ -30,15 +30,15 @@ export const CURSOS_ONLINE: CursoHome[] = [
   {
     slug: "supervisor-de-seguridad",
     title: "Supervisor de Seguridad",
-    image: "https://aprecap.cl/wp-content/uploads/2023/09/OS10_3-500x300.png",
+    image: "/images/cursos/supervisor-de-seguridad.png",
     duracion: "140 horas",
     modalidad: "Online",
     acreditado: true,
   },
   {
-    slug: "operador-cc-tv-y-alarmas",
-    title: "Operador CC.TV y Alarmas",
-    image: "https://aprecap.cl/wp-content/uploads/2025/09/cctv-500x300.jpg",
+    slug: "operador-cctv-y-alarmas",
+    title: "Operador CCTV y Alarmas",
+    image: "/images/cursos/operador-cctv-y-alarmas.png",
     duracion: "40 horas",
     modalidad: "Online",
     acreditado: true,
