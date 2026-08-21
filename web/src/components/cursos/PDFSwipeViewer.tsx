@@ -44,9 +44,6 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
   const [direction, setDirection] = useState(0) // 1 = right, -1 = left
   const [hasFinishedOnce, setHasFinishedOnce] = useState(isAdmin)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [currentScale, setCurrentScale] = useState<number>(1)
-  const [pageWidth, setPageWidth] = useState<number>(360)
-  
   const containerRef = useRef<HTMLDivElement>(null)
 
   // -- Configuración de Logo Drag & Drop --
@@ -102,43 +99,31 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     });
   };
 
-  const updateDimensions = () => {
-    if (containerRef.current) {
-      const containerWidth = containerRef.current.clientWidth;
-      if (window.innerWidth <= 768) {
-        // En móviles y tablets ajustamos al ancho exacto disponible para evitar desbordes
-        setPageWidth(Math.max(280, Math.min(containerWidth - 16, window.innerWidth - 32)));
-      } else if (document.fullscreenElement || isFullscreen) {
-        setPageWidth(Math.min(containerWidth - 40, 1000));
-      } else {
-        setPageWidth(Math.min(containerWidth - 32, 850));
-      }
-    } else {
-      if (window.innerWidth <= 768) {
-        setPageWidth(Math.max(280, window.innerWidth - 32));
+  const [pageWidth, setPageWidth] = useState<number>(850);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (window.innerWidth <= 600) {
+        setPageWidth(window.innerWidth - 20);
+      } else if (document.fullscreenElement) {
+        setPageWidth(Math.min(window.innerWidth - 60, 1000));
       } else {
         setPageWidth(850);
       }
-    }
-  };
+    };
 
-  useEffect(() => {
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
     const handleFullscreenChange = () => {
-      const isDocFull = !!(document.fullscreenElement || (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement);
-      setIsFullscreen(isDocFull);
-      setTimeout(updateDimensions, 100);
+      setIsFullscreen(!!document.fullscreenElement);
+      updateDimensions();
     };
-
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
     return () => {
       window.removeEventListener('resize', updateDimensions);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
     };
   }, []);
 
@@ -146,27 +131,18 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     if (!containerRef.current) return
 
     try {
-      if (!document.fullscreenElement && !isFullscreen) {
-        if (containerRef.current.requestFullscreen) {
-          await containerRef.current.requestFullscreen().catch(() => {});
-        }
-        setIsFullscreen(true);
+      if (!document.fullscreenElement) {
+        await containerRef.current.requestFullscreen()
       } else {
-        if (document.fullscreenElement && document.exitFullscreen) {
-          await document.exitFullscreen().catch(() => {});
-        }
-        setIsFullscreen(false);
+        await document.exitFullscreen()
       }
     } catch (err) {
       console.error('Error attempting to toggle fullscreen', err);
-      setIsFullscreen(prev => !prev);
     }
-    setTimeout(updateDimensions, 100);
   };
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
-    updateDimensions();
   }
 
   const changePage = (offset: number) => {
@@ -181,23 +157,19 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     }
   };
 
-  // Gestos táctiles para móviles (Solo cambia de página si no está con zoom ampliado)
+  // Gestos para móviles (Idéntico a Sarmat)
   const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      if (currentScale <= 1.05) changePage(1);
-    },
-    onSwipedRight: () => {
-      if (currentScale <= 1.05) changePage(-1);
-    },
+    onSwipedLeft: () => changePage(1),
+    onSwipedRight: () => changePage(-1),
     swipeDuration: 500,
     preventScrollOnSwipe: false,
     trackMouse: false
   });
 
-  // Variantes de animación para framer-motion
+  // Variantes de animación para framer-motion (Idéntico a Sarmat)
   const variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
+      x: direction > 0 ? 800 : -800,
       opacity: 0
     }),
     center: {
@@ -207,7 +179,7 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 300 : -300,
+      x: direction < 0 ? 800 : -800,
       opacity: 0
     })
   };
@@ -236,8 +208,7 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
           <div className={styles.headerIcon}>📄</div>
           <h3>
             Material de Estudio
-            <span className="hidden sm:block">Desliza o usa los botones para navegar</span>
-            <span className="sm:hidden">Pinch con 2 dedos para zoom</span>
+            <span>Desliza para cambiar de página</span>
           </h3>
         </div>
         <div className={styles.headerRight}>
@@ -248,21 +219,21 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
             className={styles.fullscreenBtn} 
             onClick={toggleFullscreen}
             title={isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}
-            type="button"
           >
             {isFullscreen ? '↙️' : '↗️'}
           </button>
         </div>
       </div>
 
-      <div className={styles.documentWrapper} {...handlers}>
+      <div className={styles.documentWrapper} {...handlers} style={{ position: 'relative' }}>
         
-        {/* Logo overlay drag & drop */}
+        {/* Logo overlay drag & drop (Solo en PC/Desktop) */}
         {isFullscreen && (
           <>
             <motion.div 
               drag={isDevOrSuperAdmin}
               dragMomentum={false}
+              className={styles.floatingLogoDesktopOnly}
               animate={{ x: logoConfig.x, y: logoConfig.y }}
               onDragEnd={(_e, info) => {
                 setLogoConfig((prev: LogoConfig) => {
@@ -287,15 +258,19 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
                 boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                 pointerEvents: isDevOrSuperAdmin ? 'auto' : 'none',
                 cursor: isDevOrSuperAdmin ? 'grab' : 'default',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                alignItems: 'center', 
+                justifyContent: 'center'
               }}
             >
               <img src="/logo/logo.png" alt="APRECAP Capacitaciones" style={{ width: `${logoConfig.w}px`, height: `${logoConfig.h}px`, pointerEvents: 'none', display: 'block' }} />
             </motion.div>
 
-            {/* Panel de Configuración (SuperAdmin y Local Dev) */}
+            {/* Panel de Configuración (SuperAdmin y Local Dev - Solo PC) */}
             {isDevOrSuperAdmin && (
-              <div style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 60, display: 'flex', gap: '15px', background: 'rgba(0,0,0,0.85)', padding: '10px 20px', borderRadius: '8px', border: '1px solid rgba(0,240,255,0.4)', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center', width: 'max-content' }}>
+              <div 
+                className={styles.floatingLogoDesktopOnly}
+                style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 60, gap: '15px', background: 'rgba(0,0,0,0.85)', padding: '10px 20px', borderRadius: '8px', border: '1px solid rgba(0,240,255,0.4)', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center', width: 'max-content' }}
+              >
                 <span style={{color: '#00f0ff', fontSize: '0.85rem', fontWeight: 'bold'}}>⚙️ Config LOGO:</span>
                 
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: '#ffcc00', fontSize: '0.8rem', marginRight: '10px' }}>
@@ -338,7 +313,7 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
           error={<p className={styles.error}>Error al cargar el PDF.</p>}
         >
           <div className={styles.pageContainer}>
-            <AnimatePresence mode="wait" custom={direction}>
+            <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={pageNumber}
                 custom={direction}
@@ -347,8 +322,8 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
                 animate="center"
                 exit="exit"
                 transition={{
-                  x: { type: "tween", duration: 0.2 },
-                  opacity: { duration: 0.15 }
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 }
                 }}
                 className={styles.pageMotion}
               >
@@ -358,18 +333,12 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
                     minScale={1}
                     maxScale={4}
                     centerOnInit
-                    wheel={{ disabled: false }}
-                    doubleClick={{ disabled: false, mode: "toggle" }}
-                    pinch={{ disabled: false, step: 5 }}
-                    panning={{ disabled: false }}
-                    onTransform={(ref) => {
-                      if (ref?.state?.scale) {
-                        setCurrentScale(ref.state.scale);
-                      }
-                    }}
+                    wheel={{ disabled: true }}
+                    doubleClick={{ disabled: true }}
+                    pinch={{ step: 5 }}
                   >
                     {({ zoomIn, zoomOut, resetTransform }) => (
-                      <div className={styles.transformInner}>
+                      <div style={{ position: 'relative' }}>
                         <TransformComponent wrapperClass={styles.transformWrapper} contentClass={styles.transformContent}>
                           <Page 
                             pageNumber={pageNumber} 
@@ -379,34 +348,6 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
                             className={styles.pdfPage}
                           />
                         </TransformComponent>
-
-                        {/* Botones de Zoom flotantes SOLO para PC / Desktop (Ocultos en celulares y tablets) */}
-                        <div className={styles.desktopZoomControls}>
-                          <button
-                            onClick={() => zoomIn()}
-                            className={styles.zoomBtn}
-                            title="Acercar (Zoom +)"
-                            type="button"
-                          >
-                            +
-                          </button>
-                          <button
-                            onClick={() => zoomOut()}
-                            className={styles.zoomBtn}
-                            title="Alejar (Zoom -)"
-                            type="button"
-                          >
-                            -
-                          </button>
-                          <button
-                            onClick={() => resetTransform()}
-                            className={styles.zoomBtn}
-                            title="Restablecer tamaño"
-                            type="button"
-                          >
-                            ↺
-                          </button>
-                        </div>
                       </div>
                     )}
                   </TransformWrapper>
