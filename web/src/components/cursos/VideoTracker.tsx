@@ -8,7 +8,7 @@ interface VideoTrackerProps {
   url: string
   onUnlockNext: () => void
   title?: string
-  minWatchSeconds?: number  // segundos mínimos antes de poder avanzar (default: 30)
+  minWatchSeconds?: number  // segundos mínimos antes de poder avanzar (default: 300 = 5 minutos)
   isAlreadyCompleted?: boolean // bypass de cuenta regresiva para repasos
   isAdmin?: boolean // bypass total para administradores y docentes
 }
@@ -29,24 +29,43 @@ function getYouTubeId(url: string): string | null {
   return null
 }
 
-export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds = 1, isAlreadyCompleted = false, isAdmin = false }: VideoTrackerProps) {
-  const isBypassed = isAlreadyCompleted || isAdmin
+export default function VideoTracker({
+  url,
+  onUnlockNext,
+  title,
+  minWatchSeconds = 300, // 5 minutos por defecto
+  isAlreadyCompleted = false,
+  isAdmin = false,
+}: VideoTrackerProps) {
+  const videoId = getYouTubeId(url)
+
+  // Revisar si ya fue visualizado previamente en este dispositivo
+  const isPreviouslyWatched = typeof window !== 'undefined' && videoId
+    ? localStorage.getItem(`aprecap_video_watched_${videoId}`) === 'true'
+    : false
+
+  const isBypassed = isAlreadyCompleted || isAdmin || isPreviouslyWatched
   const [hasStarted, setHasStarted] = useState(isBypassed)
   const [unlocked, setUnlocked] = useState(false)
   const [secondsWatched, setSecondsWatched] = useState(isBypassed ? minWatchSeconds : 0)
   const intervalRef = useRef<any>(null)
 
-  const videoId = getYouTubeId(url)
-
   // Cuando el usuario da play, iniciamos el contador
   const handlePlay = () => {
     setHasStarted(true)
     // Empezar a contar segundos de visionado
+    if (intervalRef.current) clearInterval(intervalRef.current)
     intervalRef.current = setInterval(() => {
       setSecondsWatched(prev => {
         const next = prev + 1
         if (next >= minWatchSeconds && !unlocked) {
-          // Desbloqueamos automáticamente al llegar al mínimo
+          if (videoId && typeof window !== 'undefined') {
+            try {
+              localStorage.setItem(`aprecap_video_watched_${videoId}`, 'true')
+            } catch {
+              /* ignore */
+            }
+          }
           clearInterval(intervalRef.current)
         }
         return next
@@ -64,6 +83,13 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
   const handleContinue = () => {
     setUnlocked(true)
     if (intervalRef.current) clearInterval(intervalRef.current)
+    if (videoId && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(`aprecap_video_watched_${videoId}`, 'true')
+      } catch {
+        /* ignore */
+      }
+    }
     onUnlockNext()
   }
 
@@ -89,6 +115,14 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
   const isReady = secondsWatched >= minWatchSeconds
   const remaining = Math.max(0, minWatchSeconds - secondsWatched)
 
+  const remMin = Math.floor(remaining / 60)
+  const remSec = remaining % 60
+  const remFormatted = `${remMin}:${remSec.toString().padStart(2, '0')} min`
+
+  const minRequeridosText = minWatchSeconds >= 60
+    ? `${Math.ceil(minWatchSeconds / 60)} minutos`
+    : `${minWatchSeconds} segundos`
+
   return (
     <div className={styles.videoContainer}>
 
@@ -107,7 +141,7 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
         />
       </div>
 
-      {/* Portada Sarmat — flota encima hasta que el usuario hace click */}
+      {/* Portada — flota encima hasta que el usuario hace click */}
       {!hasStarted && (
         <div
           className={styles.overlay}
@@ -136,17 +170,17 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
       <div className={styles.progressContainer}>
 
         {/* Banner de Advertencia - Oculto si ya se completó o si es Admin */}
-        {hasStarted && !unlocked && !isAlreadyCompleted && !isAdmin && (
+        {hasStarted && !unlocked && !isBypassed && !isReady && (
           <div className={styles.warningBanner}>
             <span className={styles.warningIcon}>⚠️</span>
             <div className={styles.warningText}>
               <strong>ATENCIÓN: REQUISITO OBLIGATORIO</strong>
-              <p>Por normativa, es obligatorio visualizar la clase completa para que el sistema libere el acceso al material de estudio o a la evaluación (Mínimo {minWatchSeconds} segundos requeridos en plataforma).</p>
+              <p>Por normativa formativa, debes visualizar al menos {minRequeridosText} de esta clase en plataforma para que el sistema libere el acceso a la lectura del Manual PDF y su evaluación.</p>
             </div>
           </div>
         )}
 
-        {hasStarted && !unlocked && !isAlreadyCompleted && !isAdmin && (
+        {hasStarted && !unlocked && !isBypassed && !isReady && (
           <div className={styles.progressBar}>
             <div
               className={styles.progressFill}
@@ -162,7 +196,6 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
               <p className={styles.progressText}>
                 Haz click en la portada para iniciar el video
               </p>
-              {/* Botón de inicio especial para móviles fuera del área de video */}
               <button
                 className={`${styles.playButton} ${styles.mobileOnly}`}
                 onClick={handlePlay}
@@ -172,21 +205,21 @@ export default function VideoTracker({ url, onUnlockNext, title, minWatchSeconds
             </>
           )}
 
-          {hasStarted && !isReady && !isAlreadyCompleted && !isAdmin && (
+          {hasStarted && !isReady && !isBypassed && (
             <p className={styles.progressText}>
-              ⏱ Podrás continuar en <strong style={{ color: '#00f0ff' }}>{remaining}s</strong>
+              ⏱ Podrás continuar en <strong style={{ color: '#00f0ff' }}>{remFormatted}</strong>
             </p>
           )}
 
-          {hasStarted && (isReady || isAlreadyCompleted || isAdmin) && !unlocked && (
+          {hasStarted && (isReady || isBypassed) && !unlocked && (
             <button className={styles.continueBtn} onClick={handleContinue}>
-              Continuar al siguiente paso {isAdmin ? '(Admin)' : isAlreadyCompleted ? '(Repaso)' : '→'}
+              Continuar a la lectura del Manual PDF {isAdmin ? '(Admin)' : isBypassed ? '(Repaso)' : '→'}
             </button>
           )}
 
           {unlocked && (
             <p className={`${styles.progressText} ${styles.unlocked}`}>
-              ✅ ¡Siguiente etapa desbloqueada!
+              ✅ ¡Etapa de video completada! Avanzando al Manual PDF...
             </p>
           )}
         </div>

@@ -19,7 +19,7 @@ export const cursosOtec: CursoOtec[] = [
     financiadoSence: true,
     description:
       "Nuestro curso de Guardia de Seguridad está diseñado para formar profesionales altamente capacitados en el área de seguridad. Ofrecemos opciones tanto para la formación inicial como para el perfeccionamiento, brindando a nuestros alumnos las herramientas necesarias para desempeñarse con excelencia en sus funciones.",
-    image: "https://aprecap.cl/wp-content/uploads/2023/10/capacitacion.png",
+    image: "/images/cursos/guardia-de-seguridad.png",
   },
   {
     slug: "nochero-portero-y-rondin",
@@ -42,8 +42,7 @@ export const cursosOtec: CursoOtec[] = [
     financiadoSence: false,
     description:
       "Curso práctico de manejo de bastón y uso de esposas, orientado al personal de seguridad que necesita dominar estas destrezas de control con seguridad y responsabilidad. Para matricularte, envíanos tus datos y coordinamos tu cupo.",
-    image:
-      "https://aprecap.cl/wp-content/uploads/2023/10/capacitacion.png",
+    image: "/images/cursos/baston-y-esposas.png",
   },
   {
     slug: "supervisor-de-seguridad",
@@ -54,8 +53,7 @@ export const cursosOtec: CursoOtec[] = [
     financiadoSence: true,
     description:
       "Nuestro curso de Supervisor de Seguridad se imparte en línea o presencial y cuenta con el respaldo de la acreditación OS-10. Preparamos a nuestros alumnos para ejercer funciones de supervisión con responsabilidad y eficacia, garantizando una formación de calidad y adaptada a las necesidades del rubro.",
-    image:
-      "https://aprecap.cl/wp-content/uploads/2023/10/Curso-supervisor-de-seguridad-privada-edited-1.jpg",
+    image: "/images/cursos/supervisor-de-seguridad.png",
   },
   {
     slug: "operador-cctv-y-alarmas",
@@ -66,7 +64,7 @@ export const cursosOtec: CursoOtec[] = [
     financiadoSence: true,
     description:
       "Nuestro curso de Alarma y CCTV está diseñado para capacitar a profesionales en el manejo y mantenimiento de sistemas de seguridad electrónicos. A través de la modalidad en línea y presencial con la acreditación OS-10, aseguramos una formación actualizada y acorde a los avances tecnológicos.",
-    image: "https://aprecap.cl/wp-content/uploads/2023/10/ps3.jpg",
+    image: "/images/cursos/operador-cctv-y-alarmas.png",
   },
   {
     slug: "electricidad-domiciliaria",

@@ -10,6 +10,7 @@ import { CONTACTO } from "@/data/site";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
 import { canAccessCourse, getCourseFieldKey, getCourseStatus, CURSOS_LISTA } from "@/lib/courseAccess";
+import { COURSE_TIMING_CONFIG, getDiaActualCurso } from "@/lib/courseTiming";
 import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
 
 interface Enroll {
@@ -501,6 +502,11 @@ export default function PanelAlumno() {
                 const isPendiente = status === "pendiente";
                 const isRechazado = status === "rechazado";
 
+                const enrollCurso = enrolls.find((e) => e.courseSlug === c.slug);
+                const rawFechaCurso = enrollCurso?.fecha || userData?.fechaRegistro;
+                const timing = COURSE_TIMING_CONFIG[c.slug];
+                const diaCurso = timing ? getDiaActualCurso(rawFechaCurso) : null;
+
                 return (
                   <div
                     key={c.slug}
@@ -540,6 +546,12 @@ export default function PanelAlumno() {
                       <p className="mt-1 text-xs text-gray-600">
                         Duración: {c.horas} horas pedagógicas con certificación oficial.
                       </p>
+                      {isDesbloqueado && timing && diaCurso && (
+                        <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-cyan-50 border border-cyan-200/80 px-2.5 py-1 text-[11px] text-cyan-800 font-bold">
+                          <span>📅</span>
+                          <span>Jornada: <strong>Día {Math.min(diaCurso, timing.totalDias)} de {timing.totalDias}</strong></span>
+                        </div>
+                      )}
                       {!isDesbloqueado && (
                         <p className="mt-2 text-xs font-semibold text-gray-500">
                           {isPendiente

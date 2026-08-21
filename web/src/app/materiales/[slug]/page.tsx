@@ -16,6 +16,12 @@ import { getBancoModulo } from "@/lib/questionBanks/os10";
 import { getMiniQuizBancoCctv } from "@/lib/questionBanks/cctv";
 import { getMiniQuizBancoBaston } from "@/lib/questionBanks/baston";
 import { getMiniQuizBancoSupervisor } from "@/lib/questionBanks/supervisor";
+import {
+  COURSE_TIMING_CONFIG,
+  getDiaActualCurso,
+  getExamUnlockStatus,
+  getModuleUnlockStatus,
+} from "@/lib/courseTiming";
 import { materialesEstudio } from "@/data/materiales-estudio";
 
 const PDFSwipeViewer = dynamic(() => import("@/components/cursos/PDFSwipeViewer"), {
@@ -89,7 +95,7 @@ export default function CursoMaterialesPage({ params }: PageProps) {
 function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { user, userData, loading: authLoading } = useAuth();
-  const [enrollments, setEnrollments] = useState<{ courseSlug?: string }[]>([]);
+  const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown }[]>([]);
   const [solicitando, setSolicitando] = useState(false);
 
   const cursoActual = materialesEstudio.find((c) => c.slug === slug);
@@ -104,7 +110,12 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     if (!db || !user) return;
     const q = query(collection(db, "enrollments"), where("uid", "==", user.uid));
     const unsub = onSnapshot(q, (snap) => {
-      setEnrollments(snap.docs.map((d) => ({ courseSlug: d.data().courseSlug })));
+      setEnrollments(
+        snap.docs.map((d) => ({
+          courseSlug: d.data().courseSlug,
+          fecha: d.data().fecha,
+        }))
+      );
     });
     return unsub;
   }, [user]);
@@ -143,7 +154,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     notFound();
   }
 
-  // Verificación de acceso
+  // Verificación de acceso general al curso
   const status = getCourseStatus(userData, slug, enrollments);
   const hasAccess = canAccessCourse(userData, slug, enrollments);
 
@@ -165,6 +176,14 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     userData?.rol === "superadmin" ||
     userData?.rol === "profesor"
   );
+
+  // --- Lógica de Desbloqueo Progresivo Temporal (Drip Content) ---
+  const matriculaActual = enrollments.find((e) => e.courseSlug === slug);
+  const rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
+  const timingConfig = COURSE_TIMING_CONFIG[slug];
+  const diaActual = getDiaActualCurso(rawFechaMatricula);
+  const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
+  const moduloActualUnlock = getModuleUnlockStatus(slug, expandedModuloIdx, rawFechaMatricula, isAdmin);
 
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];
   const hasSubModulos = Boolean(moduloActual.subModulos && moduloActual.subModulos.length > 0);
@@ -227,7 +246,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
               👑 VISTA PREVIA ADMINISTRADOR
             </span>
             <span className="text-slate-200">
-              Contenido <strong>100% desbloqueado</strong>. Puedes saltar libremente entre videos, diapositivas, manuales PDF y cuestionarios.
+              Contenido <strong>100% desbloqueado</strong>. Los temporizadores de días no aplican en tu cuenta.
             </span>
           </div>
           <Link
@@ -275,11 +294,32 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                 </span>
               </div>
 
+              {/* Indicador de Jornada / Días de Capacitación (CCTV y Supervisor) */}
+              {timingConfig && !isAdmin && (
+                <div className="rounded-xl bg-gradient-to-r from-cyan-950/60 to-slate-900 border border-cyan-500/30 p-3 mb-4 shadow-sm">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-300">📅 Jornada de Estudio:</span>
+                    <span className="font-black text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                      Día {Math.min(diaActual, timingConfig.totalDias)} de {timingConfig.totalDias}
+                    </span>
+                  </div>
+                  <div className="mt-2 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-400 to-apre-red rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(100, (diaActual / timingConfig.totalDias) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3">
                 {cursoActual.modulos.map((m, mIdx) => {
                   const isExpanded = mIdx === expandedModuloIdx;
                   const modSubModulos = m.subModulos || [];
                   const isCompletado = completados.includes(mIdx);
+                  const modUnlock = getModuleUnlockStatus(slug, mIdx, rawFechaMatricula, isAdmin);
 
                   return (
                     <div key={mIdx} className="rounded-xl border border-slate-800/80 bg-slate-900/40 overflow-hidden">
@@ -295,12 +335,27 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                         }`}
                       >
                         <div className="flex items-center gap-2 pr-2">
-                          <span className={`font-black text-xs ${isExpanded ? "text-cyan-400" : "text-slate-500"}`}>
-                            {isCompletado ? "✓" : `#${mIdx + 1}`}
+                          <span
+                            className={`font-black text-xs ${
+                              !modUnlock.isUnlocked
+                                ? "text-amber-400"
+                                : isExpanded
+                                  ? "text-cyan-400"
+                                  : "text-slate-500"
+                            }`}
+                          >
+                            {!modUnlock.isUnlocked ? "🔒" : isCompletado ? "✓" : `#${mIdx + 1}`}
                           </span>
                           <span className="line-clamp-2">{m.nombre}</span>
                         </div>
-                        <span className="text-xs text-slate-400">{isExpanded ? "▼" : "▶"}</span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {!modUnlock.isUnlocked && (
+                            <span className="text-[10px] font-bold text-amber-300 bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/20">
+                              Día {modUnlock.diaRequerido}
+                            </span>
+                          )}
+                          <span className="text-xs text-slate-400">{isExpanded ? "▼" : "▶"}</span>
+                        </div>
                       </button>
 
                       {/* Sub-modulos Children List */}
@@ -349,23 +404,37 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                       style={{ width: `${(completados.length / Math.max(1, modulosEvaluables.length)) * 100}%` }}
                     />
                   </div>
+
                   {cursoActual.banco === "cctv" ||
                   cursoActual.banco === "baston" ||
                   cursoActual.banco === "supervisor" ||
                   cursoActual.banco === "os10" ? (
                     <>
-                      <Link
-                        href={`/evaluaciones/${cursoActual.slug}`}
-                        className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
-                      >
-                        {cursoActual.banco === "supervisor"
-                          ? "📝 Examen Final Supervisor de Seguridad"
-                          : cursoActual.banco === "os10"
-                            ? "📝 Examen Final OS-10"
-                            : cursoActual.banco === "baston"
-                              ? "📝 Examen Final Bastón y Esposas"
-                              : "📝 Examen Final CCTV"}
-                      </Link>
+                      {examUnlock.isUnlocked ? (
+                        <Link
+                          href={`/evaluaciones/${cursoActual.slug}`}
+                          className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
+                        >
+                          {cursoActual.banco === "supervisor"
+                            ? "📝 Examen Final Supervisor de Seguridad"
+                            : cursoActual.banco === "os10"
+                              ? "📝 Examen Final OS-10"
+                              : cursoActual.banco === "baston"
+                                ? "📝 Examen Final Bastón y Esposas"
+                                : "📝 Examen Final CCTV"}
+                        </Link>
+                      ) : (
+                        <div className="mt-3 rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-center">
+                          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-300">
+                            <span>🔒</span>
+                            <span>Examen Final · Día {examUnlock.diaRequerido}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-400 mt-1">
+                            Disponible en ~{examUnlock.horasRestantes}h tras tu periodo formativo.
+                          </p>
+                        </div>
+                      )}
+
                       {cursoActual.banco === "os10" && (
                         <Link
                           href={`/cuestionarios/${cursoActual.slug}`}
@@ -412,7 +481,12 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                 </span>
                 {isAdmin && (
                   <span className="rounded-full bg-amber-400/10 text-amber-300 text-[10px] font-black px-2 py-0.5 border border-amber-400/30">
-                    DESBLOQUEADO
+                    ADMIN DESBLOQUEADO
+                  </span>
+                )}
+                {!moduloActualUnlock.isUnlocked && (
+                  <span className="rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-black px-2 py-0.5 border border-amber-500/40 flex items-center gap-1">
+                    🔒 DÍA {moduloActualUnlock.diaRequerido}
                   </span>
                 )}
               </div>
@@ -481,7 +555,38 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
               )}
             </div>
 
-            {paso === "completed" && tieneQuiz ? (
+            {/* Si el módulo está bloqueado por cronograma temporal para el alumno */}
+            {!moduloActualUnlock.isUnlocked ? (
+              <div className="rounded-2xl border border-cyan-500/30 bg-slate-950 p-8 text-center space-y-5 shadow-2xl">
+                <div className="w-16 h-16 mx-auto rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-3xl shadow-inner">
+                  ⏳
+                </div>
+                <div className="space-y-2">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-300 border border-amber-500/30">
+                    🔒 Módulo Programado · Día {moduloActualUnlock.diaRequerido}
+                  </div>
+                  <h3 className="text-xl font-black text-white">
+                    {moduloActual.nombre}
+                  </h3>
+                  <p className="text-sm text-slate-300 max-w-lg mx-auto">
+                    {moduloActualUnlock.mensajeBloqueo}
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 max-w-md mx-auto text-left text-xs bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                  <div>
+                    <span className="text-slate-500 block text-[10px] uppercase font-bold">Tu día actual:</span>
+                    <span className="text-white font-bold">Día {diaActual} de {moduloActualUnlock.totalDiasCurso}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px] uppercase font-bold">Tiempo restante aprox:</span>
+                    <span className="text-cyan-400 font-bold">~{moduloActualUnlock.horasRestantes}h {moduloActualUnlock.minutosRestantes}m</span>
+                  </div>
+                </div>
+                <div className="rounded-xl bg-cyan-950/30 border border-cyan-500/20 p-3 max-w-md mx-auto text-[11px] text-cyan-200/90 leading-relaxed">
+                  💡 <strong>Dosificación de Estudio:</strong> Este cronograma asegura el cumplimiento de las horas pedagógicas exigidas por el programa formativo.
+                </div>
+              </div>
+            ) : paso === "completed" && tieneQuiz ? (
               <div className="rounded-2xl border border-emerald-500/40 bg-emerald-950/20 p-8 text-center space-y-4">
                 <div className="text-4xl">🎉</div>
                 <h3 className="text-xl font-black text-white">
@@ -504,18 +609,24 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   cursoActual.banco === "baston" ||
                   cursoActual.banco === "supervisor" ||
                   cursoActual.banco === "os10" ? (
-                  <Link
-                    href={`/evaluaciones/${cursoActual.slug}`}
-                    className="inline-block rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark"
-                  >
-                    {cursoActual.banco === "supervisor"
-                      ? "📝 Rendir Examen Final Supervisor de Seguridad"
-                      : cursoActual.banco === "os10"
-                        ? "📝 Rendir Examen Final OS-10"
-                        : cursoActual.banco === "baston"
-                          ? "📝 Rendir Examen Final Bastón y Esposas"
-                          : "📝 Rendir Examen Final CCTV"}
-                  </Link>
+                  examUnlock.isUnlocked ? (
+                    <Link
+                      href={`/evaluaciones/${cursoActual.slug}`}
+                      className="inline-block rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark"
+                    >
+                      {cursoActual.banco === "supervisor"
+                        ? "📝 Rendir Examen Final Supervisor de Seguridad"
+                        : cursoActual.banco === "os10"
+                          ? "📝 Rendir Examen Final OS-10"
+                          : cursoActual.banco === "baston"
+                            ? "📝 Rendir Examen Final Bastón y Esposas"
+                            : "📝 Rendir Examen Final CCTV"}
+                    </Link>
+                  ) : (
+                    <div className="inline-block rounded-xl bg-slate-900 border border-slate-700 px-6 py-3 text-xs text-amber-300 font-bold">
+                      🔒 Examen Final disponible el Día {examUnlock.diaRequerido} (en ~{examUnlock.horasRestantes}h)
+                    </div>
+                  )
                 ) : (
                   <Link
                     href={`/cuestionarios/${cursoActual.slug}`}

@@ -459,14 +459,14 @@ export const materialesEstudio: CursoMaterial[] = [
           {
             id: "sup-2-1",
             codigo: "2.1",
-            nombre: "Prevención de Riesgos en el Puesto",
+            nombre: "Prevención de Riesgos y Seguridad Laboral en Instalaciones",
             videoUrl: "https://youtu.be/-vXHx6DdEvg",
             pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7a1e489ff6e94c49fa7fb03b0cb219cfd1670dc6.pdf"
           },
           {
             id: "sup-2-2",
             codigo: "2.2",
-            nombre: "Control de Incendios y Emergencias",
+            nombre: "Control de Incendios, Emergencias y Evacuación",
             videoUrl: "https://youtu.be/7jFHf8I_vNw",
             pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/01d6221450e3c7713aaf2d5781607b01371493e5.pdf"
           }
