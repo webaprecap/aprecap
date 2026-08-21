@@ -326,9 +326,16 @@
   - Navegación libre por todos los módulos y retorno contextual al panel correspondiente.
 - **Verificación**: `pnpm tsc --noEmit` y `pnpm build` (`@opennextjs/cloudflare`) completados con 0 errores (44 rutas estáticas y dinámicas compiladas exitosamente).
 
-- **Pendiente para la próxima sesión**:
-  - Implementar endpoints `/api/zoom/recordings` y `lib/zoom.ts` (listado y descargas).
-  - Implementar `lib/youtube.ts` (parser de video IDs).
-  - Implementar UI de gestión y temporizadores en `panel/admin/page.tsx`.
-  - Implementar UI de reproducción y visualización en `panel/alumno/page.tsx`.
-  - Actualizar reglas de seguridad en `firestore.rules`.
+- **Implementado en esta sesión**:
+  - `lib/zoom.ts` actualizado con tipos `ZoomRecordingMeeting`, `ZoomRecordingFile`, `listRecordings`, `deleteMeetingRecordings` y `getZoomAccessToken`.
+  - Endpoint `/api/zoom/recordings` (`GET` con URLs de descarga directa autenticadas y `DELETE` para liberar espacio en la nube de Zoom).
+  - Helper `lib/youtube.ts` con extractor universal de video IDs (`extractYouTubeVideoId`), generador de embed seguro (`getYouTubeEmbedUrl`) y miniaturas HD (`getYouTubeThumbnailUrl`).
+  - `Panel Admin`:
+    - Subpestaña *"📥 Grabaciones Zoom (Nube)"*: listado en tiempo real de grabaciones en la nube de Zoom, botón de descarga directa de archivos MP4 con tamaño en MB, botón de copiado rápido, botón de publicación rápida y botón de eliminación de Zoom.
+    - Subpestaña *"📹 Clases Grabadas (YouTube)"*: formulario para publicar repeticiones con validación en tiempo real de YouTube + vista previa de miniatura, selector de curso (OS-10, CCTV, Supervisor, Bastón), fecha de dictado y temporizadores de disponibilidad (*inmediata/programada* y *permanente/expiración*); tabla con filtros por curso, estados de vigencia, modal de reproducción, activación/pausa, edición y eliminación.
+  - `Panel Alumno`:
+    - Tarjeta destacada en *Herramientas Principales* con conteo de clases disponibles.
+    - Sección *"📹 Clases Grabadas y Repeticiones"*: filtrado estricto en tiempo real por matrícula aprobada (`canAccessCourse`), temporizadores activos con cuenta regresiva en días, y reproductor modal responsivo seguro en streaming sin enlaces directos de descarga.
+  - Reglas de seguridad actualizadas en `firestore.rules` y `web/firestore.rules` para la colección `clases_grabadas`.
+  - Verificación: `pnpm tsc --noEmit` y `pnpm build` (`@opennextjs/cloudflare`) completados exitosamente con 0 errores (45 rutas compiladas).
+

@@ -13,7 +13,10 @@ export type AuditAction =
   | "SOLICITUD_APROBADA"
   | "SOLICITUD_RECHAZADA"
   | "MEETING_CREATED"
-  | "MEETING_DELETED";
+  | "MEETING_DELETED"
+  | "RECORDING_DELETED"
+  | "RECORDING_DOWNLOADED";
+
 
 export async function logAuditAction(
   accion: AuditAction,

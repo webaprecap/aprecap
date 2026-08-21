@@ -79,6 +79,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ---- Clases grabadas / Repeticiones (YouTube): lectura autenticada; gestión solo admin ----
+    match /clases_grabadas/{claseId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+
     // ---- Contacto público ----
     match /contact_submissions/{docId} {
       allow create: if true;

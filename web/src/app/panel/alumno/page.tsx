@@ -10,6 +10,7 @@ import { CONTACTO } from "@/data/site";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
 import { canAccessCourse, getCourseFieldKey, getCourseStatus, CURSOS_LISTA } from "@/lib/courseAccess";
+import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
 
 interface Enroll {
   id: string;
@@ -29,6 +30,19 @@ interface Clase {
   fechaInicio?: unknown;
 }
 
+interface ClaseGrabada {
+  id: string;
+  titulo: string;
+  descripcion?: string;
+  cursoSlug: string;
+  youtubeUrl?: string;
+  youtubeVideoId: string;
+  fechaClaseDictada?: string;
+  disponibleDesde?: string | null;
+  disponibleHasta?: string | null;
+  activa?: boolean;
+}
+
 interface HistorialNota {
   id: string;
   moduloNombre: string;
@@ -45,6 +59,9 @@ export default function PanelAlumno() {
   const router = useRouter();
   const [enrolls, setEnrolls] = useState<Enroll[]>([]);
   const [clases, setClases] = useState<Clase[]>([]);
+  const [clasesGrabadas, setClasesGrabadas] = useState<ClaseGrabada[]>([]);
+  const [cursoFiltroGrabadas, setCursoFiltroGrabadas] = useState<string>("todos");
+  const [videoActivoModal, setVideoActivoModal] = useState<ClaseGrabada | null>(null);
   const [historial, setHistorial] = useState<HistorialNota[]>([]);
   const [aviso, setAviso] = useState<Clase | null>(null);
   const [showModalSolicitud, setShowModalSolicitud] = useState(false);
@@ -108,6 +125,34 @@ export default function PanelAlumno() {
     return unsub;
   }, [userData, enrolls]);
 
+  // Filtro estricto de Clases Grabadas: Solo se muestran si el alumno tiene acceso aprobado al curso asignado
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db || !userData) return;
+    const q = query(collection(db, "clases_grabadas"), where("activa", "==", true));
+    const unsub = onSnapshot(q, (snap) => {
+      const ahora = new Date().toISOString();
+      const todas = snap.docs.map((d) => ({ id: d.id, ...d.data() } as ClaseGrabada));
+
+      // 1. Control estricto por matrícula y permisos (accesoOS10, accesoCCTV, etc.)
+      const permitidas = todas.filter((c) => {
+        if (!c.cursoSlug) return true;
+        return canAccessCourse(userData, c.cursoSlug, enrolls);
+      });
+
+      // 2. Control de temporizadores (drip y vigencia)
+      const vigentes = permitidas.filter((c) => {
+        if (c.disponibleDesde && c.disponibleDesde > ahora) return false;
+        if (c.disponibleHasta && c.disponibleHasta < ahora) return false;
+        return true;
+      });
+
+      setClasesGrabadas(vigentes);
+    });
+    return unsub;
+  }, [userData, enrolls]);
+
+
   const solicitarAccesoCurso = async (fieldKey: string, nombreCurso: string) => {
     if (!user) return;
     setSolicitandoCurso(fieldKey);
@@ -136,6 +181,15 @@ export default function PanelAlumno() {
       ? Math.round(historial.reduce((acc, curr) => acc + curr.porcentaje, 0) / historial.length)
       : 0;
 
+  const cursosDesbloqueados = CURSOS_LISTA.filter((c) =>
+    canAccessCourse(userData, c.slug, enrolls)
+  );
+
+  const clasesGrabadasFiltradas = clasesGrabadas.filter((cg) => {
+    if (cursoFiltroGrabadas === "todos") return true;
+    return cg.cursoSlug === cursoFiltroGrabadas;
+  });
+
   return (
     <>
       {/* Header Banner */}
@@ -149,7 +203,7 @@ export default function PanelAlumno() {
               ¡Hola, {userData.nombre.split(" ")[0]}! 👋
             </h1>
             <p className="mt-1 text-sm text-white/80">
-              Bienvenido a tu aula virtual. Accede a tus clases en vivo, material PPT, evaluaciones y solicitudes de cursos.
+              Bienvenido a tu aula virtual. Accede a tus clases en vivo, grabaciones, material PPT, evaluaciones y solicitudes de cursos.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -181,7 +235,7 @@ export default function PanelAlumno() {
               📌 Herramientas Principales
             </h2>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {/* Card 1: Clases en Vivo */}
               <div
                 className={`relative rounded-2xl border p-6 transition-all shadow-sm ${
@@ -207,7 +261,7 @@ export default function PanelAlumno() {
                     href={`/aula-en-vivo?id=${clases[0].id}`}
                     className="mt-4 block rounded-xl bg-whatsapp py-2.5 text-center text-xs font-black text-white transition hover:brightness-105 shadow-sm"
                   >
-                    🚀 Entrar al Aula Virtual en Vivo
+                    🚀 Entrar al Aula Virtual
                   </Link>
                 ) : (
                   <span className="mt-4 inline-block text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg">
@@ -216,42 +270,74 @@ export default function PanelAlumno() {
                 )}
               </div>
 
-              {/* Card 2: Materiales PPT */}
-              <Link href="/materiales/guardia-de-seguridad" className="group">
-                <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-apre-red group-hover:shadow-md">
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl">📊</div>
-                    <span className="rounded-full bg-apre-red/10 px-2.5 py-0.5 text-xs font-bold text-apre-red">
-                      PPT INTERACTIVO
+              {/* Card 2: Clases Grabadas (Repeticiones YouTube) */}
+              <a href="#clases-grabadas" className="group">
+                <div className="relative rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-blue-600 group-hover:shadow-md h-full flex flex-col justify-between">
+                  {clasesGrabadas.length > 0 && (
+                    <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+                      {clasesGrabadas.length} DISPONIBLES
                     </span>
+                  )}
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl">📼</div>
+                      <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-blue-700 border border-blue-200">
+                        REPETICIONES
+                      </span>
+                    </div>
+                    <h3 className="mt-2 font-extrabold text-apre-blue text-lg group-hover:text-blue-600 transition">
+                      Clases Grabadas
+                    </h3>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Repeticiones de clases dictadas con streaming protegido en HD.
+                    </p>
                   </div>
-                  <h3 className="mt-2 font-extrabold text-apre-blue text-lg group-hover:text-apre-red transition">
-                    Materiales de Estudio
-                  </h3>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Presentaciones en diapositivas con imágenes HD y manuales en PDF.
-                  </p>
+                  <span className="mt-4 inline-flex items-center text-xs font-bold text-blue-600 group-hover:underline">
+                    Ver repeticiones →
+                  </span>
+                </div>
+              </a>
+
+              {/* Card 3: Materiales PPT */}
+              <Link href="/materiales/guardia-de-seguridad" className="group">
+                <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-apre-red group-hover:shadow-md h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl">📊</div>
+                      <span className="rounded-full bg-apre-red/10 px-2.5 py-0.5 text-xs font-bold text-apre-red">
+                        PPT INTERACTIVO
+                      </span>
+                    </div>
+                    <h3 className="mt-2 font-extrabold text-apre-blue text-lg group-hover:text-apre-red transition">
+                      Materiales de Estudio
+                    </h3>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Presentaciones en diapositivas con imágenes HD y manuales en PDF.
+                    </p>
+                  </div>
                   <span className="mt-4 inline-flex items-center text-xs font-bold text-apre-red group-hover:underline">
                     Ver presentaciones PPT →
                   </span>
                 </div>
               </Link>
 
-              {/* Card 3: Evaluaciones en Linea */}
+              {/* Card 4: Evaluaciones en Linea */}
               <Link href="/evaluaciones" className="group">
-                <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-cyan-500 group-hover:shadow-md">
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl">📝</div>
-                    <span className="rounded-full bg-cyan-50 px-2.5 py-0.5 text-xs font-bold text-cyan-600 border border-cyan-200">
-                      CUESTIONARIOS
-                    </span>
+                <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-cyan-500 group-hover:shadow-md h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl">📝</div>
+                      <span className="rounded-full bg-cyan-50 px-2.5 py-0.5 text-xs font-bold text-cyan-600 border border-cyan-200">
+                        CUESTIONARIOS
+                      </span>
+                    </div>
+                    <h3 className="mt-2 font-extrabold text-apre-blue text-lg group-hover:text-cyan-600 transition">
+                      Evaluaciones en Línea
+                    </h3>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Rinde tus pruebas de módulo con corrección inmediata.
+                    </p>
                   </div>
-                  <h3 className="mt-2 font-extrabold text-apre-blue text-lg group-hover:text-cyan-600 transition">
-                    Evaluaciones en Línea
-                  </h3>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Rinde tus pruebas de módulo con corrección inmediata.
-                  </p>
                   <span className="mt-4 inline-flex items-center text-xs font-bold text-cyan-600 group-hover:underline">
                     Rendir examen ahora →
                   </span>
@@ -259,6 +345,148 @@ export default function PanelAlumno() {
               </Link>
             </div>
           </div>
+
+          {/* SECCIÓN DE CLASES GRABADAS (REPETICIONES PROTEGIDAS Y CON CONTROL DE ACCESO) */}
+          <div id="clases-grabadas" className="scroll-mt-8 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-600/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-blue-700">
+                  <span>📹</span> Repositorio Oficial
+                </div>
+                <h2 className="text-xl font-extrabold text-apre-blue mt-1">
+                  Clases Grabadas y Repeticiones
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Revisa las sesiones dictadas en vivo de tus cursos matriculados. Streaming protegido en alta definición.
+                </p>
+              </div>
+
+              {/* Filtro por cursos matriculados del alumno */}
+              {cursosDesbloqueados.length > 1 && (
+                <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-xl border border-gray-200 shadow-xs">
+                  <button
+                    onClick={() => setCursoFiltroGrabadas("todos")}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                      cursoFiltroGrabadas === "todos"
+                        ? "bg-apre-blue text-white shadow-xs"
+                        : "text-gray-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    Todos ({clasesGrabadas.length})
+                  </button>
+                  {cursosDesbloqueados.map((c) => {
+                    const count = clasesGrabadas.filter((x) => x.cursoSlug === c.slug).length;
+                    return (
+                      <button
+                        key={c.slug}
+                        onClick={() => setCursoFiltroGrabadas(c.slug)}
+                        className={`rounded-lg px-3 py-1.5 text-xs font-bold transition flex items-center gap-1 ${
+                          cursoFiltroGrabadas === c.slug
+                            ? "bg-apre-blue text-white shadow-xs"
+                            : "text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        <span>{c.icono}</span>
+                        <span>{c.shortName}</span>
+                        <span className="text-[10px] opacity-75">({count})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Lista / Grid de Videos */}
+            {clasesGrabadasFiltradas.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {clasesGrabadasFiltradas.map((cg) => {
+                  const cursoInfo = CURSOS_LISTA.find((c) => c.slug === cg.cursoSlug);
+                  const diasRestantes = cg.disponibleHasta
+                    ? Math.ceil((new Date(cg.disponibleHasta).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+                    : null;
+
+                  return (
+                    <div
+                      key={cg.id}
+                      className="group flex flex-col justify-between rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-xs hover:border-gray-300 hover:shadow-md transition"
+                    >
+                      <div>
+                        {/* Miniatura / Play Cover */}
+                        <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
+                          <img
+                            src={getYouTubeThumbnailUrl(cg.youtubeVideoId)}
+                            alt={cg.titulo}
+                            className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                          />
+                          <button
+                            onClick={() => setVideoActivoModal(cg)}
+                            className="absolute inset-0 bg-black/40 hover:bg-black/50 flex items-center justify-center transition"
+                            title="Reproducir clase grabada"
+                          >
+                            <div className="h-12 w-12 rounded-full bg-apre-red text-white flex items-center justify-center text-xl shadow-lg pl-1 transition transform group-hover:scale-110">
+                              ▶
+                            </div>
+                          </button>
+
+                          {/* Badge de Curso */}
+                          <span className="absolute top-2.5 left-2.5 rounded-md bg-slate-900/85 backdrop-blur-xs px-2 py-0.5 text-[10px] font-black text-white uppercase shadow-xs">
+                            {cursoInfo?.icono} {cursoInfo?.shortName || cg.cursoSlug}
+                          </span>
+
+                          {/* Badge de Fecha Dictada */}
+                          {cg.fechaClaseDictada && (
+                            <span className="absolute bottom-2.5 right-2.5 rounded-md bg-black/75 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                              📅 {new Date(cg.fechaClaseDictada).toLocaleDateString("es-CL", { day: "numeric", month: "short" })}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Contenido */}
+                        <div className="p-4 space-y-2">
+                          <h3 className="font-extrabold text-apre-blue text-sm line-clamp-2 leading-snug group-hover:text-apre-red transition">
+                            {cg.titulo}
+                          </h3>
+
+                          {cg.descripcion && (
+                            <p className="text-xs text-gray-500 line-clamp-2">{cg.descripcion}</p>
+                          )}
+
+                          {/* Temporizador de Vigencia */}
+                          {diasRestantes !== null && (
+                            <div className="rounded-lg bg-amber-50 border border-amber-200 px-2.5 py-1 text-[11px] font-bold text-amber-800 flex items-center gap-1.5">
+                              <span>⏳</span>
+                              <span>
+                                Disponible por {diasRestantes} {diasRestantes === 1 ? "día más" : "días más"}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-4 pt-0">
+                        <button
+                          onClick={() => setVideoActivoModal(cg)}
+                          className="w-full rounded-xl bg-apre-blue hover:bg-apre-blue-light py-2.5 text-center text-xs font-black text-white transition shadow-xs flex items-center justify-center gap-1.5"
+                        >
+                          <span>▶</span>
+                          <span>Ver Repetición de Clase</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center shadow-xs">
+                <div className="text-3xl mb-2">📹</div>
+                <h3 className="text-sm font-bold text-apre-blue">Sin repeticiones disponibles por ahora</h3>
+                <p className="text-xs text-gray-500 max-w-md mx-auto mt-1">
+                  Las clases dictadas en vivo se publican aquí para que puedas repasarlas. Apenas tu profesor o el administrador suba una repetición de tus cursos matriculados, la verás disponible.
+                </p>
+              </div>
+            )}
+          </div>
+
 
           {/* SECCIÓN DE CURSOS INDIVIDUALES (ESTILO SARMAT: CADA CURSO CON SU ACCESO O SOLICITUD) */}
           <div>
@@ -548,6 +776,48 @@ export default function PanelAlumno() {
           </div>
         </div>
       )}
+
+      {/* Modal Reproductor de Clase Grabada (Streaming Seguro HD) */}
+      {videoActivoModal && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/85 p-4 backdrop-blur-xs">
+          <div className="relative w-full max-w-4xl rounded-2xl bg-slate-950 overflow-hidden shadow-2xl border border-white/10">
+            <div className="flex items-center justify-between p-4 bg-slate-900 border-b border-white/10 text-white">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-cyan-400">
+                  {CURSOS_LISTA.find((c) => c.slug === videoActivoModal.cursoSlug)?.nombre || "Aula Virtual APRECAP"}
+                </span>
+                <h3 className="font-extrabold text-sm sm:text-base leading-snug">
+                  {videoActivoModal.titulo}
+                </h3>
+              </div>
+              <button
+                onClick={() => setVideoActivoModal(null)}
+                className="rounded-full bg-white/10 hover:bg-white/20 text-white w-8 h-8 flex items-center justify-center font-bold transition ml-3"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="relative w-full aspect-video bg-black">
+              <iframe
+                src={getYouTubeEmbedUrl(videoActivoModal.youtubeVideoId, true)}
+                title={videoActivoModal.titulo}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full border-0"
+              />
+            </div>
+
+            {videoActivoModal.descripcion && (
+              <div className="p-4 bg-slate-900/90 text-slate-300 text-xs border-t border-white/10">
+                <p className="font-bold text-white mb-1">Notas de la sesión:</p>
+                <p>{videoActivoModal.descripcion}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }
+

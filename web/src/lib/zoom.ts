@@ -112,9 +112,64 @@ async function zoomDelete(path: string): Promise<boolean> {
   throw new Error(errorDetail || `Zoom API ${res.status}`);
 }
 
+export interface ZoomRecordingFile {
+  id: string;
+  meeting_id: string | number;
+  recording_start: string;
+  recording_end?: string;
+  file_type: string; // "MP4", "M4A", "TIMELINE", "TRANSCRIPT", "CHAT"
+  file_extension: string;
+  file_size: number;
+  play_url?: string;
+  download_url: string;
+  status: string;
+  recording_type?: string;
+}
+
+export interface ZoomRecordingMeeting {
+  uuid: string;
+  id: number;
+  topic: string;
+  start_time: string;
+  duration: number;
+  total_size: number;
+  recording_count: number;
+  share_url?: string;
+  recording_files: ZoomRecordingFile[];
+}
+
+export interface ZoomRecordingsResponse {
+  from?: string;
+  to?: string;
+  page_size?: number;
+  total_records?: number;
+  meetings: ZoomRecordingMeeting[];
+}
+
+export async function getZoomAccessToken(): Promise<string> {
+  return getZoomToken();
+}
+
+export async function listRecordings(from?: string, to?: string): Promise<ZoomRecordingsResponse> {
+  const params = new URLSearchParams({ page_size: "50" });
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  return zoomFetch<ZoomRecordingsResponse>(`/users/me/recordings?${params.toString()}`);
+}
+
 export async function deleteMeeting(meetingId: number | string): Promise<boolean> {
   const cleanId = String(meetingId).trim();
   return zoomDelete(`/meetings/${encodeURIComponent(cleanId)}`);
 }
+
+export async function deleteMeetingRecordings(
+  meetingId: number | string,
+  action: "trash" | "delete" = "trash"
+): Promise<boolean> {
+  const cleanId = String(meetingId).trim();
+  return zoomDelete(`/meetings/${encodeURIComponent(cleanId)}/recordings?action=${action}`);
+}
+
+
 
 

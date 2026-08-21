@@ -99,12 +99,13 @@
 
 ### Clases Grabadas y Ecosistema (Zoom ➡️ YouTube ➡️ APRECAP)
 - [x] Documento de arquitectura y diseño redactado (`docs/ECOSISTEMA_CLASES_GRABADAS.md`)
-- [ ] Backend: `listRecordings` y `getRecordingDownloadUrl` en `lib/zoom.ts` + `/api/zoom/recordings`
-- [ ] Backend: Helper `lib/youtube.ts` para sanitizar URLs y extraer `videoId`
-- [ ] Admin: Subpestaña "Grabaciones Zoom (Descargas)" con botón 📥 Descargar MP4
-- [ ] Admin: Subpestaña "Publicar Clase Grabada" con selector de curso, fecha y temporizadores (disponibleDesde / disponibleHasta)
-- [ ] Alumno: Pestaña "📹 Clases Grabadas" con reproductor responsivo protegido por matrícula y temporizadores
-- [ ] Firestore: Reglas de seguridad para `clases_grabadas` en `firestore.rules`
+- [x] Backend: `listRecordings` y `getRecordingDownloadUrl` en `lib/zoom.ts` + `/api/zoom/recordings`
+- [x] Backend: Helper `lib/youtube.ts` para sanitizar URLs y extraer `videoId`
+- [x] Admin: Subpestaña "Grabaciones Zoom (Descargas)" con botón 📥 Descargar MP4
+- [x] Admin: Subpestaña "Publicar Clase Grabada" con selector de curso, fecha y temporizadores (disponibleDesde / disponibleHasta)
+- [x] Alumno: Pestaña "📹 Clases Grabadas" con reproductor responsivo protegido por matrícula y temporizadores
+- [x] Firestore: Reglas de seguridad para `clases_grabadas` en `firestore.rules`
+
 
 ### Otros
 - [ ] Backups programados de Firestore (Ley 21.663)

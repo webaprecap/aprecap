@@ -90,6 +90,13 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // 4.1 CLASES GRABADAS / REPETICIONES (YOUTUBE)
+    match /clases_grabadas/{claseId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+
     // 5. RESULTADOS DE EVALUACIONES
     match /resultados_evaluaciones/{resultadoId} {
       allow read: if isSignedIn() && (

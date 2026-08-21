@@ -25,6 +25,7 @@ import ConsentModal from "@/components/ConsentModal";
 import DiplomaCertificado, { CURSOS_CERTIFICADO } from "@/components/DiplomaCertificado";
 import { CURSOS_LISTA, getCourseFieldKey } from "@/lib/courseAccess";
 import { formatRut } from "@/lib/rut";
+import { extractYouTubeVideoId, getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
 
 type Tab =
   | "pendientes"
@@ -35,6 +36,8 @@ type Tab =
   | "profesores"
   | "clases"
   | "reuniones"
+  | "zoom-grabaciones"
+  | "clases-grabadas"
   | "diplomas"
   | "reportes"
   | "pagos"
@@ -65,10 +68,12 @@ const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: str
     ],
   },
   {
-    section: "Clases y Salas",
+    section: "Clases y Grabaciones",
     items: [
-      { id: "clases", label: "Clases en Vivo (Admin)", emoji: "📹" },
+      { id: "clases", label: "Clases en Vivo (Admin)", emoji: "🔴" },
       { id: "reuniones", label: "Reuniones Zoom (API)", emoji: "🔁" },
+      { id: "zoom-grabaciones", label: "Grabaciones Zoom (Nube)", emoji: "📥" },
+      { id: "clases-grabadas", label: "Clases Grabadas (YouTube)", emoji: "📹" },
     ],
   },
   {
@@ -83,6 +88,7 @@ const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: str
     ],
   },
 ];
+
 
 const CURSOS_PLATAFORMA = cursosOtec.filter((c) =>
   [
@@ -123,11 +129,16 @@ export default function PanelAdmin() {
     rut?: string;
     cursoSlug?: string;
   } | null>(null);
+  const [grabadaPreselect, setGrabadaPreselect] = useState<{
+    titulo?: string;
+    fecha?: string;
+  } | null>(null);
 
   const pendientesCount = useCount("solicitudes", "estado", "pendiente");
   const alumnosCount = useCount("usuarios", "rol", "alumno");
   const profesoresCount = useCount("usuarios", "rol", "profesor");
   const clasesActivasCount = useCount("clases", "estado", "activa");
+  const clasesGrabadasCount = useCount("clases_grabadas");
 
   const handleLogout = async () => {
     await signOut();
@@ -152,10 +163,13 @@ export default function PanelAdmin() {
         return profesoresCount;
       case "clases":
         return clasesActivasCount;
+      case "clases-grabadas":
+        return clasesGrabadasCount;
       default:
         return null;
     }
   };
+
 
   const tituloTab = NAV_GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
 
@@ -268,11 +282,21 @@ export default function PanelAdmin() {
             {tab === "profesores" && <UsuariosTab filtroRol="profesor" />}
             {tab === "clases" && <ClasesTab />}
             {tab === "reuniones" && <ReunionesTab />}
+            {tab === "zoom-grabaciones" && (
+              <ZoomGrabacionesTab
+                onPublicar={(datos) => {
+                  setGrabadaPreselect(datos);
+                  setTab("clases-grabadas");
+                }}
+              />
+            )}
+            {tab === "clases-grabadas" && <ClasesGrabadasTab preselect={grabadaPreselect} />}
             {tab === "diplomas" && <DiplomasTab preselect={diplomaPreselect} />}
             {tab === "reportes" && <ReportesTab />}
             {tab === "pagos" && <PagosTab />}
             {tab === "contacto" && <ContactoTab />}
             {tab === "auditoria" && <AuditoriaTab />}
+
           </div>
         </main>
       </div>
@@ -2067,8 +2091,892 @@ function ReunionesTab() {
   );
 }
 
+/* ---------- Grabaciones Zoom en la Nube (Descargas directas MP4) ---------- */
+function ZoomGrabacionesTab({
+  onPublicar,
+}: {
+  onPublicar?: (datos: { titulo: string; fecha: string }) => void;
+}) {
+  const [recordings, setRecordings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState<number | string | null>(null);
+
+  const cargar = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/zoom/recordings", { method: "GET" });
+      const data = await res.json();
+      if (res.ok) {
+        setRecordings(data.meetings || []);
+      } else {
+        setError(data.error || "No se pudieron obtener las grabaciones de Zoom.");
+      }
+    } catch {
+      setError("Error al conectar con la API de grabaciones de Zoom.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    cargar();
+  }, [cargar]);
+
+  const eliminarGrabacion = async (meetingId: number | string) => {
+    if (
+      !confirm(
+        "¿Deseas enviar esta grabación a la papelera de Zoom para liberar espacio en tu cuenta?\n\n⚠️ Asegúrate de haber descargado el archivo .MP4 y haberlo respaldado antes de continuar."
+      )
+    ) {
+      return;
+    }
+
+    setDeletingId(meetingId);
+    try {
+      const res = await fetch(`/api/zoom/recordings?id=${meetingId}&action=trash`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setRecordings((prev) => prev.filter((m) => String(m.id) !== String(meetingId)));
+        alert("✅ Grabación enviada a la papelera de Zoom para liberar espacio.");
+      } else {
+        alert(data.error || "No se pudo eliminar la grabación de Zoom.");
+      }
+    } catch {
+      alert("Error de red al intentar eliminar la grabación.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const copiarDatos = (topic: string, fechaStr: string) => {
+    const texto = `${topic} - ${fechaStr}`;
+    navigator.clipboard.writeText(texto);
+    alert(`Copiado al portapapeles: "${texto}"`);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Banner Explicativo del Flujo */}
+      <div className="rounded-2xl border border-blue-200 bg-linear-to-r from-blue-50 to-indigo-50/50 p-5 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-600/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-blue-700">
+              <span>☁️</span> Grabaciones en la Nube de Zoom
+            </div>
+            <h2 className="text-xl font-extrabold text-apre-blue mt-2">
+              Descarga de Videos Originales (.MP4)
+            </h2>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+              Todas las clases en vivo se auto-graban en la nube de Zoom. Descarga el video original en alta definición con un clic, súbelo a tu canal de YouTube en modo <strong>Oculto (Unlisted)</strong> y luego puedes eliminarlo de Zoom para mantener tu espacio 100% libre.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={cargar}
+              disabled={loading}
+              className="rounded-xl bg-white border border-gray-300 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50 shadow-xs transition inline-flex items-center gap-1.5"
+            >
+              <span>🔄</span>
+              <span>{loading ? "Consultando…" : "Actualizar"}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pasos rápidos */}
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-3 border-t border-blue-100">
+          <div className="rounded-xl bg-white/80 p-3 text-xs border border-blue-100">
+            <p className="font-bold text-apre-blue flex items-center gap-1.5">
+              <span>1️⃣</span> Descargar MP4
+            </p>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              Haz clic en <strong>📥 Descargar Video</strong> para guardar el archivo en tu equipo.
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/80 p-3 text-xs border border-blue-100">
+            <p className="font-bold text-apre-blue flex items-center gap-1.5">
+              <span>2️⃣</span> Subir a YouTube (Oculto)
+            </p>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              Sube el video a tu canal en modo <em>No listado / Oculto</em> para streaming ilimitado.
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/80 p-3 text-xs border border-blue-100">
+            <p className="font-bold text-apre-blue flex items-center gap-1.5">
+              <span>3️⃣</span> Publicar en APRECAP
+            </p>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              Pega el enlace en la pestaña <strong>Clases Grabadas</strong> asignando el curso y temporizador.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {error && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-700">
+          <p className="font-bold flex items-center gap-2">
+            <span>⚠️</span> Error al consultar Zoom
+          </p>
+          <p className="mt-1">{error}</p>
+        </div>
+      )}
+
+      {loading && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-xs">
+          <div className="inline-block animate-spin text-3xl mb-3">⏳</div>
+          <p className="text-xs font-bold text-gray-600">Consultando grabaciones en la nube de Zoom…</p>
+        </div>
+      )}
+
+      {!loading && recordings.length === 0 && (
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center shadow-xs">
+          <div className="text-4xl mb-2">📹</div>
+          <h3 className="text-sm font-bold text-apre-blue">No hay grabaciones en la nube de Zoom</h3>
+          <p className="text-xs text-gray-500 max-w-md mx-auto mt-1">
+            Cuando inicies y finalices una clase en vivo, Zoom procesará la grabación y aparecerá aquí automáticamente para que descargues el archivo MP4.
+          </p>
+          <button
+            onClick={cargar}
+            className="mt-4 rounded-xl bg-apre-blue/10 px-4 py-2 text-xs font-bold text-apre-blue hover:bg-apre-blue/20 transition"
+          >
+            🔄 Volver a consultar
+          </button>
+        </div>
+      )}
+
+      {/* Lista de Grabaciones */}
+      {!loading && recordings.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold text-gray-600">
+              Total: {recordings.length} {recordings.length === 1 ? "reunión grabada" : "reuniones grabadas"}
+            </p>
+          </div>
+
+          <div className="grid gap-4">
+            {recordings.map((m) => {
+              const mp4Files = (m.recording_files || []).filter(
+                (f: any) => (f.file_type || "").toUpperCase() === "MP4" || (f.file_extension || "").toUpperCase() === "MP4"
+              );
+              const otrosArchivos = (m.recording_files || []).filter(
+                (f: any) => !mp4Files.includes(f)
+              );
+
+              const totalMB = m.total_size ? (m.total_size / (1024 * 1024)).toFixed(1) : "0";
+              const fechaStr = m.start_time
+                ? new Date(m.start_time).toLocaleDateString("es-CL", {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : "Sin fecha";
+
+              return (
+                <div
+                  key={m.id || m.uuid}
+                  className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition hover:border-gray-300"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[10px] font-black text-blue-800 uppercase">
+                          ZOOM CLOUD
+                        </span>
+                        <h3 className="font-extrabold text-apre-blue text-base">{m.topic || "Clase sin título"}</h3>
+                      </div>
+                      <p className="text-xs text-gray-600">
+                        📅 <strong>{fechaStr}</strong> · ⏱ <strong>{m.duration || 0} minutos</strong> · 💾 <strong>{totalMB} MB</strong>
+                      </p>
+                      <p className="text-[11px] font-mono text-gray-400">ID Reunión: {m.id}</p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      {onPublicar && (
+                        <button
+                          onClick={() =>
+                            onPublicar({
+                              titulo: m.topic || "",
+                              fecha: m.start_time ? m.start_time.slice(0, 10) : "",
+                            })
+                          }
+                          className="rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white px-3.5 py-2 text-xs font-bold shadow-xs transition flex items-center gap-1.5"
+                          title="Llevar título y fecha a la pestaña de Publicar Clase Grabada"
+                        >
+                          <span>🚀</span>
+                          <span>Publicar en APRECAP</span>
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => copiarDatos(m.topic || "Clase", fechaStr)}
+                        className="rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 text-xs font-bold transition flex items-center gap-1"
+                        title="Copiar nombre y fecha"
+                      >
+                        <span>📋</span>
+                        <span>Copiar</span>
+                      </button>
+
+                      <button
+                        onClick={() => eliminarGrabacion(m.id)}
+                        disabled={deletingId === m.id}
+                        className="rounded-xl bg-red-50 hover:bg-red-100 text-apre-red px-3 py-2 text-xs font-bold transition flex items-center gap-1 disabled:opacity-50"
+                        title="Eliminar de Zoom para liberar espacio"
+                      >
+                        <span>🗑</span>
+                        <span>{deletingId === m.id ? "Eliminando…" : "Borrar de Zoom"}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Archivos descargables */}
+                  <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
+                    {mp4Files.map((f: any, idx: number) => {
+                      const sizeMB = f.file_size ? (f.file_size / (1024 * 1024)).toFixed(1) : "";
+                      const urlDescarga = f.download_url_auth || f.download_url;
+                      return (
+                        <a
+                          key={f.id || idx}
+                          href={urlDescarga}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-xl bg-whatsapp hover:brightness-105 text-white px-4 py-2 text-xs font-black shadow-xs transition inline-flex items-center gap-2"
+                        >
+                          <span>📥</span>
+                          <span>Descargar Video MP4 {sizeMB ? `(${sizeMB} MB)` : ""}</span>
+                        </a>
+                      );
+                    })}
+
+                    {otrosArchivos.map((f: any, idx: number) => {
+                      const urlDescarga = f.download_url_auth || f.download_url;
+                      return (
+                        <a
+                          key={f.id || idx}
+                          href={urlDescarga}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-xs font-semibold transition inline-flex items-center gap-1.5"
+                        >
+                          <span>📄</span>
+                          <span>
+                            {f.file_type || "Archivo"} ({f.file_extension || "DAT"})
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Clases Grabadas y Repeticiones (YouTube ➡️ APRECAP) ---------- */
+function ClasesGrabadasTab({
+  preselect,
+}: {
+  preselect?: { titulo?: string; fecha?: string } | null;
+}) {
+  const db = getFirestoreDb();
+  const { userData } = useAuth();
+  const [clases, setClases] = useState<any[]>([]);
+  const [filtroCurso, setFiltroCurso] = useState<string>("todos");
+  const [editandoId, setEditandoId] = useState<string | null>(null);
+  const [guardando, setGuardando] = useState(false);
+  const [previewVideoId, setPreviewVideoId] = useState<string | null>(null);
+
+  // Form State
+  const [form, setForm] = useState({
+    titulo: preselect?.titulo || "",
+    descripcion: "",
+    cursoSlug: "guardia-de-seguridad",
+    youtubeUrl: "",
+    fechaClaseDictada: preselect?.fecha || new Date().toISOString().slice(0, 10),
+    tipoInicio: "inmediato" as "inmediato" | "programado",
+    disponibleDesde: "",
+    tipoFin: "permanente" as "permanente" | "limite",
+    disponibleHasta: "",
+  });
+
+  useEffect(() => {
+    if (preselect) {
+      if (preselect.titulo) setForm((p) => ({ ...p, titulo: preselect.titulo || "" }));
+      if (preselect.fecha) setForm((p) => ({ ...p, fechaClaseDictada: preselect.fecha || "" }));
+    }
+  }, [preselect]);
+
+  // Sync snapshot con Firestore
+  useEffect(() => {
+    if (!db) return;
+    const q = query(collection(db, "clases_grabadas"), orderBy("fechaCreacion", "desc"));
+    return onSnapshot(q, (snap) => {
+      setClases(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+  }, [db]);
+
+  const videoIdDetectado = extractYouTubeVideoId(form.youtubeUrl);
+
+  const guardarClase = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!db) return;
+    if (!form.titulo.trim()) {
+      alert("Por favor ingresa un título o tema para la clase.");
+      return;
+    }
+    if (!videoIdDetectado) {
+      alert("Por favor ingresa un enlace válido de YouTube (ej. https://youtu.be/... o https://www.youtube.com/watch?v=...)");
+      return;
+    }
+
+    setGuardando(true);
+    try {
+      const docData: any = {
+        titulo: form.titulo.trim(),
+        descripcion: form.descripcion.trim(),
+        cursoSlug: form.cursoSlug,
+        youtubeUrl: form.youtubeUrl.trim(),
+        youtubeVideoId: videoIdDetectado,
+        fechaClaseDictada: form.fechaClaseDictada,
+        disponibleDesde: form.tipoInicio === "programado" && form.disponibleDesde ? form.disponibleDesde : null,
+        disponibleHasta: form.tipoFin === "limite" && form.disponibleHasta ? form.disponibleHasta : null,
+        actualizadoEn: serverTimestamp(),
+      };
+
+      if (editandoId) {
+        await updateDoc(doc(db, "clases_grabadas", editandoId), docData);
+        alert("✅ Clase grabada actualizada correctamente.");
+        setEditandoId(null);
+      } else {
+        docData.activa = true;
+        docData.creadoPor = userData?.email || "";
+        docData.fechaCreacion = serverTimestamp();
+        await addDoc(collection(db, "clases_grabadas"), docData);
+        alert("✅ ¡Clase grabada publicada exitosamente!");
+      }
+
+      setForm({
+        titulo: "",
+        descripcion: "",
+        cursoSlug: "guardia-de-seguridad",
+        youtubeUrl: "",
+        fechaClaseDictada: new Date().toISOString().slice(0, 10),
+        tipoInicio: "inmediato",
+        disponibleDesde: "",
+        tipoFin: "permanente",
+        disponibleHasta: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Error al guardar la clase grabada.");
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  const cargarParaEditar = (c: any) => {
+    setEditandoId(c.id);
+    setForm({
+      titulo: c.titulo || "",
+      descripcion: c.descripcion || "",
+      cursoSlug: c.cursoSlug || "guardia-de-seguridad",
+      youtubeUrl: c.youtubeUrl || `https://youtu.be/${c.youtubeVideoId}`,
+      fechaClaseDictada: c.fechaClaseDictada || new Date().toISOString().slice(0, 10),
+      tipoInicio: c.disponibleDesde ? "programado" : "inmediato",
+      disponibleDesde: c.disponibleDesde || "",
+      tipoFin: c.disponibleHasta ? "limite" : "permanente",
+      disponibleHasta: c.disponibleHasta || "",
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const cancelarEdicion = () => {
+    setEditandoId(null);
+    setForm({
+      titulo: "",
+      descripcion: "",
+      cursoSlug: "guardia-de-seguridad",
+      youtubeUrl: "",
+      fechaClaseDictada: new Date().toISOString().slice(0, 10),
+      tipoInicio: "inmediato",
+      disponibleDesde: "",
+      tipoFin: "permanente",
+      disponibleHasta: "",
+    });
+  };
+
+  const toggleActiva = async (c: any) => {
+    if (!db) return;
+    await updateDoc(doc(db, "clases_grabadas", c.id), {
+      activa: !c.activa,
+    });
+  };
+
+  const eliminarClase = async (c: any) => {
+    if (!db) return;
+    if (!confirm(`¿Eliminar permanentemente la clase grabada "${c.titulo}"?`)) return;
+    await deleteDoc(doc(db, "clases_grabadas", c.id));
+  };
+
+  const clasesFiltradas = clases.filter((c) => {
+    if (filtroCurso === "todos") return true;
+    return c.cursoSlug === filtroCurso;
+  });
+
+  const obtenerEstadoTemporizador = (c: any) => {
+    if (!c.activa) {
+      return { estado: "pausada", label: "Pausada / Oculta", badgeBg: "bg-gray-100 text-gray-700 border-gray-300" };
+    }
+    const ahora = new Date().toISOString();
+    if (c.disponibleDesde && c.disponibleDesde > ahora) {
+      return {
+        estado: "programada",
+        label: `Programada (Desde: ${new Date(c.disponibleDesde).toLocaleString("es-CL")})`,
+        badgeBg: "bg-amber-100 text-amber-900 border-amber-300",
+      };
+    }
+    if (c.disponibleHasta && c.disponibleHasta < ahora) {
+      return {
+        estado: "expirada",
+        label: `Expirada (Venció: ${new Date(c.disponibleHasta).toLocaleString("es-CL")})`,
+        badgeBg: "bg-red-100 text-red-900 border-red-300",
+      };
+    }
+    if (c.disponibleHasta) {
+      const diffMs = new Date(c.disponibleHasta).getTime() - new Date().getTime();
+      const diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      return {
+        estado: "activa_limite",
+        label: `Visible (Expira en ${diffDias} ${diffDias === 1 ? "día" : "días"})`,
+        badgeBg: "bg-emerald-100 text-emerald-900 border-emerald-300 font-bold",
+      };
+    }
+    return {
+      estado: "activa",
+      label: "Visible (Permanente)",
+      badgeBg: "bg-green-100 text-green-900 border-green-300 font-bold",
+    };
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Formulario de Creación / Edición */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-red">
+            <span>📹</span> {editandoId ? "Modo Edición" : "Publicar Nueva Grabación"}
+          </div>
+          {editandoId && (
+            <button
+              onClick={cancelarEdicion}
+              className="text-xs font-bold text-gray-500 hover:text-gray-700 underline"
+            >
+              ✕ Cancelar edición
+            </button>
+          )}
+        </div>
+
+        <h2 className="text-xl font-extrabold text-apre-blue mt-2">
+          {editandoId ? "Editar Clase Grabada" : "Publicar Clase Grabada (YouTube)"}
+        </h2>
+        <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+          Pega el enlace de YouTube del video que subiste en modo <strong>Oculto (Unlisted)</strong>. La clase únicamente será visible para los alumnos matriculados en el curso asignado y respetará los temporizadores de disponibilidad configurados.
+        </p>
+
+        <form onSubmit={guardarClase} className="mt-5 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Título */}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-apre-blue">
+                Título o Tema de la Clase *
+              </label>
+              <input
+                type="text"
+                value={form.titulo}
+                onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+                placeholder="Ej. Módulo 1: Legislación de Seguridad Privada y Ley 21.659"
+                className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm"
+                required
+              />
+            </div>
+
+            {/* Curso Asociado */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-apre-blue">
+                Curso Asociado (Control de Acceso) *
+              </label>
+              <select
+                value={form.cursoSlug}
+                onChange={(e) => setForm({ ...form, cursoSlug: e.target.value })}
+                className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm bg-white font-medium"
+              >
+                {CURSOS_LISTA.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.icono} {c.nombre}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-[11px] text-gray-500">
+                🔒 Solo los alumnos matriculados en este curso podrán verla.
+              </p>
+            </div>
+
+            {/* Fecha en que se dictó */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-apre-blue">
+                Fecha de Dictado de la Clase
+              </label>
+              <input
+                type="date"
+                value={form.fechaClaseDictada}
+                onChange={(e) => setForm({ ...form, fechaClaseDictada: e.target.value })}
+                className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm"
+              />
+            </div>
+
+            {/* Enlace de YouTube */}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-apre-blue">
+                Enlace de YouTube (Video en modo Oculto) *
+              </label>
+              <div className="mt-1 flex gap-2">
+                <input
+                  type="text"
+                  value={form.youtubeUrl}
+                  onChange={(e) => setForm({ ...form, youtubeUrl: e.target.value })}
+                  placeholder="https://youtu.be/... o https://www.youtube.com/watch?v=..."
+                  className="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-mono"
+                  required
+                />
+              </div>
+
+              {/* Detección y preview en tiempo real */}
+              {videoIdDetectado && (
+                <div className="mt-2 flex items-center gap-3 rounded-xl bg-emerald-50 p-2.5 border border-emerald-200">
+                  <img
+                    src={getYouTubeThumbnailUrl(videoIdDetectado)}
+                    alt="Miniatura"
+                    className="h-12 w-20 rounded-lg object-cover shadow-xs border border-emerald-300"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-emerald-900">
+                      ✅ Video de YouTube detectado correctamente
+                    </p>
+                    <p className="text-[11px] font-mono text-emerald-700">ID: {videoIdDetectado}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewVideoId(videoIdDetectado)}
+                    className="rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 text-xs font-bold shadow-xs transition"
+                  >
+                    ▶ Probar Reproducción
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Temporizadores de Disponibilidad */}
+            <div className="sm:col-span-2 rounded-xl bg-gray-50 p-4 border border-gray-200 space-y-3">
+              <p className="text-xs font-black uppercase tracking-wider text-apre-blue flex items-center gap-1.5">
+                <span>⏳</span> Temporizadores de Disponibilidad (Drip & Vigencia)
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                {/* Disponibilidad Inicial */}
+                <div>
+                  <label className="text-xs font-bold text-gray-700">1. ¿Cuándo se publica para los alumnos?</label>
+                  <div className="mt-1.5 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, tipoInicio: "inmediato", disponibleDesde: "" })}
+                      className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold border transition ${
+                        form.tipoInicio === "inmediato"
+                          ? "bg-apre-blue text-white border-apre-blue"
+                          : "bg-white text-gray-700 border-gray-300"
+                      }`}
+                    >
+                      Inmediata
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, tipoInicio: "programado" })}
+                      className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold border transition ${
+                        form.tipoInicio === "programado"
+                          ? "bg-apre-blue text-white border-apre-blue"
+                          : "bg-white text-gray-700 border-gray-300"
+                      }`}
+                    >
+                      Programar fecha
+                    </button>
+                  </div>
+
+                  {form.tipoInicio === "programado" && (
+                    <input
+                      type="datetime-local"
+                      value={form.disponibleDesde}
+                      onChange={(e) => setForm({ ...form, disponibleDesde: e.target.value })}
+                      className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs"
+                      required
+                    />
+                  )}
+                </div>
+
+                {/* Fecha Límite */}
+                <div>
+                  <label className="text-xs font-bold text-gray-700">2. ¿Hasta cuándo estará disponible?</label>
+                  <div className="mt-1.5 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, tipoFin: "permanente", disponibleHasta: "" })}
+                      className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold border transition ${
+                        form.tipoFin === "permanente"
+                          ? "bg-apre-blue text-white border-apre-blue"
+                          : "bg-white text-gray-700 border-gray-300"
+                      }`}
+                    >
+                      Permanente
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, tipoFin: "limite" })}
+                      className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold border transition ${
+                        form.tipoFin === "limite"
+                          ? "bg-apre-blue text-white border-apre-blue"
+                          : "bg-white text-gray-700 border-gray-300"
+                      }`}
+                    >
+                      Expira con fecha
+                    </button>
+                  </div>
+
+                  {form.tipoFin === "limite" && (
+                    <input
+                      type="datetime-local"
+                      value={form.disponibleHasta}
+                      onChange={(e) => setForm({ ...form, disponibleHasta: e.target.value })}
+                      className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs"
+                      required
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Descripción */}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-apre-blue">
+                Descripción / Notas de la Clase (Opcional)
+              </label>
+              <textarea
+                value={form.descripcion}
+                onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+                rows={2}
+                placeholder="Resumen de los temas tratados, artículos de ley vistos, o indicaciones para el alumno…"
+                className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="submit"
+              disabled={guardando}
+              className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-6 py-2.5 text-sm font-black shadow-sm transition disabled:opacity-50 inline-flex items-center gap-2"
+            >
+              <span>{editandoId ? "💾 Actualizar Clase" : "🚀 Publicar Clase Grabada"}</span>
+            </button>
+
+            {editandoId && (
+              <button
+                type="button"
+                onClick={cancelarEdicion}
+                className="rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2.5 text-xs font-bold transition"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+
+      {/* Filtros por Curso */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-gray-600 mr-1">Filtrar por curso:</span>
+        <button
+          onClick={() => setFiltroCurso("todos")}
+          className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition border ${
+            filtroCurso === "todos"
+              ? "bg-apre-blue text-white border-apre-blue shadow-xs"
+              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+          }`}
+        >
+          Todos ({clases.length})
+        </button>
+        {CURSOS_LISTA.map((c) => {
+          const count = clases.filter((x) => x.cursoSlug === c.slug).length;
+          return (
+            <button
+              key={c.slug}
+              onClick={() => setFiltroCurso(c.slug)}
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition border flex items-center gap-1 ${
+                filtroCurso === c.slug
+                  ? "bg-apre-blue text-white border-apre-blue shadow-xs"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+              }`}
+            >
+              <span>{c.icono}</span>
+              <span>{c.shortName}</span>
+              <span className="text-[10px] opacity-75">({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Lista de Clases Grabadas */}
+      <div className="space-y-4">
+        {clasesFiltradas.map((c) => {
+          const cursoInfo = CURSOS_LISTA.find((x) => x.slug === c.cursoSlug);
+          const estadoInfo = obtenerEstadoTemporizador(c);
+
+          return (
+            <div
+              key={c.id}
+              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition hover:border-gray-300"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Thumbnail */}
+                  <div className="relative shrink-0 w-full sm:w-44 h-28 rounded-xl overflow-hidden bg-black/5 border border-gray-200">
+                    <img
+                      src={getYouTubeThumbnailUrl(c.youtubeVideoId)}
+                      alt={c.titulo}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => setPreviewVideoId(c.youtubeVideoId)}
+                      className="absolute inset-0 bg-black/30 hover:bg-black/40 flex items-center justify-center text-white text-2xl transition"
+                      title="Reproducir video"
+                    >
+                      ▶
+                    </button>
+                  </div>
+
+                  {/* Info */}
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-md bg-apre-blue/10 px-2 py-0.5 text-[10px] font-black text-apre-blue uppercase">
+                        {cursoInfo?.icono} {cursoInfo?.shortName || c.cursoSlug}
+                      </span>
+                      <span className={`rounded-md px-2 py-0.5 text-[10px] border ${estadoInfo.badgeBg}`}>
+                        {estadoInfo.label}
+                      </span>
+                    </div>
+
+                    <h3 className="font-extrabold text-apre-blue text-base leading-snug">{c.titulo}</h3>
+
+                    {c.descripcion && (
+                      <p className="text-xs text-gray-600 line-clamp-2">{c.descripcion}</p>
+                    )}
+
+                    <p className="text-[11px] text-gray-500">
+                      📅 Fecha de clase: <strong>{c.fechaClaseDictada || "Sin fecha"}</strong> · 🔗{" "}
+                      <a
+                        href={c.youtubeUrl || `https://youtu.be/${c.youtubeVideoId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-apre-blue hover:underline font-mono"
+                      >
+                        YouTube Link
+                      </a>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Acciones */}
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setPreviewVideoId(c.youtubeVideoId)}
+                    className="rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 text-xs font-bold transition flex items-center gap-1"
+                  >
+                    <span>👁️</span>
+                    <span>Ver</span>
+                  </button>
+
+                  <button
+                    onClick={() => toggleActiva(c)}
+                    className={`rounded-xl px-3 py-2 text-xs font-bold transition ${
+                      c.activa
+                        ? "bg-amber-50 hover:bg-amber-100 text-amber-800"
+                        : "bg-emerald-50 hover:bg-emerald-100 text-emerald-800"
+                    }`}
+                  >
+                    {c.activa ? "⏸ Pausar" : "▶ Activar"}
+                  </button>
+
+                  <button
+                    onClick={() => cargarParaEditar(c)}
+                    className="rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 px-3 py-2 text-xs font-bold transition"
+                  >
+                    ✎ Editar
+                  </button>
+
+                  <button
+                    onClick={() => eliminarClase(c)}
+                    className="rounded-xl bg-red-50 hover:bg-red-100 text-apre-red px-3 py-2 text-xs font-bold transition"
+                  >
+                    🗑
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {clasesFiltradas.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
+            <p className="text-gray-500 text-xs">No hay clases grabadas publicadas para este filtro.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Modal de Previsualización de Video */}
+      {previewVideoId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+          <div className="relative w-full max-w-4xl rounded-2xl bg-black overflow-hidden shadow-2xl">
+            <button
+              onClick={() => setPreviewVideoId(null)}
+              className="absolute top-3 right-3 z-10 rounded-full bg-black/60 hover:bg-black text-white w-8 h-8 flex items-center justify-center font-bold"
+            >
+              ✕
+            </button>
+            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                src={getYouTubeEmbedUrl(previewVideoId, true)}
+                title="Reproductor YouTube"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full border-0"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---------- Contacto ---------- */
 function ContactoTab() {
+
   const db = getFirestoreDb();
   const [items, setItems] = useState<any[]>([]);
 
