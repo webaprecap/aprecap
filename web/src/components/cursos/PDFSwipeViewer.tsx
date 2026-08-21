@@ -100,16 +100,11 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
   };
 
   const [pageWidth, setPageWidth] = useState<number>(850);
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   useEffect(() => {
     const updateDimensions = () => {
-      const mobile = window.innerWidth <= 768;
-      if (mobile && (document.fullscreenElement || isFullscreen)) {
-        // En fullscreen móvil: la diapositiva ocupa TODO el ancho de la pantalla
-        setPageWidth(Math.max(window.innerWidth, window.innerHeight));
-      } else if (mobile) {
-        setPageWidth(window.innerWidth - 10);
+      if (window.innerWidth <= 600) {
+        setPageWidth(window.innerWidth - 20);
       } else if (document.fullscreenElement) {
         setPageWidth(Math.min(window.innerWidth - 60, 1000));
       } else {
@@ -120,25 +115,17 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
-    // Detectar cambios de orientación en móviles
-    const handleOrientationChange = () => {
-      setTimeout(updateDimensions, 150);
-    };
-    window.addEventListener('orientationchange', handleOrientationChange);
-
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
-      setTimeout(updateDimensions, 100);
+      updateDimensions();
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
 
     return () => {
       window.removeEventListener('resize', updateDimensions);
-      window.removeEventListener('orientationchange', handleOrientationChange);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFullscreen]);
+  }, []);
 
   const toggleFullscreen = async () => {
     if (!containerRef.current) return
@@ -150,8 +137,6 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
         await document.exitFullscreen()
       }
     } catch (err) {
-      // Fallback para iOS Safari que no soporta requestFullscreen
-      setIsFullscreen(prev => !prev);
       console.error('Error attempting to toggle fullscreen', err);
     }
   };
@@ -172,22 +157,19 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     }
   };
 
-  // Gestos para móviles — swipe desde CUALQUIER punto de la pantalla
-  // delta bajo (30px) para que no necesites deslizar desde tan lejos
+  // Gestos para móviles (Idéntico a Sarmat)
   const handlers = useSwipeable({
     onSwipedLeft: () => changePage(1),
     onSwipedRight: () => changePage(-1),
-    swipeDuration: 800,
-    delta: 30,
-    preventScrollOnSwipe: true,
-    trackMouse: true,
-    trackTouch: true
+    swipeDuration: 500,
+    preventScrollOnSwipe: false,
+    trackMouse: false
   });
 
   // Variantes de animación para framer-motion (Idéntico a Sarmat)
   const variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 800 : -800,
+      x: direction > 0 ? 1000 : -1000,
       opacity: 0
     }),
     center: {
@@ -197,7 +179,7 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 800 : -800,
+      x: direction < 0 ? 1000 : -1000,
       opacity: 0
     })
   };
@@ -216,57 +198,35 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
     );
   }
 
-  // En fullscreen móvil: decidir si ocultar header y controles
-  const mobileFullscreen = isFullscreen && (typeof window !== 'undefined' && window.innerWidth <= 768);
-
   return (
     <div 
       className={`${styles.pdfViewerContainer} ${isFullscreen ? styles.fullscreenMode : ''}`} 
       ref={containerRef}
     >
-      {/* Header — Se oculta en fullscreen móvil para maximizar espacio */}
-      {!mobileFullscreen && (
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <div className={styles.headerIcon}>📄</div>
-            <h3>
-              Material de Estudio
-              <span>Desliza para cambiar de página</span>
-            </h3>
-          </div>
-          <div className={styles.headerRight}>
-            <p className={styles.counter}>
-              {pageNumber} / {numPages || '--'}
-            </p>
-            <button 
-              className={styles.fullscreenBtn} 
-              onClick={toggleFullscreen}
-              title={isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}
-            >
-              {isFullscreen ? '↙️' : '↗️'}
-            </button>
-          </div>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <div className={styles.headerIcon}>📄</div>
+          <h3>
+            Material de Estudio
+            <span>Desliza o usa los botones para navegar</span>
+          </h3>
         </div>
-      )}
+        <div className={styles.headerRight}>
+          <p className={styles.counter}>
+            {pageNumber} / {numPages || '--'}
+          </p>
+          <button 
+            className={styles.fullscreenBtn} 
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}
+          >
+            {isFullscreen ? '↙️' : '↗️'}
+          </button>
+        </div>
+      </div>
 
-      {/* Área de documento + swipe — Ocupa TODA la pantalla en fullscreen móvil */}
       <div className={styles.documentWrapper} {...handlers} style={{ position: 'relative' }}>
         
-        {/* Overlay flotante en fullscreen móvil: contador + botón salir */}
-        {mobileFullscreen && (
-          <div className={styles.mobileOverlayControls}>
-            <span className={styles.mobileCounter}>
-              {pageNumber} / {numPages}
-            </span>
-            <button 
-              className={styles.mobileExitBtn}
-              onClick={toggleFullscreen}
-            >
-              ✕
-            </button>
-          </div>
-        )}
-
         {/* Logo overlay drag & drop (Solo en PC/Desktop) */}
         {isFullscreen && (
           <>
@@ -374,8 +334,8 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
                     maxScale={4}
                     centerOnInit
                     wheel={{ disabled: true }}
-                    doubleClick={{ disabled: false, mode: "toggle" }}
-                    pinch={{ disabled: false, step: 5 }}
+                    doubleClick={{ disabled: true }}
+                    pinch={{ step: 5 }}
                   >
                     {({ zoomIn, zoomOut, resetTransform }) => (
                       <div style={{ position: 'relative' }}>
@@ -396,78 +356,56 @@ export default function PDFSwipeViewer({ url, onFinishReading, isAdmin = false }
             </AnimatePresence>
           </div>
         </Document>
-
-        {/* Navegación flotante en fullscreen móvil — botones laterales transparentes */}
-        {mobileFullscreen && (
-          <>
-            <button 
-              className={styles.mobileNavLeft}
-              onClick={() => changePage(-1)}
-              disabled={pageNumber <= 1}
-            >
-              ‹
-            </button>
-            <button 
-              className={styles.mobileNavRight}
-              onClick={() => changePage(1)}
-              disabled={pageNumber >= numPages}
-            >
-              ›
-            </button>
-          </>
-        )}
       </div>
 
-      {/* Controles inferiores — Se ocultan en fullscreen móvil */}
-      {!mobileFullscreen && (
-        <div className={styles.controls}>
-          <button 
-            disabled={pageNumber <= 1} 
-            onClick={() => changePage(-1)}
-            className={styles.controlBtn}
-            type="button"
-          >
-            &#8592; Anterior
-          </button>
+      <div className={styles.controls}>
+        <button 
+          disabled={pageNumber <= 1} 
+          onClick={() => changePage(-1)}
+          className={styles.controlBtn}
+          type="button"
+        >
+          &#8592; Anterior
+        </button>
 
-          <div className={styles.progressDots}>
-            {hasFinishedOnce ? (
-              <span className={styles.finishedBadge}>✓ Lectura Completada</span>
-            ) : (
-              <div className={styles.progressBar}>
-                <div 
-                  className={styles.progressFill}
-                  style={{ width: `${(pageNumber / numPages) * 100}%` }}
-                ></div>
-              </div>
-            )}
-          </div>
-
-          <button 
-            disabled={pageNumber >= numPages} 
-            onClick={() => changePage(1)}
-            className={`${styles.controlBtn} ${pageNumber === numPages ? styles.hidden : ''}`}
-            type="button"
-          >
-            Siguiente &#8594;
-          </button>
-
-          {isAdmin && (
-            <button
-              onClick={() => {
-                setHasFinishedOnce(true);
-                onFinishReading();
-              }}
-              className={styles.controlBtn}
-              style={{ background: '#00e5ff', color: '#000', fontWeight: 'bold' }}
-              type="button"
-              title="Avanzar directamente al siguiente paso (Modo Administrador)"
-            >
-              ⚡ Avanzar (Admin) →
-            </button>
+        <div className={styles.progressDots}>
+          {hasFinishedOnce ? (
+            <span className={styles.finishedBadge}>✓ Lectura Completada</span>
+          ) : (
+            <div className={styles.progressBar}>
+              <div 
+                className={styles.progressFill}
+                style={{ width: `${(pageNumber / numPages) * 100}%` }}
+              ></div>
+            </div>
           )}
         </div>
-      )}
+
+        <button 
+          disabled={pageNumber >= numPages} 
+          onClick={() => changePage(1)}
+          className={`${styles.controlBtn} ${pageNumber === numPages ? styles.hidden : ''}`}
+          type="button"
+        >
+          Siguiente &#8594;
+        </button>
+
+        {isAdmin && (
+          <button
+            onClick={() => {
+              setHasFinishedOnce(true);
+              onFinishReading();
+            }}
+            className={styles.controlBtn}
+            style={{ background: '#00e5ff', color: '#000', fontWeight: 'bold' }}
+            type="button"
+            title="Avanzar directamente al siguiente paso (Modo Administrador)"
+          >
+            ⚡ Avanzar (Admin) →
+          </button>
+        )}
+      </div>
     </div>
   )
 }
+
