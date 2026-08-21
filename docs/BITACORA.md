@@ -339,3 +339,17 @@
   - Reglas de seguridad actualizadas en `firestore.rules` y `web/firestore.rules` para la colección `clases_grabadas`.
   - Verificación: `pnpm tsc --noEmit` y `pnpm build` (`@opennextjs/cloudflare`) completados exitosamente con 0 errores (45 rutas compiladas).
 
+## Sesión 2026-08-21 · Despliegue de Dominio Oficial `aprecap.cl` en Cloudflare & NIC Chile
+- **Visor PDF (PDFSwipeViewer)**:
+  - Estructura visual y gestos 100% alineados con Sarmat (Header con 'Material de Estudio' y 'Desliza o usa los botones para navegar', barra inferior con '← Anterior' y 'Siguiente →' y barra de progreso roja).
+  - Logo flotante configurado para ocultarse en móviles (`display: none`) y mostrarse únicamente en computadores de escritorio (`@media (min-width: 769px)`).
+  - Commits subidos a `main`: `0b0ef0d`, `14fb1f5`.
+- **Despliegue de Dominio en Cloudflare**:
+  - Zona agregada en Cloudflare: `aprecap.cl`.
+  - Nameservers oficiales asignados y actualizados en NIC Chile: `julissa.ns.cloudflare.com` y `moura.ns.cloudflare.com`.
+  - Custom Domains conectados al Worker `aprecap` en producción: `aprecap.cl` y `www.aprecap.cl`.
+  - Orígenes CORS autorizados en Sanity CMS (`mwwotgjc`): `https://aprecap.cl` y `https://www.aprecap.cl` con `allow credentials`.
+  - Dominios autorizados en Firebase Authentication (`aprecap-8aa89`): `aprecap.cl` y `www.aprecap.cl`.
+  - **Nota Pendiente para el Cliente**: Confirmar si el servicio de correo corporativo activo (`@aprecap.cl`) es **Zoho Mail** o el cPanel del servidor anterior (`servidoresph.com` / `66.235.175.220`) para terminar de ajustar los registros MX en Cloudflare DNS.
+
+
