@@ -13,7 +13,7 @@ export const CURSOS_PRESENCIAL_ONLINE: CursoHome[] = [
     title: "Guardia de Seguridad (OS-10)",
     image: "/images/cursos/guardia-de-seguridad.png",
     duracion: "90 horas (formación) · 36 horas (perfeccionamiento)",
-    modalidad: "Presencial + Online",
+    modalidad: "100% Presencial (apoyo online)",
     acreditado: true,
   },
   {
@@ -21,7 +21,7 @@ export const CURSOS_PRESENCIAL_ONLINE: CursoHome[] = [
     title: "Bastón y Esposas",
     image: "/images/cursos/baston-y-esposas.png",
     duracion: "8 horas",
-    modalidad: "Presencial + Online",
+    modalidad: "100% Presencial (apoyo online)",
     acreditado: false,
   },
 ];

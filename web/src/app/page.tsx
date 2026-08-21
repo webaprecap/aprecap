@@ -59,16 +59,16 @@ export default function Home() {
       {/* Carrusel Infinito Continuo de Logos Autorizados */}
       <LogosCarrusel />
 
-      {/* Cursos Presenciales + Online */}
+      {/* Cursos Presenciales */}
       <section className="bg-gray-50 py-16 overflow-hidden">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up" duration={600}>
             <div>
               <h2 className="text-3xl font-extrabold text-apre-blue">
-                Cursos Presenciales + Online
+                Cursos Presenciales
               </h2>
               <p className="mt-2 text-gray-600">
-                Formación mixta: clases presenciales y material de estudio en
+                Clases 100% presenciales en sede con material y apoyo de estudio en
                 nuestra plataforma en línea.
               </p>
             </div>

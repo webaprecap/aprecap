@@ -29,10 +29,10 @@ export default function CursosPage() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-extrabold text-apre-blue">
-            Cursos Presenciales + Online
+            Cursos Presenciales
           </h2>
           <p className="mt-2 text-gray-600">
-            Formación mixta: clases presenciales y material de estudio en
+            Formación 100% presencial en sede con material y apoyo de estudio en
             nuestra plataforma en línea.
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">

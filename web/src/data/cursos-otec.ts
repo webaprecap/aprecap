@@ -14,7 +14,7 @@ export const cursosOtec: CursoOtec[] = [
     slug: "guardia-de-seguridad",
     title: "Curso de Guardia de Seguridad",
     duracion: "90 horas (formación) · 36 horas (perfeccionamiento)",
-    modalidad: "Presencial",
+    modalidad: "100% Presencial (con apoyo en línea)",
     acreditado: true,
     financiadoSence: true,
     description:
@@ -25,7 +25,7 @@ export const cursosOtec: CursoOtec[] = [
     slug: "nochero-portero-y-rondin",
     title: "Curso de Nochero, Portero y Rondín",
     duracion: "32 horas",
-    modalidad: "Presencial con material en línea",
+    modalidad: "100% Presencial (con apoyo en línea)",
     acreditado: false,
     financiadoSence: false,
     description:
@@ -37,7 +37,7 @@ export const cursosOtec: CursoOtec[] = [
     slug: "baston-y-esposas",
     title: "Curso de Bastón y Esposas",
     duracion: "8 horas",
-    modalidad: "Presencial con material en línea",
+    modalidad: "100% Presencial (con apoyo en línea)",
     acreditado: false,
     financiadoSence: false,
     description:
