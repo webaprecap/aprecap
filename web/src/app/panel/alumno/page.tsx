@@ -68,6 +68,7 @@ export default function PanelAlumno() {
   const [showModalSolicitud, setShowModalSolicitud] = useState(false);
   const [cursoSolicitadoNombre, setCursoSolicitadoNombre] = useState("");
   const [solicitandoCurso, setSolicitandoCurso] = useState<string | null>(null);
+  const [cuestionariosOS10Habilitados, setCuestionariosOS10Habilitados] = useState(false);
 
   const avisados = useRef<Set<string>>(new Set());
 
@@ -81,6 +82,20 @@ export default function PanelAlumno() {
       router.push("/login");
     }
   }, [userData, loading, router]);
+
+  // Listener para el estado de habilitación de cuestionarios OS-10 fijado por el Administrador
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const unsub = onSnapshot(doc(db, "configuracion", "os10_cuestionarios"), (snap) => {
+      if (snap.exists()) {
+        setCuestionariosOS10Habilitados(snap.data().habilitado === true);
+      } else {
+        setCuestionariosOS10Habilitados(false);
+      }
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const db = getFirestoreDb();
@@ -236,7 +251,7 @@ export default function PanelAlumno() {
               📌 Herramientas Principales
             </h2>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-3">
               {/* Card 1: Clases en Vivo */}
               <div
                 className={`relative rounded-2xl border p-6 transition-all shadow-sm ${
@@ -299,30 +314,7 @@ export default function PanelAlumno() {
                 </div>
               </a>
 
-              {/* Card 3: Materiales PPT */}
-              <Link href="/materiales/guardia-de-seguridad" className="group">
-                <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-apre-red group-hover:shadow-md h-full flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl">📊</div>
-                      <span className="rounded-full bg-apre-red/10 px-2.5 py-0.5 text-xs font-bold text-apre-red">
-                        PPT INTERACTIVO
-                      </span>
-                    </div>
-                    <h3 className="mt-2 font-extrabold text-apre-blue text-lg group-hover:text-apre-red transition">
-                      Materiales de Estudio
-                    </h3>
-                    <p className="mt-1 text-xs text-gray-500">
-                      Presentaciones en diapositivas con imágenes HD y manuales en PDF.
-                    </p>
-                  </div>
-                  <span className="mt-4 inline-flex items-center text-xs font-bold text-apre-red group-hover:underline">
-                    Ver presentaciones PPT →
-                  </span>
-                </div>
-              </Link>
-
-              {/* Card 4: Evaluaciones en Linea */}
+              {/* Card 3: Evaluaciones en Linea */}
               <Link href="/evaluaciones" className="group">
                 <div className="rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-cyan-500 group-hover:shadow-md h-full flex flex-col justify-between">
                   <div>
@@ -573,12 +565,23 @@ export default function PanelAlumno() {
                             🚀 ENTRAR AL CURSO {c.shortName.toUpperCase()}
                           </Link>
                           {c.slug === "guardia-de-seguridad" && (
-                            <Link
-                              href="/cuestionarios/guardia-de-seguridad"
-                              className="block w-full rounded-xl bg-apre-red py-2.5 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
-                            >
-                              📋 CUESTIONARIOS OFICIALES OS-10
-                            </Link>
+                            cuestionariosOS10Habilitados ? (
+                              <Link
+                                href="/cuestionarios/guardia-de-seguridad"
+                                className="block w-full rounded-xl bg-apre-red py-2.5 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                              >
+                                📋 CUESTIONARIOS OFICIALES OS-10
+                              </Link>
+                            ) : (
+                              <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-2.5 text-center select-none">
+                                <span className="text-xs font-extrabold text-gray-500 flex items-center justify-center gap-1.5">
+                                  <span>🔒</span> Cuestionarios Oficiales OS-10 (Bloqueados)
+                                </span>
+                                <p className="text-[10px] text-gray-400 mt-0.5 font-medium">
+                                  Se habilitarán por el docente al concluir las clases presenciales.
+                                </p>
+                              </div>
+                            )
                           )}
                         </>
                       ) : isPendiente ? (

@@ -30,8 +30,14 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
   const [enrollments, setEnrollments] = useState<{ courseSlug?: string }[]>([]);
   const [solicitando, setSolicitando] = useState(false);
   const [activoIdx, setActivoIdx] = useState(0);
+  const [cuestionariosHabilitados, setCuestionariosHabilitados] = useState(false);
 
   const cursoCuestionarios = getCuestionarios(slug);
+
+  const isAdminUser =
+    userData?.rol === "admin" ||
+    userData?.rol === "superadmin" ||
+    userData?.rol === "profesor";
 
   useEffect(() => {
     const db = getFirestoreDb();
@@ -42,6 +48,20 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
     });
     return unsub;
   }, [user]);
+
+  // Listener para el switch global de habilitación de cuestionarios OS-10 fijado por Admin
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const unsub = onSnapshot(doc(db, "configuracion", "os10_cuestionarios"), (snap) => {
+      if (snap.exists()) {
+        setCuestionariosHabilitados(snap.data().habilitado === true);
+      } else {
+        setCuestionariosHabilitados(false);
+      }
+    });
+    return unsub;
+  }, []);
 
   const handleRequestAccess = async () => {
     if (!user) return;
@@ -65,7 +85,7 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
     notFound();
   }
 
-  // Verificación de acceso
+  // Verificación de acceso al curso
   const status = getCourseStatus(userData, slug, enrollments);
   const hasAccess = canAccessCourse(userData, slug, enrollments);
 
@@ -79,6 +99,42 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
         solicitando={solicitando}
         onRequestAccess={handleRequestAccess}
       />
+    );
+  }
+
+  // Compuerta: Si son los cuestionarios de Guardia OS-10 y están deshabilitados por Admin para alumnos
+  if (slug === "guardia-de-seguridad" && !cuestionariosHabilitados && !isAdminUser) {
+    return (
+      <div className="min-h-[70vh] bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full rounded-3xl bg-white p-8 border border-gray-200 shadow-xl text-center space-y-4">
+          <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
+            🔒
+          </div>
+          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-[11px] font-black uppercase text-amber-800">
+            Control de Asistencia Presencial
+          </span>
+          <h2 className="text-2xl font-black text-apre-blue">
+            Cuestionarios Oficiales Bloqueados
+          </h2>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Por disposición académica de OTEC APRECAP, las pruebas y cuestionarios oficiales del curso <strong>Guardia de Seguridad OS-10</strong> se habilitan durante la clase presencial o al concluir la formación teórica con el docente, para garantizar un aprendizaje integral y no meramente memorístico.
+          </p>
+          <div className="pt-4 border-t border-gray-100 flex flex-col gap-2">
+            <Link
+              href="/panel/alumno"
+              className="w-full rounded-xl bg-apre-blue py-3 text-xs font-bold text-white transition hover:bg-apre-blue-dark shadow-sm"
+            >
+              ← Volver a Mi Panel de Alumno
+            </Link>
+            <Link
+              href="/materiales/guardia-de-seguridad"
+              className="w-full rounded-xl bg-gray-100 py-2.5 text-xs font-bold text-gray-700 transition hover:bg-gray-200"
+            >
+              📖 Ir a los Manuales de Estudio del Curso
+            </Link>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -98,60 +154,57 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
             <p className="mt-1 text-xs text-white/80">
               Los cuestionarios oficiales que se rinden en el curso, digitalizados con las
               mismas preguntas y respuestas. Corrección inmediata: al responder verás si
-              acertaste y cuál era la respuesta correcta.
+              acertaste o no con retroalimentación explicativa.
             </p>
           </div>
           <Link
             href={`/materiales/${cursoCuestionarios.slug}`}
-            className="rounded-xl bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-white/20 border border-white/10"
+            className="rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white hover:bg-white/20 transition"
           >
-            ← Volver al Curso
+            ← Volver al material del curso
           </Link>
         </div>
       </section>
 
-      <section className="bg-slate-900 py-8 min-h-[75vh]">
-        <div className="mx-auto max-w-7xl px-4 grid gap-8 lg:grid-cols-12">
-          <aside className="lg:col-span-4 space-y-3">
-            {cursoCuestionarios.cuestionarios.map((c, idx) => {
-              const isActive = idx === activoIdx;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => {
-                    setActivoIdx(idx);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className={`w-full text-left rounded-2xl border p-4 transition ${
-                    isActive
-                      ? "border-cyan-500/50 bg-cyan-500/10"
-                      : "border-slate-800 bg-slate-950 hover:bg-slate-900"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <h3
-                      className={`text-sm font-bold ${
-                        isActive ? "text-cyan-300" : "text-slate-200"
-                      }`}
-                    >
-                      {c.titulo}
-                    </h3>
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-black border bg-apre-red/10 text-apre-red border-apre-red/30">
-                      EVALUACIÓN
+      {/* Grid de cuestionarios */}
+      <section className="bg-gray-50 py-8 min-h-screen">
+        <div className="mx-auto max-w-7xl px-4 grid gap-6 lg:grid-cols-4">
+          {/* Sidebar de módulos / cuestionarios */}
+          <aside className="space-y-2 lg:col-span-1">
+            <p className="text-xs font-black uppercase tracking-wider text-gray-500 mb-3 px-1">
+              Cuestionarios Disponibles ({cursoCuestionarios.cuestionarios.length})
+            </p>
+            <div className="space-y-1.5 max-h-[75vh] overflow-y-auto pr-1">
+              {cursoCuestionarios.cuestionarios.map((c, idx) => {
+                const isActive = idx === activoIdx;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => setActivoIdx(idx)}
+                    className={`w-full text-left rounded-xl p-3 text-xs transition flex flex-col gap-1 border ${
+                      isActive
+                        ? "bg-apre-blue text-white border-apre-blue shadow-md font-bold"
+                        : "bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span className={`text-[10px] font-black uppercase ${isActive ? "text-apre-red" : "text-gray-400"}`}>
+                      Cuestionario {idx + 1}
                     </span>
-                  </div>
-                  <p className="mt-1 text-[11px] font-bold text-slate-400">
-                    {c.preguntas.length} preguntas · V/F y alternativas con corrección inmediata
-                  </p>
-                </button>
-              );
-            })}
+                    <span className="line-clamp-2 leading-tight">{c.titulo}</span>
+                    <span className={`text-[10px] mt-1 ${isActive ? "text-white/70" : "text-gray-400"}`}>
+                      {c.preguntas.length} preguntas V/F
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </aside>
 
-          <main className="lg:col-span-8">
+          {/* Área principal del cuestionario */}
+          <main className="lg:col-span-3">
             <CuestionarioVFView
               titulo={activo.titulo}
-              preguntas={activo.preguntas as PreguntaCuestionario[]}
+              preguntas={activo.preguntas}
             />
           </main>
         </div>

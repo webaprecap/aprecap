@@ -468,6 +468,117 @@ function HistorialTab() {
   );
 }
 
+/* ---------- Control de Habilitación de Cuestionarios OS-10 para Alumnos ---------- */
+function ControlCuestionariosOS10Card() {
+  const { user } = useAuth();
+  const [habilitado, setHabilitado] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [guardando, setGuardando] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const unsub = onSnapshot(doc(db, "configuracion", "os10_cuestionarios"), (snap) => {
+      if (snap.exists()) {
+        setHabilitado(snap.data().habilitado === true);
+      } else {
+        setHabilitado(false);
+      }
+      setLoading(false);
+    });
+    return unsub;
+  }, []);
+
+  const toggleHabilitacion = async () => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    setGuardando(true);
+    setMsg(null);
+    try {
+      const nuevoEstado = !habilitado;
+      await setDoc(
+        doc(db, "configuracion", "os10_cuestionarios"),
+        {
+          habilitado: nuevoEstado,
+          actualizadoPor: user?.email || "admin",
+          actualizadoEn: serverTimestamp(),
+        },
+        { merge: true }
+      );
+      setMsg(
+        nuevoEstado
+          ? "✅ Cuestionarios OS-10 ACTIVADOS para todos los alumnos matriculados."
+          : "🔒 Cuestionarios OS-10 BLOQUEADOS para alumnos (para asegurar asistencia presencial)."
+      );
+      setTimeout(() => setMsg(null), 5000);
+    } catch (e: any) {
+      console.error(e);
+      alert("Error al actualizar estado: " + e.message);
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  return (
+    <div
+      className={`rounded-2xl border p-5 transition-all shadow-sm ${
+        habilitado ? "border-emerald-300 bg-emerald-50/60" : "border-amber-300 bg-amber-50/50"
+      }`}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="max-w-2xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-2xl">🛡️</span>
+            <h3 className="font-extrabold text-apre-blue text-base">
+              Control de Pruebas y Cuestionarios OS-10 (Guardia de Seguridad)
+            </h3>
+            <span
+              className={`rounded-full px-2.5 py-0.5 text-xs font-black uppercase tracking-wider ${
+                loading
+                  ? "bg-gray-100 text-gray-600"
+                  : habilitado
+                  ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                  : "bg-red-100 text-red-800 border border-red-300"
+              }`}
+            >
+              {loading ? "Cargando..." : habilitado ? "🟢 ACTIVADOS PARA ALUMNOS" : "🔴 BLOQUEADOS PARA ALUMNOS"}
+            </span>
+          </div>
+          <p className="mt-1.5 text-xs text-gray-600 leading-relaxed">
+            {habilitado
+              ? "Los alumnos matriculados en Guardia de Seguridad OS-10 tienen el botón rojo de Cuestionarios activo y pueden rendir las pruebas en plataforma."
+              : "Los cuestionarios están BLOQUEADOS para los alumnos en su panel para asegurar la asistencia a las clases presenciales y evitar la simple memorización de alternativas."}
+          </p>
+          {msg && (
+            <p className="mt-2 text-xs font-bold text-apre-blue bg-white/90 px-3 py-1 rounded-lg border inline-block shadow-xs">
+              {msg}
+            </p>
+          )}
+        </div>
+
+        <button
+          onClick={toggleHabilitacion}
+          disabled={guardando || loading}
+          className={`flex items-center gap-2 rounded-xl px-5 py-3 text-xs font-extrabold shadow-sm transition active:scale-95 ${
+            habilitado
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-emerald-600 text-white hover:bg-emerald-700"
+          } disabled:opacity-50 cursor-pointer`}
+        >
+          <span>
+            {guardando
+              ? "Guardando cambio..."
+              : habilitado
+              ? "🔒 Bloquear Cuestionarios a Alumnos"
+              : "🔓 Desbloquear Cuestionarios a Alumnos"}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Explorar Cursos Desbloqueados (Vista Administrador) ---------- */
 function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
   const cursosDetallados = [
@@ -527,6 +638,9 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
 
   return (
     <div className="space-y-6">
+      {/* Control Switch de Pruebas OS-10 */}
+      <ControlCuestionariosOS10Card />
+
       {/* Banner Explicativo */}
       <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-apre-blue to-slate-900 p-6 text-white shadow-md">
         <div className="flex items-center gap-2">

@@ -97,6 +97,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const { user, userData, loading: authLoading } = useAuth();
   const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown }[]>([]);
   const [solicitando, setSolicitando] = useState(false);
+  const [cuestionariosHabilitados, setCuestionariosHabilitados] = useState(false);
 
   const cursoActual = materialesEstudio.find((c) => c.slug === slug);
 
@@ -104,6 +105,19 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const [selectedSubModuloIdx, setSelectedSubModuloIdx] = useState<number>(0);
   const [paso, setPaso] = useState<PasoModulo>(PASO_INICIAL);
   const [completados, setCompletados] = useStoredProgress(slug);
+
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const unsub = onSnapshot(doc(db, "configuracion", "os10_cuestionarios"), (snap) => {
+      if (snap.exists()) {
+        setCuestionariosHabilitados(snap.data().habilitado === true);
+      } else {
+        setCuestionariosHabilitados(false);
+      }
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const db = getFirestoreDb();
@@ -436,21 +450,43 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                       )}
 
                       {cursoActual.banco === "os10" && (
-                        <Link
-                          href={`/cuestionarios/${cursoActual.slug}`}
-                          className="mt-2 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800"
-                        >
-                          📋 Cuestionarios Oficiales
-                        </Link>
+                        cuestionariosHabilitados || isAdmin ? (
+                          <Link
+                            href={`/cuestionarios/${cursoActual.slug}`}
+                            className="mt-2 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800"
+                          >
+                            📋 Cuestionarios Oficiales
+                          </Link>
+                        ) : (
+                          <div className="mt-2 rounded-xl border border-dashed border-slate-800 bg-slate-950/60 p-2.5 text-center">
+                            <span className="text-[11px] font-bold text-slate-500 flex items-center justify-center gap-1">
+                              <span>🔒</span> Cuestionarios Oficiales Bloqueados
+                            </span>
+                            <p className="text-[10px] text-slate-600 mt-0.5">
+                              Se habilitarán al concluir clases presenciales.
+                            </p>
+                          </div>
+                        )
                       )}
                     </>
                   ) : (
-                    <Link
-                      href={`/cuestionarios/${cursoActual.slug}`}
-                      className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
-                    >
-                      📋 Cuestionarios Oficiales
-                    </Link>
+                    cuestionariosHabilitados || isAdmin ? (
+                      <Link
+                        href={`/cuestionarios/${cursoActual.slug}`}
+                        className="mt-3 block w-full rounded-xl py-2.5 text-center text-xs font-bold transition border bg-apre-red text-white border-apre-red shadow-md hover:bg-apre-red-dark"
+                      >
+                        📋 Cuestionarios Oficiales
+                      </Link>
+                    ) : (
+                      <div className="mt-3 rounded-xl border border-dashed border-slate-800 bg-slate-950/60 p-2.5 text-center">
+                        <span className="text-[11px] font-bold text-slate-500 flex items-center justify-center gap-1">
+                          <span>🔒</span> Cuestionarios Oficiales Bloqueados
+                        </span>
+                        <p className="text-[10px] text-slate-600 mt-0.5">
+                          Se habilitarán por el docente al finalizar clases.
+                        </p>
+                      </div>
+                    )
                   )}
                 </div>
               )}
