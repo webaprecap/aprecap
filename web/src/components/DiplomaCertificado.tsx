@@ -57,34 +57,47 @@ export default function DiplomaCertificado({
       className="certificado-aprecap mx-auto max-w-4xl rounded-sm bg-white p-2 shadow-2xl print:shadow-none print:p-0 print:m-0 print:w-full print:max-w-none"
     >
       <div className="relative border-4 border-double border-apre-blue p-6 md:p-10 text-center bg-gradient-to-b from-white via-white to-slate-50/40">
-        {/* Cabecera y Logos */}
-        <div>
+        {/* Cabecera con doble Escudo APRECAP y Acreditaciones Oficiales */}
+        <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-4">
           <img
             src="/logo/logo.png"
             alt="APRECAP OTEC"
-            className="mx-auto h-20 w-20 object-contain"
+            className="h-16 w-16 md:h-20 md:w-20 object-contain shrink-0"
           />
-          <p className="mt-3 text-[10px] font-bold uppercase tracking-widest text-apre-blue">
-            Organismo Técnico de Capacitación Acreditado por ICONTEC NCH 2728:2015
-          </p>
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
-            Autorizada por SENCE · Servicio Nacional de Capacitación y Empleo · Ministerio
-            del Trabajo y Previsión Social
-          </p>
-          <p className="mt-2 text-sm font-black text-apre-blue uppercase tracking-wide">
-            Aprecap Spa · Centro de Capacitación y Desarrollo Humano
-          </p>
-          <p className="mt-1 text-[11px] italic text-gray-500 font-serif">
+          <div className="flex-1 text-center px-1">
+            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-apre-blue leading-tight">
+              ORGANISMO TÉCNICO DE CAPACITACIÓN ACREDITADO POR ICONTEC NCH 2728:2015
+            </p>
+            <p className="mt-1 text-[8.5px] md:text-[9.5px] font-semibold uppercase tracking-wide text-gray-700 leading-tight">
+              AUTORIZADA POR SENCE – SERVICIO NACIONAL DE CAPACITACIÓN Y EMPLEO - MINISTERIO DEL TRABAJO Y PREVISIÓN SOCIAL
+            </p>
+            <p className="mt-1 text-[8px] md:text-[9px] font-bold uppercase tracking-wide text-gray-800 leading-tight">
+              AUTORIZADO POR LA SUBSECRETARÍA PREVENCIÓN DEL DELITO - AUTORIZADA POR OS-10 DE CARABINEROS – AUTORIZADA POR DIRECTEMAR
+            </p>
+            <p className="mt-2 text-xs md:text-sm font-black text-apre-blue uppercase tracking-wide">
+              Aprecap Spa · Centro de Capacitación y Desarrollo Humano
+            </p>
+          </div>
+          <img
+            src="/logo/logo.png"
+            alt="APRECAP OTEC"
+            className="h-16 w-16 md:h-20 md:w-20 object-contain shrink-0"
+          />
+        </div>
+
+        {/* Cuerpo del Diploma */}
+        <div className="pt-4">
+          <p className="mt-2 text-xs italic text-gray-500 font-serif">
             Otorga el presente
           </p>
 
           {/* Título Principal */}
-          <h2 className="mt-3 font-serif text-4xl font-black uppercase tracking-[0.25em] text-apre-red md:text-5xl drop-shadow-xs">
+          <h2 className="mt-2 font-serif text-4xl font-black uppercase tracking-[0.25em] text-apre-blue md:text-5xl drop-shadow-xs">
             Certificado
           </h2>
 
-          <p className="mt-6 text-xs uppercase tracking-widest text-gray-500 font-semibold">
-            A
+          <p className="mt-5 text-xs uppercase tracking-widest text-gray-500 font-bold">
+            A DON / DOÑA:
           </p>
           <p className="mx-auto mt-1 max-w-2xl font-serif text-2xl font-black uppercase text-gray-900 md:text-3xl tracking-wide">
             {nombre || "—"}
@@ -93,14 +106,14 @@ export default function DiplomaCertificado({
             RUT: <span className="font-mono font-bold text-gray-900">{rutFormateado}</span>
           </p>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-gray-700">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-gray-700">
             Por su participación y aprobación en el curso de:
           </p>
           <p className="mx-auto mt-2 max-w-2xl font-serif text-lg font-black uppercase text-apre-blue md:text-xl">
             “{curso.nombre}”
           </p>
 
-          {/* Duración centrada en mayúsculas estilo diseño oficial */}
+          {/* Duración centrada en mayúsculas */}
           <p className="mt-4 text-xs font-black uppercase tracking-[0.2em] text-gray-700">
             DURACIÓN: {curso.horas} HORAS
           </p>
@@ -124,7 +137,7 @@ export default function DiplomaCertificado({
             </p>
           </div>
 
-          {/* Centro: QR Oficial APRECAP a www.aprecap.cl (sin contorno rojo) */}
+          {/* Centro: QR Oficial APRECAP a www.aprecap.cl */}
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-col items-center justify-center bg-white p-1">
               <QRCodeAprecap url="https://www.aprecap.cl" size={56} />
@@ -152,7 +165,7 @@ export default function DiplomaCertificado({
         </div>
 
         {/* Pie de Página: Fecha y Enlace Oficial */}
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           <p className="text-xs font-semibold text-gray-600">
             Santiago, {fechaTexto}
           </p>

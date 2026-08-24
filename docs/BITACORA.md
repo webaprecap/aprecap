@@ -342,14 +342,15 @@
 ## Sesión 2026-08-21 · Despliegue de Dominio Oficial `aprecap.cl` en Cloudflare & NIC Chile
 - **Visor PDF (PDFSwipeViewer)**:
   - Estructura visual y gestos 100% alineados con Sarmat (Header con 'Material de Estudio' y 'Desliza o usa los botones para navegar', barra inferior con '← Anterior' y 'Siguiente →' y barra de progreso roja).
-  - Logo flotante configurado para ocultarse en móviles (`display: none`) y mostrarse únicamente en computadores de escritorio (`@media (min-width: 769px)`).
-  - Commits subidos a `main`: `0b0ef0d`, `14fb1f5`.
-- **Despliegue de Dominio en Cloudflare**:
-  - Zona agregada en Cloudflare: `aprecap.cl`.
-  - Nameservers oficiales asignados y actualizados en NIC Chile: `julissa.ns.cloudflare.com` y `moura.ns.cloudflare.com`.
-  - Custom Domains conectados al Worker `aprecap` en producción: `aprecap.cl` y `www.aprecap.cl`.
-  - Orígenes CORS autorizados en Sanity CMS (`mwwotgjc`): `https://aprecap.cl` y `https://www.aprecap.cl` con `allow credentials`.
-  - Dominios autorizados en Firebase Authentication (`aprecap-8aa89`): `aprecap.cl` y `www.aprecap.cl`.
-  - **Nota Pendiente para el Cliente**: Confirmar si el servicio de correo corporativo activo (`@aprecap.cl`) es **Zoho Mail** o el cPanel del servidor anterior (`servidoresph.com` / `66.235.175.220`) para terminar de ajustar los registros MX en Cloudflare DNS.
+## Sesión 2026-08-24 · Actualización y Alineación del Diploma Oficial APRECAP con Word del Cliente
+- **Acreditaciones Institucionales Completas (`JUANA GONZALEZ.docx`)**:
+  - Se analizó el documento Word original del cliente (`C:\Users\Vickoto\Desktop\fotos aprecap\JUANA GONZALEZ.docx` y `DIPLOMA SUPERVISOR  ERIKA.pdf`).
+  - Se incorporó en `DiplomaCertificado.tsx` la 3ª línea oficial de acreditaciones omitida:
+    `AUTORIZADO POR LA SUBSECRETARÍA PREVENCIÓN DEL DELITO - AUTORIZADA POR OS-10 DE CARABINEROS – AUTORIZADA POR DIRECTEMAR`.
+  - Se ajustó el encabezado con doble escudo institucional flanqueando las acreditaciones.
+  - Se actualizó el título a azul marino institucional (`text-apre-blue`) y la fórmula del destinatario a `A DON / DOÑA: {nombre}` para cobertura inclusiva de todos los egresados.
+- **Verificación y Calidad**:
+  - `tsc --noEmit` completado con 0 errores.
+
 
 
