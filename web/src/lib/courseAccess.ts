@@ -85,7 +85,8 @@ export function canAccessCourse(
 export function isMaterialHabilitado(
   userData: UserData | null,
   courseSlug: string,
-  globalConfigHabilitado: boolean = false
+  globalConfigHabilitado: boolean = false,
+  enrollmentOrCohorteHabilitado: boolean = false
 ): boolean {
   if (!userData || userData.activo === false) return false;
   if (userData.rol === "admin" || userData.rol === "superadmin" || userData.rol === "profesor") {
@@ -98,12 +99,13 @@ export function isMaterialHabilitado(
   }
 
   // Para Guardia de Seguridad (OS-10): el material digital está bloqueado por defecto en fase presencial
-  // hasta que el admin lo active de forma individual o global
+  // hasta que el admin lo active de forma individual, por cohorte/grupo o global
   const individualHabilitado = Boolean(
     userData.habilitadoMaterialOS10 === true ||
     userData.materialOS10Habilitado === true ||
-    (userData as any).materialHabilitado === true
+    (userData as any).materialHabilitado === true ||
+    (userData as any).materialOS10Activo === true
   );
 
-  return individualHabilitado || globalConfigHabilitado;
+  return individualHabilitado || enrollmentOrCohorteHabilitado || globalConfigHabilitado;
 }

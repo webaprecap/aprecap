@@ -36,6 +36,7 @@ import {
 type Tab =
   | "pendientes"
   | "historial"
+  | "cohortes"
   | "seguimiento"
   | "aprobados"
   | "cursos-explorar"
@@ -56,13 +57,14 @@ const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: str
   {
     section: "Solicitudes",
     items: [
-      { id: "pendientes", label: "Pendientes", emoji: "📋" },
+      { id: "pendientes", label: "Pendientes por Curso", emoji: "📋" },
       { id: "historial", label: "Historial", emoji: "📁" },
     ],
   },
   {
-    section: "Cursos y Alumnos",
+    section: "Cursos y Convocatorias",
     items: [
+      { id: "cohortes", label: "Grupos por Fecha (Convocatorias)", emoji: "🗓️" },
       { id: "seguimiento", label: "Seguimiento y Días", emoji: "⏱️" },
       { id: "aprobados", label: "Alumnos Aprobados", emoji: "🎓" },
       { id: "cursos-gestion", label: "Gestión y Matrículas", emoji: "📚" },
@@ -286,6 +288,7 @@ export default function PanelAdmin() {
 
             {tab === "pendientes" && <PendientesTab />}
             {tab === "historial" && <HistorialTab />}
+            {tab === "cohortes" && <CohortesTab />}
             {tab === "seguimiento" && <SeguimientoTab onEmitirDiploma={irADiplomaAprobado} />}
             {tab === "aprobados" && <AprobadosTab onEmitirDiploma={irADiplomaAprobado} />}
             {tab === "cursos-explorar" && <CursosExplorarTab onIrAGestion={() => setTab("cursos-gestion")} />}
@@ -317,20 +320,31 @@ export default function PanelAdmin() {
   );
 }
 
-/* ---------- Solicitudes Pendientes ---------- */
+/* ---------- Solicitudes Pendientes (Con pestañas por curso y asignación de cohortes) ---------- */
 function PendientesTab() {
   const db = getFirestoreDb();
   const [items, setItems] = useState<any[]>([]);
+  const [cohortes, setCohortes] = useState<any[]>([]);
+  const [filtroCurso, setFiltroCurso] = useState<string>("todos");
+  const [busqueda, setBusqueda] = useState<string>("");
+  const [modalAprobar, setModalAprobar] = useState<any | null>(null);
+  const [cohorteSel, setCohorteSel] = useState<string>("");
 
   useEffect(() => {
     if (!db) return;
-    const q = query(collection(db, "solicitudes"), where("estado", "==", "pendiente"));
-    return onSnapshot(q, (snap) =>
+    const un1 = onSnapshot(query(collection(db, "solicitudes"), where("estado", "==", "pendiente")), (snap) =>
       setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
+    const un2 = onSnapshot(collection(db, "cohortes"), (snap) =>
+      setCohortes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+    };
   }, [db]);
 
-  const aprobar = async (s: any) => {
+  const aprobar = async (s: any, cohorteIdElegida?: string) => {
     if (!db) return;
     const uidTemp = s.email.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
     const nombreCompleto = [s.nombres, s.apellidoPaterno, s.apellidoMaterno]
@@ -341,94 +355,936 @@ function PendientesTab() {
     const cursoSlug = s.cursoDeseado || "guardia-de-seguridad";
     const fieldKey = getCourseFieldKey(cursoSlug);
 
-    await setDoc(doc(db, "usuarios", uidTemp), {
-      uid: uidTemp,
-      email: s.email,
-      nombre: nombreCompleto || s.nombres,
-      rut: s.rut || "",
-      rol: s.tipoSolicitud || "alumno",
-      activo: true,
-      telefono: s.telefono || "",
-      solicitudId: s.id,
-      cursoDeseado: cursoSlug,
-      [fieldKey]: "aceptado",
-      fechaRegistro: serverTimestamp(),
-    });
+    const targetCohorteId = cohorteIdElegida || cohorteSel;
+    const cohorteObj = cohortes.find((c) => c.id === targetCohorteId);
+    const cohorteNombre = cohorteObj?.nombre || null;
+    const cohorteId = cohorteObj?.id || null;
+    const materialHabilitado = Boolean(cohorteObj?.materialHabilitado);
+
+    await setDoc(
+      doc(db, "usuarios", uidTemp),
+      {
+        uid: uidTemp,
+        email: s.email,
+        nombre: nombreCompleto || s.nombres,
+        rut: s.rut || "",
+        rol: s.tipoSolicitud || "alumno",
+        activo: true,
+        telefono: s.telefono || "",
+        solicitudId: s.id,
+        cursoDeseado: cursoSlug,
+        cohorteId,
+        cohorteNombre,
+        [fieldKey]: "aceptado",
+        ...(cursoSlug === "guardia-de-seguridad"
+          ? {
+              habilitadoMaterialOS10: materialHabilitado,
+              materialOS10Habilitado: materialHabilitado,
+            }
+          : {}),
+        fechaRegistro: serverTimestamp(),
+      },
+      { merge: true }
+    );
 
     if (s.tipoSolicitud === "alumno" || !s.tipoSolicitud) {
-      await setDoc(doc(collection(db, "enrollments"), `${uidTemp}_${cursoSlug}`), {
-        uid: uidTemp,
-        courseSlug: cursoSlug,
-        modulosCompletados: [],
-        fecha: serverTimestamp(),
-      });
+      await setDoc(
+        doc(collection(db, "enrollments"), `${uidTemp}_${cursoSlug}`),
+        {
+          uid: uidTemp,
+          courseSlug: cursoSlug,
+          cohorteId,
+          cohorteNombre,
+          modulosCompletados: [],
+          fecha: serverTimestamp(),
+        },
+        { merge: true }
+      );
     }
 
     await updateDoc(doc(db, "solicitudes", s.id), {
       estado: "aprobada",
+      cohorteId,
+      cohorteNombre,
       fechaRevision: serverTimestamp(),
     });
+
+    setModalAprobar(null);
+    setCohorteSel("");
   };
 
   const rechazar = async (s: any) => {
     if (!db) return;
+    if (!confirm(`¿Rechazar la solicitud de ${s.nombres || s.email}?`)) return;
     await updateDoc(doc(db, "solicitudes", s.id), {
       estado: "rechazada",
       fechaRevision: serverTimestamp(),
     });
   };
 
-  if (items.length === 0) {
-    return <p className="text-gray-500">No hay solicitudes pendientes.</p>;
-  }
+  const os10Count = items.filter((s) => (s.cursoDeseado || "guardia-de-seguridad") === "guardia-de-seguridad").length;
+  const cctvCount = items.filter((s) => s.cursoDeseado === "operador-cctv-y-alarmas").length;
+  const supCount = items.filter((s) => s.cursoDeseado === "supervisor-de-seguridad").length;
+  const basCount = items.filter((s) => s.cursoDeseado === "baston-y-esposas").length;
+  const profCount = items.filter((s) => s.tipoSolicitud === "profesor").length;
+  const otrosCount = items.filter(
+    (s) =>
+      !["guardia-de-seguridad", "operador-cctv-y-alarmas", "supervisor-de-seguridad", "baston-y-esposas"].includes(
+        s.cursoDeseado || "guardia-de-seguridad"
+      ) && s.tipoSolicitud !== "profesor"
+  ).length;
+
+  const itemsFiltrados = items.filter((s) => {
+    const curso = s.cursoDeseado || "guardia-de-seguridad";
+    if (filtroCurso !== "todos") {
+      if (filtroCurso === "profesor") {
+        if (s.tipoSolicitud !== "profesor") return false;
+      } else if (filtroCurso === "otros") {
+        if (
+          ["guardia-de-seguridad", "operador-cctv-y-alarmas", "supervisor-de-seguridad", "baston-y-esposas"].includes(
+            curso
+          ) ||
+          s.tipoSolicitud === "profesor"
+        )
+          return false;
+      } else {
+        if (curso !== filtroCurso) return false;
+      }
+    }
+
+    if (busqueda.trim()) {
+      const q = busqueda.toLowerCase().trim();
+      const nom = [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ").toLowerCase();
+      const email = (s.email || "").toLowerCase();
+      const rut = (s.rut || "").toLowerCase();
+      if (!nom.includes(q) && !email.includes(q) && !rut.includes(q)) return false;
+    }
+
+    return true;
+  });
+
   return (
     <div className="space-y-4">
-      {items.map((s) => (
-        <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <p className="font-extrabold text-apre-blue text-base">
-                {[s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ")}
-              </p>
-              {s.rut && (
-                <p className="text-xs font-mono font-bold text-gray-700">
-                  RUT: {formatRut(s.rut)}
-                </p>
-              )}
-            </div>
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-bold text-white ${
-                s.tipoSolicitud === "profesor" ? "bg-apre-pink" : "bg-apre-blue"
+      {/* Pestañas de Filtro por Curso */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setFiltroCurso("todos")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroCurso === "todos" ? "bg-apre-blue text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>📋 Todas</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{items.length}</span>
+          </button>
+          <button
+            onClick={() => setFiltroCurso("guardia-de-seguridad")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroCurso === "guardia-de-seguridad" ? "bg-apre-red text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>🛡️ Guardia OS-10</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{os10Count}</span>
+          </button>
+          <button
+            onClick={() => setFiltroCurso("operador-cctv-y-alarmas")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroCurso === "operador-cctv-y-alarmas" ? "bg-blue-600 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>📹 Operador CCTV</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{cctvCount}</span>
+          </button>
+          <button
+            onClick={() => setFiltroCurso("supervisor-de-seguridad")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroCurso === "supervisor-de-seguridad" ? "bg-amber-600 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>⭐ Supervisor</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{supCount}</span>
+          </button>
+          <button
+            onClick={() => setFiltroCurso("baston-y-esposas")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroCurso === "baston-y-esposas" ? "bg-indigo-600 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>🥋 Bastón y Esposas</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{basCount}</span>
+          </button>
+          {profCount > 0 && (
+            <button
+              onClick={() => setFiltroCurso("profesor")}
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+                filtroCurso === "profesor" ? "bg-apre-pink text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {s.tipoSolicitud === "profesor" ? "👨‍🏫 Profesor" : "👨‍🎓 Alumno"}
-            </span>
-          </div>
-          <p className="text-sm text-gray-600 mt-1">
-            {s.email} · {s.telefono}
-          </p>
-          {s.cursoDeseado && (
-            <p className="mt-1 text-xs font-semibold text-emerald-700 bg-emerald-50 inline-block px-2.5 py-1 rounded-lg border border-emerald-200">
-              Curso solicitado: {cursoNombreDe(s.cursoDeseado)}
-            </p>
+              <span>👨‍🏫 Profesores</span>
+              <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{profCount}</span>
+            </button>
           )}
-          {s.mensaje && <p className="mt-2 text-xs text-gray-500 italic">{s.mensaje}</p>}
-          <div className="mt-4 flex gap-2">
+          {otrosCount > 0 && (
             <button
-              onClick={() => aprobar(s)}
-              className="rounded-xl bg-whatsapp px-5 py-2.5 text-xs font-black text-white hover:brightness-105 shadow-sm"
+              onClick={() => setFiltroCurso("otros")}
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+                filtroCurso === "otros" ? "bg-slate-700 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
             >
-              ✓ Aprobar y Matricular
+              <span>💼 Otros</span>
+              <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{otrosCount}</span>
             </button>
-            <button
-              onClick={() => rechazar(s)}
-              className="rounded-xl bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
-            >
-              ✕ Rechazar
-            </button>
+          )}
+        </div>
+
+        {/* Buscador */}
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar solicitante…"
+            className="w-full rounded-xl border border-gray-300 px-3 py-1.5 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+      </div>
+
+      {itemsFiltrados.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
+          <p className="text-gray-500 text-xs">No hay solicitudes pendientes con el filtro seleccionado.</p>
+        </div>
+      ) : (
+        itemsFiltrados.map((s) => {
+          const curso = s.cursoDeseado || "guardia-de-seguridad";
+          const cohortesDisponibles = cohortes.filter((c) => c.cursoSlug === curso);
+
+          return (
+            <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="font-extrabold text-apre-blue text-base">
+                    {[s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ")}
+                  </p>
+                  {s.rut && (
+                    <p className="text-xs font-mono font-bold text-gray-700">
+                      RUT: {formatRut(s.rut)}
+                    </p>
+                  )}
+                </div>
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-bold text-white ${
+                    s.tipoSolicitud === "profesor" ? "bg-apre-pink" : "bg-apre-blue"
+                  }`}
+                >
+                  {s.tipoSolicitud === "profesor" ? "👨‍🏫 Profesor" : "👨‍🎓 Alumno"}
+                </span>
+              </div>
+              <p className="text-sm text-gray-600 mt-1">
+                {s.email} · {s.telefono || "Sin teléfono"}
+              </p>
+              {s.cursoDeseado && (
+                <p className="mt-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 inline-block px-2.5 py-1 rounded-lg border border-emerald-200">
+                  Curso solicitado: <strong>{cursoNombreDe(s.cursoDeseado)}</strong>
+                </p>
+              )}
+              {s.mensaje && <p className="mt-2 text-xs text-gray-500 italic bg-gray-50 p-2.5 rounded-lg">{s.mensaje}</p>}
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {cohortesDisponibles.length > 0 ? (
+                  <button
+                    onClick={() => {
+                      setModalAprobar(s);
+                      setCohorteSel(cohortesDisponibles[0].id);
+                    }}
+                    className="rounded-xl bg-whatsapp px-5 py-2.5 text-xs font-black text-white hover:brightness-105 shadow-sm flex items-center gap-1.5"
+                  >
+                    <span>✓</span>
+                    <span>Aprobar y Asignar a Convocatoria ({cohortesDisponibles.length} disponibles)</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => aprobar(s)}
+                    className="rounded-xl bg-whatsapp px-5 py-2.5 text-xs font-black text-white hover:brightness-105 shadow-sm flex items-center gap-1.5"
+                  >
+                    <span>✓</span>
+                    <span>Aprobar y Matricular</span>
+                  </button>
+                )}
+                <button
+                  onClick={() => rechazar(s)}
+                  className="rounded-xl bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
+                >
+                  ✕ Rechazar
+                </button>
+              </div>
+            </div>
+          );
+        })
+      )}
+
+      {/* Modal de Selección de Cohorte al Aprobar */}
+      {modalAprobar && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-gray-200 space-y-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-base font-extrabold text-apre-blue">
+                  Asignar a Convocatoria / Grupo
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Alumno: <strong>{[modalAprobar.nombres, modalAprobar.apellidoPaterno].filter(Boolean).join(" ")}</strong>
+                </p>
+              </div>
+              <button
+                onClick={() => setModalAprobar(null)}
+                className="rounded-full bg-gray-100 p-1.5 text-gray-500 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">
+                Selecciona la Convocatoria por Fecha:
+              </label>
+              <select
+                value={cohorteSel}
+                onChange={(e) => setCohorteSel(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+              >
+                <option value="">Sin grupo específico (Matrícula directa)</option>
+                {cohortes
+                  .filter((c) => c.cursoSlug === (modalAprobar.cursoDeseado || "guardia-de-seguridad"))
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nombre} (Inicio: {c.fechaInicio || "—"})
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => aprobar(modalAprobar, cohorteSel)}
+                className="flex-1 rounded-xl bg-whatsapp py-2.5 text-xs font-black text-white hover:brightness-105 shadow-sm"
+              >
+                ✓ Confirmar y Matricular
+              </button>
+              <button
+                onClick={() => setModalAprobar(null)}
+                className="rounded-xl bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
-      ))}
+      )}
+    </div>
+  );
+}
+
+/* ---------- Grupos y Convocatorias por Fecha (Cohortes de Estudio) ---------- */
+function CohortesTab() {
+  const db = getFirestoreDb();
+  const [cohortes, setCohortes] = useState<any[]>([]);
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [modalCrear, setModalCrear] = useState(false);
+  const [modalAlumnos, setModalAlumnos] = useState<any | null>(null);
+  const [filtroCurso, setFiltroCurso] = useState<string>("todos");
+  const [busqueda, setBusqueda] = useState<string>("");
+  const [alumnoParaAgregar, setAlumnoParaAgregar] = useState<string>("");
+  const [guardando, setGuardando] = useState(false);
+
+  const [form, setForm] = useState({
+    nombre: "",
+    cursoSlug: "guardia-de-seguridad",
+    fechaInicio: new Date().toISOString().split("T")[0],
+    modalidad: "presencial",
+    descripcion: "",
+  });
+
+  useEffect(() => {
+    if (!db) return;
+    const un1 = onSnapshot(collection(db, "cohortes"), (snap) =>
+      setCohortes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    const un2 = onSnapshot(query(collection(db, "usuarios"), where("rol", "==", "alumno")), (snap) =>
+      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+    };
+  }, [db]);
+
+  const crearCohorte = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!db || !form.nombre.trim()) return;
+    setGuardando(true);
+    try {
+      const cohorteId = `cohorte_${Date.now()}`;
+      await setDoc(doc(db, "cohortes", cohorteId), {
+        id: cohorteId,
+        nombre: form.nombre.trim(),
+        cursoSlug: form.cursoSlug,
+        fechaInicio: form.fechaInicio,
+        modalidad: form.modalidad,
+        descripcion: form.descripcion.trim(),
+        materialHabilitado: false,
+        estado: "en_curso",
+        creadoEn: serverTimestamp(),
+      });
+      setForm({
+        nombre: "",
+        cursoSlug: "guardia-de-seguridad",
+        fechaInicio: new Date().toISOString().split("T")[0],
+        modalidad: "presencial",
+        descripcion: "",
+      });
+      setModalCrear(false);
+    } catch (err: any) {
+      console.error(err);
+      alert("Error al crear la convocatoria: " + err.message);
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  const toggleMaterialCohorte = async (cohorte: any) => {
+    if (!db) return;
+    const nuevoEstado = !cohorte.materialHabilitado;
+    const msg = nuevoEstado
+      ? `¿Habilitar el material de estudio y evaluaciones para todos los alumnos del grupo "${cohorte.nombre}"?\n(Los alumnos de otros grupos o nuevas convocatorias no se verán afectados y continuarán en fase presencial).`
+      : `¿Bloquear el material de estudio para el grupo "${cohorte.nombre}" (modo fase presencial)?`;
+
+    if (!confirm(msg)) return;
+
+    await updateDoc(doc(db, "cohortes", cohorte.id), {
+      materialHabilitado: nuevoEstado,
+    });
+
+    const alumnosGrupo = usuarios.filter((u) => u.cohorteId === cohorte.id);
+    for (const u of alumnosGrupo) {
+      await updateDoc(doc(db, "usuarios", u.id), {
+        habilitadoMaterialOS10: nuevoEstado,
+        materialOS10Habilitado: nuevoEstado,
+      });
+    }
+
+    if (modalAlumnos && modalAlumnos.id === cohorte.id) {
+      setModalAlumnos((prev: any) => (prev ? { ...prev, materialHabilitado: nuevoEstado } : null));
+    }
+  };
+
+  const asignarAlumnoACohorte = async (uid: string, cohorte: any) => {
+    if (!db || !uid) return;
+    const u = usuarios.find((x) => x.id === uid);
+    if (!u) return;
+
+    await updateDoc(doc(db, "usuarios", uid), {
+      cohorteId: cohorte.id,
+      cohorteNombre: cohorte.nombre,
+      ...(cohorte.cursoSlug === "guardia-de-seguridad"
+        ? {
+            habilitadoMaterialOS10: Boolean(cohorte.materialHabilitado),
+            materialOS10Habilitado: Boolean(cohorte.materialHabilitado),
+          }
+        : {}),
+    });
+
+    const enrollId = `${uid}_${cohorte.cursoSlug}`;
+    await setDoc(
+      doc(db, "enrollments", enrollId),
+      {
+        uid,
+        courseSlug: cohorte.cursoSlug,
+        cohorteId: cohorte.id,
+        cohorteNombre: cohorte.nombre,
+        modulosCompletados: [],
+        fecha: serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    setAlumnoParaAgregar("");
+  };
+
+  const desasignarAlumnoDeCohorte = async (uid: string, cohorte: any) => {
+    if (!db) return;
+    if (!confirm("¿Quitar al alumno de este grupo?")) return;
+    await updateDoc(doc(db, "usuarios", uid), {
+      cohorteId: null,
+      cohorteNombre: null,
+    });
+    const enrollId = `${uid}_${cohorte.cursoSlug}`;
+    await updateDoc(doc(db, "enrollments", enrollId), {
+      cohorteId: null,
+      cohorteNombre: null,
+    });
+  };
+
+  const eliminarCohorte = async (cohorte: any) => {
+    if (!db) return;
+    if (!confirm(`¿Eliminar la convocatoria "${cohorte.nombre}"? Los alumnos no se borrarán pero quedarán sin grupo.`))
+      return;
+    await deleteDoc(doc(db, "cohortes", cohorte.id));
+    if (modalAlumnos?.id === cohorte.id) setModalAlumnos(null);
+  };
+
+  const exportarAlumnosCohorte = (cohorte: any, alumnosLista: any[]) => {
+    const filas = [
+      ["N°", "Nombre Alumno", "RUT", "Email", "Teléfono", "Grupo / Convocatoria", "Curso", "Fecha Inicio", "Modalidad"],
+      ...alumnosLista.map((u, i) => [
+        String(i + 1),
+        u.nombre || "—",
+        u.rut ? formatRut(u.rut) : "—",
+        u.email || "—",
+        u.telefono || "—",
+        cohorte.nombre,
+        cursoNombreDe(cohorte.cursoSlug),
+        cohorte.fechaInicio || "—",
+        cohorte.modalidad === "online" ? "Online" : "Presencial",
+      ]),
+    ];
+
+    const csv =
+      "\uFEFF" +
+      filas.map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nomina-${cohorte.nombre.toLowerCase().replace(/[^a-z0-9]/g, "-")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const cohortesFiltradas = cohortes.filter((c) => {
+    if (filtroCurso !== "todos" && c.cursoSlug !== filtroCurso) return false;
+    if (busqueda.trim()) {
+      const q = busqueda.toLowerCase().trim();
+      const nom = (c.nombre || "").toLowerCase();
+      const desc = (c.descripcion || "").toLowerCase();
+      if (!nom.includes(q) && !desc.includes(q)) return false;
+    }
+    return true;
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Banner Principal */}
+      <div className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 p-6 text-white shadow-md">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-400/20 px-3 py-1 text-xs font-black uppercase tracking-wider text-cyan-300 border border-cyan-400/30">
+              <span>🗓️</span> Gestión de Convocatorias y Grupos por Fecha
+            </div>
+            <h2 className="text-xl font-extrabold text-white mt-2">
+              Grupos de Estudio y Convocatorias por Fecha
+            </h2>
+            <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+              Crea grupos específicos (ej. <em>Curso 2 de Septiembre</em>, <em>Curso 15 de Septiembre</em>) y asigna a los alumnos.
+              Cuando concluya la fase presencial de un grupo, habilita el material digital <strong>exclusivamente para los alumnos de esa fecha</strong> sin afectar a los nuevos matriculados.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setModalCrear(true)}
+            className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-3 text-xs shadow-md transition flex items-center gap-2"
+          >
+            <span>+</span>
+            <span>Crear Nueva Convocatoria / Grupo</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Barra de Filtros */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setFiltroCurso("todos")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+              filtroCurso === "todos" ? "bg-apre-blue text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Todos ({cohortes.length})
+          </button>
+          {CURSOS_PLATAFORMA.map((c) => {
+            const count = cohortes.filter((x) => x.cursoSlug === c.slug).length;
+            return (
+              <button
+                key={c.slug}
+                onClick={() => setFiltroCurso(c.slug)}
+                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1 ${
+                  filtroCurso === c.slug ? "bg-apre-blue text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span>{c.title}</span>
+                <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar grupo por nombre…"
+            className="w-full rounded-xl border border-gray-300 px-3 py-1.5 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+      </div>
+
+      {/* Grid de Grupos / Cohortes */}
+      {cohortesFiltradas.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center">
+          <div className="text-3xl mb-2">🗓️</div>
+          <h3 className="text-sm font-bold text-apre-blue">No hay grupos o convocatorias registradas</h3>
+          <p className="text-xs text-gray-500 max-w-md mx-auto mt-1">
+            Haz clic en "Crear Nueva Convocatoria / Grupo" para registrar el grupo de fecha (ej. Curso 2 de Septiembre o 15 de Septiembre).
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cohortesFiltradas.map((c) => {
+            const alumnosEnGrupo = usuarios.filter((u) => u.cohorteId === c.id);
+            const isOS10 = c.cursoSlug === "guardia-de-seguridad";
+
+            return (
+              <div
+                key={c.id}
+                className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:border-gray-300 transition"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-bold text-blue-700 border border-blue-200">
+                      {cursoNombreDe(c.cursoSlug)}
+                    </span>
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                        c.modalidad === "online"
+                          ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                          : "bg-gray-100 text-gray-700 border border-gray-200"
+                      }`}
+                    >
+                      {c.modalidad === "online" ? "🟢 Online" : "🏫 Presencial"}
+                    </span>
+                  </div>
+
+                  <h3 className="text-base font-black text-apre-blue mt-2.5">{c.nombre}</h3>
+
+                  <div className="mt-2 space-y-1 text-xs text-gray-600">
+                    <p className="flex items-center gap-1.5">
+                      <span>📅</span>
+                      <span>Fecha Inicio: <strong>{c.fechaInicio || "Por definir"}</strong></span>
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <span>👥</span>
+                      <span>Alumnos en este grupo: <strong className="text-apre-blue">{alumnosEnGrupo.length}</strong></span>
+                    </p>
+                    {c.descripcion && <p className="text-[11px] text-gray-500 italic mt-1">{c.descripcion}</p>}
+                  </div>
+
+                  {/* Estado de Material OS-10 para esta cohorte */}
+                  {isOS10 && (
+                    <div className="mt-3 rounded-xl p-3 border text-xs bg-slate-50 border-slate-200">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-gray-700 text-[11px]">Material de Estudio:</span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            c.materialHabilitado
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : "bg-amber-100 text-amber-800 border border-amber-300"
+                          }`}
+                        >
+                          {c.materialHabilitado ? "🟢 HABILITADO" : "🔒 BLOQUEADO"}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-gray-500 mt-1">
+                        {c.materialHabilitado
+                          ? "Los alumnos de esta fecha ya pueden ver manuales y rendir exámenes."
+                          : "Fase presencial activa. Material digital en espera para este grupo."}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+                  {/* Botón Switch de Material OS-10 para este grupo */}
+                  {isOS10 && (
+                    <button
+                      onClick={() => toggleMaterialCohorte(c)}
+                      className={`w-full rounded-xl py-2 px-3 text-xs font-black transition shadow-2xs flex items-center justify-center gap-1.5 ${
+                        c.materialHabilitado
+                          ? "bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300"
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                      }`}
+                    >
+                      <span>{c.materialHabilitado ? "🔒" : "📚"}</span>
+                      <span>
+                        {c.materialHabilitado
+                          ? "Bloquear Material (Fase Presencial)"
+                          : "Habilitar Material para este Grupo"}
+                      </span>
+                    </button>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setModalAlumnos(c)}
+                      className="flex-1 rounded-xl bg-gray-100 hover:bg-gray-200 py-2 text-xs font-bold text-gray-800 transition flex items-center justify-center gap-1.5"
+                    >
+                      <span>👥</span>
+                      <span>Gestionar Alumnos ({alumnosEnGrupo.length})</span>
+                    </button>
+                    <button
+                      onClick={() => eliminarCohorte(c)}
+                      className="rounded-xl bg-red-50 hover:bg-red-100 p-2 text-xs font-bold text-apre-red transition"
+                      title="Eliminar grupo"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Modal Crear Convocatoria / Grupo */}
+      {modalCrear && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl border border-gray-200 space-y-4">
+            <div className="flex items-start justify-between border-b border-gray-100 pb-3">
+              <div>
+                <h3 className="text-lg font-extrabold text-apre-blue">Crear Convocatoria / Grupo por Fecha</h3>
+                <p className="text-xs text-gray-500">
+                  Organiza a los alumnos según la fecha de inicio del curso (ej. 2 de Septiembre o 15 de Septiembre).
+                </p>
+              </div>
+              <button
+                onClick={() => setModalCrear(false)}
+                className="rounded-full bg-gray-100 p-1.5 text-gray-500 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={crearCohorte} className="space-y-3">
+              <div>
+                <label className="text-xs font-bold text-gray-700 block mb-1">
+                  Nombre del Grupo / Convocatoria: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={form.nombre}
+                  onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                  placeholder="ej. Curso Guardia OS-10 - 2 de Septiembre 2026"
+                  className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">Curso: *</label>
+                  <select
+                    value={form.cursoSlug}
+                    onChange={(e) => setForm({ ...form, cursoSlug: e.target.value })}
+                    className="w-full rounded-xl border border-gray-300 px-3 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+                  >
+                    {CURSOS_PLATAFORMA.map((c) => (
+                      <option key={c.slug} value={c.slug}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">Fecha de Inicio: *</label>
+                  <input
+                    type="date"
+                    required
+                    value={form.fechaInicio}
+                    onChange={(e) => setForm({ ...form, fechaInicio: e.target.value })}
+                    className="w-full rounded-xl border border-gray-300 px-3 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-gray-700 block mb-1">Modalidad:</label>
+                <select
+                  value={form.modalidad}
+                  onChange={(e) => setForm({ ...form, modalidad: e.target.value })}
+                  className="w-full rounded-xl border border-gray-300 px-3 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+                >
+                  <option value="presencial">🏫 Presencial en Sede</option>
+                  <option value="online">🟢 Online (Zoom Virtual)</option>
+                  <option value="mixta">🔄 Mixta (Híbrida)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-gray-700 block mb-1">Observaciones / Sede (opcional):</label>
+                <input
+                  type="text"
+                  value={form.descripcion}
+                  onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+                  placeholder="ej. Sede Santiago Centro, Horario Matutino"
+                  className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-3">
+                <button
+                  type="submit"
+                  disabled={guardando || !form.nombre.trim()}
+                  className="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 py-2.5 text-xs font-black text-white shadow-sm transition disabled:opacity-50"
+                >
+                  {guardando ? "Creando..." : "✓ Guardar y Crear Convocatoria"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalCrear(false)}
+                  className="rounded-xl bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal / Drawer de Gestión de Alumnos por Cohorte */}
+      {modalAlumnos && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl border border-gray-200 max-h-[90vh] overflow-y-auto space-y-4">
+            <div className="flex items-start justify-between border-b border-gray-100 pb-3">
+              <div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-blue-700 border border-blue-200">
+                  <span>🗓️</span> {cursoNombreDe(modalAlumnos.cursoSlug)}
+                </div>
+                <h3 className="text-lg font-black text-apre-blue mt-1">{modalAlumnos.nombre}</h3>
+                <p className="text-xs text-gray-500">
+                  Inicio: {modalAlumnos.fechaInicio || "—"} · Modalidad: {modalAlumnos.modalidad === "online" ? "Online" : "Presencial"}
+                </p>
+              </div>
+              <button
+                onClick={() => setModalAlumnos(null)}
+                className="rounded-full bg-gray-100 p-1.5 text-gray-500 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Acciones de la cohorte */}
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+              {modalAlumnos.cursoSlug === "guardia-de-seguridad" && (
+                <button
+                  onClick={() => toggleMaterialCohorte(modalAlumnos)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-black transition shadow-2xs flex items-center gap-1.5 ${
+                    modalAlumnos.materialHabilitado
+                      ? "bg-amber-600 hover:bg-amber-700 text-white"
+                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                  }`}
+                >
+                  <span>{modalAlumnos.materialHabilitado ? "🔒" : "📚"}</span>
+                  <span>
+                    {modalAlumnos.materialHabilitado
+                      ? "Bloquear Material (Fase Presencial)"
+                      : "Habilitar Material para este Grupo"}
+                  </span>
+                </button>
+              )}
+
+              <button
+                onClick={() =>
+                  exportarAlumnosCohorte(
+                    modalAlumnos,
+                    usuarios.filter((u) => u.cohorteId === modalAlumnos.id)
+                  )
+                }
+                disabled={usuarios.filter((u) => u.cohorteId === modalAlumnos.id).length === 0}
+                className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-bold transition flex items-center gap-1 disabled:opacity-50"
+              >
+                <span>⬇</span>
+                <span>Descargar Nómina (Excel)</span>
+              </button>
+            </div>
+
+            {/* Asignar Alumno Existente a este grupo */}
+            <div className="rounded-xl border border-gray-200 p-3 bg-white space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">
+                + Agregar Alumno a este Grupo:
+              </label>
+              <div className="flex gap-2">
+                <select
+                  value={alumnoParaAgregar}
+                  onChange={(e) => setAlumnoParaAgregar(e.target.value)}
+                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+                >
+                  <option value="">Selecciona un alumno registrado…</option>
+                  {usuarios
+                    .filter((u) => u.cohorteId !== modalAlumnos.id)
+                    .map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.nombre} ({u.email}) {u.rut ? `· RUT: ${formatRut(u.rut)}` : ""} {u.cohorteNombre ? `[Actualmente en: ${u.cohorteNombre}]` : "[Sin grupo]"}
+                      </option>
+                    ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => asignarAlumnoACohorte(alumnoParaAgregar, modalAlumnos)}
+                  disabled={!alumnoParaAgregar}
+                  className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark px-4 py-2 text-xs font-bold text-white transition disabled:opacity-50"
+                >
+                  Asignar
+                </button>
+              </div>
+            </div>
+
+            {/* Lista de Alumnos del Grupo */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black uppercase text-gray-500 tracking-wider">
+                Alumnos Inscritos en este Grupo ({usuarios.filter((u) => u.cohorteId === modalAlumnos.id).length})
+              </h4>
+
+              {usuarios.filter((u) => u.cohorteId === modalAlumnos.id).length === 0 ? (
+                <p className="text-xs text-gray-400 italic py-4 text-center">
+                  Aún no hay alumnos asignados a esta convocatoria. Puedes agregar alumnos arriba o seleccionarla al aprobar solicitudes.
+                </p>
+              ) : (
+                <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+                  {usuarios
+                    .filter((u) => u.cohorteId === modalAlumnos.id)
+                    .map((u) => (
+                      <div key={u.id} className="p-3 bg-white flex items-center justify-between gap-3 hover:bg-slate-50">
+                        <div>
+                          <p className="text-xs font-extrabold text-apre-blue">{u.nombre}</p>
+                          <p className="text-[11px] text-gray-500">
+                            {u.email} · RUT: <strong>{u.rut ? formatRut(u.rut) : "Sin RUT"}</strong>
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => desasignarAlumnoDeCohorte(u.id, modalAlumnos)}
+                          className="rounded-lg bg-red-50 hover:bg-red-100 px-2.5 py-1 text-[11px] font-bold text-apre-red transition"
+                        >
+                          Quitar del Grupo
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2219,6 +3075,7 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
   const db = getFirestoreDb();
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [enrolls, setEnrolls] = useState<any[]>([]);
+  const [cohortes, setCohortes] = useState<any[]>([]);
   const [selUid, setSelUid] = useState<string | null>(null);
   const [selCurso, setSelCurso] = useState("");
   const [editandoRutUid, setEditandoRutUid] = useState<string | null>(null);
@@ -2239,10 +3096,14 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
         setOs10GlobalHabilitado(snap.data().habilitado === true);
       }
     });
+    const un4 = onSnapshot(collection(db, "cohortes"), (snap) =>
+      setCohortes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
     return () => {
       un1();
       un2();
       un3();
+      un4();
     };
   }, [db]);
 
@@ -2501,6 +3362,43 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
                     >
                       {u.habilitadoMaterialOS10 ? "🔒 Bloquear Material OS-10" : "📚 Habilitar Material OS-10"}
                     </button>
+                  </div>
+                )}
+
+                {/* Asignación de Grupo / Convocatoria para Alumnos */}
+                {u.rol === "alumno" && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold bg-indigo-50 text-indigo-900 border border-indigo-200">
+                      <span>🗓️</span>
+                      <span>Grupo: <strong>{u.cohorteNombre || "Sin convocatoria asignada"}</strong></span>
+                    </span>
+                    {cohortes.length > 0 && (
+                      <select
+                        value={u.cohorteId || ""}
+                        onChange={async (e) => {
+                          const val = e.target.value;
+                          const cObj = cohortes.find((x) => x.id === val);
+                          await updateDoc(doc(db!, "usuarios", u.id), {
+                            cohorteId: val || null,
+                            cohorteNombre: cObj ? cObj.nombre : null,
+                            ...(cObj?.cursoSlug === "guardia-de-seguridad"
+                              ? {
+                                  habilitadoMaterialOS10: Boolean(cObj.materialHabilitado),
+                                  materialOS10Habilitado: Boolean(cObj.materialHabilitado),
+                                }
+                              : {}),
+                          });
+                        }}
+                        className="rounded-lg border border-gray-200 bg-white px-2 py-0.5 text-[11px] text-gray-700 font-medium focus:border-apre-blue focus:outline-hidden"
+                      >
+                        <option value="">Cambiar grupo / convocatoria…</option>
+                        {cohortes.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.nombre} ({c.fechaInicio || "—"})
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                 )}
               </div>
