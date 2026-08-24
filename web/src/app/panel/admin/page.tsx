@@ -26,10 +26,18 @@ import DiplomaCertificado, { CURSOS_CERTIFICADO } from "@/components/DiplomaCert
 import { CURSOS_LISTA, getCourseFieldKey } from "@/lib/courseAccess";
 import { formatRut } from "@/lib/rut";
 import { extractYouTubeVideoId, getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
+import {
+  COURSE_TIMING_CONFIG,
+  getAlumnoSeguimientoTiming,
+  getDiaActualCurso,
+  normalizarFechaMatricula,
+} from "@/lib/courseTiming";
 
 type Tab =
   | "pendientes"
   | "historial"
+  | "seguimiento"
+  | "aprobados"
   | "cursos-explorar"
   | "cursos-gestion"
   | "alumnos"
@@ -55,9 +63,11 @@ const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: str
   {
     section: "Cursos y Alumnos",
     items: [
-      { id: "cursos-explorar", label: "Ver Cursos Desbloqueados", emoji: "👁️" },
+      { id: "seguimiento", label: "Seguimiento y Días", emoji: "⏱️" },
+      { id: "aprobados", label: "Alumnos Aprobados", emoji: "🎓" },
       { id: "cursos-gestion", label: "Gestión y Matrículas", emoji: "📚" },
-      { id: "diplomas", label: "Diplomas de Aprobados", emoji: "🎓" },
+      { id: "diplomas", label: "Diplomas y Certificados", emoji: "📜" },
+      { id: "cursos-explorar", label: "Ver Cursos Desbloqueados", emoji: "👁️" },
     ],
   },
   {
@@ -276,6 +286,8 @@ export default function PanelAdmin() {
 
             {tab === "pendientes" && <PendientesTab />}
             {tab === "historial" && <HistorialTab />}
+            {tab === "seguimiento" && <SeguimientoTab onEmitirDiploma={irADiplomaAprobado} />}
+            {tab === "aprobados" && <AprobadosTab onEmitirDiploma={irADiplomaAprobado} />}
             {tab === "cursos-explorar" && <CursosExplorarTab onIrAGestion={() => setTab("cursos-gestion")} />}
             {tab === "cursos-gestion" && <CursosGestionTab onEmitirDiploma={irADiplomaAprobado} />}
             {tab === "alumnos" && <UsuariosTab filtroRol="alumno" />}
@@ -780,9 +792,17 @@ function CursosGestionTab({
   // Solicitudes de acceso pendientes para este curso
   const pendientesEsteCurso = usuarios.filter((u) => u.rol === "alumno" && u[fieldKey] === "pendiente");
 
-  // Alumnos que han aprobado el examen final de este curso
+  // Alumnos que han aprobado el examen final de este curso (Examen Oficial de Egreso)
   const aprobadosEsteCurso = evaluaciones.filter((ev) => {
     if (!ev.aprobado) return false;
+    const esFinal = Boolean(
+      ev.esExamenFinal === true ||
+      ev.tipo === "examen_final" ||
+      (ev.moduloNombre || "").toLowerCase().includes("examen final") ||
+      (ev.moduloNombre || "").toLowerCase().includes("evaluación final") ||
+      (ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+    );
+    if (!esFinal) return false;
     if (ev.courseSlug === cursoActivoSlug) return true;
     const mod = (ev.moduloNombre || "").toLowerCase();
     if (cursoActivoSlug === "guardia-de-seguridad" && (mod.includes("os-10") || mod.includes("guardia"))) return true;
@@ -1128,8 +1148,926 @@ function CursosGestionTab({
   );
 }
 
+/* ---------- Seguimiento y Días de Alumnos (Panel de Control Académico) ---------- */
+function SeguimientoTab({
+  onEmitirDiploma,
+}: {
+  onEmitirDiploma?: (datos: { uid: string; nombre: string; rut: string; cursoSlug: string }) => void;
+}) {
+  const db = getFirestoreDb();
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [enrolls, setEnrolls] = useState<any[]>([]);
+  const [evaluaciones, setEvaluaciones] = useState<any[]>([]);
+  const [cursoFiltro, setCursoFiltro] = useState<string>("todos");
+  const [busqueda, setBusqueda] = useState<string>("");
+  const [modalAlumno, setModalAlumno] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (!db) return;
+    const un1 = onSnapshot(query(collection(db, "usuarios"), where("rol", "==", "alumno")), (snap) =>
+      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    const un2 = onSnapshot(collection(db, "enrollments"), (snap) =>
+      setEnrolls(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    const un3 = onSnapshot(collection(db, "resultados_evaluaciones"), (snap) =>
+      setEvaluaciones(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+      un3();
+    };
+  }, [db]);
+
+  const listaAlumnos = enrolls.map((e) => {
+    const u = usuarios.find((x) => x.id === e.uid || x.uid === e.uid);
+    const cursoInfo = CURSOS_LISTA.find((c) => c.slug === e.courseSlug) || {
+      slug: e.courseSlug,
+      nombre: cursoNombreDe(e.courseSlug),
+      shortName: cursoNombreDe(e.courseSlug),
+      icono: "📚",
+      horas: 90,
+      fieldKey: "accesoOS10",
+    };
+
+    const rawFecha = e.fecha || u?.fechaRegistro;
+    const timing = getAlumnoSeguimientoTiming(e.courseSlug, rawFecha);
+
+    const evalsAlumno = evaluaciones.filter(
+      (ev) =>
+        (ev.userId === e.uid || ev.userId === u?.id || (u?.email && ev.userEmail === u.email)) &&
+        (ev.courseSlug === e.courseSlug ||
+          (e.courseSlug === "guardia-de-seguridad" && (ev.moduloNombre || "").toLowerCase().includes("os-10")) ||
+          (e.courseSlug === "operador-cctv-y-alarmas" && (ev.moduloNombre || "").toLowerCase().includes("cctv")) ||
+          (e.courseSlug === "supervisor-de-seguridad" && (ev.moduloNombre || "").toLowerCase().includes("supervisor")) ||
+          (e.courseSlug === "baston-y-esposas" && (ev.moduloNombre || "").toLowerCase().includes("bastón")))
+    );
+
+    const quizzes = evalsAlumno.filter(
+      (ev) =>
+        !ev.esExamenFinal &&
+        ev.tipo !== "examen_final" &&
+        !(ev.moduloNombre || "").toLowerCase().includes("examen final") &&
+        !(ev.moduloNombre || "").toLowerCase().includes("evaluación final") &&
+        !(ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+    );
+
+    const examenesFinales = evalsAlumno.filter(
+      (ev) =>
+        ev.esExamenFinal === true ||
+        ev.tipo === "examen_final" ||
+        (ev.moduloNombre || "").toLowerCase().includes("examen final") ||
+        (ev.moduloNombre || "").toLowerCase().includes("evaluación final") ||
+        (ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+    );
+
+    const mejorExamenFinal = examenesFinales.sort((a, b) => (b.porcentaje ?? 0) - (a.porcentaje ?? 0))[0] || null;
+
+    const promedioQuizzes =
+      quizzes.length > 0
+        ? Math.round(quizzes.reduce((acc, curr) => acc + (curr.porcentaje ?? 0), 0) / quizzes.length)
+        : null;
+
+    return {
+      enrollId: e.id,
+      uid: e.uid,
+      nombre: u?.nombre || "Estudiante",
+      email: u?.email || "—",
+      rut: u?.rut || "",
+      telefono: u?.telefono || "—",
+      courseSlug: e.courseSlug,
+      cursoInfo,
+      fechaMatricula: rawFecha,
+      timing,
+      quizzes,
+      promedioQuizzes,
+      examenFinal: mejorExamenFinal,
+    };
+  });
+
+  const filtrados = listaAlumnos.filter((item) => {
+    if (cursoFiltro !== "todos" && item.courseSlug !== cursoFiltro) return false;
+    if (busqueda.trim()) {
+      const q = busqueda.toLowerCase().trim();
+      const matchNom = item.nombre.toLowerCase().includes(q);
+      const matchEmail = item.email.toLowerCase().includes(q);
+      const matchRut = item.rut.toLowerCase().includes(q);
+      if (!matchNom && !matchEmail && !matchRut) return false;
+    }
+    return true;
+  });
+
+  const totalMatriculados = listaAlumnos.length;
+  const enFormacion = listaAlumnos.filter((x) => x.timing.esCursoConTiempo && !x.timing.examenDisponible).length;
+  const examenHabilitado = listaAlumnos.filter((x) => x.timing.examenDisponible && !x.examenFinal?.aprobado).length;
+  const graduados = listaAlumnos.filter((x) => x.examenFinal?.aprobado).length;
+
+  const exportarExcelSeguimiento = () => {
+    const filas = [
+      [
+        "Fecha Matrícula",
+        "Alumno",
+        "RUT",
+        "Email",
+        "Teléfono",
+        "Asignatura / Curso",
+        "Jornada Actual",
+        "Días Totales",
+        "Días Restantes Examen",
+        "Estado Examen Final",
+        "Nota Examen Final (%)",
+        "Quizzes Rendidos",
+        "Promedio Quizzes (%)",
+      ],
+      ...filtrados.map((item) => [
+        item.fechaMatricula?.toDate
+          ? item.fechaMatricula.toDate().toLocaleDateString("es-CL")
+          : typeof item.fechaMatricula === "string"
+          ? new Date(item.fechaMatricula).toLocaleDateString("es-CL")
+          : "—",
+        item.nombre,
+        item.rut ? formatRut(item.rut) : "Sin RUT",
+        item.email,
+        item.telefono,
+        item.cursoInfo.nombre || item.courseSlug,
+        `Día ${item.timing.diaActual}`,
+        String(item.timing.totalDiasCurso),
+        item.timing.esCursoConTiempo
+          ? item.timing.examenDisponible
+            ? "0 (Examen Habilitado)"
+            : `${item.timing.diasRestantes} días`
+          : "0 (Acceso Inmediato)",
+        item.examenFinal
+          ? item.examenFinal.aprobado
+            ? "Aprobado Oficial"
+            : "Reprobado"
+          : item.timing.examenDisponible
+          ? "Habilitado (Sin rendir)"
+          : "Bloqueado por tiempo",
+        item.examenFinal ? `${item.examenFinal.porcentaje}%` : "—",
+        String(item.quizzes.length),
+        item.promedioQuizzes !== null ? `${item.promedioQuizzes}%` : "—",
+      ]),
+    ];
+
+    const csv =
+      "\uFEFF" +
+      filas
+        .map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";"))
+        .join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `seguimiento-alumnos-aprecap-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Banner Principal */}
+      <div className="rounded-2xl border border-cyan-200 bg-linear-to-r from-cyan-50 via-blue-50/70 to-indigo-50/50 p-6 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-600/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-cyan-800 border border-cyan-300">
+              <span>⏱️</span> Panel de Control y Seguimiento Académico
+            </div>
+            <h2 className="text-xl font-extrabold text-apre-blue mt-2">
+              Seguimiento de Alumnos y Temporizadores por Días
+            </h2>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+              Monitorea en tiempo real en qué jornada se encuentra cada estudiante, cuántos días y horas le faltan para desbloquear el examen final, y revisa el detalle de calificaciones en cada mini-quiz de módulo.
+            </p>
+          </div>
+          <button
+            onClick={exportarExcelSeguimiento}
+            disabled={filtrados.length === 0}
+            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 text-xs font-bold shadow-sm transition flex items-center gap-2 disabled:opacity-50"
+          >
+            <span>⬇</span>
+            <span>Descargar Planilla de Seguimiento (Excel)</span>
+          </button>
+        </div>
+
+        {/* Tarjetas de Métricas Resumen */}
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-cyan-100">
+          <div className="rounded-xl bg-white/90 p-3 text-xs border border-cyan-200 shadow-2xs">
+            <span className="text-slate-500 font-bold block text-[10px] uppercase">Matrículas Totales</span>
+            <span className="text-xl font-black text-apre-blue">{totalMatriculados}</span>
+          </div>
+          <div className="rounded-xl bg-white/90 p-3 text-xs border border-amber-200 shadow-2xs">
+            <span className="text-amber-700 font-bold block text-[10px] uppercase">En Formación (Días Activos)</span>
+            <span className="text-xl font-black text-amber-700">{enFormacion}</span>
+          </div>
+          <div className="rounded-xl bg-white/90 p-3 text-xs border border-blue-200 shadow-2xs">
+            <span className="text-blue-700 font-bold block text-[10px] uppercase">Examen Habilitado</span>
+            <span className="text-xl font-black text-blue-700">{examenHabilitado}</span>
+          </div>
+          <div className="rounded-xl bg-white/90 p-3 text-xs border border-emerald-200 shadow-2xs">
+            <span className="text-emerald-700 font-bold block text-[10px] uppercase">Graduados (Examen Aprobado)</span>
+            <span className="text-xl font-black text-emerald-700">{graduados}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Barra de Filtros y Búsqueda */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        {/* Selector de Cursos */}
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setCursoFiltro("todos")}
+            className={`rounded-xl px-3.5 py-2 text-xs font-bold transition ${
+              cursoFiltro === "todos"
+                ? "bg-apre-blue text-white shadow-xs"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Todos los Cursos ({listaAlumnos.length})
+          </button>
+          {CURSOS_LISTA.map((c) => {
+            const count = listaAlumnos.filter((x) => x.courseSlug === c.slug).length;
+            const active = cursoFiltro === c.slug;
+            return (
+              <button
+                key={c.slug}
+                onClick={() => setCursoFiltro(c.slug)}
+                className={`rounded-xl px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
+                  active
+                    ? "bg-apre-blue text-white shadow-xs"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span>{c.icono}</span>
+                <span>{c.shortName}</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                    active ? "bg-white/20 text-white" : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Buscador */}
+        <div className="w-full sm:w-72">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar por nombre, RUT o email…"
+            className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+      </div>
+
+      {/* Tabla Principal de Seguimiento */}
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-xs">
+        <table className="w-full text-left text-xs">
+          <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider border-b border-gray-200">
+            <tr>
+              <th className="p-3.5">Alumno</th>
+              <th className="p-3.5">Curso Matriculado</th>
+              <th className="p-3.5">Jornada y Temporizador</th>
+              <th className="p-3.5">Mini-Quizzes de Módulos</th>
+              <th className="p-3.5">Examen Final Oficial</th>
+              <th className="p-3.5 text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {filtrados.map((item) => {
+              const { timing, examenFinal, quizzes, promedioQuizzes } = item;
+              const hasPassedFinal = examenFinal?.aprobado === true;
+
+              return (
+                <tr key={`${item.uid}_${item.courseSlug}`} className="hover:bg-slate-50/80 transition">
+                  {/* Alumno */}
+                  <td className="p-3.5">
+                    <p className="font-extrabold text-apre-blue text-sm">{item.nombre}</p>
+                    <p className="text-gray-500 text-[11px]">{item.email}</p>
+                    <p className="text-gray-700 font-mono text-[11px] mt-0.5">
+                      RUT: <strong>{item.rut ? formatRut(item.rut) : "Sin RUT"}</strong>
+                    </p>
+                  </td>
+
+                  {/* Curso */}
+                  <td className="p-3.5">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-800 border border-slate-200">
+                      <span>{item.cursoInfo.icono}</span>
+                      <span>{item.cursoInfo.shortName}</span>
+                    </span>
+                    <p className="text-[10px] text-gray-400 mt-1">
+                      Inicio:{" "}
+                      {item.fechaMatricula?.toDate
+                        ? item.fechaMatricula.toDate().toLocaleDateString("es-CL")
+                        : typeof item.fechaMatricula === "string"
+                        ? new Date(item.fechaMatricula).toLocaleDateString("es-CL")
+                        : "—"}
+                    </p>
+                  </td>
+
+                  {/* Jornada y Temporizador */}
+                  <td className="p-3.5">
+                    {timing.esCursoConTiempo ? (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-800 text-xs">
+                            Día {timing.diaActual} de {timing.totalDiasCurso}
+                          </span>
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase ${
+                              timing.examenDisponible
+                                ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                : "bg-amber-100 text-amber-800 border border-amber-300"
+                            }`}
+                          >
+                            {timing.examenDisponible ? "✅ Examen Habilitado" : `⏳ Faltan ${timing.diasRestantes}d`}
+                          </span>
+                        </div>
+                        {/* Barra visual de progreso por días */}
+                        <div className="h-1.5 w-36 rounded-full bg-gray-200 overflow-hidden">
+                          <div
+                            className={`h-full transition-all ${timing.examenDisponible ? "bg-emerald-500" : "bg-cyan-500"}`}
+                            style={{
+                              width: `${Math.min(100, (timing.diaActual / timing.totalDiasCurso) * 100)}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="inline-block rounded-lg bg-blue-50 border border-blue-200 px-2.5 py-1 text-[11px] font-bold text-blue-700">
+                        ⚡ Acceso Inmediato
+                      </span>
+                    )}
+                  </td>
+
+                  {/* Mini-Quizzes */}
+                  <td className="p-3.5">
+                    {quizzes.length > 0 ? (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-md bg-purple-50 text-purple-800 border border-purple-200 px-2 py-0.5 text-[11px] font-bold">
+                            {quizzes.length} {quizzes.length === 1 ? "quiz" : "quizzes"}
+                          </span>
+                          {promedioQuizzes !== null && (
+                            <span className="font-black text-slate-700 text-xs">
+                              Promedio: {promedioQuizzes}%
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => setModalAlumno(item)}
+                          className="text-[11px] font-bold text-apre-blue hover:underline flex items-center gap-1"
+                        >
+                          <span>👁️ Ver notas de quizzes</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 italic text-[11px]">Sin quizzes rendidos</span>
+                    )}
+                  </td>
+
+                  {/* Examen Final */}
+                  <td className="p-3.5">
+                    {examenFinal ? (
+                      <div className="space-y-1">
+                        <span
+                          className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-black ${
+                            examenFinal.aprobado
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : "bg-red-100 text-red-800 border border-red-300"
+                          }`}
+                        >
+                          {examenFinal.aprobado
+                            ? `✅ APROBADO (${examenFinal.porcentaje}%)`
+                            : `❌ REPROBADO (${examenFinal.porcentaje}%)`}
+                        </span>
+                        <p className="text-[10px] text-gray-400">
+                          {examenFinal.fecha?.toDate
+                            ? examenFinal.fecha.toDate().toLocaleDateString("es-CL")
+                            : typeof examenFinal.fecha === "string"
+                            ? new Date(examenFinal.fecha).toLocaleDateString("es-CL")
+                            : "Reciente"}
+                        </p>
+                      </div>
+                    ) : timing.examenDisponible ? (
+                      <span className="rounded-md bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 text-[11px] font-bold">
+                        📝 Habilitado (Sin rendir)
+                      </span>
+                    ) : (
+                      <span className="rounded-md bg-gray-100 text-gray-500 px-2 py-0.5 text-[11px] font-medium">
+                        🔒 Bloqueado por días
+                      </span>
+                    )}
+                  </td>
+
+                  {/* Acciones */}
+                  <td className="p-3.5 text-right">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => setModalAlumno(item)}
+                        className="rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1.5 text-xs font-bold transition"
+                        title="Ver expediente del estudiante"
+                      >
+                        📋 Expediente
+                      </button>
+                      {hasPassedFinal && onEmitirDiploma && (
+                        <button
+                          onClick={() =>
+                            onEmitirDiploma({
+                              uid: item.uid,
+                              nombre: item.nombre,
+                              rut: item.rut,
+                              cursoSlug: item.courseSlug,
+                            })
+                          }
+                          className="rounded-lg bg-apre-red hover:bg-apre-red-dark text-white px-2.5 py-1.5 text-xs font-bold transition shadow-xs flex items-center gap-1"
+                        >
+                          <span>📜</span>
+                          <span>Diploma</span>
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+            {filtrados.length === 0 && (
+              <tr>
+                <td colSpan={6} className="p-8 text-center text-gray-500">
+                  No se encontraron alumnos con los filtros seleccionados.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Modal de Desglose de Notas y Expediente del Alumno */}
+      {modalAlumno && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl border border-gray-200 max-h-[90vh] overflow-y-auto space-y-5">
+            {/* Header Modal */}
+            <div className="flex items-start justify-between border-b border-gray-100 pb-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-cyan-50 px-2.5 py-0.5 text-xs font-bold text-cyan-800 border border-cyan-200">
+                  <span>{modalAlumno.cursoInfo.icono}</span>
+                  <span>{modalAlumno.cursoInfo.nombre}</span>
+                </div>
+                <h3 className="text-xl font-extrabold text-apre-blue mt-1.5">{modalAlumno.nombre}</h3>
+                <p className="text-xs text-gray-500">
+                  {modalAlumno.email} · RUT: {modalAlumno.rut ? formatRut(modalAlumno.rut) : "Sin RUT"} · Tel: {modalAlumno.telefono}
+                </p>
+              </div>
+              <button
+                onClick={() => setModalAlumno(null)}
+                className="rounded-full bg-gray-100 hover:bg-gray-200 p-2 text-gray-500 font-bold transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Resumen de Temporizador */}
+            <div className="rounded-xl bg-slate-50 p-4 border border-slate-200 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <span className="text-gray-500 block font-semibold text-[10px] uppercase">Jornada Actual</span>
+                <span className="font-black text-slate-800 text-sm">
+                  Día {modalAlumno.timing.diaActual} de {modalAlumno.timing.totalDiasCurso}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block font-semibold text-[10px] uppercase">Examen Final</span>
+                <span
+                  className={`font-black text-xs ${
+                    modalAlumno.examenFinal?.aprobado
+                      ? "text-emerald-700"
+                      : modalAlumno.timing.examenDisponible
+                      ? "text-blue-700"
+                      : "text-amber-700"
+                  }`}
+                >
+                  {modalAlumno.examenFinal?.aprobado
+                    ? `Aprobado (${modalAlumno.examenFinal.porcentaje}%)`
+                    : modalAlumno.timing.examenDisponible
+                    ? "Habilitado"
+                    : `Faltan ${modalAlumno.timing.diasRestantes} días`}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block font-semibold text-[10px] uppercase">Quizzes Rendidos</span>
+                <span className="font-black text-slate-800 text-sm">
+                  {modalAlumno.quizzes.length} pruebas {modalAlumno.promedioQuizzes !== null ? `(${modalAlumno.promedioQuizzes}% prom.)` : ""}
+                </span>
+              </div>
+            </div>
+
+            {/* Listado de Mini-Quizzes Rendidos */}
+            <div>
+              <h4 className="text-sm font-extrabold text-apre-blue mb-2 flex items-center gap-1.5">
+                <span>📝</span> Desglose de Evaluaciones y Quizzes Rendidos
+              </h4>
+              {modalAlumno.quizzes.length > 0 ? (
+                <div className="overflow-x-auto rounded-xl border border-gray-200">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider border-b border-gray-200">
+                      <tr>
+                        <th className="p-2.5">Evaluación / Quiz</th>
+                        <th className="p-2.5">Correctas</th>
+                        <th className="p-2.5">Nota %</th>
+                        <th className="p-2.5">Estado</th>
+                        <th className="p-2.5">Fecha</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {modalAlumno.quizzes.map((q: any) => (
+                        <tr key={q.id} className="hover:bg-slate-50">
+                          <td className="p-2.5 font-bold text-apre-blue">{q.moduloNombre || "Quiz de Módulo"}</td>
+                          <td className="p-2.5 text-gray-600">
+                            {q.correctas ?? "—"} / {q.total ?? "—"}
+                          </td>
+                          <td className="p-2.5 font-black text-slate-800">{q.porcentaje}%</td>
+                          <td className="p-2.5">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                q.aprobado ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {q.aprobado ? "✓ Aprobado" : "✕ Reprobado"}
+                            </span>
+                          </td>
+                          <td className="p-2.5 text-gray-400">
+                            {q.fecha?.toDate
+                              ? q.fecha.toDate().toLocaleDateString("es-CL")
+                              : typeof q.fecha === "string"
+                              ? new Date(q.fecha).toLocaleDateString("es-CL")
+                              : "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-500 italic p-4 bg-gray-50 rounded-xl text-center">
+                  El alumno no registra mini-quizzes rendidos todavía.
+                </p>
+              )}
+            </div>
+
+            {/* Footer Modal */}
+            <div className="flex justify-end gap-2 pt-3 border-t border-gray-100">
+              {modalAlumno.examenFinal?.aprobado && onEmitirDiploma && (
+                <button
+                  onClick={() => {
+                    const sel = modalAlumno;
+                    setModalAlumno(null);
+                    onEmitirDiploma({
+                      uid: sel.uid,
+                      nombre: sel.nombre,
+                      rut: sel.rut,
+                      cursoSlug: sel.courseSlug,
+                    });
+                  }}
+                  className="rounded-xl bg-apre-red text-white px-4 py-2 text-xs font-bold hover:bg-apre-red-dark transition"
+                >
+                  📜 Generar Diploma Oficial
+                </button>
+              )}
+              <button
+                onClick={() => setModalAlumno(null)}
+                className="rounded-xl bg-gray-200 text-gray-700 px-4 py-2 text-xs font-bold hover:bg-gray-300 transition"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Alumnos Aprobados por Asignatura (Egresados Oficiales) ---------- */
+function AprobadosTab({
+  onEmitirDiploma,
+}: {
+  onEmitirDiploma?: (datos: { uid: string; nombre: string; rut: string; cursoSlug: string }) => void;
+}) {
+  const db = getFirestoreDb();
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [evaluaciones, setEvaluaciones] = useState<any[]>([]);
+  const [cursoFiltro, setCursoFiltro] = useState<string>("todos");
+  const [busqueda, setBusqueda] = useState<string>("");
+
+  useEffect(() => {
+    if (!db) return;
+    const un1 = onSnapshot(query(collection(db, "usuarios"), where("rol", "==", "alumno")), (snap) =>
+      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    const un2 = onSnapshot(collection(db, "resultados_evaluaciones"), (snap) =>
+      setEvaluaciones(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+    };
+  }, [db]);
+
+  // Filtrar exclusivamente exámenes finales aprobados
+  const aprobadosFinales = evaluaciones.filter((ev) => {
+    if (!ev.aprobado) return false;
+    const esFinal = Boolean(
+      ev.esExamenFinal === true ||
+      ev.tipo === "examen_final" ||
+      (ev.moduloNombre || "").toLowerCase().includes("examen final") ||
+      (ev.moduloNombre || "").toLowerCase().includes("evaluación final") ||
+      (ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+    );
+    return esFinal;
+  });
+
+  // Normalizar curso y asociar usuario
+  const listaAprobados = aprobadosFinales.map((ev) => {
+    const u = usuarios.find((x) => x.id === ev.userId || x.uid === ev.userId || (ev.userEmail && x.email === ev.userEmail));
+    const slug =
+      ev.courseSlug ||
+      ((ev.moduloNombre || "").toLowerCase().includes("cctv")
+        ? "operador-cctv-y-alarmas"
+        : (ev.moduloNombre || "").toLowerCase().includes("supervisor")
+        ? "supervisor-de-seguridad"
+        : (ev.moduloNombre || "").toLowerCase().includes("bastón")
+        ? "baston-y-esposas"
+        : "guardia-de-seguridad");
+
+    const cursoInfo = CURSOS_LISTA.find((c) => c.slug === slug) || {
+      slug,
+      nombre: cursoNombreDe(slug),
+      shortName: cursoNombreDe(slug),
+      icono: "🎓",
+    };
+
+    return {
+      id: ev.id,
+      uid: ev.userId || u?.id,
+      nombre: u?.nombre || ev.nombreUsuario || "Estudiante",
+      rut: u?.rut || ev.userRut || "",
+      email: u?.email || ev.userEmail || "—",
+      telefono: u?.telefono || "—",
+      courseSlug: slug,
+      cursoInfo,
+      porcentaje: ev.porcentaje ?? 100,
+      correctas: ev.correctas,
+      total: ev.total,
+      fecha: ev.fecha,
+    };
+  });
+
+  // Desduplicar si un alumno rindió el examen más de una vez con aprobación (dejar el de mayor porcentaje)
+  const mapaUnicos = new Map<string, typeof listaAprobados[0]>();
+  listaAprobados.forEach((item) => {
+    const key = `${item.uid || item.email}_${item.courseSlug}`;
+    const prev = mapaUnicos.get(key);
+    if (!prev || (item.porcentaje > prev.porcentaje)) {
+      mapaUnicos.set(key, item);
+    }
+  });
+
+  const egresadosUnicos = Array.from(mapaUnicos.values());
+
+  const filtrados = egresadosUnicos.filter((item) => {
+    if (cursoFiltro !== "todos" && item.courseSlug !== cursoFiltro) return false;
+    if (busqueda.trim()) {
+      const q = busqueda.toLowerCase().trim();
+      const matchNom = item.nombre.toLowerCase().includes(q);
+      const matchRut = item.rut.toLowerCase().includes(q);
+      const matchEmail = item.email.toLowerCase().includes(q);
+      if (!matchNom && !matchRut && !matchEmail) return false;
+    }
+    return true;
+  });
+
+  const exportarCsvEgresados = () => {
+    const filas = [
+      ["Fecha Aprobación", "Alumno", "RUT", "Email", "Teléfono", "Asignatura / Curso", "Nota Examen Final (%)", "Correctas", "Total Preguntas", "Estado"],
+      ...filtrados.map((r) => [
+        r.fecha?.toDate
+          ? r.fecha.toDate().toLocaleString("es-CL")
+          : typeof r.fecha === "string"
+          ? new Date(r.fecha).toLocaleString("es-CL")
+          : "—",
+        r.nombre,
+        r.rut ? formatRut(r.rut) : "Sin RUT",
+        r.email,
+        r.telefono,
+        r.cursoInfo.nombre || r.courseSlug,
+        `${r.porcentaje}%`,
+        String(r.correctas ?? "—"),
+        String(r.total ?? "—"),
+        "APROBADO",
+      ]),
+    ];
+    const csv =
+      "\uFEFF" +
+      filas
+        .map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";"))
+        .join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nomina-alumnos-aprobados-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="rounded-2xl border border-emerald-200 bg-linear-to-r from-emerald-50 via-teal-50/70 to-blue-50/50 p-6 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-600/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-emerald-800 border border-emerald-300">
+              <span>🎓</span> Nómina Oficial de Aprobados
+            </div>
+            <h2 className="text-xl font-extrabold text-apre-blue mt-2">
+              Alumnos Aprobados y Egresados por Asignatura
+            </h2>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+              Listado exclusivo de estudiantes que han rendido y aprobado el <strong>Examen Final Oficial</strong> de cada curso. Listos para emisión de Diploma, Certificado y acreditación ante las entidades correspondientes.
+            </p>
+          </div>
+          <button
+            onClick={exportarCsvEgresados}
+            disabled={filtrados.length === 0}
+            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 text-xs font-bold shadow-sm transition flex items-center gap-2 disabled:opacity-50"
+          >
+            <span>⬇</span>
+            <span>Descargar Nómina de Aprobados (Excel)</span>
+          </button>
+        </div>
+
+        {/* Resumen por Asignatura */}
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-4 border-t border-emerald-100">
+          <div className="rounded-xl bg-white/90 p-3 text-xs border border-emerald-200 shadow-2xs">
+            <span className="text-slate-500 font-bold block text-[10px] uppercase">Total Egresados</span>
+            <span className="text-xl font-black text-emerald-800">{egresadosUnicos.length}</span>
+          </div>
+          {CURSOS_LISTA.map((c) => {
+            const count = egresadosUnicos.filter((x) => x.courseSlug === c.slug).length;
+            return (
+              <div key={c.slug} className="rounded-xl bg-white/90 p-3 text-xs border border-emerald-100 shadow-2xs">
+                <span className="text-slate-500 font-bold block text-[10px] uppercase truncate">
+                  {c.icono} {c.shortName}
+                </span>
+                <span className="text-lg font-black text-slate-800">{count}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Filtros y Búsqueda */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setCursoFiltro("todos")}
+            className={`rounded-xl px-3.5 py-2 text-xs font-bold transition ${
+              cursoFiltro === "todos"
+                ? "bg-apre-blue text-white shadow-xs"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Todas las Asignaturas ({egresadosUnicos.length})
+          </button>
+          {CURSOS_LISTA.map((c) => {
+            const count = egresadosUnicos.filter((x) => x.courseSlug === c.slug).length;
+            const active = cursoFiltro === c.slug;
+            return (
+              <button
+                key={c.slug}
+                onClick={() => setCursoFiltro(c.slug)}
+                className={`rounded-xl px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
+                  active
+                    ? "bg-apre-blue text-white shadow-xs"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span>{c.icono}</span>
+                <span>{c.shortName}</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                    active ? "bg-white/20 text-white" : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="w-full sm:w-72">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar aprobado por nombre o RUT…"
+            className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+      </div>
+
+      {/* Tabla de Aprobados */}
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-xs">
+        <table className="w-full text-left text-xs">
+          <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider border-b border-gray-200">
+            <tr>
+              <th className="p-3.5">Alumno</th>
+              <th className="p-3.5">RUT</th>
+              <th className="p-3.5">Asignatura / Curso</th>
+              <th className="p-3.5">Nota Examen Final</th>
+              <th className="p-3.5">Fecha Aprobación</th>
+              <th className="p-3.5 text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {filtrados.map((item) => (
+              <tr key={`${item.uid}_${item.courseSlug}`} className="hover:bg-slate-50/80 transition">
+                <td className="p-3.5">
+                  <p className="font-extrabold text-apre-blue text-sm">{item.nombre}</p>
+                  <p className="text-gray-500 text-[11px]">{item.email}</p>
+                </td>
+                <td className="p-3.5 font-mono font-bold text-slate-700">
+                  {item.rut ? formatRut(item.rut) : "Sin RUT"}
+                </td>
+                <td className="p-3.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 px-2.5 py-1 text-xs font-bold">
+                    <span>{item.cursoInfo.icono}</span>
+                    <span>{item.cursoInfo.shortName}</span>
+                  </span>
+                </td>
+                <td className="p-3.5">
+                  <span className="inline-block rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1 text-xs font-black">
+                    {item.porcentaje}%
+                  </span>
+                  {item.correctas !== undefined && item.total !== undefined && (
+                    <p className="text-[10px] text-gray-400 mt-0.5">
+                      {item.correctas}/{item.total} correctas
+                    </p>
+                  )}
+                </td>
+                <td className="p-3.5 text-gray-500">
+                  {item.fecha?.toDate
+                    ? item.fecha.toDate().toLocaleDateString("es-CL", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : typeof item.fecha === "string"
+                    ? new Date(item.fecha).toLocaleDateString("es-CL")
+                    : "Reciente"}
+                </td>
+                <td className="p-3.5 text-right">
+                  {onEmitirDiploma && (
+                    <button
+                      onClick={() =>
+                        onEmitirDiploma({
+                          uid: item.uid,
+                          nombre: item.nombre,
+                          rut: item.rut,
+                          cursoSlug: item.courseSlug,
+                        })
+                      }
+                      className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-3.5 py-2 text-xs font-bold transition shadow-xs inline-flex items-center gap-1.5"
+                    >
+                      <span>📜</span>
+                      <span>Emitir Diploma</span>
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {filtrados.length === 0 && (
+              <tr>
+                <td colSpan={6} className="p-8 text-center text-gray-500">
+                  No hay alumnos aprobados registrados con los filtros seleccionados.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Usuarios y Matrículas (Alumnos / Profesores) ---------- */
 function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
+
   const db = getFirestoreDb();
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [enrolls, setEnrolls] = useState<any[]>([]);
@@ -1396,9 +2334,17 @@ function DiplomasTab({
   const curso =
     CURSOS_CERTIFICADO.find((c) => c.slug === cursoSlug) ?? CURSOS_CERTIFICADO[0];
 
-  // Lista de aprobados en este curso
+  // Lista de aprobados en este curso (SOLO EXÁMENES FINALES REALES)
   const aprobadosCurso = evaluaciones.filter((ev) => {
     if (!ev.aprobado) return false;
+    const esFinal = Boolean(
+      ev.esExamenFinal === true ||
+      ev.tipo === "examen_final" ||
+      (ev.moduloNombre || "").toLowerCase().includes("examen final") ||
+      (ev.moduloNombre || "").toLowerCase().includes("evaluación final") ||
+      (ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+    );
+    if (!esFinal) return false;
     if (ev.courseSlug === cursoSlug) return true;
     const mod = (ev.moduloNombre || "").toLowerCase();
     if (cursoSlug === "guardia-de-seguridad" && (mod.includes("os-10") || mod.includes("guardia"))) return true;
@@ -1662,12 +2608,35 @@ function ClasesTab() {
           topic: form.nombre.trim(),
           start_time: new Date().toISOString(),
           duration: "90",
+          timezone: "America/Santiago",
         }),
       });
       const data = await res.json();
       if (res.ok && data.meeting?.join_url) {
-        setForm((prev) => ({ ...prev, joinUrl: data.meeting.join_url }));
-        setZoomMsg("✅ Sala Zoom creada exitosamente con contraseña embebida.");
+        const joinUrl = data.meeting.join_url;
+        const startUrl = data.meeting.start_url || "";
+        setForm((prev) => ({
+          ...prev,
+          joinUrl,
+          startUrl,
+        }));
+
+        // Guardar y activar la sala automáticamente en Firestore para transmisión inmediata
+        if (db) {
+          await addDoc(collection(db, "clases"), {
+            nombre: form.nombre.trim(),
+            descripcion: form.descripcion.trim(),
+            cursoSlug: form.cursoSlug,
+            joinUrl,
+            startUrl,
+            estado: "activa", // ¡Activa de inmediato!
+            fechaInicio: serverTimestamp(),
+            fechaCreacion: serverTimestamp(),
+            creadoPor: userData?.email || "",
+          });
+          setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
+          setZoomMsg("✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos ya pueden entrar directamente desde su panel.");
+        }
       } else {
         setZoomMsg(data.error || "Zoom API no disponible. Puedes pegar el enlace de Zoom manualmente abajo.");
       }
@@ -1678,7 +2647,7 @@ function ClasesTab() {
     }
   };
 
-  const crear = async () => {
+  const crear = async (activa: boolean = true) => {
     if (!db || !form.nombre.trim()) return;
     let url = form.joinUrl.trim();
     if (url && !url.startsWith("http://") && !url.startsWith("https://")) {
@@ -1689,12 +2658,14 @@ function ClasesTab() {
       descripcion: form.descripcion.trim(),
       cursoSlug: form.cursoSlug,
       joinUrl: url,
-      estado: "inactiva",
+      startUrl: (form as any).startUrl || "",
+      estado: activa ? "activa" : "inactiva", // Activa de una para que los alumnos entren altiro
+      ...(activa ? { fechaInicio: serverTimestamp() } : {}),
       fechaCreacion: serverTimestamp(),
       creadoPor: userData?.email || "",
     });
     setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
-    setZoomMsg("");
+    setZoomMsg(activa ? "✅ Sala registrada y ACTIVADA EN VIVO. Los alumnos ya pueden unirse." : "Sala registrada como inactiva.");
   };
 
   const guardarUrlClase = async (c: any) => {
@@ -1725,12 +2696,12 @@ function ClasesTab() {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
-        <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-red">
-          <span>📹</span> Control Exclusivo de Salas
+        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 border border-emerald-300 px-3 py-1 text-xs font-black uppercase tracking-wider text-emerald-800">
+          <span>📹</span> Control de Transmisión en Vivo
         </div>
-        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Crear Clase en Vivo</h2>
+        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Crear y Abrir Sala de Clases</h2>
         <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-          Solo tú puedes abrir o cerrar la sala. Al hacer clic en <strong>Iniciar Clase (Abrir Sala)</strong>, únicamente los alumnos matriculados y autorizados en el curso seleccionado podrán ver el aviso y unirse a la transmisión.
+          Crea la sala y déjala activa en el instante. Los alumnos matriculados verán el aviso en vivo en su panel y podrán entrar inmediatamente sin sala de espera.
         </p>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -1784,23 +2755,25 @@ function ClasesTab() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button
-            onClick={crear}
-            disabled={!form.nombre.trim()}
-            className="rounded-xl bg-apre-red px-6 py-2.5 text-sm font-black text-white transition hover:bg-apre-red-dark disabled:opacity-50 shadow-sm"
-          >
-            Crear Clase
-          </button>
-
+        <div className="mt-4 flex flex-wrap gap-2.5">
           <button
             type="button"
             onClick={generarZoomAutomatico}
             disabled={creandoZoom || !form.nombre.trim()}
-            className="rounded-xl bg-apre-blue px-4 py-2.5 text-xs font-bold text-white transition hover:bg-apre-blue-light disabled:opacity-50 shadow-xs flex items-center gap-1.5"
+            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 text-xs font-black text-white transition disabled:opacity-50 shadow-md flex items-center gap-1.5"
           >
             <span>⚡</span>
-            <span>{creandoZoom ? "Generando con Zoom API…" : "Generar enlace Zoom Automático"}</span>
+            <span>{creandoZoom ? "Generando y Abriendo Sala…" : "🔴 Crear y Abrir Sala Zoom en Vivo (1 Clic)"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => crear(true)}
+            disabled={!form.nombre.trim()}
+            className="rounded-xl bg-whatsapp px-5 py-2.5 text-xs font-black text-white hover:brightness-105 disabled:opacity-50 shadow-sm flex items-center gap-1.5"
+          >
+            <span>+</span>
+            <span>Crear y Activar Sala Manual</span>
           </button>
         </div>
 
@@ -1895,6 +2868,18 @@ function ClasesTab() {
                     <span>Ver Aula Virtual</span>
                   </Link>
                 )}
+                {c.startUrl && (
+                  <a
+                    href={c.startUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-2 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5"
+                    title="Iniciar reunión como Anfitrión en Zoom"
+                  >
+                    <span>👑</span>
+                    <span>Iniciar como Host</span>
+                  </a>
+                )}
                 {c.estado === "inactiva" && (
                   <button
                     onClick={() => cambiarEstado(c, "activa")}
@@ -1937,11 +2922,14 @@ function ClasesTab() {
   );
 }
 
-/* ---------- Reportes: Notas y Evaluaciones ---------- */
+/* ---------- Reportes: Notas y Evaluaciones (Estilo SARMAT) ---------- */
 function ReportesTab() {
   const db = getFirestoreDb();
   const [resultados, setResultados] = useState<any[]>([]);
   const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [filtroTipo, setFiltroTipo] = useState<"todos" | "quizzes" | "finales">("todos");
+  const [filtroCurso, setFiltroCurso] = useState<string>("todos");
+  const [busqueda, setBusqueda] = useState<string>("");
 
   useEffect(() => {
     if (!db) return;
@@ -1960,22 +2948,92 @@ function ReportesTab() {
   const nombreDe = (uid?: string) => {
     if (!uid) return "—";
     const u = usuarios.find((x) => x.id === uid || x.uid === uid);
-    return u?.nombre ? `${u.nombre} (${u.email ?? ""})` : uid;
+    return u?.nombre || uid;
   };
 
-  const exportarCsv = () => {
+  const rutDe = (uid?: string, rawRut?: string) => {
+    if (rawRut) return formatRut(rawRut);
+    const u = usuarios.find((x) => x.id === uid || x.uid === uid);
+    return u?.rut ? formatRut(u.rut) : "—";
+  };
+
+  const emailDe = (uid?: string, rawEmail?: string) => {
+    if (rawEmail) return rawEmail;
+    const u = usuarios.find((x) => x.id === uid || x.uid === uid);
+    return u?.email || "—";
+  };
+
+  const esFinal = (r: any) =>
+    Boolean(
+      r.esExamenFinal === true ||
+      r.tipo === "examen_final" ||
+      (r.moduloNombre || "").toLowerCase().includes("examen final") ||
+      (r.moduloNombre || "").toLowerCase().includes("evaluación final") ||
+      (r.moduloNombre || "").toLowerCase().includes("evaluacion final")
+    );
+
+  const listaFiltrada = resultados.filter((r) => {
+    const isExFinal = esFinal(r);
+    if (filtroTipo === "quizzes" && isExFinal) return false;
+    if (filtroTipo === "finales" && !isExFinal) return false;
+
+    if (filtroCurso !== "todos") {
+      if (r.courseSlug && r.courseSlug !== filtroCurso) return false;
+    }
+
+    if (busqueda.trim()) {
+      const q = busqueda.toLowerCase().trim();
+      const nom = nombreDe(r.userId).toLowerCase();
+      const rut = rutDe(r.userId, r.userRut).toLowerCase();
+      const mod = (r.moduloNombre || "").toLowerCase();
+      if (!nom.includes(q) && !rut.includes(q) && !mod.includes(q)) return false;
+    }
+
+    return true;
+  });
+
+  const exportarCsv = (tipoExportar: "todos" | "quizzes" | "finales") => {
+    const itemsAExportar = resultados.filter((r) => {
+      const isExFinal = esFinal(r);
+      if (tipoExportar === "quizzes" && isExFinal) return false;
+      if (tipoExportar === "finales" && !isExFinal) return false;
+      if (filtroCurso !== "todos" && r.courseSlug && r.courseSlug !== filtroCurso) return false;
+      return true;
+    });
+
     const filas = [
-      ["Fecha", "Alumno", "Módulo/Evaluación", "Correctas", "Total", "%", "Aprobado"],
-      ...resultados.map((r) => [
-        r.fecha?.toDate ? r.fecha.toDate().toISOString() : "",
+      [
+        "Fecha y Hora",
+        "Alumno",
+        "RUT",
+        "Email",
+        "Asignatura/Curso",
+        "Tipo Evaluación",
+        "Módulo/Evaluación",
+        "Correctas",
+        "Total Preguntas",
+        "Porcentaje (%)",
+        "Estado",
+      ],
+      ...itemsAExportar.map((r) => [
+        r.fecha?.toDate
+          ? r.fecha.toDate().toLocaleString("es-CL")
+          : typeof r.fecha === "string"
+          ? new Date(r.fecha).toLocaleString("es-CL")
+          : "—",
         nombreDe(r.userId),
-        r.moduloNombre || r.evaluacion || "",
+        rutDe(r.userId, r.userRut),
+        emailDe(r.userId, r.userEmail),
+        r.courseSlug ? cursoNombreDe(r.courseSlug) : "General",
+        esFinal(r) ? "Examen Final Oficial" : "Mini-Quiz de Módulo",
+        r.moduloNombre || r.evaluacion || "—",
         String(r.correctas ?? ""),
         String(r.total ?? ""),
-        String(r.porcentaje ?? ""),
-        r.aprobado ? "Sí" : "No",
+        `${r.porcentaje ?? ""}%`,
+        r.aprobado ? "APROBADO" : "REPROBADO",
       ]),
     ];
+
     const csv =
       "\uFEFF" +
       filas
@@ -1985,65 +3043,229 @@ function ReportesTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `notas-aprecap-${new Date().toISOString().slice(0, 10)}.csv`;
+    const prefijo =
+      tipoExportar === "quizzes"
+        ? "reporte-mini-quizzes"
+        : tipoExportar === "finales"
+        ? "reporte-examenes-finales"
+        : "reporte-completo-calificaciones";
+    a.download = `${prefijo}-aprecap-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
+  const totalEvals = resultados.length;
+  const totalQuizzes = resultados.filter((r) => !esFinal(r)).length;
+  const totalFinales = resultados.filter((r) => esFinal(r)).length;
+  const promedioGeneral =
+    totalEvals > 0 ? Math.round(resultados.reduce((a, b) => a + (b.porcentaje || 0), 0) / totalEvals) : 0;
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs text-gray-600">
-          Historial de notas y porcentajes de las evaluaciones de los alumnos.
-        </p>
-        <button
-          onClick={exportarCsv}
-          disabled={resultados.length === 0}
-          className="rounded-xl bg-apre-blue px-4 py-2 text-xs font-bold text-white hover:bg-apre-blue-light disabled:opacity-40"
-        >
-          ⬇ Descargar Notas y % (Excel)
-        </button>
+    <div className="space-y-6">
+      {/* Banner Principal con Botones de Descarga Excel estilo SARMAT */}
+      <div className="rounded-2xl border border-indigo-200 bg-linear-to-r from-slate-900 via-blue-950 to-indigo-950 p-6 text-white shadow-md">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-400/20 px-3 py-1 text-xs font-black uppercase tracking-wider text-cyan-300 border border-cyan-400/30">
+              <span>📊</span> Sistema de Calificaciones SARMAT
+            </div>
+            <h2 className="text-xl font-extrabold text-white mt-2">
+              Reportes de Notas, Mini-Quizzes y Exámenes Finales
+            </h2>
+            <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+              Exporta planillas oficiales en Excel con desglose por módulo, preguntas acertadas y porcentajes de aprobación de todos los alumnos.
+            </p>
+          </div>
+
+          {/* Grupo de 3 Botones de Descarga Excel estilo SARMAT */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => exportarCsv("todos")}
+              disabled={resultados.length === 0}
+              className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-4 py-2.5 text-xs shadow-md transition flex items-center gap-1.5 disabled:opacity-40"
+            >
+              <span>📥</span>
+              <span>Descargar Todo (Excel)</span>
+            </button>
+            <button
+              onClick={() => exportarCsv("quizzes")}
+              disabled={totalQuizzes === 0}
+              className="rounded-xl bg-purple-500/30 hover:bg-purple-500/50 text-purple-200 border border-purple-400/40 font-bold px-3.5 py-2.5 text-xs transition flex items-center gap-1.5 disabled:opacity-40"
+            >
+              <span>📝</span>
+              <span>Solo Mini-Quizzes</span>
+            </button>
+            <button
+              onClick={() => exportarCsv("finales")}
+              disabled={totalFinales === 0}
+              className="rounded-xl bg-cyan-500/30 hover:bg-cyan-500/50 text-cyan-200 border border-cyan-400/40 font-bold px-3.5 py-2.5 text-xs transition flex items-center gap-1.5 disabled:opacity-40"
+            >
+              <span>🎓</span>
+              <span>Solo Exámenes Finales</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Tarjetas de Estadísticas */}
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-white/10">
+          <div className="rounded-xl bg-white/10 p-3 text-xs border border-white/10">
+            <span className="text-slate-400 font-bold block text-[10px] uppercase">Total Evaluaciones</span>
+            <span className="text-xl font-black text-white">{totalEvals}</span>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 text-xs border border-white/10">
+            <span className="text-purple-300 font-bold block text-[10px] uppercase">Mini-Quizzes Rendidos</span>
+            <span className="text-xl font-black text-purple-300">{totalQuizzes}</span>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 text-xs border border-white/10">
+            <span className="text-cyan-300 font-bold block text-[10px] uppercase">Exámenes Finales</span>
+            <span className="text-xl font-black text-cyan-300">{totalFinales}</span>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 text-xs border border-white/10">
+            <span className="text-emerald-300 font-bold block text-[10px] uppercase">Promedio General</span>
+            <span className="text-xl font-black text-emerald-300">{promedioGeneral}%</span>
+          </div>
+        </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+      {/* Barra de Filtros y Búsqueda */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Filtro por Tipo */}
+          <div className="flex rounded-xl bg-gray-100 p-1 border border-gray-200">
+            <button
+              onClick={() => setFiltroTipo("todos")}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                filtroTipo === "todos" ? "bg-apre-blue text-white shadow-xs" : "text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Todos ({resultados.length})
+            </button>
+            <button
+              onClick={() => setFiltroTipo("quizzes")}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                filtroTipo === "quizzes" ? "bg-purple-700 text-white shadow-xs" : "text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              📝 Mini-Quizzes ({totalQuizzes})
+            </button>
+            <button
+              onClick={() => setFiltroTipo("finales")}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                filtroTipo === "finales" ? "bg-cyan-700 text-white shadow-xs" : "text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              🎓 Exámenes Finales ({totalFinales})
+            </button>
+          </div>
+
+          {/* Selector de Curso */}
+          <select
+            value={filtroCurso}
+            onChange={(e) => setFiltroCurso(e.target.value)}
+            className="rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 focus:border-apre-blue focus:outline-hidden"
+          >
+            <option value="todos">Todos los Cursos</option>
+            {CURSOS_LISTA.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.icono} {c.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Buscador */}
+        <div className="w-full sm:w-72">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar por alumno, RUT o módulo…"
+            className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+      </div>
+
+      {/* Tabla de Resultados */}
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-xs">
         <table className="w-full text-left text-xs">
           <thead>
-            <tr className="border-b border-gray-200 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-              <th className="px-4 py-3">Fecha</th>
-              <th className="px-4 py-3">Alumno</th>
-              <th className="px-4 py-3">Módulo/Evaluación</th>
-              <th className="px-4 py-3">Correctas</th>
-              <th className="px-4 py-3">%</th>
-              <th className="px-4 py-3">Aprobado</th>
+            <tr className="border-b border-gray-200 bg-gray-50 text-[10px] font-bold uppercase tracking-wider text-gray-600">
+              <th className="px-4 py-3.5">Fecha y Hora</th>
+              <th className="px-4 py-3.5">Alumno</th>
+              <th className="px-4 py-3.5">RUT</th>
+              <th className="px-4 py-3.5">Tipo</th>
+              <th className="px-4 py-3.5">Módulo / Evaluación</th>
+              <th className="px-4 py-3.5">Correctas</th>
+              <th className="px-4 py-3.5">%</th>
+              <th className="px-4 py-3.5">Estado</th>
             </tr>
           </thead>
-          <tbody>
-            {resultados.map((r) => (
-              <tr key={r.id} className="border-b border-gray-100 last:border-0">
-                <td className="whitespace-nowrap px-4 py-3 text-gray-600">
-                  {r.fecha?.toDate ? r.fecha.toDate().toLocaleString("es-CL") : "—"}
-                </td>
-                <td className="px-4 py-3 text-gray-700">{nombreDe(r.userId)}</td>
-                <td className="px-4 py-3 font-semibold text-apre-blue">
-                  {r.moduloNombre || r.evaluacion || "—"}
-                </td>
-                <td className="px-4 py-3 text-gray-600">
-                  {r.correctas ?? "—"} / {r.total ?? "—"}
-                </td>
-                <td className="px-4 py-3 font-bold">{r.porcentaje ?? "—"}%</td>
-                <td className="px-4 py-3">
-                  {r.aprobado ? (
-                    <span className="text-green-600 font-bold">✅ Sí</span>
-                  ) : (
-                    <span className="text-apre-red font-bold">❌ No</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {resultados.length === 0 && (
+          <tbody className="divide-y divide-gray-100">
+            {listaFiltrada.map((r) => {
+              const isExFinal = esFinal(r);
+              return (
+                <tr key={r.id} className="hover:bg-slate-50 transition">
+                  <td className="whitespace-nowrap px-4 py-3.5 text-gray-500 text-[11px]">
+                    {r.fecha?.toDate
+                      ? r.fecha.toDate().toLocaleString("es-CL", {
+                          day: "2-digit",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : typeof r.fecha === "string"
+                      ? new Date(r.fecha).toLocaleString("es-CL")
+                      : "—"}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <p className="font-bold text-apre-blue">{nombreDe(r.userId)}</p>
+                    <p className="text-[10px] text-gray-400">{emailDe(r.userId, r.userEmail)}</p>
+                  </td>
+                  <td className="px-4 py-3.5 font-mono text-gray-700 text-[11px]">
+                    {rutDe(r.userId, r.userRut)}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold ${
+                        isExFinal
+                          ? "bg-cyan-100 text-cyan-800 border border-cyan-200"
+                          : "bg-purple-100 text-purple-800 border border-purple-200"
+                      }`}
+                    >
+                      <span>{isExFinal ? "🎓" : "📝"}</span>
+                      <span>{isExFinal ? "Examen Final" : "Mini-Quiz"}</span>
+                    </span>
+                  </td>
+                  <td className="px-4 py-3.5 font-semibold text-slate-800">
+                    {r.moduloNombre || r.evaluacion || "—"}
+                    {r.courseSlug && (
+                      <span className="block text-[10px] text-gray-400 font-normal">
+                        {cursoNombreDe(r.courseSlug)}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3.5 text-gray-600 font-medium">
+                    {r.correctas ?? "—"} / {r.total ?? "—"}
+                  </td>
+                  <td className="px-4 py-3.5 font-black text-sm text-slate-800">{r.porcentaje ?? "—"}%</td>
+                  <td className="px-4 py-3.5">
+                    <span
+                      className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                        r.aprobado
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                          : "bg-red-100 text-red-800 border border-red-300"
+                      }`}
+                    >
+                      {r.aprobado ? "✓ Aprobado" : "✕ Reprobado"}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+            {listaFiltrada.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                  Sin resultados registrados.
+                <td colSpan={8} className="px-4 py-12 text-center text-gray-500">
+                  Sin resultados registrados para los filtros aplicados.
                 </td>
               </tr>
             )}

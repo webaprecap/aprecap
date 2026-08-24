@@ -230,3 +230,61 @@ export function getExamUnlockStatus(
     esCursoConTiempo: true,
   };
 }
+
+export interface AlumnoSeguimientoTiming {
+  diaActual: number;
+  totalDiasCurso: number;
+  diasRestantes: number;
+  horasRestantes: number;
+  fechaDesbloqueoExamen: Date | null;
+  examenDisponible: boolean;
+  esCursoConTiempo: boolean;
+  etiquetaProgreso: string;
+}
+
+/**
+ * Calcula el progreso de días transcurridos y restantes para la vista de seguimiento del Administrador
+ */
+export function getAlumnoSeguimientoTiming(
+  cursoSlug: string,
+  fechaMatricula?: unknown
+): AlumnoSeguimientoTiming {
+  const config = COURSE_TIMING_CONFIG[cursoSlug];
+  const fecha = normalizarFechaMatricula(fechaMatricula);
+  const diaActual = getDiaActualCurso(fechaMatricula);
+
+  if (!config) {
+    return {
+      diaActual: 1,
+      totalDiasCurso: 1,
+      diasRestantes: 0,
+      horasRestantes: 0,
+      fechaDesbloqueoExamen: null,
+      examenDisponible: true,
+      esCursoConTiempo: false,
+      etiquetaProgreso: "Sin restricción de días (Acceso inmediato)",
+    };
+  }
+
+  const diaRequerido = config.examenFinalDia;
+  const isUnlocked = diaActual >= diaRequerido;
+  const msRequeridos = (diaRequerido - 1) * 24 * 60 * 60 * 1000;
+  const fechaDesbloqueo = new Date(fecha.getTime() + msRequeridos);
+  const diffRestanteMs = Math.max(0, fechaDesbloqueo.getTime() - Date.now());
+  const horasRestantes = Math.floor(diffRestanteMs / (1000 * 60 * 60));
+  const diasRestantes = isUnlocked ? 0 : Math.max(1, Math.ceil(diffRestanteMs / (1000 * 60 * 60 * 24)));
+
+  return {
+    diaActual: Math.min(diaActual, config.totalDias),
+    totalDiasCurso: config.totalDias,
+    diasRestantes,
+    horasRestantes,
+    fechaDesbloqueoExamen: isUnlocked ? null : fechaDesbloqueo,
+    examenDisponible: isUnlocked,
+    esCursoConTiempo: true,
+    etiquetaProgreso: isUnlocked
+      ? `Día ${config.totalDias} de ${config.totalDias} (Periodo Completado)`
+      : `Día ${diaActual} de ${config.totalDias} (Faltan ${diasRestantes} ${diasRestantes === 1 ? "día" : "días"})`,
+  };
+}
+

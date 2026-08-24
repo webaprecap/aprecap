@@ -6,7 +6,10 @@ export interface ZoomMeeting {
   topic: string;
   start_time: string;
   join_url: string;
+  start_url?: string;
+  password?: string;
   duration: number;
+  timezone?: string;
 }
 
 const ZOOM_ACCOUNT_ID = process.env.ZOOM_ACCOUNT_ID;
@@ -65,13 +68,29 @@ async function zoomPost<T>(path: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export async function createMeeting(topic: string, startTime: string, durationMinutes: number): Promise<ZoomMeeting> {
+export async function createMeeting(
+  topic: string,
+  startTime: string,
+  durationMinutes: number = 90,
+  timezone: string = "America/Santiago"
+): Promise<ZoomMeeting> {
   return zoomPost<ZoomMeeting>("/users/me/meetings", {
     topic,
     type: 2,
     start_time: startTime,
     duration: durationMinutes,
-    settings: { host_video: true, participant_video: true, auto_recording: "cloud" },
+    timezone: timezone,
+    settings: {
+      host_video: true,
+      participant_video: true,
+      join_before_host: true, // Permite ingresar de inmediato a la sala
+      jbh_time: 0, // En cualquier momento sin esperar al anfitrión
+      waiting_room: false, // Desactiva la sala de espera para acceso instantáneo
+      mute_upon_entry: false,
+      auto_recording: "cloud", // Grabación automática en la nube
+      approval_type: 2, // Aprobación automática sin requerir registro previo
+      audio: "both",
+    },
   });
 }
 

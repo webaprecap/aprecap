@@ -114,6 +114,7 @@ export default function FinalExamVF({
           porcentaje: pct,
           aprobado,
           esExamenFinal: true,
+          tipo: "examen_final",
           fecha: serverTimestamp(),
         });
       } catch (err) {

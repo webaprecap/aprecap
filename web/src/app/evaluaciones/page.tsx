@@ -5,7 +5,7 @@ import Link from "next/link";
 import { addDoc, collection } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
-import { bancoEvaluaciones, type EvaluacionModulo } from "@/data/evaluaciones-banco";
+import { bancoEvaluaciones } from "@/data/evaluaciones-banco";
 
 export default function EvaluacionesPage() {
   const { user, userData } = useAuth();
@@ -44,6 +44,8 @@ export default function EvaluacionesPage() {
         await addDoc(collection(db, "resultados_evaluaciones"), {
           userId: user.uid,
           nombreUsuario: userData?.nombre || user.displayName || "Alumno",
+          userEmail: user.email || "",
+          userRut: userData?.rut || "",
           evalId: evalActual.id,
           moduloNombre: evalActual.moduloNombre,
           courseSlug: evalActual.courseSlug,
@@ -51,6 +53,8 @@ export default function EvaluacionesPage() {
           total: res.total,
           porcentaje: res.pct,
           aprobado: res.aprobado,
+          esExamenFinal: false,
+          tipo: "quiz_modulo",
           fecha: new Date(),
         });
         setMsgGuardado("¡Resultado guardado exitosamente en tu expediente oficial!");
@@ -94,7 +98,23 @@ export default function EvaluacionesPage() {
 
       <section className="bg-gray-50 py-12 min-h-[70vh]">
         <div className="mx-auto max-w-4xl px-4 space-y-8">
-          {/* Selector de Evaluación */}
+          <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-5 text-xs text-blue-950 shadow-xs flex flex-wrap items-center justify-between gap-3">
+            <div className="max-w-xl">
+              <p className="font-bold flex items-center gap-1.5 text-apre-blue">
+                <span>ℹ️</span> Evaluaciones Formativas de Módulos (Mini-Quizzes)
+              </p>
+              <p className="mt-1 text-slate-600 leading-relaxed">
+                Estas pruebas cortas te permiten medir tu aprendizaje módulo a módulo. Para rendir tu <strong>Examen Final Oficial de Certificación</strong>, ingresa a tu curso matriculado desde el panel de alumno una vez concluido el periodo formativo.
+              </p>
+            </div>
+            <Link
+              href="/panel/alumno"
+              className="rounded-xl bg-apre-blue text-white px-3.5 py-2 text-xs font-bold hover:bg-apre-blue-light transition"
+            >
+              Ir a Mis Cursos →
+            </Link>
+          </div>
+
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <label className="text-sm font-bold text-apre-blue">Selecciona el módulo a evaluar:</label>
             <select
@@ -113,7 +133,6 @@ export default function EvaluacionesPage() {
             </select>
           </div>
 
-          {/* Resultado Final */}
           {finalizado && res && (
             <div
               className={`rounded-2xl p-6 text-center border-2 ${
@@ -143,7 +162,6 @@ export default function EvaluacionesPage() {
             </div>
           )}
 
-          {/* Lista de Preguntas */}
           <div className="space-y-6">
             {evalActual.preguntas.map((p, idx) => {
               const respondida = respuestas[p.id] !== undefined;
@@ -207,7 +225,6 @@ export default function EvaluacionesPage() {
             })}
           </div>
 
-          {/* Botón de Enviar */}
           {!finalizado && (
             <div className="pt-4">
               <button
@@ -226,3 +243,4 @@ export default function EvaluacionesPage() {
     </>
   );
 }
+

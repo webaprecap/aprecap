@@ -21,6 +21,23 @@ export async function GET() {
   }
 }
 
+function formatToSantiagoLocal(dateInput?: string | Date): string {
+  const d = dateInput ? new Date(dateInput) : new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: "America/Santiago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+  const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(d);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value || "00";
+  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}:${get("second")}`;
+}
+
 export async function POST(req: Request) {
   if (!zoomEnabled()) {
     return NextResponse.json(
@@ -29,14 +46,19 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const { topic, start_time, duration } = await req.json();
-    if (!topic || !start_time) {
-      return NextResponse.json({ error: "Tema y fecha son requeridos" }, { status: 400 });
+    const { topic, start_time, duration, timezone } = await req.json();
+    if (!topic) {
+      return NextResponse.json({ error: "El tema o nombre de la clase es requerido" }, { status: 400 });
     }
+
+    const tz = timezone || "America/Santiago";
+    const formattedStartTime = formatToSantiagoLocal(start_time);
+
     const meeting = await createMeeting(
       String(topic),
-      new Date(start_time).toISOString(),
-      Number(duration) || 60
+      formattedStartTime,
+      Number(duration) || 90,
+      tz
     );
     await logAuditAction("MEETING_CREATED", { detalle: topic });
     return NextResponse.json({ meeting });

@@ -245,6 +245,36 @@ export default function PanelAlumno() {
 
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-6xl space-y-10 px-4">
+          {/* Banner de Clase Activa en Vivo (Notificación Instantánea) */}
+          {clases.length > 0 && (
+            <div className="rounded-3xl border-2 border-emerald-500 bg-linear-to-r from-emerald-50 via-teal-50/80 to-blue-50/60 p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-600 text-white font-black text-3xl shadow-lg animate-pulse">
+                  🔴
+                </span>
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-emerald-600/10 text-emerald-900 border border-emerald-300 px-3 py-1 text-xs font-black uppercase tracking-wider">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                    CLASE EN VIVO EN ESTE MOMENTO
+                  </div>
+                  <h3 className="text-xl font-extrabold text-apre-blue mt-1.5">
+                    {clases[0].nombre}
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    La sala virtual está abierta. Haz clic en el botón para ingresar de inmediato y ver la clase.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/aula-en-vivo?id=${clases[0].id}`}
+                className="rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3.5 text-sm font-black shadow-lg transition flex items-center gap-2"
+              >
+                <span>🚀</span>
+                <span>Entrar a la Clase Ahora</span>
+              </Link>
+            </div>
+          )}
+
           {/* Quick Action Feature Grid (Estilo SARMAT) */}
           <div>
             <h2 className="text-xl font-extrabold text-apre-blue mb-4">
