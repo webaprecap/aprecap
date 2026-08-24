@@ -1164,7 +1164,7 @@ function SeguimientoTab({
 
   useEffect(() => {
     if (!db) return;
-    const un1 = onSnapshot(query(collection(db, "usuarios"), where("rol", "==", "alumno")), (snap) =>
+    const un1 = onSnapshot(collection(db, "usuarios"), (snap) =>
       setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
     const un2 = onSnapshot(collection(db, "enrollments"), (snap) =>
@@ -1180,74 +1180,101 @@ function SeguimientoTab({
     };
   }, [db]);
 
-  const listaAlumnos = enrolls.map((e) => {
-    const u = usuarios.find((x) => x.id === e.uid || x.uid === e.uid);
-    const cursoInfo = CURSOS_LISTA.find((c) => c.slug === e.courseSlug) || {
-      slug: e.courseSlug,
-      nombre: cursoNombreDe(e.courseSlug),
-      shortName: cursoNombreDe(e.courseSlug),
-      icono: "📚",
-      horas: 90,
-      fieldKey: "accesoOS10",
-    };
+  const listaAlumnos = enrolls
+    .map((e) => {
+      const u = usuarios.find(
+        (x) =>
+          x.id === e.uid ||
+          x.uid === e.uid ||
+          (e.userEmail && x.email?.toLowerCase() === e.userEmail?.toLowerCase())
+      );
 
-    const rawFecha = e.fecha || u?.fechaRegistro;
-    const timing = getAlumnoSeguimientoTiming(e.courseSlug, rawFecha);
+      // Si el usuario no existe en la base de datos o fue borrado, no lo listamos para evitar confusiones
+      if (!u || !u.email || u.nombre === "Estudiante") return null;
 
-    const evalsAlumno = evaluaciones.filter(
-      (ev) =>
-        (ev.userId === e.uid || ev.userId === u?.id || (u?.email && ev.userEmail === u.email)) &&
-        (ev.courseSlug === e.courseSlug ||
-          (e.courseSlug === "guardia-de-seguridad" && (ev.moduloNombre || "").toLowerCase().includes("os-10")) ||
-          (e.courseSlug === "operador-cctv-y-alarmas" && (ev.moduloNombre || "").toLowerCase().includes("cctv")) ||
-          (e.courseSlug === "supervisor-de-seguridad" && (ev.moduloNombre || "").toLowerCase().includes("supervisor")) ||
-          (e.courseSlug === "baston-y-esposas" && (ev.moduloNombre || "").toLowerCase().includes("bastón")))
-    );
+      const cursoInfo = CURSOS_LISTA.find((c) => c.slug === e.courseSlug) || {
+        slug: e.courseSlug,
+        nombre: cursoNombreDe(e.courseSlug),
+        shortName: cursoNombreDe(e.courseSlug),
+        icono: "📚",
+        horas: 90,
+        fieldKey: "accesoOS10",
+      };
 
-    const quizzes = evalsAlumno.filter(
-      (ev) =>
-        !ev.esExamenFinal &&
-        ev.tipo !== "examen_final" &&
-        !(ev.moduloNombre || "").toLowerCase().includes("examen final") &&
-        !(ev.moduloNombre || "").toLowerCase().includes("evaluación final") &&
-        !(ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
-    );
+      const rawFecha = e.fecha || u?.fechaRegistro;
+      const timing = getAlumnoSeguimientoTiming(e.courseSlug, rawFecha);
 
-    const examenesFinales = evalsAlumno.filter(
-      (ev) =>
-        ev.esExamenFinal === true ||
-        ev.tipo === "examen_final" ||
-        (ev.moduloNombre || "").toLowerCase().includes("examen final") ||
-        (ev.moduloNombre || "").toLowerCase().includes("evaluación final") ||
-        (ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
-    );
+      const uEmail = (u.email || "").toLowerCase().trim();
+      const uRut = (u.rut || "").replace(/[^0-9kK]/g, "").toLowerCase();
 
-    const mejorExamenFinal = examenesFinales.sort((a, b) => (b.porcentaje ?? 0) - (a.porcentaje ?? 0))[0] || null;
+      const evalsAlumno = evaluaciones.filter((ev) => {
+        const evEmail = (ev.userEmail || "").toLowerCase().trim();
+        const evRut = (ev.userRut || "").replace(/[^0-9kK]/g, "").toLowerCase();
+        const matchUser =
+          ev.userId === e.uid ||
+          ev.userId === u.id ||
+          ev.userId === u.uid ||
+          (uEmail && evEmail && evEmail === uEmail) ||
+          (uRut && evRut && evRut === uRut);
 
-    const promedioQuizzes =
-      quizzes.length > 0
-        ? Math.round(quizzes.reduce((acc, curr) => acc + (curr.porcentaje ?? 0), 0) / quizzes.length)
-        : null;
+        if (!matchUser) return false;
 
-    const accesoOnline = Boolean(u?.accesoOnline === true || u?.accesoClasesVivo === true || (u as any)?.modalidadOnline === true);
+        const modName = (ev.moduloNombre || "").toLowerCase();
+        const matchCurso =
+          ev.courseSlug === e.courseSlug ||
+          (e.courseSlug === "guardia-de-seguridad" && (modName.includes("os-10") || modName.includes("guardia"))) ||
+          (e.courseSlug === "operador-cctv-y-alarmas" && (modName.includes("cctv") || modName.includes("alarma"))) ||
+          (e.courseSlug === "supervisor-de-seguridad" && modName.includes("supervisor")) ||
+          (e.courseSlug === "baston-y-esposas" && (modName.includes("bastón") || modName.includes("baston") || modName.includes("esposa")));
 
-    return {
-      enrollId: e.id,
-      uid: e.uid,
-      nombre: u?.nombre || "Estudiante",
-      email: u?.email || "—",
-      rut: u?.rut || "",
-      telefono: u?.telefono || "—",
-      accesoOnline,
-      courseSlug: e.courseSlug,
-      cursoInfo,
-      fechaMatricula: rawFecha,
-      timing,
-      quizzes,
-      promedioQuizzes,
-      examenFinal: mejorExamenFinal,
-    };
-  });
+        return matchCurso;
+      });
+
+      const quizzes = evalsAlumno.filter(
+        (ev) =>
+          !ev.esExamenFinal &&
+          ev.tipo !== "examen_final" &&
+          !(ev.moduloNombre || "").toLowerCase().includes("examen final") &&
+          !(ev.moduloNombre || "").toLowerCase().includes("evaluación final") &&
+          !(ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+      );
+
+      const examenesFinales = evalsAlumno.filter(
+        (ev) =>
+          ev.esExamenFinal === true ||
+          ev.tipo === "examen_final" ||
+          (ev.moduloNombre || "").toLowerCase().includes("examen final") ||
+          (ev.moduloNombre || "").toLowerCase().includes("evaluación final") ||
+          (ev.moduloNombre || "").toLowerCase().includes("evaluacion final")
+      );
+
+      const mejorExamenFinal = examenesFinales.sort((a, b) => (b.porcentaje ?? 0) - (a.porcentaje ?? 0))[0] || null;
+
+      const promedioQuizzes =
+        quizzes.length > 0
+          ? Math.round(quizzes.reduce((acc, curr) => acc + (curr.porcentaje ?? 0), 0) / quizzes.length)
+          : null;
+
+      const accesoOnline = Boolean(u?.accesoOnline === true || u?.accesoClasesVivo === true || (u as any)?.modalidadOnline === true);
+
+      return {
+        enrollId: e.id,
+        uid: u.id || e.uid,
+        nombre: u.nombre || "Estudiante",
+        email: u.email || "—",
+        rut: u.rut || "",
+        telefono: u.telefono || "—",
+        accesoOnline,
+        courseSlug: e.courseSlug,
+        cursoInfo,
+        fechaMatricula: rawFecha,
+        timing,
+        quizzes,
+        promedioQuizzes,
+        examenFinal: mejorExamenFinal,
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
 
   const toggleOnlineAlumno = async (uid: string, actual: boolean) => {
     if (!db) return;
