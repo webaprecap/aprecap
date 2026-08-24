@@ -32,6 +32,7 @@ import {
   getDiaActualCurso,
   normalizarFechaMatricula,
 } from "@/lib/courseTiming";
+import { formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
 
 type Tab =
   | "pendientes"
@@ -295,7 +296,14 @@ export default function PanelAdmin() {
             {tab === "cursos-gestion" && <CursosGestionTab onEmitirDiploma={irADiplomaAprobado} />}
             {tab === "alumnos" && <UsuariosTab filtroRol="alumno" />}
             {tab === "profesores" && <UsuariosTab filtroRol="profesor" />}
-            {tab === "clases" && <ClasesTab />}
+            {tab === "clases" && (
+              <ClasesTab
+                onPublicarGrabada={(datos) => {
+                  setGrabadaPreselect(datos);
+                  setTab("clases-grabadas");
+                }}
+              />
+            )}
             {tab === "reuniones" && <ReunionesTab />}
             {tab === "zoom-grabaciones" && (
               <ZoomGrabacionesTab
@@ -3752,17 +3760,41 @@ function DiplomasTab({
   );
 }
 
-/* ---------- Clases en vivo (Control exclusivo del Admin) ---------- */
-function ClasesTab() {
+/* ---------- Clases en vivo y Programadas (Control exclusivo del Admin) ---------- */
+function ClasesTab({
+  onPublicarGrabada,
+}: {
+  onPublicarGrabada?: (datos: { titulo: string; cursoSlug: string; descripcion: string }) => void;
+}) {
   const db = getFirestoreDb();
   const { userData } = useAuth();
   const [clases, setClases] = useState<any[]>([]);
+
+  const getTomorrowAt = (hours: number, minutes: number = 0) => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    d.setHours(hours, minutes, 0, 0);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(hours)}:${pad(minutes)}`;
+  };
+
+  const [tipoHorario, setTipoHorario] = useState<"programada" | "inmediata">("programada");
+  const [fechaInicioProg, setFechaInicioProg] = useState(getTomorrowAt(8, 0));
+  const [fechaFinProg, setFechaFinProg] = useState(getTomorrowAt(15, 0));
+
   const [form, setForm] = useState({
     nombre: "",
     descripcion: "",
     cursoSlug: "",
     joinUrl: "",
   });
+
+  const [filtroEstado, setFiltroEstado] = useState<"todas" | "en_vivo" | "programadas" | "finalizadas">("todas");
+  const [editandoUrlId, setEditandoUrlId] = useState<string | null>(null);
+  const [nuevaUrl, setNuevaUrl] = useState("");
+  const [zoomMeetings, setZoomMeetings] = useState<any[]>([]);
+  const [creandoZoom, setCreandoZoom] = useState(false);
+  const [zoomMsg, setZoomMsg] = useState("");
 
   useEffect(() => {
     if (!db) return;
@@ -3771,12 +3803,6 @@ function ClasesTab() {
       setClases(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
   }, [db]);
-
-  const [editandoUrlId, setEditandoUrlId] = useState<string | null>(null);
-  const [nuevaUrl, setNuevaUrl] = useState("");
-  const [zoomMeetings, setZoomMeetings] = useState<any[]>([]);
-  const [creandoZoom, setCreandoZoom] = useState(false);
-  const [zoomMsg, setZoomMsg] = useState("");
 
   // Cargar reuniones de Zoom API si está configurado
   useEffect(() => {
@@ -3798,13 +3824,28 @@ function ClasesTab() {
     setCreandoZoom(true);
     setZoomMsg("");
     try {
+      const duracionMinutos =
+        tipoHorario === "programada" && fechaInicioProg && fechaFinProg
+          ? Math.max(
+              30,
+              Math.round(
+                (new Date(fechaFinProg).getTime() - new Date(fechaInicioProg).getTime()) / (1000 * 60)
+              )
+            )
+          : 90;
+
+      const startTime =
+        tipoHorario === "programada" && fechaInicioProg
+          ? new Date(fechaInicioProg).toISOString()
+          : new Date().toISOString();
+
       const res = await fetch("/api/zoom", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           topic: form.nombre.trim(),
-          start_time: new Date().toISOString(),
-          duration: "90",
+          start_time: startTime,
+          duration: String(duracionMinutos),
           timezone: "America/Santiago",
         }),
       });
@@ -3812,13 +3853,7 @@ function ClasesTab() {
       if (res.ok && data.meeting?.join_url) {
         const joinUrl = data.meeting.join_url;
         const startUrl = data.meeting.start_url || "";
-        setForm((prev) => ({
-          ...prev,
-          joinUrl,
-          startUrl,
-        }));
 
-        // Guardar y activar la sala automáticamente en Firestore para transmisión inmediata
         if (db) {
           await addDoc(collection(db, "clases"), {
             nombre: form.nombre.trim(),
@@ -3826,43 +3861,70 @@ function ClasesTab() {
             cursoSlug: form.cursoSlug,
             joinUrl,
             startUrl,
-            estado: "activa", // ¡Activa de inmediato!
-            fechaInicio: serverTimestamp(),
+            tipoHorario,
+            ...(tipoHorario === "programada"
+              ? {
+                  fechaInicioProgramada: fechaInicioProg,
+                  fechaFinProgramada: fechaFinProg,
+                  estado: "programada",
+                }
+              : {
+                  estado: "activa",
+                  fechaInicio: serverTimestamp(),
+                }),
             fechaCreacion: serverTimestamp(),
             creadoPor: userData?.email || "",
           });
           setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
-          setZoomMsg("✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos ya pueden entrar directamente desde su panel.");
+          setZoomMsg(
+            tipoHorario === "programada"
+              ? `✅ ¡Clase programada exitosamente con Zoom! Horario: ${formatRangoHorario(fechaInicioProg, fechaFinProg)}`
+              : "✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos ya pueden entrar directamente."
+          );
         }
       } else {
-        setZoomMsg(data.error || "Zoom API no disponible. Puedes pegar el enlace de Zoom manualmente abajo.");
+        setZoomMsg(data.error || "Zoom API no disponible. Puedes ingresar el enlace de Zoom manualmente abajo.");
       }
     } catch {
-      setZoomMsg("Zoom API no disponible en este entorno. Puedes pegar tu enlace de Zoom o Meet abajo.");
+      setZoomMsg("Zoom API no disponible en este entorno. Puedes ingresar tu enlace de Zoom o Meet abajo.");
     } finally {
       setCreandoZoom(false);
     }
   };
 
-  const crear = async (activa: boolean = true) => {
+  const crearManual = async () => {
     if (!db || !form.nombre.trim()) return;
     let url = form.joinUrl.trim();
     if (url && !url.startsWith("http://") && !url.startsWith("https://")) {
       url = "https://" + url;
     }
+
     await addDoc(collection(db, "clases"), {
       nombre: form.nombre.trim(),
       descripcion: form.descripcion.trim(),
       cursoSlug: form.cursoSlug,
       joinUrl: url,
-      startUrl: (form as any).startUrl || "",
-      estado: activa ? "activa" : "inactiva", // Activa de una para que los alumnos entren altiro
-      ...(activa ? { fechaInicio: serverTimestamp() } : {}),
+      tipoHorario,
+      ...(tipoHorario === "programada"
+        ? {
+            fechaInicioProgramada: fechaInicioProg,
+            fechaFinProgramada: fechaFinProg,
+            estado: "programada",
+          }
+        : {
+            estado: "activa",
+            fechaInicio: serverTimestamp(),
+          }),
       fechaCreacion: serverTimestamp(),
       creadoPor: userData?.email || "",
     });
+
     setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
-    setZoomMsg(activa ? "✅ Sala registrada y ACTIVADA EN VIVO. Los alumnos ya pueden unirse." : "Sala registrada como inactiva.");
+    setZoomMsg(
+      tipoHorario === "programada"
+        ? `✅ Clase programada para: ${formatRangoHorario(fechaInicioProg, fechaFinProg)}`
+        : "✅ Sala creada y ACTIVADA EN VIVO."
+    );
   };
 
   const guardarUrlClase = async (c: any) => {
@@ -3879,69 +3941,165 @@ function ClasesTab() {
   };
 
   const cambiarEstado = async (c: any, estado: string) => {
-    await updateDoc(doc(db!, "clases", c.id), {
+    if (!db) return;
+    await updateDoc(doc(db, "clases", c.id), {
       estado,
       ...(estado === "activa" ? { fechaInicio: serverTimestamp() } : {}),
     });
   };
 
   const eliminar = async (c: any) => {
+    if (!db) return;
     if (!confirm(`¿Eliminar la clase "${c.nombre}"?`)) return;
-    await deleteDoc(doc(db!, "clases", c.id));
+    await deleteDoc(doc(db, "clases", c.id));
   };
+
+  // Clasificación por estado calculado
+  const clasesConEstado = clases.map((c) => ({
+    ...c,
+    liveStatus: getClaseLiveStatus(c),
+  }));
+
+  const enVivoList = clasesConEstado.filter((c) => c.liveStatus === "en_vivo");
+  const programadasList = clasesConEstado.filter((c) => c.liveStatus === "programada");
+  const finalizadasList = clasesConEstado.filter((c) => c.liveStatus === "finalizada");
+
+  const clasesFiltradas = clasesConEstado.filter((c) => {
+    if (filtroEstado === "en_vivo") return c.liveStatus === "en_vivo";
+    if (filtroEstado === "programadas") return c.liveStatus === "programada";
+    if (filtroEstado === "finalizadas") return c.liveStatus === "finalizada";
+    return true;
+  });
 
   return (
     <div className="space-y-6">
+      {/* Formulario de Creación y Programación */}
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
-        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 border border-emerald-300 px-3 py-1 text-xs font-black uppercase tracking-wider text-emerald-800">
-          <span>📹</span> Control de Transmisión en Vivo
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 border border-blue-300 px-3 py-1 text-xs font-black uppercase tracking-wider text-blue-900">
+            <span>🗓️</span> Programador de Clases en Vivo (Zoom / Virtual)
+          </div>
+          <span className="text-xs text-gray-500 font-bold">
+            Solo visible para alumnos con aprobación de clases online
+          </span>
         </div>
-        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Crear y Abrir Sala de Clases</h2>
+
+        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Programar o Abrir Sala de Clases</h2>
         <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-          Crea la sala y déjala activa en el instante. Los alumnos matriculados verán el aviso en vivo en su panel y podrán entrar inmediatamente sin sala de espera.
+          Puedes programar una clase hoy en la noche para que <strong>se active automáticamente en el horario asignado (ej. de 08:00 a 15:00 hrs)</strong> y finalice sola, o abrir una sala de inmediato.
         </p>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <input
-            value={form.nombre}
-            onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-            placeholder="Nombre de la clase (ej. Módulo 1: Legislación de Seguridad)"
-            className="rounded-xl border border-gray-300 px-4 py-2.5 text-sm sm:col-span-2"
-          />
-          <input
-            value={form.descripcion}
-            onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
-            placeholder="Descripción u objetivos (opcional)"
-            className="rounded-xl border border-gray-300 px-4 py-2.5 text-sm sm:col-span-2"
-          />
-          <select
-            value={form.cursoSlug}
-            onChange={(e) => setForm({ ...form, cursoSlug: e.target.value })}
-            className="rounded-xl border border-gray-300 px-4 py-2.5 text-sm"
+        {/* Selector de Tipo de Horario */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setTipoHorario("programada")}
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition flex items-center gap-2 ${
+              tipoHorario === "programada"
+                ? "bg-apre-blue text-white shadow-xs"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
           >
-            <option value="">Todos los cursos (transmisión global)</option>
-            {CURSOS_PLATAFORMA.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.title}
-              </option>
-            ))}
-          </select>
+            <span>⏰</span>
+            <span>Programar Fecha y Horario (ej. 08:00 a 15:00 hrs)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setTipoHorario("inmediata")}
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition flex items-center gap-2 ${
+              tipoHorario === "inmediata"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>🔴</span>
+            <span>Transmisión Inmediata (Abrir Ahora Mismo)</span>
+          </button>
+        </div>
 
-          <div className="space-y-1">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label className="text-xs font-bold text-gray-700 block mb-1">Nombre de la Clase: *</label>
+            <input
+              value={form.nombre}
+              onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+              placeholder="ej. Módulo 1: Legislación de Seguridad Privada y Derechos Humanos"
+              className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-xs focus:border-apre-blue focus:outline-hidden"
+            />
+          </div>
+
+          {/* Rango de Horarios si es programada */}
+          {tipoHorario === "programada" && (
+            <>
+              <div>
+                <label className="text-xs font-bold text-gray-700 block mb-1">
+                  📅 Fecha y Hora de Inicio: * (ej. 08:00 AM)
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={fechaInicioProg}
+                  onChange={(e) => setFechaInicioProg(e.target.value)}
+                  className="w-full rounded-xl border border-blue-300 bg-blue-50/40 px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-700 block mb-1">
+                  🏁 Fecha y Hora de Término: * (ej. 15:00 PM / 3 de la tarde)
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={fechaFinProg}
+                  onChange={(e) => setFechaFinProg(e.target.value)}
+                  className="w-full rounded-xl border border-blue-300 bg-blue-50/40 px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                />
+              </div>
+            </>
+          )}
+
+          <div>
+            <label className="text-xs font-bold text-gray-700 block mb-1">Curso Asignado:</label>
+            <select
+              value={form.cursoSlug}
+              onChange={(e) => setForm({ ...form, cursoSlug: e.target.value })}
+              className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-xs focus:border-apre-blue focus:outline-hidden"
+            >
+              <option value="">Todos los cursos (Transmisión Global)</option>
+              {CURSOS_PLATAFORMA.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-bold text-gray-700 block mb-1">Descripción / Temario (opcional):</label>
+            <input
+              value={form.descripcion}
+              onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+              placeholder="ej. Clase teórica presencial transmitida vía Zoom"
+              className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-xs focus:border-apre-blue focus:outline-hidden"
+            />
+          </div>
+
+          <div className="sm:col-span-2 space-y-1">
+            <label className="text-xs font-bold text-gray-700 block">Enlace de la Sala Zoom / Meet:</label>
             <input
               value={form.joinUrl}
               onChange={(e) => setForm({ ...form, joinUrl: e.target.value })}
-              placeholder="Enlace de la sala (ej. https://zoom.us/j/... o Meet)"
-              className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm"
+              placeholder="https://zoom.us/j/... (o genera automáticamente con el botón abajo)"
+              className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-xs focus:border-apre-blue focus:outline-hidden"
             />
             {zoomMeetings.length > 0 && (
               <select
                 onChange={(e) => {
                   if (e.target.value) setForm((prev) => ({ ...prev, joinUrl: e.target.value }));
                 }}
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] text-gray-700"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[11px] text-gray-700"
               >
-                <option value="">O seleccionar de tus reuniones Zoom existentes…</option>
+                <option value="">O seleccionar de tus reuniones Zoom sincronizadas…</option>
                 {zoomMeetings.map((zm) => (
                   <option key={zm.id} value={zm.join_url}>
                     {zm.topic} ({new Date(zm.start_time).toLocaleDateString("es-CL")})
@@ -3960,159 +4118,259 @@ function ClasesTab() {
             className="rounded-xl bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 text-xs font-black text-white transition disabled:opacity-50 shadow-md flex items-center gap-1.5"
           >
             <span>⚡</span>
-            <span>{creandoZoom ? "Generando y Abriendo Sala…" : "🔴 Crear y Abrir Sala Zoom en Vivo (1 Clic)"}</span>
+            <span>
+              {creandoZoom
+                ? "Sincronizando con Zoom…"
+                : tipoHorario === "programada"
+                ? "🗓️ Programar Clase Automática con Zoom API"
+                : "🔴 Crear y Abrir Sala Zoom en Vivo (1 Clic)"}
+            </span>
           </button>
 
           <button
             type="button"
-            onClick={() => crear(true)}
+            onClick={crearManual}
             disabled={!form.nombre.trim()}
-            className="rounded-xl bg-whatsapp px-5 py-2.5 text-xs font-black text-white hover:brightness-105 disabled:opacity-50 shadow-sm flex items-center gap-1.5"
+            className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark px-5 py-2.5 text-xs font-black text-white disabled:opacity-50 shadow-sm flex items-center gap-1.5"
           >
             <span>+</span>
-            <span>Crear y Activar Sala Manual</span>
+            <span>{tipoHorario === "programada" ? "Guardar Clase Programada" : "Crear y Abrir Manual"}</span>
           </button>
         </div>
 
-        {zoomMsg && <p className="mt-2 text-xs font-semibold text-apre-blue">{zoomMsg}</p>}
+        {zoomMsg && (
+          <p className="mt-3 text-xs font-bold text-apre-blue bg-blue-50 border border-blue-200 p-2.5 rounded-xl">
+            {zoomMsg}
+          </p>
+        )}
       </div>
 
+      {/* Barra de Filtros de Clases */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setFiltroEstado("todas")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+              filtroEstado === "todas" ? "bg-apre-blue text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Todas ({clases.length})
+          </button>
+          <button
+            onClick={() => setFiltroEstado("en_vivo")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroEstado === "en_vivo" ? "bg-emerald-600 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>🔴 En Vivo Ahora</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{enVivoList.length}</span>
+          </button>
+          <button
+            onClick={() => setFiltroEstado("programadas")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroEstado === "programadas" ? "bg-blue-600 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>⏳ Programadas</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{programadasList.length}</span>
+          </button>
+          <button
+            onClick={() => setFiltroEstado("finalizadas")}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+              filtroEstado === "finalizadas" ? "bg-slate-700 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>📁 Finalizadas / Historial</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{finalizadasList.length}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Lista de Clases */}
       <div className="space-y-3">
-        {clases.map((c) => (
-          <div key={c.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="font-extrabold text-apre-blue text-base">{c.nombre}</p>
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-bold text-white ${
-                      c.estado === "activa"
-                        ? "bg-whatsapp animate-pulse"
-                        : c.estado === "finalizada"
-                        ? "bg-gray-400"
-                        : "bg-apre-blue"
-                    }`}
-                  >
-                    {c.estado === "activa" ? "🔴 EN VIVO (SALA ABIERTA)" : c.estado === "finalizada" ? "Sala Cerrada" : "Inactiva"}
-                  </span>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">
-                  Curso: <strong>{c.cursoSlug ? cursoNombreDe(c.cursoSlug) : "Todos los cursos (Global)"}</strong>
-                </p>
-                {c.descripcion && <p className="mt-1 text-xs text-gray-500">{c.descripcion}</p>}
-                
-                {/* Edición rápida del enlace de la clase */}
-                <div className="mt-2">
-                  {editandoUrlId === c.id ? (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={nuevaUrl}
-                        onChange={(e) => setNuevaUrl(e.target.value)}
-                        placeholder="https://zoom.us/j/..."
-                        className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-mono w-72"
-                      />
-                      <button
-                        onClick={() => guardarUrlClase(c)}
-                        className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white"
-                      >
-                        Guardar enlace
-                      </button>
-                      <button
-                        onClick={() => setEditandoUrlId(null)}
-                        className="rounded-lg bg-gray-200 px-3 py-1.5 text-xs text-gray-600"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      {c.joinUrl ? (
-                        <a
-                          href={c.joinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-block text-xs font-bold text-apre-blue hover:underline font-mono"
-                        >
-                          🔗 {c.joinUrl}
-                        </a>
-                      ) : (
-                        <span className="text-xs text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                          ⚠️ Sin enlace de Zoom/Meet configurado
-                        </span>
-                      )}
-                      <button
-                        onClick={() => {
-                          setEditandoUrlId(c.id);
-                          setNuevaUrl(c.joinUrl || "");
-                        }}
-                        className="text-[11px] font-bold text-apre-blue hover:underline"
-                      >
-                        ✎ {c.joinUrl ? "Cambiar enlace" : "+ Pegar enlace Zoom/Meet"}
-                      </button>
-                    </div>
+        {clasesFiltradas.map((c) => {
+          const isLive = c.liveStatus === "en_vivo";
+          const isProg = c.liveStatus === "programada";
+          const isFin = c.liveStatus === "finalizada";
+
+          return (
+            <div key={c.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-extrabold text-apre-blue text-base">{c.nombre}</p>
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-xs font-bold text-white ${
+                        isLive
+                          ? "bg-whatsapp animate-pulse"
+                          : isProg
+                          ? "bg-blue-600"
+                          : "bg-gray-400"
+                      }`}
+                    >
+                      {isLive
+                        ? "🔴 EN VIVO AHORA (SALA ABIERTA)"
+                        : isProg
+                        ? "⏳ PROGRAMADA (EN ESPERA)"
+                        : "⏹️ CLASE FINALIZADA"}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-gray-600">
+                    Curso: <strong>{c.cursoSlug ? cursoNombreDe(c.cursoSlug) : "Todos los cursos (Global)"}</strong>
+                  </p>
+
+                  {/* Horario programado */}
+                  {(c.fechaInicioProgramada || c.tipoHorario === "programada") && (
+                    <p className="text-xs font-semibold text-indigo-900 bg-indigo-50 border border-indigo-200 inline-block px-2.5 py-1 rounded-lg">
+                      ⏰ Horario: <strong>{formatRangoHorario(c.fechaInicioProgramada, c.fechaFinProgramada)}</strong>
+                    </p>
                   )}
+
+                  {c.descripcion && <p className="text-xs text-gray-500 italic">{c.descripcion}</p>}
+
+                  {/* Edición rápida del enlace de la clase */}
+                  <div className="mt-2">
+                    {editandoUrlId === c.id ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={nuevaUrl}
+                          onChange={(e) => setNuevaUrl(e.target.value)}
+                          placeholder="https://zoom.us/j/..."
+                          className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-mono w-72"
+                        />
+                        <button
+                          onClick={() => guardarUrlClase(c)}
+                          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white"
+                        >
+                          Guardar enlace
+                        </button>
+                        <button
+                          onClick={() => setEditandoUrlId(null)}
+                          className="rounded-lg bg-gray-200 px-3 py-1.5 text-xs text-gray-600"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        {c.joinUrl ? (
+                          <a
+                            href={c.joinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block text-xs font-bold text-apre-blue hover:underline font-mono"
+                          >
+                            🔗 {c.joinUrl}
+                          </a>
+                        ) : (
+                          <span className="text-xs text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                            ⚠️ Sin enlace de Zoom/Meet configurado
+                          </span>
+                        )}
+                        <button
+                          onClick={() => {
+                            setEditandoUrlId(c.id);
+                            setNuevaUrl(c.joinUrl || "");
+                          }}
+                          className="text-[11px] font-bold text-apre-blue hover:underline"
+                        >
+                          ✎ {c.joinUrl ? "Cambiar enlace" : "+ Pegar enlace Zoom/Meet"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {c.estado === "activa" && (
-                  <Link
-                    href={`/aula-en-vivo?id=${c.id}`}
-                    target="_blank"
-                    className="rounded-xl bg-cyan-500 px-3.5 py-2 text-xs font-black text-slate-950 hover:bg-cyan-400 shadow-sm inline-flex items-center gap-1.5"
-                  >
-                    <span>🚀</span>
-                    <span>Ver Aula Virtual</span>
-                  </Link>
-                )}
-                {c.startUrl && (
-                  <a
-                    href={c.startUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-2 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5"
-                    title="Iniciar reunión como Anfitrión en Zoom"
-                  >
-                    <span>👑</span>
-                    <span>Iniciar como Host</span>
-                  </a>
-                )}
-                {c.estado === "inactiva" && (
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Botón Ver Aula */}
+                  {isLive && (
+                    <Link
+                      href={`/aula-en-vivo?id=${c.id}`}
+                      target="_blank"
+                      className="rounded-xl bg-cyan-500 px-3.5 py-2 text-xs font-black text-slate-950 hover:bg-cyan-400 shadow-sm inline-flex items-center gap-1.5"
+                    >
+                      <span>🚀</span>
+                      <span>Ver Aula Virtual</span>
+                    </Link>
+                  )}
+
+                  {c.startUrl && (
+                    <a
+                      href={c.startUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-2 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5"
+                      title="Iniciar reunión como Anfitrión en Zoom"
+                    >
+                      <span>👑</span>
+                      <span>Iniciar como Host</span>
+                    </a>
+                  )}
+
+                  {/* Acciones de estado */}
+                  {isProg && (
+                    <button
+                      onClick={() => cambiarEstado(c, "activa")}
+                      className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-black text-white hover:brightness-105 shadow-sm"
+                    >
+                      ▶ Forzar Inicio en Vivo Ahora
+                    </button>
+                  )}
+
+                  {isLive && (
+                    <button
+                      onClick={() => cambiarEstado(c, "finalizada")}
+                      className="rounded-xl bg-gray-800 px-4 py-2 text-xs font-black text-white hover:bg-gray-900 shadow-sm"
+                    >
+                      ■ Finalizar Clase (Cerrar Sala)
+                    </button>
+                  )}
+
+                  {isFin && (
+                    <>
+                      <button
+                        onClick={() => cambiarEstado(c, "activa")}
+                        className="rounded-xl bg-whatsapp px-3.5 py-2 text-xs font-bold text-white hover:brightness-105 shadow-sm"
+                      >
+                        ▶ Reabrir Sala
+                      </button>
+
+                      {onPublicarGrabada && (
+                        <button
+                          onClick={() =>
+                            onPublicarGrabada({
+                              titulo: c.nombre,
+                              cursoSlug: c.cursoSlug || "guardia-de-seguridad",
+                              descripcion: c.descripcion || "",
+                            })
+                          }
+                          className="rounded-xl bg-purple-600 hover:bg-purple-700 px-3.5 py-2 text-xs font-bold text-white shadow-sm inline-flex items-center gap-1.5"
+                        >
+                          <span>📹</span>
+                          <span>Publicar como Clase Grabada</span>
+                        </button>
+                      )}
+                    </>
+                  )}
+
                   <button
-                    onClick={() => cambiarEstado(c, "activa")}
-                    className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-black text-white hover:brightness-105 shadow-sm"
+                    onClick={() => eliminar(c)}
+                    className="rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-apre-red hover:bg-red-100"
                   >
-                    ▶ Iniciar Clase (Abrir Sala)
+                    Eliminar
                   </button>
-                )}
-                {c.estado === "activa" && (
-                  <button
-                    onClick={() => cambiarEstado(c, "finalizada")}
-                    className="rounded-xl bg-gray-800 px-4 py-2 text-xs font-black text-white hover:bg-gray-900 shadow-sm"
-                  >
-                    ■ Finalizar Clase (Cerrar Sala)
-                  </button>
-                )}
-                {c.estado === "finalizada" && (
-                  <button
-                    onClick={() => cambiarEstado(c, "activa")}
-                    className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-black text-white hover:brightness-105 shadow-sm"
-                  >
-                    ▶ Reiniciar Sala
-                  </button>
-                )}
-                <button
-                  onClick={() => eliminar(c)}
-                  className="rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-apre-red hover:bg-red-100"
-                >
-                  Eliminar
-                </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        {clases.length === 0 && (
-          <p className="text-gray-500 text-xs">Sin clases registradas. Crea la primera arriba.</p>
+          );
+        })}
+
+        {clasesFiltradas.length === 0 && (
+          <p className="text-gray-500 text-xs py-4 text-center">
+            No hay clases registradas en esta categoría. Puedes programar una nueva arriba.
+          </p>
         )}
       </div>
     </div>

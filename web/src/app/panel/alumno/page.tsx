@@ -12,6 +12,7 @@ import PrivacidadPanel from "@/components/PrivacidadPanel";
 import { canAccessCourse, getCourseFieldKey, getCourseStatus, isMaterialHabilitado, CURSOS_LISTA } from "@/lib/courseAccess";
 import { COURSE_TIMING_CONFIG, getDiaActualCurso } from "@/lib/courseTiming";
 import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
+import { formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
 
 interface Enroll {
   id: string;
@@ -29,6 +30,9 @@ interface Clase {
   joinUrl?: string;
   estado?: string;
   fechaInicio?: unknown;
+  tipoHorario?: string;
+  fechaInicioProgramada?: string | null;
+  fechaFinProgramada?: string | null;
 }
 
 interface ClaseGrabada {
@@ -124,7 +128,6 @@ export default function PanelAlumno() {
     const db = getFirestoreDb();
     if (!db || !userData) return;
 
-    // Si el alumno NO tiene modalidad online habilitada por el admin, no ve las clases en vivo
     const tieneAccesoOnline = Boolean(
       userData.accesoOnline === true ||
       userData.accesoClasesVivo === true ||
@@ -136,16 +139,18 @@ export default function PanelAlumno() {
       return;
     }
 
-    const q = query(collection(db, "clases"), where("estado", "==", "activa"));
+    const q = query(collection(db, "clases"), where("estado", "!=", "finalizada"));
     const unsub = onSnapshot(q, (snap) => {
-      const activas = snap.docs
+      const permitidas = snap.docs
         .map((d) => ({ id: d.id, ...d.data() } as Clase))
         .filter((c) => {
           if (!c.cursoSlug) return true;
           return canAccessCourse(userData, c.cursoSlug, enrolls);
         });
-      setClases(activas);
-      const nuevas = activas.filter((c) => !avisados.current.has(c.id));
+      setClases(permitidas);
+
+      const enVivo = permitidas.filter((c) => getClaseLiveStatus(c) === "en_vivo");
+      const nuevas = enVivo.filter((c) => !avisados.current.has(c.id));
       if (nuevas.length > 0) {
         for (const c of nuevas) avisados.current.add(c.id);
         setAviso(nuevas[0]);
@@ -154,7 +159,6 @@ export default function PanelAlumno() {
     return unsub;
   }, [userData, enrolls]);
 
-  // Filtro estricto de Clases Grabadas: Solo se muestran si el alumno tiene acceso aprobado al curso asignado
   useEffect(() => {
     const db = getFirestoreDb();
     if (!db || !userData) return;
@@ -163,13 +167,11 @@ export default function PanelAlumno() {
       const ahora = new Date().toISOString();
       const todas = snap.docs.map((d) => ({ id: d.id, ...d.data() } as ClaseGrabada));
 
-      // 1. Control estricto por matrícula y permisos (accesoOS10, accesoCCTV, etc.)
       const permitidas = todas.filter((c) => {
         if (!c.cursoSlug) return true;
         return canAccessCourse(userData, c.cursoSlug, enrolls);
       });
 
-      // 2. Control de temporizadores (drip y vigencia)
       const vigentes = permitidas.filter((c) => {
         if (c.disponibleDesde && c.disponibleDesde > ahora) return false;
         if (c.disponibleHasta && c.disponibleHasta < ahora) return false;
@@ -180,7 +182,6 @@ export default function PanelAlumno() {
     });
     return unsub;
   }, [userData, enrolls]);
-
 
   const solicitarAccesoCurso = async (fieldKey: string, nombreCurso: string) => {
     if (!user) return;
@@ -197,7 +198,7 @@ export default function PanelAlumno() {
       }
     } catch (err) {
       console.error("Error solicitando acceso:", err);
-      alert("Hubo un error enviando la solicitud. Intenta nuevamente.");
+      alert("Error al enviar la solicitud. Intenta nuevamente.");
     } finally {
       setSolicitandoCurso(null);
     }
@@ -219,9 +220,22 @@ export default function PanelAlumno() {
     return cg.cursoSlug === cursoFiltroGrabadas;
   });
 
+  const tieneAccesoOnline = Boolean(
+    userData?.accesoOnline === true ||
+    userData?.accesoClasesVivo === true ||
+    (userData as any)?.modalidadOnline === true
+  );
+
+  const claseEnVivo = tieneAccesoOnline
+    ? clases.find((c) => getClaseLiveStatus(c) === "en_vivo")
+    : null;
+
+  const claseProgramada = tieneAccesoOnline
+    ? clases.find((c) => getClaseLiveStatus(c) === "programada")
+    : null;
+
   return (
     <>
-      {/* Header Banner */}
       <section className="bg-apre-blue text-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-12">
           <div>
@@ -258,8 +272,7 @@ export default function PanelAlumno() {
 
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-6xl space-y-10 px-4">
-          {/* Banner de Clase Activa en Vivo (Notificación Instantánea) */}
-          {clases.length > 0 && (
+          {claseEnVivo && (
             <div className="rounded-3xl border-2 border-emerald-500 bg-linear-to-r from-emerald-50 via-teal-50/80 to-blue-50/60 p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-600 text-white font-black text-3xl shadow-lg animate-pulse">
@@ -271,15 +284,17 @@ export default function PanelAlumno() {
                     CLASE EN VIVO EN ESTE MOMENTO
                   </div>
                   <h3 className="text-xl font-extrabold text-apre-blue mt-1.5">
-                    {clases[0].nombre}
+                    {claseEnVivo.nombre}
                   </h3>
                   <p className="text-xs text-slate-600 mt-0.5">
-                    La sala virtual está abierta. Haz clic en el botón para ingresar de inmediato y ver la clase.
+                    {claseEnVivo.fechaInicioProgramada
+                      ? `Horario: ${formatRangoHorario(claseEnVivo.fechaInicioProgramada, claseEnVivo.fechaFinProgramada)} · La sala virtual está abierta.`
+                      : "La sala virtual está abierta. Haz clic en el botón para ingresar de inmediato y ver la clase."}
                   </p>
                 </div>
               </div>
               <Link
-                href={`/aula-en-vivo?id=${clases[0].id}`}
+                href={`/aula-en-vivo?id=${claseEnVivo.id}`}
                 className="rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3.5 text-sm font-black shadow-lg transition flex items-center gap-2"
               >
                 <span>🚀</span>
@@ -288,7 +303,33 @@ export default function PanelAlumno() {
             </div>
           )}
 
-          {/* Quick Action Feature Grid (Estilo SARMAT) */}
+          {!claseEnVivo && claseProgramada && (
+            <div className="rounded-3xl border border-blue-300 bg-linear-to-r from-blue-50 via-indigo-50/70 to-slate-50 p-6 shadow-md flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white font-black text-2xl shadow-md">
+                  ⏰
+                </span>
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-blue-600/10 text-blue-900 border border-blue-300 px-3 py-1 text-xs font-black uppercase tracking-wider">
+                    <span>🗓️</span> PRÓXIMA CLASE PROGRAMADA
+                  </div>
+                  <h3 className="text-xl font-extrabold text-apre-blue mt-1.5">
+                    {claseProgramada.nombre}
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Horario: <strong>{formatRangoHorario(claseProgramada.fechaInicioProgramada, claseProgramada.fechaFinProgramada)}</strong> · La sala se habilitará automáticamente al comenzar el horario.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="rounded-2xl bg-blue-100 text-blue-900 border border-blue-300 px-5 py-3 text-xs font-black inline-flex items-center gap-2">
+                  <span>🔒</span>
+                  <span>En espera de inicio</span>
+                </span>
+              </div>
+            </div>
+          )}
+
           <div>
             <h2 className="text-xl font-extrabold text-apre-blue mb-4">
               📌 Herramientas Principales
@@ -296,37 +337,48 @@ export default function PanelAlumno() {
 
             <div
               className={`grid gap-4 ${
-                Boolean(userData?.accesoOnline || userData?.accesoClasesVivo) ? "sm:grid-cols-3" : "sm:grid-cols-2"
+                tieneAccesoOnline ? "sm:grid-cols-3" : "sm:grid-cols-2"
               }`}
             >
-              {/* Card 1: Clases en Vivo (Solo para alumnos con modalidad Online habilitada) */}
-              {Boolean(userData?.accesoOnline || userData?.accesoClasesVivo) && (
+              {tieneAccesoOnline && (
                 <div
                   className={`relative rounded-2xl border p-6 transition-all shadow-sm ${
-                    clases.length > 0
+                    claseEnVivo
                       ? "border-2 border-whatsapp bg-white"
+                      : claseProgramada
+                      ? "border-2 border-blue-300 bg-white"
                       : "border-gray-200 bg-white hover:border-gray-300"
                   }`}
                 >
-                  {clases.length > 0 && (
+                  {claseEnVivo ? (
                     <span className="absolute -top-3 right-4 animate-pulse rounded-full bg-whatsapp px-3 py-0.5 text-xs font-bold text-white shadow-md">
                       🔴 EN VIVO
                     </span>
-                  )}
+                  ) : claseProgramada ? (
+                    <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-xs font-bold text-white shadow-md">
+                      ⏳ PROGRAMADA
+                    </span>
+                  ) : null}
                   <div className="text-3xl mb-2">📹</div>
                   <h3 className="font-extrabold text-apre-blue text-lg">Clases en Vivo (Zoom)</h3>
                   <p className="mt-1 text-xs text-gray-500">
-                    {clases.length > 0
-                      ? `${clases.length} clase disponible para unirte`
+                    {claseEnVivo
+                      ? "Clase transmitiendo en vivo ahora"
+                      : claseProgramada
+                      ? `Próxima clase: ${formatRangoHorario(claseProgramada.fechaInicioProgramada, claseProgramada.fechaFinProgramada)}`
                       : "Reuniones virtuales y webinars en directo"}
                   </p>
-                  {clases.length > 0 ? (
+                  {claseEnVivo ? (
                     <Link
-                      href={`/aula-en-vivo?id=${clases[0].id}`}
+                      href={`/aula-en-vivo?id=${claseEnVivo.id}`}
                       className="mt-4 block rounded-xl bg-whatsapp py-2.5 text-center text-xs font-black text-white transition hover:brightness-105 shadow-sm"
                     >
                       🚀 Entrar al Aula Virtual
                     </Link>
+                  ) : claseProgramada ? (
+                    <span className="mt-4 inline-block text-xs font-bold text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg">
+                      ⏰ Abre a las {new Date(claseProgramada.fechaInicioProgramada || "").toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })} hrs
+                    </span>
                   ) : (
                     <span className="mt-4 inline-block text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg">
                       Sin clases activas ahora
@@ -335,7 +387,6 @@ export default function PanelAlumno() {
                 </div>
               )}
 
-              {/* Card 2: Clases Grabadas (Repeticiones YouTube) */}
               <a href="#clases-grabadas" className="group">
                 <div className="relative rounded-2xl border border-gray-200 bg-white p-6 transition-all shadow-sm group-hover:border-blue-600 group-hover:shadow-md h-full flex flex-col justify-between">
                   {clasesGrabadas.length > 0 && (

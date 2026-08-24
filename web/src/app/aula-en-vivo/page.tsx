@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { canAccessCourse } from "@/lib/courseAccess";
 import { getMeetingIdAndPwd, getZoomWebClientUrl } from "@/lib/zoomWeb";
+import { formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
 
 interface ClaseData {
   id: string;
@@ -17,6 +18,9 @@ interface ClaseData {
   joinUrl?: string;
   estado?: string;
   creadoPor?: string;
+  tipoHorario?: string;
+  fechaInicioProgramada?: string | null;
+  fechaFinProgramada?: string | null;
 }
 
 export default function AulaEnVivoPage() {
@@ -169,18 +173,46 @@ function AulaEnVivoInner() {
     );
   }
 
-  if (!clase || clase.estado === "finalizada") {
+  const liveStatus = clase ? getClaseLiveStatus(clase) : "finalizada";
+
+  if (!clase || liveStatus === "finalizada") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
-        <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-8 text-center shadow-2xl">
-          <div className="text-4xl mb-3">⏹️</div>
+        <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-8 text-center shadow-2xl space-y-4">
+          <div className="text-4xl">⏹️</div>
           <h1 className="text-xl font-black text-white">Sala de Clases Cerrada</h1>
-          <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-            No hay una transmisión en vivo activa en esta sala en este momento. La clase ha finalizado o aún no ha sido iniciada por el docente.
+          <p className="text-xs text-slate-400 leading-relaxed">
+            No hay una transmisión en vivo activa en esta sala en este momento. La clase ha finalizado o la sala fue cerrada por el docente.
           </p>
           <Link
             href={volverPanelHref}
-            className="mt-6 inline-block w-full rounded-xl bg-cyan-500 py-3 text-xs font-black text-slate-950 hover:bg-cyan-400 shadow-lg"
+            className="inline-block w-full rounded-xl bg-cyan-500 py-3 text-xs font-black text-slate-950 hover:bg-cyan-400 shadow-lg"
+          >
+            ← Volver a mi Portal
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!esAdminOProfesor && liveStatus === "programada") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
+        <div className="w-full max-w-md rounded-3xl border border-blue-500/30 bg-slate-900 p-8 text-center shadow-2xl space-y-4">
+          <div className="text-4xl">⏰</div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30 px-3 py-1 text-xs font-black uppercase tracking-wider">
+            <span>🗓️</span> Clase Programada
+          </div>
+          <h1 className="text-xl font-extrabold text-white">{clase.nombre}</h1>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Horario programado: <strong>{formatRangoHorario(clase.fechaInicioProgramada, clase.fechaFinProgramada)}</strong>
+          </p>
+          <p className="text-[11px] text-slate-400 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+            La sala virtual se abrirá automáticamente en este horario. Por favor regresa a la hora programada para unirte a la transmisión.
+          </p>
+          <Link
+            href={volverPanelHref}
+            className="inline-block w-full rounded-xl bg-cyan-500 py-3 text-xs font-black text-slate-950 hover:bg-cyan-400 shadow-lg"
           >
             ← Volver a mi Portal
           </Link>
