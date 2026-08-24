@@ -12,7 +12,7 @@ import PrivacidadPanel from "@/components/PrivacidadPanel";
 import { canAccessCourse, getCourseFieldKey, getCourseStatus, isMaterialHabilitado, CURSOS_LISTA } from "@/lib/courseAccess";
 import { COURSE_TIMING_CONFIG, getDiaActualCurso } from "@/lib/courseTiming";
 import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
-import { formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
+import { formatDetalleHorario, formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
 
 interface Enroll {
   id: string;
@@ -33,6 +33,11 @@ interface Clase {
   tipoHorario?: string;
   fechaInicioProgramada?: string | null;
   fechaFinProgramada?: string | null;
+  fechaInicioRango?: string | null;
+  fechaFinRango?: string | null;
+  horaInicioDiaria?: string | null;
+  horaFinDiaria?: string | null;
+  diasPermitidos?: number[] | null;
 }
 
 interface ClaseGrabada {
@@ -287,8 +292,8 @@ export default function PanelAlumno() {
                     {claseEnVivo.nombre}
                   </h3>
                   <p className="text-xs text-slate-600 mt-0.5">
-                    {claseEnVivo.fechaInicioProgramada
-                      ? `Horario: ${formatRangoHorario(claseEnVivo.fechaInicioProgramada, claseEnVivo.fechaFinProgramada)} · La sala virtual está abierta.`
+                    {claseEnVivo.fechaInicioRango || claseEnVivo.fechaInicioProgramada
+                      ? `Horario: ${formatDetalleHorario(claseEnVivo)} · La sala virtual está abierta en este momento.`
                       : "La sala virtual está abierta. Haz clic en el botón para ingresar de inmediato y ver la clase."}
                   </p>
                 </div>
@@ -303,6 +308,7 @@ export default function PanelAlumno() {
             </div>
           )}
 
+          {/* Banner de Próxima Clase Programada (Solo visible si no hay clase en vivo activa y el alumno tiene online) */}
           {!claseEnVivo && claseProgramada && (
             <div className="rounded-3xl border border-blue-300 bg-linear-to-r from-blue-50 via-indigo-50/70 to-slate-50 p-6 shadow-md flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
@@ -317,7 +323,7 @@ export default function PanelAlumno() {
                     {claseProgramada.nombre}
                   </h3>
                   <p className="text-xs text-slate-600 mt-0.5">
-                    Horario: <strong>{formatRangoHorario(claseProgramada.fechaInicioProgramada, claseProgramada.fechaFinProgramada)}</strong> · La sala se habilitará automáticamente al comenzar el horario.
+                    Horario: <strong>{formatDetalleHorario(claseProgramada)}</strong> · La sala se habilitará automáticamente cada día dentro del horario establecido.
                   </p>
                 </div>
               </div>
@@ -330,6 +336,7 @@ export default function PanelAlumno() {
             </div>
           )}
 
+          {/* Quick Action Feature Grid (Estilo SARMAT) */}
           <div>
             <h2 className="text-xl font-extrabold text-apre-blue mb-4">
               📌 Herramientas Principales
@@ -340,6 +347,7 @@ export default function PanelAlumno() {
                 tieneAccesoOnline ? "sm:grid-cols-3" : "sm:grid-cols-2"
               }`}
             >
+              {/* Card 1: Clases en Vivo (Solo para alumnos con modalidad Online habilitada) */}
               {tieneAccesoOnline && (
                 <div
                   className={`relative rounded-2xl border p-6 transition-all shadow-sm ${
@@ -365,7 +373,7 @@ export default function PanelAlumno() {
                     {claseEnVivo
                       ? "Clase transmitiendo en vivo ahora"
                       : claseProgramada
-                      ? `Próxima clase: ${formatRangoHorario(claseProgramada.fechaInicioProgramada, claseProgramada.fechaFinProgramada)}`
+                      ? `Próxima sesión: ${formatDetalleHorario(claseProgramada)}`
                       : "Reuniones virtuales y webinars en directo"}
                   </p>
                   {claseEnVivo ? (
@@ -377,7 +385,7 @@ export default function PanelAlumno() {
                     </Link>
                   ) : claseProgramada ? (
                     <span className="mt-4 inline-block text-xs font-bold text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg">
-                      ⏰ Abre a las {new Date(claseProgramada.fechaInicioProgramada || "").toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })} hrs
+                      ⏰ {claseProgramada.horaInicioDiaria ? `Abre a las ${claseProgramada.horaInicioDiaria} hrs` : "Abre a la hora programada"}
                     </span>
                   ) : (
                     <span className="mt-4 inline-block text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg">

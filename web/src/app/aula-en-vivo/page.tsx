@@ -8,7 +8,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { canAccessCourse } from "@/lib/courseAccess";
 import { getMeetingIdAndPwd, getZoomWebClientUrl } from "@/lib/zoomWeb";
-import { formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
+import {
+  formatDetalleHorario,
+  formatRangoHorario,
+  getClaseLiveStatus,
+} from "@/lib/claseHorario";
 
 interface ClaseData {
   id: string;
@@ -21,6 +25,11 @@ interface ClaseData {
   tipoHorario?: string;
   fechaInicioProgramada?: string | null;
   fechaFinProgramada?: string | null;
+  fechaInicioRango?: string | null;
+  fechaFinRango?: string | null;
+  horaInicioDiaria?: string | null;
+  horaFinDiaria?: string | null;
+  diasPermitidos?: number[] | null;
 }
 
 export default function AulaEnVivoPage() {
@@ -205,10 +214,10 @@ function AulaEnVivoInner() {
           </div>
           <h1 className="text-xl font-extrabold text-white">{clase.nombre}</h1>
           <p className="text-xs text-slate-300 leading-relaxed">
-            Horario programado: <strong>{formatRangoHorario(clase.fechaInicioProgramada, clase.fechaFinProgramada)}</strong>
+            Horario programado: <strong>{formatDetalleHorario(clase)}</strong>
           </p>
           <p className="text-[11px] text-slate-400 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
-            La sala virtual se abrirá automáticamente en este horario. Por favor regresa a la hora programada para unirte a la transmisión.
+            La sala virtual se abre y habilita automáticamente en los días y horarios establecidos. Por favor regresa en el horario fijado para unirte a la transmisión.
           </p>
           <Link
             href={volverPanelHref}

@@ -32,7 +32,11 @@ import {
   getDiaActualCurso,
   normalizarFechaMatricula,
 } from "@/lib/courseTiming";
-import { formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
+import {
+  formatDetalleHorario,
+  formatRangoHorario,
+  getClaseLiveStatus,
+} from "@/lib/claseHorario";
 
 type Tab =
   | "pendientes"
@@ -3770,6 +3774,19 @@ function ClasesTab({
   const { userData } = useAuth();
   const [clases, setClases] = useState<any[]>([]);
 
+  const getTodayDateStr = () => {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  };
+
+  const getFutureDateStr = (days: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  };
+
   const getTomorrowAt = (hours: number, minutes: number = 0) => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
@@ -3778,7 +3795,16 @@ function ClasesTab({
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(hours)}:${pad(minutes)}`;
   };
 
-  const [tipoHorario, setTipoHorario] = useState<"programada" | "inmediata">("programada");
+  const [tipoHorario, setTipoHorario] = useState<"rango_dias" | "programada" | "inmediata">("rango_dias");
+  
+  // Ciclo por Rango de Días (ej. del 1 al 10 de Septiembre, diario de 08:00 a 15:00 hrs)
+  const [fechaInicioRango, setFechaInicioRango] = useState(getTodayDateStr());
+  const [fechaFinRango, setFechaFinRango] = useState(getFutureDateStr(10));
+  const [horaInicioDiaria, setHoraInicioDiaria] = useState("08:00");
+  const [horaFinDiaria, setHoraFinDiaria] = useState("15:00");
+  const [diasSemana, setDiasSemana] = useState<"lunes_a_viernes" | "lunes_a_sabado" | "todos_los_dias">("lunes_a_viernes");
+
+  // Clase Única puntual
   const [fechaInicioProg, setFechaInicioProg] = useState(getTomorrowAt(8, 0));
   const [fechaFinProg, setFechaFinProg] = useState(getTomorrowAt(15, 0));
 
@@ -3816,6 +3842,12 @@ function ClasesTab({
       .catch(() => {});
   }, []);
 
+  const getDiasPermitidosArray = (tipo: string) => {
+    if (tipo === "lunes_a_viernes") return [1, 2, 3, 4, 5];
+    if (tipo === "lunes_a_sabado") return [1, 2, 3, 4, 5, 6];
+    return null;
+  };
+
   const generarZoomAutomatico = async () => {
     if (!form.nombre.trim()) {
       alert("Por favor ingresa primero el nombre de la clase.");
@@ -3824,20 +3856,23 @@ function ClasesTab({
     setCreandoZoom(true);
     setZoomMsg("");
     try {
-      const duracionMinutos =
-        tipoHorario === "programada" && fechaInicioProg && fechaFinProg
-          ? Math.max(
-              30,
-              Math.round(
-                (new Date(fechaFinProg).getTime() - new Date(fechaInicioProg).getTime()) / (1000 * 60)
-              )
-            )
-          : 90;
+      let duracionMinutos = 90;
+      let startTime = new Date().toISOString();
 
-      const startTime =
-        tipoHorario === "programada" && fechaInicioProg
-          ? new Date(fechaInicioProg).toISOString()
-          : new Date().toISOString();
+      if (tipoHorario === "rango_dias") {
+        const [hIni, mIni] = horaInicioDiaria.split(":").map(Number);
+        const [hFin, mFin] = horaFinDiaria.split(":").map(Number);
+        duracionMinutos = Math.max(30, (hFin * 60 + mFin) - (hIni * 60 + mIni));
+        startTime = new Date(`${fechaInicioRango}T${horaInicioDiaria}:00`).toISOString();
+      } else if (tipoHorario === "programada") {
+        duracionMinutos = Math.max(
+          30,
+          Math.round(
+            (new Date(fechaFinProg).getTime() - new Date(fechaInicioProg).getTime()) / (1000 * 60)
+          )
+        );
+        startTime = new Date(fechaInicioProg).toISOString();
+      }
 
       const res = await fetch("/api/zoom", {
         method: "POST",
@@ -3855,32 +3890,48 @@ function ClasesTab({
         const startUrl = data.meeting.start_url || "";
 
         if (db) {
-          await addDoc(collection(db, "clases"), {
+          const diasArray = getDiasPermitidosArray(diasSemana);
+          const payloadBase: any = {
             nombre: form.nombre.trim(),
             descripcion: form.descripcion.trim(),
             cursoSlug: form.cursoSlug,
             joinUrl,
             startUrl,
             tipoHorario,
-            ...(tipoHorario === "programada"
-              ? {
-                  fechaInicioProgramada: fechaInicioProg,
-                  fechaFinProgramada: fechaFinProg,
-                  estado: "programada",
-                }
-              : {
-                  estado: "activa",
-                  fechaInicio: serverTimestamp(),
-                }),
             fechaCreacion: serverTimestamp(),
             creadoPor: userData?.email || "",
-          });
+          };
+
+          if (tipoHorario === "rango_dias") {
+            await addDoc(collection(db, "clases"), {
+              ...payloadBase,
+              fechaInicioRango,
+              fechaFinRango,
+              horaInicioDiaria,
+              horaFinDiaria,
+              diasPermitidos: diasArray,
+              diasSemanaTipo: diasSemana,
+              estado: "programada",
+            });
+            setZoomMsg(`✅ ¡Ciclo programado exitosamente! Del ${fechaInicioRango} al ${fechaFinRango} (Diario de ${horaInicioDiaria} a ${horaFinDiaria} hrs).`);
+          } else if (tipoHorario === "programada") {
+            await addDoc(collection(db, "clases"), {
+              ...payloadBase,
+              fechaInicioProgramada: fechaInicioProg,
+              fechaFinProgramada: fechaFinProg,
+              estado: "programada",
+            });
+            setZoomMsg(`✅ ¡Clase programada exitosamente! Horario: ${formatRangoHorario(fechaInicioProg, fechaFinProg)}`);
+          } else {
+            await addDoc(collection(db, "clases"), {
+              ...payloadBase,
+              estado: "activa",
+              fechaInicio: serverTimestamp(),
+            });
+            setZoomMsg("✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos ya pueden entrar directamente.");
+          }
+
           setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
-          setZoomMsg(
-            tipoHorario === "programada"
-              ? `✅ ¡Clase programada exitosamente con Zoom! Horario: ${formatRangoHorario(fechaInicioProg, fechaFinProg)}`
-              : "✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos ya pueden entrar directamente."
-          );
         }
       } else {
         setZoomMsg(data.error || "Zoom API no disponible. Puedes ingresar el enlace de Zoom manualmente abajo.");
@@ -3899,32 +3950,47 @@ function ClasesTab({
       url = "https://" + url;
     }
 
-    await addDoc(collection(db, "clases"), {
+    const diasArray = getDiasPermitidosArray(diasSemana);
+    const payloadBase: any = {
       nombre: form.nombre.trim(),
       descripcion: form.descripcion.trim(),
       cursoSlug: form.cursoSlug,
       joinUrl: url,
       tipoHorario,
-      ...(tipoHorario === "programada"
-        ? {
-            fechaInicioProgramada: fechaInicioProg,
-            fechaFinProgramada: fechaFinProg,
-            estado: "programada",
-          }
-        : {
-            estado: "activa",
-            fechaInicio: serverTimestamp(),
-          }),
       fechaCreacion: serverTimestamp(),
       creadoPor: userData?.email || "",
-    });
+    };
+
+    if (tipoHorario === "rango_dias") {
+      await addDoc(collection(db, "clases"), {
+        ...payloadBase,
+        fechaInicioRango,
+        fechaFinRango,
+        horaInicioDiaria,
+        horaFinDiaria,
+        diasPermitidos: diasArray,
+        diasSemanaTipo: diasSemana,
+        estado: "programada",
+      });
+      setZoomMsg(`✅ Ciclo guardado: Del ${fechaInicioRango} al ${fechaFinRango} (Diario de ${horaInicioDiaria} a ${horaFinDiaria} hrs).`);
+    } else if (tipoHorario === "programada") {
+      await addDoc(collection(db, "clases"), {
+        ...payloadBase,
+        fechaInicioProgramada: fechaInicioProg,
+        fechaFinProgramada: fechaFinProg,
+        estado: "programada",
+      });
+      setZoomMsg(`✅ Clase programada para: ${formatRangoHorario(fechaInicioProg, fechaFinProg)}`);
+    } else {
+      await addDoc(collection(db, "clases"), {
+        ...payloadBase,
+        estado: "activa",
+        fechaInicio: serverTimestamp(),
+      });
+      setZoomMsg("✅ Sala creada y ACTIVADA EN VIVO.");
+    }
 
     setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
-    setZoomMsg(
-      tipoHorario === "programada"
-        ? `✅ Clase programada para: ${formatRangoHorario(fechaInicioProg, fechaFinProg)}`
-        : "✅ Sala creada y ACTIVADA EN VIVO."
-    );
   };
 
   const guardarUrlClase = async (c: any) => {
@@ -3980,17 +4046,29 @@ function ClasesTab({
             <span>🗓️</span> Programador de Clases en Vivo (Zoom / Virtual)
           </div>
           <span className="text-xs text-gray-500 font-bold">
-            Solo visible para alumnos con aprobación de clases online
+            Solo visible para alumnos con modalidad Online aprobada
           </span>
         </div>
 
         <h2 className="text-xl font-extrabold text-apre-blue mt-2">Programar o Abrir Sala de Clases</h2>
         <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-          Puedes programar una clase hoy en la noche para que <strong>se active automáticamente en el horario asignado (ej. de 08:00 a 15:00 hrs)</strong> y finalice sola, o abrir una sala de inmediato.
+          Configura un <strong>ciclo de varios días (ej. 10 días con apertura diaria a las 08:00 AM y cierre a las 15:00 PM)</strong>, programa una fecha única o abre la sala en el instante.
         </p>
 
         {/* Selector de Tipo de Horario */}
         <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setTipoHorario("rango_dias")}
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition flex items-center gap-2 ${
+              tipoHorario === "rango_dias"
+                ? "bg-apre-blue text-white shadow-xs"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <span>🗓️</span>
+            <span>Ciclo por Rango de Días (ej. 10 días, diario 08:00 a 15:00)</span>
+          </button>
           <button
             type="button"
             onClick={() => setTipoHorario("programada")}
@@ -4001,7 +4079,7 @@ function ClasesTab({
             }`}
           >
             <span>⏰</span>
-            <span>Programar Fecha y Horario (ej. 08:00 a 15:00 hrs)</span>
+            <span>Clase Única con Fecha/Hora Puntual</span>
           </button>
           <button
             type="button"
@@ -4019,16 +4097,126 @@ function ClasesTab({
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label className="text-xs font-bold text-gray-700 block mb-1">Nombre de la Clase: *</label>
+            <label className="text-xs font-bold text-gray-700 block mb-1">Nombre de la Clase o Ciclo: *</label>
             <input
               value={form.nombre}
               onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-              placeholder="ej. Módulo 1: Legislación de Seguridad Privada y Derechos Humanos"
+              placeholder="ej. Curso Guardia de Seguridad OS-10 - Clases Virtuales Matutinas"
               className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-xs focus:border-apre-blue focus:outline-hidden"
             />
           </div>
 
-          {/* Rango de Horarios si es programada */}
+          {/* Configuración de RANGO DE DÍAS CON HORARIO DIARIO */}
+          {tipoHorario === "rango_dias" && (
+            <div className="sm:col-span-2 rounded-2xl border border-blue-200 bg-blue-50/50 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-base">🗓️</span>
+                <span className="text-xs font-black text-apre-blue uppercase tracking-wide">
+                  Configuración del Rango de Días y Horarios Diarios
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                La sala Zoom se habilitará automáticamente todos los días entre la fecha de inicio y fin, abriendo exactamente a la hora diaria fijada y cerrando a la hora de término.
+              </p>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">
+                    📅 Día de Inicio del Ciclo: *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={fechaInicioRango}
+                    onChange={(e) => setFechaInicioRango(e.target.value)}
+                    className="w-full rounded-xl border border-blue-300 bg-white px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">
+                    🏁 Día de Término del Ciclo: *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={fechaFinRango}
+                    onChange={(e) => setFechaFinRango(e.target.value)}
+                    className="w-full rounded-xl border border-blue-300 bg-white px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">
+                    ⏰ Hora Diaria de Apertura: *
+                  </label>
+                  <input
+                    type="time"
+                    required
+                    value={horaInicioDiaria}
+                    onChange={(e) => setHoraInicioDiaria(e.target.value)}
+                    className="w-full rounded-xl border border-blue-300 bg-white px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-gray-700 block mb-1">
+                    ⏹️ Hora Diaria de Cierre: *
+                  </label>
+                  <input
+                    type="time"
+                    required
+                    value={horaFinDiaria}
+                    onChange={(e) => setHoraFinDiaria(e.target.value)}
+                    className="w-full rounded-xl border border-blue-300 bg-white px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-gray-700 block mb-1">
+                  📆 Días de la Semana Habilitados:
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setDiasSemana("lunes_a_viernes")}
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                      diasSemana === "lunes_a_viernes"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    }`}
+                  >
+                    Lunes a Viernes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDiasSemana("lunes_a_sabado")}
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                      diasSemana === "lunes_a_sabado"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    }`}
+                  >
+                    Lunes a Sábado
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDiasSemana("todos_los_dias")}
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                      diasSemana === "todos_los_dias"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    }`}
+                  >
+                    Todos los días (Corrido)
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Rango de Horarios si es puntual */}
           {tipoHorario === "programada" && (
             <>
               <div>
@@ -4079,7 +4267,7 @@ function ClasesTab({
             <input
               value={form.descripcion}
               onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
-              placeholder="ej. Clase teórica presencial transmitida vía Zoom"
+              placeholder="ej. Clases teóricas transmitidas vía Zoom"
               className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-xs focus:border-apre-blue focus:outline-hidden"
             />
           </div>
@@ -4121,8 +4309,8 @@ function ClasesTab({
             <span>
               {creandoZoom
                 ? "Sincronizando con Zoom…"
-                : tipoHorario === "programada"
-                ? "🗓️ Programar Clase Automática con Zoom API"
+                : tipoHorario === "rango_dias" || tipoHorario === "programada"
+                ? "🗓️ Programar con Zoom API Automático"
                 : "🔴 Crear y Abrir Sala Zoom en Vivo (1 Clic)"}
             </span>
           </button>
@@ -4134,7 +4322,11 @@ function ClasesTab({
             className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark px-5 py-2.5 text-xs font-black text-white disabled:opacity-50 shadow-sm flex items-center gap-1.5"
           >
             <span>+</span>
-            <span>{tipoHorario === "programada" ? "Guardar Clase Programada" : "Crear y Abrir Manual"}</span>
+            <span>
+              {tipoHorario === "rango_dias" || tipoHorario === "programada"
+                ? "Guardar Clase Programada"
+                : "Crear y Abrir Manual"}
+            </span>
           </button>
         </div>
 
@@ -4171,7 +4363,7 @@ function ClasesTab({
               filtroEstado === "programadas" ? "bg-blue-600 text-white shadow-xs" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            <span>⏳ Programadas</span>
+            <span>⏳ Programadas / En Espera</span>
             <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">{programadasList.length}</span>
           </button>
           <button
@@ -4220,10 +4412,10 @@ function ClasesTab({
                     Curso: <strong>{c.cursoSlug ? cursoNombreDe(c.cursoSlug) : "Todos los cursos (Global)"}</strong>
                   </p>
 
-                  {/* Horario programado */}
-                  {(c.fechaInicioProgramada || c.tipoHorario === "programada") && (
+                  {/* Horario detallado del ciclo o puntual */}
+                  {(c.tipoHorario === "rango_dias" || c.fechaInicioRango || c.fechaInicioProgramada || c.tipoHorario === "programada") && (
                     <p className="text-xs font-semibold text-indigo-900 bg-indigo-50 border border-indigo-200 inline-block px-2.5 py-1 rounded-lg">
-                      ⏰ Horario: <strong>{formatRangoHorario(c.fechaInicioProgramada, c.fechaFinProgramada)}</strong>
+                      ⏰ {formatDetalleHorario(c)}
                     </p>
                   )}
 
@@ -4248,35 +4440,25 @@ function ClasesTab({
                         </button>
                         <button
                           onClick={() => setEditandoUrlId(null)}
-                          className="rounded-lg bg-gray-200 px-3 py-1.5 text-xs text-gray-600"
+                          className="text-xs text-gray-500 hover:text-gray-700"
                         >
-                          ✕
+                          Cancelar
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        {c.joinUrl ? (
-                          <a
-                            href={c.joinUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block text-xs font-bold text-apre-blue hover:underline font-mono"
-                          >
-                            🔗 {c.joinUrl}
-                          </a>
-                        ) : (
-                          <span className="text-xs text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                            ⚠️ Sin enlace de Zoom/Meet configurado
-                          </span>
-                        )}
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="text-gray-500">Enlace Zoom:</span>
+                        <code className="bg-gray-100 px-2 py-0.5 rounded text-gray-700 text-[11px]">
+                          {c.joinUrl || "Sin enlace asignado"}
+                        </code>
                         <button
                           onClick={() => {
                             setEditandoUrlId(c.id);
                             setNuevaUrl(c.joinUrl || "");
                           }}
-                          className="text-[11px] font-bold text-apre-blue hover:underline"
+                          className="text-blue-600 hover:underline font-bold text-[11px]"
                         >
-                          ✎ {c.joinUrl ? "Cambiar enlace" : "+ Pegar enlace Zoom/Meet"}
+                          ✏️ Editar enlace
                         </button>
                       </div>
                     )}
@@ -4284,47 +4466,34 @@ function ClasesTab({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  {/* Botón Ver Aula */}
-                  {isLive && (
+                  {c.joinUrl && (
                     <Link
                       href={`/aula-en-vivo?id=${c.id}`}
                       target="_blank"
-                      className="rounded-xl bg-cyan-500 px-3.5 py-2 text-xs font-black text-slate-950 hover:bg-cyan-400 shadow-sm inline-flex items-center gap-1.5"
+                      className="rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white px-3.5 py-2 text-xs font-bold transition shadow-xs flex items-center gap-1"
                     >
                       <span>🚀</span>
-                      <span>Ver Aula Virtual</span>
+                      <span>Probar Aula Virtual</span>
                     </Link>
-                  )}
-
-                  {c.startUrl && (
-                    <a
-                      href={c.startUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-2 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5"
-                      title="Iniciar reunión como Anfitrión en Zoom"
-                    >
-                      <span>👑</span>
-                      <span>Iniciar como Host</span>
-                    </a>
-                  )}
-
-                  {/* Acciones de estado */}
-                  {isProg && (
-                    <button
-                      onClick={() => cambiarEstado(c, "activa")}
-                      className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-black text-white hover:brightness-105 shadow-sm"
-                    >
-                      ▶ Forzar Inicio en Vivo Ahora
-                    </button>
                   )}
 
                   {isLive && (
                     <button
                       onClick={() => cambiarEstado(c, "finalizada")}
-                      className="rounded-xl bg-gray-800 px-4 py-2 text-xs font-black text-white hover:bg-gray-900 shadow-sm"
+                      className="rounded-xl bg-amber-600 hover:bg-amber-700 px-3.5 py-2 text-xs font-bold text-white transition shadow-xs flex items-center gap-1"
                     >
-                      ■ Finalizar Clase (Cerrar Sala)
+                      <span>⏹️</span>
+                      <span>Cerrar Sala Hoy</span>
+                    </button>
+                  )}
+
+                  {isProg && (
+                    <button
+                      onClick={() => cambiarEstado(c, "activa")}
+                      className="rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white transition shadow-xs flex items-center gap-1"
+                    >
+                      <span>🔴</span>
+                      <span>Forzar Apertura Ahora</span>
                     </button>
                   )}
 
@@ -4332,11 +4501,11 @@ function ClasesTab({
                     <>
                       <button
                         onClick={() => cambiarEstado(c, "activa")}
-                        className="rounded-xl bg-whatsapp px-3.5 py-2 text-xs font-bold text-white hover:brightness-105 shadow-sm"
+                        className="rounded-xl bg-gray-100 hover:bg-gray-200 px-3.5 py-2 text-xs font-bold text-gray-700 transition flex items-center gap-1"
                       >
-                        ▶ Reabrir Sala
+                        <span>🔄</span>
+                        <span>Reactivar Sala</span>
                       </button>
-
                       {onPublicarGrabada && (
                         <button
                           onClick={() =>
@@ -4346,7 +4515,7 @@ function ClasesTab({
                               descripcion: c.descripcion || "",
                             })
                           }
-                          className="rounded-xl bg-purple-600 hover:bg-purple-700 px-3.5 py-2 text-xs font-bold text-white shadow-sm inline-flex items-center gap-1.5"
+                          className="rounded-xl bg-blue-600 hover:bg-blue-700 px-3.5 py-2 text-xs font-bold text-white transition shadow-xs flex items-center gap-1"
                         >
                           <span>📹</span>
                           <span>Publicar como Clase Grabada</span>
@@ -4357,9 +4526,9 @@ function ClasesTab({
 
                   <button
                     onClick={() => eliminar(c)}
-                    className="rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-apre-red hover:bg-red-100"
+                    className="rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 text-xs font-bold text-red-600 transition"
                   >
-                    Eliminar
+                    🗑️
                   </button>
                 </div>
               </div>
@@ -4368,9 +4537,9 @@ function ClasesTab({
         })}
 
         {clasesFiltradas.length === 0 && (
-          <p className="text-gray-500 text-xs py-4 text-center">
-            No hay clases registradas en esta categoría. Puedes programar una nueva arriba.
-          </p>
+          <div className="rounded-2xl border border-dashed border-gray-300 p-8 text-center text-xs text-gray-400">
+            No hay clases registradas en esta sección. Puedes programar una nueva arriba.
+          </div>
         )}
       </div>
     </div>
