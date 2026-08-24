@@ -294,35 +294,33 @@ export default function PanelAlumno() {
               📌 Herramientas Principales
             </h2>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              {/* Card 1: Clases en Vivo */}
-              <div
-                className={`relative rounded-2xl border p-6 transition-all shadow-sm ${
-                  clases.length > 0
-                    ? "border-2 border-whatsapp bg-white"
-                    : "border-gray-200 bg-white hover:border-gray-300"
-                }`}
-              >
-                {clases.length > 0 && (
-                  <span className="absolute -top-3 right-4 animate-pulse rounded-full bg-whatsapp px-3 py-0.5 text-xs font-bold text-white shadow-md">
-                    🔴 EN VIVO
-                  </span>
-                )}
-                <div className="text-3xl mb-2">
-                  {userData?.accesoOnline || userData?.accesoClasesVivo ? "📹" : "🏫"}
-                </div>
-                <h3 className="font-extrabold text-apre-blue text-lg">
-                  {userData?.accesoOnline || userData?.accesoClasesVivo ? "Clases en Vivo (Zoom)" : "Modalidad Presencial"}
-                </h3>
-                <p className="mt-1 text-xs text-gray-500">
-                  {userData?.accesoOnline || userData?.accesoClasesVivo
-                    ? clases.length > 0
+            <div
+              className={`grid gap-4 ${
+                Boolean(userData?.accesoOnline || userData?.accesoClasesVivo) ? "sm:grid-cols-3" : "sm:grid-cols-2"
+              }`}
+            >
+              {/* Card 1: Clases en Vivo (Solo para alumnos con modalidad Online habilitada) */}
+              {Boolean(userData?.accesoOnline || userData?.accesoClasesVivo) && (
+                <div
+                  className={`relative rounded-2xl border p-6 transition-all shadow-sm ${
+                    clases.length > 0
+                      ? "border-2 border-whatsapp bg-white"
+                      : "border-gray-200 bg-white hover:border-gray-300"
+                  }`}
+                >
+                  {clases.length > 0 && (
+                    <span className="absolute -top-3 right-4 animate-pulse rounded-full bg-whatsapp px-3 py-0.5 text-xs font-bold text-white shadow-md">
+                      🔴 EN VIVO
+                    </span>
+                  )}
+                  <div className="text-3xl mb-2">📹</div>
+                  <h3 className="font-extrabold text-apre-blue text-lg">Clases en Vivo (Zoom)</h3>
+                  <p className="mt-1 text-xs text-gray-500">
+                    {clases.length > 0
                       ? `${clases.length} clase disponible para unirte`
-                      : "Reuniones virtuales y webinars en directo"
-                    : "Tus clases se imparten de forma presencial en sede física."}
-                </p>
-                {userData?.accesoOnline || userData?.accesoClasesVivo ? (
-                  clases.length > 0 ? (
+                      : "Reuniones virtuales y webinars en directo"}
+                  </p>
+                  {clases.length > 0 ? (
                     <Link
                       href={`/aula-en-vivo?id=${clases[0].id}`}
                       className="mt-4 block rounded-xl bg-whatsapp py-2.5 text-center text-xs font-black text-white transition hover:brightness-105 shadow-sm"
@@ -333,13 +331,9 @@ export default function PanelAlumno() {
                     <span className="mt-4 inline-block text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg">
                       Sin clases activas ahora
                     </span>
-                  )
-                ) : (
-                  <span className="mt-4 inline-block text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                    📍 Asistencia en Sede
-                  </span>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
 
               {/* Card 2: Clases Grabadas (Repeticiones YouTube) */}
               <a href="#clases-grabadas" className="group">

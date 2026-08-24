@@ -64,7 +64,7 @@ export default function Header() {
               PRÓXIMO INICIO
             </span>
             <span>
-              🗓️ ¡Nuevo Curso Comienza el <strong className="underline decoration-yellow-300 decoration-2 font-black">15 de Septiembre del 2026</strong>!
+              ¡Nuevo Curso Comienza el <strong className="underline decoration-yellow-300 decoration-2 font-black">15 de Septiembre del 2026</strong>!
             </span>
             <span className="hidden md:inline text-white/80 font-normal">
               · Cupos Limitados (OS-10, CCTV y Supervisor)

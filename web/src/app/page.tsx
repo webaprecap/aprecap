@@ -60,22 +60,17 @@ export default function Home() {
       <section className="bg-gradient-to-r from-slate-900 via-apre-blue to-slate-900 py-6 text-white border-y border-white/10 shadow-lg">
         <div className="mx-auto max-w-6xl px-4">
           <div className="rounded-2xl bg-gradient-to-r from-apre-red/20 via-red-500/10 to-transparent p-5 border border-red-500/30 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-apre-red text-white text-2xl font-black shadow-lg">
-                🗓️
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/20 border border-apre-red/40 px-2.5 py-0.5 text-[11px] font-black uppercase text-red-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-ping" />
+                CONVOCATORIA Y MATRÍCULAS 2026
               </div>
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/20 border border-apre-red/40 px-2.5 py-0.5 text-[11px] font-black uppercase text-red-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-ping" />
-                  CONVOCATORIA Y MATRÍCULAS 2026
-                </div>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
-                  ¡Próximo Curso Comienza el <span className="text-yellow-300">15 de Septiembre del 2026</span>!
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
-                  Asegura tu cupo en Guardia de Seguridad OS-10, Operador CCTV o Supervisor. Modalidades Presencial y Online.
-                </p>
-              </div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1.5">
+                ¡Próximo Curso Comienza el <span className="text-yellow-300">15 de Septiembre del 2026</span>!
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
+                Asegura tu cupo en Guardia de Seguridad OS-10, Operador CCTV o Supervisor. Modalidades Presencial y Online.
+              </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a
