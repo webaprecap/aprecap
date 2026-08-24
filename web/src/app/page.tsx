@@ -56,6 +56,48 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Banner Destacado: Próximo Inicio 15 de Septiembre 2026 */}
+      <section className="bg-gradient-to-r from-slate-900 via-apre-blue to-slate-900 py-6 text-white border-y border-white/10 shadow-lg">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="rounded-2xl bg-gradient-to-r from-apre-red/20 via-red-500/10 to-transparent p-5 border border-red-500/30 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-apre-red text-white text-2xl font-black shadow-lg">
+                🗓️
+              </div>
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/20 border border-apre-red/40 px-2.5 py-0.5 text-[11px] font-black uppercase text-red-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-ping" />
+                  CONVOCATORIA Y MATRÍCULAS 2026
+                </div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
+                  ¡Próximo Curso Comienza el <span className="text-yellow-300">15 de Septiembre del 2026</span>!
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
+                  Asegura tu cupo en Guardia de Seguridad OS-10, Operador CCTV o Supervisor. Modalidades Presencial y Online.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="/solicitar-acceso"
+                className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-5 py-3 text-xs sm:text-sm font-black shadow-lg transition transform hover:-translate-y-0.5"
+              >
+                📝 Inscribirme al Curso
+              </a>
+              <a
+                href="https://wa.me/56930825313?text=Hola,%20quisiera%20inscribirme%20al%20curso%20del%2015%20de%20Septiembre%202026"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-whatsapp hover:brightness-105 text-white px-4 py-3 text-xs sm:text-sm font-bold shadow-md transition flex items-center gap-1.5"
+              >
+                <span>💬</span>
+                <span>Consultar por WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Carrusel Infinito Continuo de Logos Autorizados */}
       <LogosCarrusel />
 

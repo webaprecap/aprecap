@@ -55,6 +55,31 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur print:hidden">
+      {/* Barra de Anuncio Superior: Próximo Inicio 15 de Septiembre 2026 */}
+      <div className="bg-gradient-to-r from-apre-red via-red-600 to-apre-blue text-white py-2 px-4 text-xs font-bold shadow-xs">
+        <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-center sm:justify-between gap-2 text-center sm:text-left">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-yellow-300 animate-ping" />
+            <span className="rounded-md bg-black/25 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-yellow-300 border border-yellow-300/40">
+              PRÓXIMO INICIO
+            </span>
+            <span>
+              🗓️ ¡Nuevo Curso Comienza el <strong className="underline decoration-yellow-300 decoration-2 font-black">15 de Septiembre del 2026</strong>!
+            </span>
+            <span className="hidden md:inline text-white/80 font-normal">
+              · Cupos Limitados (OS-10, CCTV y Supervisor)
+            </span>
+          </div>
+          <Link
+            href="/solicitar-acceso"
+            className="inline-flex items-center gap-1 rounded-full bg-white text-apre-red px-3 py-1 text-[11px] font-black hover:bg-yellow-300 hover:text-black transition shadow-xs"
+          >
+            <span>Inscribirme Ahora</span>
+            <span>➔</span>
+          </Link>
+        </div>
+      </div>
+
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
         <Logo />
 

@@ -1229,6 +1229,8 @@ function SeguimientoTab({
         ? Math.round(quizzes.reduce((acc, curr) => acc + (curr.porcentaje ?? 0), 0) / quizzes.length)
         : null;
 
+    const accesoOnline = Boolean(u?.accesoOnline === true || u?.accesoClasesVivo === true || (u as any)?.modalidadOnline === true);
+
     return {
       enrollId: e.id,
       uid: e.uid,
@@ -1236,6 +1238,7 @@ function SeguimientoTab({
       email: u?.email || "—",
       rut: u?.rut || "",
       telefono: u?.telefono || "—",
+      accesoOnline,
       courseSlug: e.courseSlug,
       cursoInfo,
       fechaMatricula: rawFecha,
@@ -1245,6 +1248,18 @@ function SeguimientoTab({
       examenFinal: mejorExamenFinal,
     };
   });
+
+  const toggleOnlineAlumno = async (uid: string, actual: boolean) => {
+    if (!db) return;
+    try {
+      await updateDoc(doc(db, "usuarios", uid), {
+        accesoOnline: !actual,
+        accesoClasesVivo: !actual,
+      });
+    } catch (err) {
+      console.error("Error al actualizar acceso online:", err);
+    }
+  };
 
   const filtrados = listaAlumnos.filter((item) => {
     if (cursoFiltro !== "todos" && item.courseSlug !== cursoFiltro) return false;
@@ -1452,6 +1467,21 @@ function SeguimientoTab({
                     <p className="text-gray-700 font-mono text-[11px] mt-0.5">
                       RUT: <strong>{item.rut ? formatRut(item.rut) : "Sin RUT"}</strong>
                     </p>
+                    {/* Badge y Toggle de Modalidad Online */}
+                    <div className="mt-1 flex items-center gap-1.5">
+                      <button
+                        onClick={() => toggleOnlineAlumno(item.uid, item.accesoOnline)}
+                        className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border transition ${
+                          item.accesoOnline
+                            ? "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                            : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+                        }`}
+                        title="Clic para cambiar entre Modalidad Online (Zoom) y Presencial"
+                      >
+                        <span>{item.accesoOnline ? "🟢" : "⚪"}</span>
+                        <span>{item.accesoOnline ? "Online (Zoom Activo)" : "Presencial (Sin Zoom)"}</span>
+                      </button>
+                    </div>
                   </td>
 
                   {/* Curso */}
@@ -1622,6 +1652,33 @@ function SeguimientoTab({
                 <p className="text-xs text-gray-500">
                   {modalAlumno.email} · RUT: {modalAlumno.rut ? formatRut(modalAlumno.rut) : "Sin RUT"} · Tel: {modalAlumno.telefono}
                 </p>
+
+                {/* Control de Modalidad Online en el Modal */}
+                <div className="mt-2 flex items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold border ${
+                      modalAlumno.accesoOnline
+                        ? "bg-emerald-50 text-emerald-900 border-emerald-300"
+                        : "bg-gray-100 text-gray-600 border-gray-200"
+                    }`}
+                  >
+                    <span>{modalAlumno.accesoOnline ? "🟢" : "⚪"}</span>
+                    <span>{modalAlumno.accesoOnline ? "Modalidad Online (Zoom Habilitado)" : "Modalidad Presencial (Sin Zoom)"}</span>
+                  </span>
+                  <button
+                    onClick={async () => {
+                      await toggleOnlineAlumno(modalAlumno.uid, modalAlumno.accesoOnline);
+                      setModalAlumno((prev: any) => prev ? { ...prev, accesoOnline: !prev.accesoOnline } : null);
+                    }}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition shadow-2xs ${
+                      modalAlumno.accesoOnline
+                        ? "bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200"
+                        : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                    }`}
+                  >
+                    {modalAlumno.accesoOnline ? "✕ Cambiar a Presencial" : "✓ Dar Acceso a Clases Online"}
+                  </button>
+                </div>
               </div>
               <button
                 onClick={() => setModalAlumno(null)}
@@ -2093,7 +2150,17 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
   const lista = usuarios.filter((u) => u.rol === filtroRol);
 
   const toggleActivo = async (u: any) => {
-    await updateDoc(doc(db!, "usuarios", u.id), { activo: !u.activo });
+    if (!db) return;
+    await updateDoc(doc(db, "usuarios", u.id), { activo: !u.activo });
+  };
+
+  const toggleOnline = async (u: any) => {
+    if (!db) return;
+    const actual = Boolean(u.accesoOnline || u.accesoClasesVivo || u.modalidadOnline);
+    await updateDoc(doc(db, "usuarios", u.id), {
+      accesoOnline: !actual,
+      accesoClasesVivo: !actual,
+    });
   };
 
   const eliminar = async (u: any) => {
@@ -2139,6 +2206,7 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
     <div className="space-y-4">
       {lista.map((u) => {
         const susEnrolls = enrolls.filter((e) => e.uid === u.id);
+        const isOnline = Boolean(u.accesoOnline || u.accesoClasesVivo || u.modalidadOnline);
         return (
           <div key={u.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -2204,6 +2272,32 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
                     </p>
                   )}
                 </div>
+
+                {/* Modalidad Online vs Presencial para Alumnos */}
+                {u.rol === "alumno" && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold border ${
+                        isOnline
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                          : "bg-gray-100 text-gray-600 border-gray-200"
+                      }`}
+                    >
+                      <span>{isOnline ? "🟢" : "⚪"}</span>
+                      <span>{isOnline ? "Modalidad Online (Clases Zoom Habilitadas)" : "Modalidad Presencial (Sin Clases Zoom)"}</span>
+                    </span>
+                    <button
+                      onClick={() => toggleOnline(u)}
+                      className={`rounded-lg px-2.5 py-1 text-xs font-bold transition shadow-2xs ${
+                        isOnline
+                          ? "bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200"
+                          : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                      }`}
+                    >
+                      {isOnline ? "✕ Cambiar a Presencial" : "✓ Dar Acceso a Clases Online"}
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-2">

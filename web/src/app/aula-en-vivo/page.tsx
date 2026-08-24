@@ -132,13 +132,20 @@ function AulaEnVivoInner() {
     );
   }
 
-  // Verificación de permisos del curso para alumnos
-  const hasAccess =
-    !clase?.cursoSlug ||
+  // Verificación de permisos del curso y modalidad online para alumnos
+  const esAdminOProfesor =
     userData?.rol === "admin" ||
     userData?.rol === "superadmin" ||
-    userData?.rol === "profesor" ||
-    canAccessCourse(userData, clase.cursoSlug, enrolls);
+    userData?.rol === "profesor";
+
+  const tieneModalidadOnline = Boolean(
+    userData?.accesoOnline === true ||
+    userData?.accesoClasesVivo === true ||
+    (userData as any)?.modalidadOnline === true
+  );
+
+  const hasCourseAccess = !clase?.cursoSlug || canAccessCourse(userData, clase.cursoSlug, enrolls);
+  const hasAccess = esAdminOProfesor || (hasCourseAccess && tieneModalidadOnline);
 
   if (!hasAccess) {
     return (
@@ -146,8 +153,10 @@ function AulaEnVivoInner() {
         <div className="w-full max-w-md rounded-3xl border border-red-500/30 bg-slate-900 p-8 text-center shadow-2xl">
           <div className="text-4xl mb-3">🔒</div>
           <h1 className="text-xl font-black text-red-400">Clase Restringida</h1>
-          <p className="mt-2 text-xs text-slate-300">
-            Esta clase en vivo está reservada exclusivamente para estudiantes matriculados en el curso asignado.
+          <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+            {!hasCourseAccess
+              ? "Esta clase en vivo está reservada exclusivamente para estudiantes matriculados en el curso asignado."
+              : "Esta clase en vivo está reservada para estudiantes matriculados en modalidad Online autorizados por la administración."}
           </p>
           <Link
             href="/panel/alumno"

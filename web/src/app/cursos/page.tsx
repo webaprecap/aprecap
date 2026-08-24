@@ -23,6 +23,29 @@ export default function CursosPage() {
             órgano rector, con fiscalización operativa y examen final rendido ante Carabineros
             de Chile (Prefectura de Seguridad Privada OS-10).
           </p>
+
+          {/* Banner de Próximo Inicio */}
+          <div className="mt-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-apre-red text-white text-2xl font-black shadow-md">
+                🗓️
+              </span>
+              <div>
+                <span className="text-[11px] font-black uppercase text-yellow-300 tracking-wider">
+                  ⚡ Convocatoria Abierta
+                </span>
+                <p className="text-base sm:text-lg font-black text-white">
+                  Próximo Inicio de Cursos: 15 de Septiembre de 2026
+                </p>
+              </div>
+            </div>
+            <a
+              href="/solicitar-acceso"
+              className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-5 py-2.5 text-xs font-black shadow-md transition"
+            >
+              Matricularme Ahora ➔
+            </a>
+          </div>
         </div>
       </section>
 
