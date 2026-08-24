@@ -4,12 +4,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { cursosLP } from "@/data/cursos";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
+import { formatDetalleHorario, getClaseLiveStatus } from "@/lib/claseHorario";
 
 export default function PanelProfesor() {
   const { userData, loading, signOut } = useAuth();
@@ -50,76 +51,49 @@ export default function PanelProfesor() {
             <span>Cerrar sesión</span>
           </button>
         </div>
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex flex-wrap gap-2 pb-4">
+      </section>
+
+      <section className="bg-gray-50 py-10">
+        <div className="mx-auto max-w-6xl space-y-6 px-4">
+          <div className="flex gap-2 border-b border-gray-200 pb-4">
             <button
               onClick={() => setTab("reuniones")}
-              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+              className={`rounded-xl px-4 py-2.5 text-xs font-bold transition flex items-center gap-2 ${
                 tab === "reuniones"
-                  ? "bg-apre-pink text-white"
-                  : "bg-white/10 text-white hover:bg-white/20"
+                  ? "bg-apre-blue text-white shadow-xs"
+                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
               }`}
             >
-              📹 Clases en Vivo (Zoom)
+              <span>🔴</span>
+              <span>Clases Virtuales (En Vivo y Programadas)</span>
             </button>
             <button
               onClick={() => setTab("alumnos")}
-              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+              className={`rounded-xl px-4 py-2.5 text-xs font-bold transition flex items-center gap-2 ${
                 tab === "alumnos"
-                  ? "bg-apre-pink text-white"
-                  : "bg-white/10 text-white hover:bg-white/20"
+                  ? "bg-apre-blue text-white shadow-xs"
+                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
               }`}
             >
-              👨‍🎓 Alumnos matriculados
+              <span>👥</span>
+              <span>Alumnos Matriculados</span>
             </button>
             <button
               onClick={() => setTab("cursos")}
-              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+              className={`rounded-xl px-4 py-2.5 text-xs font-bold transition flex items-center gap-2 ${
                 tab === "cursos"
-                  ? "bg-apre-pink text-white"
-                  : "bg-white/10 text-white hover:bg-white/20"
+                  ? "bg-apre-blue text-white shadow-xs"
+                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
               }`}
             >
-              👁️ Explorar Cursos (Aula Desbloqueada)
+              <span>📚</span>
+              <span>Cursos APRECAP</span>
             </button>
           </div>
-        </div>
-      </section>
 
-      <section className="bg-gray-50 py-12">
-        <div className="mx-auto max-w-6xl space-y-10 px-4">
-          {tab === "reuniones" ? (
-            <ReunionesProfesor />
-          ) : tab === "alumnos" ? (
-            <AlumnosProfesor />
-          ) : (
-            <CursosProfesorTab />
-          )}
-
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/cursos"
-              className="rounded-xl border-2 border-apre-blue px-6 py-3 text-sm font-bold text-apre-blue transition hover:bg-apre-blue hover:text-white"
-            >
-              Ver catálogo de cursos
-            </Link>
-          </div>
-
-          {/* Barra de sesión y salida */}
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-            <div>
-              <p className="text-sm font-bold text-apre-blue">Sesión de Profesor Activa</p>
-              <p className="text-xs text-gray-500">{userData.nombre} ({userData.email})</p>
-            </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-600 transition hover:bg-red-100 hover:border-red-300 shadow-xs"
-            >
-              <span>🚪</span>
-              <span>Cerrar sesión</span>
-            </button>
-          </div>
+          {tab === "reuniones" && <ReunionesProfesor />}
+          {tab === "alumnos" && <AlumnosProfesor />}
+          {tab === "cursos" && <CursosProfesorTab />}
 
           <PrivacidadPanel />
         </div>
@@ -136,54 +110,105 @@ function ReunionesProfesor() {
 
   useEffect(() => {
     if (!db) return;
-    const q = query(collection(db, "clases"), where("estado", "==", "activa"));
-    return onSnapshot(q, (snap) =>
-      setClases(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    );
+    const q = collection(db, "clases");
+    return onSnapshot(q, (snap) => {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      items.sort((a: any, b: any) => {
+        const timeA = a.fechaCreacion?.toMillis
+          ? a.fechaCreacion.toMillis()
+          : a.fechaInicio
+          ? new Date(a.fechaInicio).getTime()
+          : 0;
+        const timeB = b.fechaCreacion?.toMillis
+          ? b.fechaCreacion.toMillis()
+          : b.fechaInicio
+          ? new Date(b.fechaInicio).getTime()
+          : 0;
+        return timeB - timeA;
+      });
+      setClases(items);
+    });
   }, [db]);
+
+  const clasesConEstado = clases.map((c) => ({
+    ...c,
+    liveStatus: getClaseLiveStatus(c),
+  }));
+
+  const vigentes = clasesConEstado.filter((c) => c.liveStatus !== "finalizada" || c.estado === "activa");
 
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
         <div className="inline-flex items-center gap-2 rounded-full bg-apre-pink/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-pink">
-          <span>📹</span> Sala de Clases en Vivo
+          <span>📹</span> Sala de Clases Virtuales
         </div>
-        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Transmisión de Clases Virtuales</h2>
+        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Transmisión de Clases y Ciclos de Estudio</h2>
         <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-          Las salas virtuales son abiertas y gestionadas directamente por la administración de APRECAP.
-          Cuando la clase sea iniciada por el administrador, aparecerá a continuación para que puedas unirte como docente.
+          Aquí puedes ver todas las clases creadas por la administración. Puedes ingresar como docente para dictar o acompañar la sesión en vivo.
         </p>
       </div>
 
       <div className="space-y-3">
-        {clases.map((c) => (
-          <div
-            key={c.id}
-            className="relative rounded-2xl border-2 border-whatsapp bg-white p-6 shadow-md"
-          >
-            <span className="absolute -top-3 right-4 animate-pulse rounded-full bg-whatsapp px-3 py-0.5 text-xs font-black text-white shadow-sm">
-              🔴 EN VIVO (SALA ABIERTA)
-            </span>
-            <p className="font-extrabold text-apre-blue text-lg">{c.nombre}</p>
-            <p className="text-xs text-gray-500 mt-1">
-              Curso: <strong>{c.cursoSlug || "Todos los cursos (Global)"}</strong>
-            </p>
-            {c.descripcion && <p className="mt-2 text-xs text-gray-600 leading-relaxed">{c.descripcion}</p>}
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <Link
-                href={`/aula-en-vivo?id=${c.id}`}
-                className="rounded-xl bg-whatsapp px-5 py-3 text-xs font-black text-white transition hover:brightness-105 shadow-sm inline-flex items-center gap-2"
+        {vigentes.map((c) => {
+          const isLive = c.liveStatus === "en_vivo";
+          return (
+            <div
+              key={c.id}
+              className={`relative rounded-2xl border-2 bg-white p-6 shadow-md ${
+                isLive ? "border-whatsapp" : "border-blue-300"
+              }`}
+            >
+              <span
+                className={`absolute -top-3 right-4 rounded-full px-3 py-0.5 text-xs font-black text-white shadow-sm ${
+                  isLive ? "bg-whatsapp animate-pulse" : "bg-blue-600"
+                }`}
               >
-                <span>🚀</span>
-                <span>Entrar al Aula Virtual como Docente</span>
-              </Link>
+                {isLive ? "🔴 EN VIVO (SALA ABIERTA)" : "⏳ PROGRAMADA (EN ESPERA)"}
+              </span>
+              <p className="font-extrabold text-apre-blue text-lg">{c.nombre}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Curso: <strong>{c.cursoSlug || "Todos los cursos (Global)"}</strong>
+              </p>
+
+              {(c.tipoHorario === "rango_dias" || c.fechaInicioRango || c.fechaInicioProgramada || c.tipoHorario === "programada") && (
+                <p className="mt-2 text-xs font-semibold text-indigo-900 bg-indigo-50 border border-indigo-200 inline-block px-2.5 py-1 rounded-lg">
+                  ⏰ {formatDetalleHorario(c)}
+                </p>
+              )}
+
+              <div className="mt-2 text-[11px] text-gray-500">
+                <span>👤 Creada por: <strong>{c.creadoPor || "Administración APRECAP"}</strong></span>
+              </div>
+
+              {c.descripcion && <p className="mt-2 text-xs text-gray-600 leading-relaxed italic">{c.descripcion}</p>}
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/aula-en-vivo?id=${c.id}`}
+                  className="rounded-xl bg-whatsapp hover:brightness-105 px-5 py-3 text-xs font-black text-white transition shadow-sm inline-flex items-center gap-2"
+                >
+                  <span>🚀</span>
+                  <span>Entrar al Aula Virtual como Docente</span>
+                </Link>
+                {c.startUrl && (
+                  <a
+                    href={c.startUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-amber-500 hover:bg-amber-600 px-4 py-3 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5"
+                  >
+                    <span>👑</span>
+                    <span>Abrir en Zoom (Host)</span>
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-        {clases.length === 0 && (
+          );
+        })}
+        {vigentes.length === 0 && (
           <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
             <p className="text-gray-600 text-xs">
-              No hay clases en vivo activas en este momento. Cuando la administración inicie una sesión, aparecerá aquí automáticamente.
+              No hay clases activas ni programadas en este momento. Las clases creadas por cualquier administrador aparecerán aquí automáticamente.
             </p>
           </div>
         )}

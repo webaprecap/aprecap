@@ -3824,9 +3824,30 @@ function ClasesTab({
 
   useEffect(() => {
     if (!db) return;
-    const q = query(collection(db, "clases"), orderBy("fechaCreacion", "desc"));
-    return onSnapshot(q, (snap) =>
-      setClases(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    // Escuchar la colección de clases completa para que todos los administradores y profesores vean todas las clases sin restricción
+    const q = collection(db, "clases");
+    return onSnapshot(
+      q,
+      (snap) => {
+        const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        list.sort((a: any, b: any) => {
+          const timeA = a.fechaCreacion?.toMillis
+            ? a.fechaCreacion.toMillis()
+            : a.fechaInicio
+            ? new Date(a.fechaInicio).getTime()
+            : 0;
+          const timeB = b.fechaCreacion?.toMillis
+            ? b.fechaCreacion.toMillis()
+            : b.fechaInicio
+            ? new Date(b.fechaInicio).getTime()
+            : 0;
+          return timeB - timeA;
+        });
+        setClases(list);
+      },
+      (err) => {
+        console.error("Error obteniendo clases:", err);
+      }
     );
   }, [db]);
 
@@ -4420,6 +4441,16 @@ function ClasesTab({
                   )}
 
                   {c.descripcion && <p className="text-xs text-gray-500 italic">{c.descripcion}</p>}
+
+                  {/* Creador y Visibilidad Compartida */}
+                  <div className="flex flex-wrap items-center gap-2 pt-0.5 text-[11px]">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 border border-slate-200 px-2 py-0.5 font-medium text-slate-700">
+                      <span>👤</span> Creado por: <strong>{c.creadoPor || "Administración APRECAP"}</strong>
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 font-medium text-emerald-800">
+                      <span>🌐</span> Visible para: <strong>Todos los Administradores, Profesores y Alumnos</strong>
+                    </span>
+                  </div>
 
                   {/* Edición rápida del enlace de la clase */}
                   <div className="mt-2">
