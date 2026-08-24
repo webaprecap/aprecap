@@ -9,7 +9,7 @@ import { getFirestoreDb } from "@/lib/firebase";
 import { CONTACTO } from "@/data/site";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
-import { canAccessCourse, getCourseFieldKey, getCourseStatus, CURSOS_LISTA } from "@/lib/courseAccess";
+import { canAccessCourse, getCourseFieldKey, getCourseStatus, isMaterialHabilitado, CURSOS_LISTA } from "@/lib/courseAccess";
 import { COURSE_TIMING_CONFIG, getDiaActualCurso } from "@/lib/courseTiming";
 import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
 
@@ -607,30 +607,32 @@ export default function PanelAlumno() {
                     <div className="mt-6 space-y-2">
                       {isDesbloqueado ? (
                         <>
-                          <Link
-                            href={`/materiales/${c.slug}`}
-                            className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
-                          >
-                            🚀 ENTRAR AL CURSO {c.shortName.toUpperCase()}
-                          </Link>
-                          {c.slug === "guardia-de-seguridad" && (
-                            cuestionariosOS10Habilitados ? (
+                          {c.slug === "guardia-de-seguridad" && !isMaterialHabilitado(userData, "guardia-de-seguridad", cuestionariosOS10Habilitados) ? (
+                            <div className="rounded-xl border border-dashed border-amber-300 bg-amber-50/60 p-4 text-center">
+                              <span className="text-xs font-black text-amber-900 flex items-center justify-center gap-1.5">
+                                <span>🔒</span> Material y Evaluaciones en Espera
+                              </span>
+                              <p className="text-[11px] text-amber-800 mt-1 leading-relaxed">
+                                Estás cursando la <strong>Fase Presencial en Sede</strong> de Guardia OS-10. El material de estudio digital y las evaluaciones se habilitarán cuando la administración finalice las clases presenciales.
+                              </p>
+                            </div>
+                          ) : (
+                            <>
                               <Link
-                                href="/cuestionarios/guardia-de-seguridad"
-                                className="block w-full rounded-xl bg-apre-red py-2.5 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                                href={`/materiales/${c.slug}`}
+                                className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
                               >
-                                📋 CUESTIONARIOS OFICIALES OS-10
+                                🚀 ENTRAR AL CURSO {c.shortName.toUpperCase()}
                               </Link>
-                            ) : (
-                              <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-2.5 text-center select-none">
-                                <span className="text-xs font-extrabold text-gray-500 flex items-center justify-center gap-1.5">
-                                  <span>🔒</span> Cuestionarios Oficiales OS-10 (Bloqueados)
-                                </span>
-                                <p className="text-[10px] text-gray-400 mt-0.5 font-medium">
-                                  Se habilitarán por el docente al concluir las clases presenciales.
-                                </p>
-                              </div>
-                            )
+                              {c.slug === "guardia-de-seguridad" && (
+                                <Link
+                                  href="/cuestionarios/guardia-de-seguridad"
+                                  className="block w-full rounded-xl bg-apre-red py-2.5 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
+                                >
+                                  📋 CUESTIONARIOS OFICIALES OS-10
+                                </Link>
+                              )}
+                            </>
                           )}
                         </>
                       ) : isPendiente ? (

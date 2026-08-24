@@ -6,7 +6,8 @@ import Link from "next/link";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
-import { canAccessCourse, getCourseStatus } from "@/lib/courseAccess";
+import { canAccessCourse, getCourseStatus, isMaterialHabilitado } from "@/lib/courseAccess";
+import { doc } from "firebase/firestore";
 import { getExamUnlockStatus } from "@/lib/courseTiming";
 import FinalExam from "@/components/cursos/FinalExam";
 import FinalExamVF from "@/components/cursos/FinalExamVF";
@@ -73,6 +74,19 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
     redirect(`/cuestionarios/${slug}`);
   }
 
+  const [globalOS10Habilitado, setGlobalOS10Habilitado] = useState(false);
+
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const unsub = onSnapshot(doc(db, "configuracion", "os10_materiales"), (snap) => {
+      if (snap.exists()) {
+        setGlobalOS10Habilitado(snap.data().habilitado === true);
+      }
+    });
+    return unsub;
+  }, []);
+
   const isAdmin = Boolean(
     userData?.rol === "admin" ||
     userData?.rol === "superadmin" ||
@@ -86,6 +100,39 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
 
   if (!loading && !hasAccess && !isAdmin) {
     redirect(`/materiales/${slug}`);
+  }
+
+  // Verificación de Fase Presencial para Guardia OS-10
+  const materialHabilitado = isMaterialHabilitado(userData, slug, globalOS10Habilitado);
+  if (!loading && !isAdmin && !materialHabilitado) {
+    return (
+      <div className="mx-auto min-h-screen w-full max-w-3xl px-4 py-16 flex items-center justify-center">
+        <div className="w-full rounded-3xl border border-amber-500/30 bg-slate-950 p-8 md:p-12 text-center space-y-6 shadow-2xl">
+          <div className="w-20 h-20 mx-auto rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-4xl shadow-inner">
+            🔒
+          </div>
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-300 border border-amber-500/30">
+              <span>🏫</span> Fase Presencial en Sede
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-white">
+              Examen Bloqueado (Fase Presencial)
+            </h1>
+            <p className="text-sm md:text-base text-slate-300 max-w-lg mx-auto leading-relaxed">
+              El examen final del curso Guardia de Seguridad OS-10 se habilitará una vez concluidas las clases presenciales por disposición de la administración y tus instructores.
+            </p>
+          </div>
+          <div className="pt-2">
+            <Link
+              href="/panel/alumno"
+              className="inline-block rounded-xl bg-cyan-400 px-6 py-3 text-xs md:text-sm font-black text-slate-950 transition hover:bg-cyan-300 shadow-lg"
+            >
+              ← Volver a mi Panel
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Si el examen final aún no se desbloquea por tiempo para el alumno

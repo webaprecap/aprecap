@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
-import { canAccessCourse, getCourseFieldKey, getCourseStatus } from "@/lib/courseAccess";
+import { canAccessCourse, getCourseFieldKey, getCourseStatus, isMaterialHabilitado } from "@/lib/courseAccess";
 import CursoAccessGate from "@/components/CursoAccessGate";
 import CuestionarioVFView from "@/components/cuestionarios/CuestionarioVFView";
 import { getCuestionarios } from "@/data/cuestionarios";
@@ -102,8 +102,8 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
     );
   }
 
-  // Compuerta: Si son los cuestionarios de Guardia OS-10 y están deshabilitados por Admin para alumnos
-  if (slug === "guardia-de-seguridad" && !cuestionariosHabilitados && !isAdminUser) {
+  // Compuerta: Si son los cuestionarios de Guardia OS-10 y están en fase presencial (deshabilitados por Admin para alumnos)
+  if (slug === "guardia-de-seguridad" && !isMaterialHabilitado(userData, slug, cuestionariosHabilitados) && !isAdminUser) {
     return (
       <div className="min-h-[70vh] bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full rounded-3xl bg-white p-8 border border-gray-200 shadow-xl text-center space-y-4">
@@ -111,13 +111,13 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
             🔒
           </div>
           <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-[11px] font-black uppercase text-amber-800">
-            Control de Asistencia Presencial
+            Fase Presencial en Sede
           </span>
           <h2 className="text-2xl font-black text-apre-blue">
             Cuestionarios Oficiales Bloqueados
           </h2>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Por disposición académica de OTEC APRECAP, las pruebas y cuestionarios oficiales del curso <strong>Guardia de Seguridad OS-10</strong> se habilitan durante la clase presencial o al concluir la formación teórica con el docente, para garantizar un aprendizaje integral y no meramente memorístico.
+            Por disposición académica de OTEC APRECAP, las pruebas y cuestionarios oficiales del curso <strong>Guardia de Seguridad OS-10</strong> se habilitan al concluir la formación presencial en aula con el docente, para garantizar un aprendizaje integral.
           </p>
           <div className="pt-4 border-t border-gray-100 flex flex-col gap-2">
             <Link
@@ -125,12 +125,6 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
               className="w-full rounded-xl bg-apre-blue py-3 text-xs font-bold text-white transition hover:bg-apre-blue-dark shadow-sm"
             >
               ← Volver a Mi Panel de Alumno
-            </Link>
-            <Link
-              href="/materiales/guardia-de-seguridad"
-              className="w-full rounded-xl bg-gray-100 py-2.5 text-xs font-bold text-gray-700 transition hover:bg-gray-200"
-            >
-              📖 Ir a los Manuales de Estudio del Curso
             </Link>
           </div>
         </div>

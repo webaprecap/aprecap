@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
-import { canAccessCourse, getCourseFieldKey, getCourseStatus } from "@/lib/courseAccess";
+import { canAccessCourse, getCourseFieldKey, getCourseStatus, isMaterialHabilitado } from "@/lib/courseAccess";
 import CursoAccessGate from "@/components/CursoAccessGate";
 import PPTSlideViewer from "@/components/PPTSlideViewer";
 import VideoTracker from "@/components/cursos/VideoTracker";
@@ -164,6 +164,19 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     }
   };
 
+  const [globalOS10Habilitado, setGlobalOS10Habilitado] = useState(false);
+
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const unsub = onSnapshot(doc(db, "configuracion", "os10_materiales"), (snap) => {
+      if (snap.exists()) {
+        setGlobalOS10Habilitado(snap.data().habilitado === true);
+      }
+    });
+    return unsub;
+  }, []);
+
   if (!cursoActual) {
     notFound();
   }
@@ -190,6 +203,38 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     userData?.rol === "superadmin" ||
     userData?.rol === "profesor"
   );
+
+  // Verificación específica de Fase Presencial para Guardia OS-10
+  const materialHabilitado = isMaterialHabilitado(userData, slug, globalOS10Habilitado);
+  if (!authLoading && !isAdmin && !materialHabilitado) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
+        <div className="w-full max-w-lg rounded-3xl border border-amber-500/30 bg-slate-900 p-8 md:p-10 text-center shadow-2xl space-y-5">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-4xl shadow-inner">
+            🔒
+          </div>
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 px-3 py-1 text-xs font-black uppercase text-amber-300">
+              <span>🏫</span> Fase Presencial en Sede
+            </span>
+            <h1 className="text-2xl font-black text-white mt-3">
+              Material de Estudio en Espera
+            </h1>
+            <p className="mt-2 text-xs md:text-sm text-slate-300 leading-relaxed">
+              El curso <strong>Guardia de Seguridad OS-10</strong> se imparte inicialmente en fase 100% presencial.
+              Los manuales, presentaciones interactivas y evaluaciones se habilitarán una vez concluidas las clases presenciales por disposición de la administración.
+            </p>
+          </div>
+          <Link
+            href="/panel/alumno"
+            className="inline-block w-full rounded-xl bg-cyan-400 py-3 text-xs font-black text-slate-950 hover:bg-cyan-300 transition shadow-lg"
+          >
+            ← Volver a mi Panel
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // --- Lógica de Desbloqueo Progresivo Temporal (Drip Content) ---
   const matriculaActual = enrollments.find((e) => e.courseSlug === slug);

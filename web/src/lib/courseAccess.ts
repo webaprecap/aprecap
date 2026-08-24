@@ -81,3 +81,29 @@ export function canAccessCourse(
   const status = getCourseStatus(userData, courseSlug, enrollments);
   return status === "desbloqueado";
 }
+
+export function isMaterialHabilitado(
+  userData: UserData | null,
+  courseSlug: string,
+  globalConfigHabilitado: boolean = false
+): boolean {
+  if (!userData || userData.activo === false) return false;
+  if (userData.rol === "admin" || userData.rol === "superadmin" || userData.rol === "profesor") {
+    return true;
+  }
+
+  // Si no es el curso Guardia OS-10, el material sigue su flujo estándar
+  if (courseSlug !== "guardia-de-seguridad") {
+    return true;
+  }
+
+  // Para Guardia de Seguridad (OS-10): el material digital está bloqueado por defecto en fase presencial
+  // hasta que el admin lo active de forma individual o global
+  const individualHabilitado = Boolean(
+    userData.habilitadoMaterialOS10 === true ||
+    userData.materialOS10Habilitado === true ||
+    (userData as any).materialHabilitado === true
+  );
+
+  return individualHabilitado || globalConfigHabilitado;
+}

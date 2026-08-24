@@ -1256,6 +1256,7 @@ function SeguimientoTab({
           : null;
 
       const accesoOnline = Boolean(u?.accesoOnline === true || u?.accesoClasesVivo === true || (u as any)?.modalidadOnline === true);
+      const habilitadoMaterialOS10 = Boolean(u?.habilitadoMaterialOS10 === true || u?.materialOS10Habilitado === true);
 
       return {
         enrollId: e.id,
@@ -1265,6 +1266,7 @@ function SeguimientoTab({
         rut: u.rut || "",
         telefono: u.telefono || "—",
         accesoOnline,
+        habilitadoMaterialOS10,
         courseSlug: e.courseSlug,
         cursoInfo,
         fechaMatricula: rawFecha,
@@ -1285,6 +1287,18 @@ function SeguimientoTab({
       });
     } catch (err) {
       console.error("Error al actualizar acceso online:", err);
+    }
+  };
+
+  const toggleMaterialOS10Alumno = async (uid: string, actual: boolean) => {
+    if (!db) return;
+    try {
+      await updateDoc(doc(db, "usuarios", uid), {
+        habilitadoMaterialOS10: !actual,
+        materialOS10Habilitado: !actual,
+      });
+    } catch (err) {
+      console.error("Error al actualizar material OS-10:", err);
     }
   };
 
@@ -1495,7 +1509,7 @@ function SeguimientoTab({
                       RUT: <strong>{item.rut ? formatRut(item.rut) : "Sin RUT"}</strong>
                     </p>
                     {/* Badge y Toggle de Modalidad Online */}
-                    <div className="mt-1 flex items-center gap-1.5">
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
                       <button
                         onClick={() => toggleOnlineAlumno(item.uid, item.accesoOnline)}
                         className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border transition ${
@@ -1508,6 +1522,22 @@ function SeguimientoTab({
                         <span>{item.accesoOnline ? "🟢" : "⚪"}</span>
                         <span>{item.accesoOnline ? "Online (Zoom Activo)" : "Presencial (Sin Zoom)"}</span>
                       </button>
+
+                      {/* Badge y Toggle de Material OS-10 si es alumno de OS-10 */}
+                      {item.courseSlug === "guardia-de-seguridad" && (
+                        <button
+                          onClick={() => toggleMaterialOS10Alumno(item.uid, item.habilitadoMaterialOS10)}
+                          className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border transition ${
+                            item.habilitadoMaterialOS10
+                              ? "bg-blue-50 text-blue-800 border-blue-300 hover:bg-blue-100"
+                              : "bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100"
+                          }`}
+                          title="Clic para habilitar o bloquear material digital y exámenes de OS-10"
+                        >
+                          <span>{item.habilitadoMaterialOS10 ? "📚" : "🔒"}</span>
+                          <span>{item.habilitadoMaterialOS10 ? "Material OS-10 Habilitado" : "Fase Presencial (Bloqueado)"}</span>
+                        </button>
+                      )}
                     </div>
                   </td>
 
@@ -1681,7 +1711,7 @@ function SeguimientoTab({
                 </p>
 
                 {/* Control de Modalidad Online en el Modal */}
-                <div className="mt-2 flex items-center gap-2">
+                <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold border ${
                       modalAlumno.accesoOnline
@@ -1706,6 +1736,41 @@ function SeguimientoTab({
                     {modalAlumno.accesoOnline ? "✕ Cambiar a Presencial" : "✓ Dar Acceso a Clases Online"}
                   </button>
                 </div>
+
+                {/* Control de Material OS-10 en el Modal */}
+                {modalAlumno.courseSlug === "guardia-de-seguridad" && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold border ${
+                        modalAlumno.habilitadoMaterialOS10
+                          ? "bg-blue-50 text-blue-900 border-blue-300"
+                          : "bg-amber-50 text-amber-900 border-amber-300"
+                      }`}
+                    >
+                      <span>{modalAlumno.habilitadoMaterialOS10 ? "📚" : "🔒"}</span>
+                      <span>
+                        {modalAlumno.habilitadoMaterialOS10
+                          ? "Material Digital OS-10: Habilitado"
+                          : "Material Digital OS-10: Bloqueado (Fase Presencial)"}
+                      </span>
+                    </span>
+                    <button
+                      onClick={async () => {
+                        await toggleMaterialOS10Alumno(modalAlumno.uid, modalAlumno.habilitadoMaterialOS10);
+                        setModalAlumno((prev: any) =>
+                          prev ? { ...prev, habilitadoMaterialOS10: !prev.habilitadoMaterialOS10 } : null
+                        );
+                      }}
+                      className={`rounded-lg px-2.5 py-1 text-xs font-bold transition shadow-2xs ${
+                        modalAlumno.habilitadoMaterialOS10
+                          ? "bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200"
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                      }`}
+                    >
+                      {modalAlumno.habilitadoMaterialOS10 ? "🔒 Bloquear Material OS-10" : "📚 Habilitar Material OS-10"}
+                    </button>
+                  </div>
+                )}
               </div>
               <button
                 onClick={() => setModalAlumno(null)}
@@ -2151,7 +2216,6 @@ function AprobadosTab({
 
 /* ---------- Usuarios y Matrículas (Alumnos / Profesores) ---------- */
 function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
-
   const db = getFirestoreDb();
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [enrolls, setEnrolls] = useState<any[]>([]);
@@ -2159,6 +2223,8 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
   const [selCurso, setSelCurso] = useState("");
   const [editandoRutUid, setEditandoRutUid] = useState<string | null>(null);
   const [rutInput, setRutInput] = useState("");
+  const [busqueda, setBusqueda] = useState("");
+  const [os10GlobalHabilitado, setOs10GlobalHabilitado] = useState(false);
 
   useEffect(() => {
     if (!db) return;
@@ -2168,9 +2234,15 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
     const un2 = onSnapshot(collection(db, "enrollments"), (snap) =>
       setEnrolls(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
+    const un3 = onSnapshot(doc(db, "configuracion", "os10_materiales"), (snap) => {
+      if (snap.exists()) {
+        setOs10GlobalHabilitado(snap.data().habilitado === true);
+      }
+    });
     return () => {
       un1();
       un2();
+      un3();
     };
   }, [db]);
 
@@ -2188,6 +2260,22 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
       accesoOnline: !actual,
       accesoClasesVivo: !actual,
     });
+  };
+
+  const toggleMaterialOS10 = async (u: any) => {
+    if (!db) return;
+    const actual = Boolean(u.habilitadoMaterialOS10 || u.materialOS10Habilitado);
+    await updateDoc(doc(db, "usuarios", u.id), {
+      habilitadoMaterialOS10: !actual,
+      materialOS10Habilitado: !actual,
+    });
+  };
+
+  const toggleGlobalOS10 = async () => {
+    if (!db) return;
+    const nuevo = !os10GlobalHabilitado;
+    await setDoc(doc(db, "configuracion", "os10_materiales"), { habilitado: nuevo }, { merge: true });
+    await setDoc(doc(db, "configuracion", "os10_cuestionarios"), { habilitado: nuevo }, { merge: true });
   };
 
   const eliminar = async (u: any) => {
@@ -2225,15 +2313,75 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
     await deleteDoc(doc(db!, "enrollments", e.id));
   };
 
+  const listaFiltrada = lista.filter((u) => {
+    if (!busqueda.trim()) return true;
+    const q = busqueda.toLowerCase().trim();
+    const nom = (u.nombre || "").toLowerCase();
+    const email = (u.email || "").toLowerCase();
+    const rut = (u.rut || "").toLowerCase();
+    return nom.includes(q) || email.includes(q) || rut.includes(q);
+  });
+
   if (lista.length === 0) {
     return <p className="text-gray-500">No hay {filtroRol === "profesor" ? "profesores" : "alumnos"} registrados.</p>;
   }
 
   return (
     <div className="space-y-4">
-      {lista.map((u) => {
+      {/* Banner de Control Global de Material OS-10 (Fase Presencial) */}
+      {filtroRol === "alumno" && (
+        <div className="rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-slate-50 to-indigo-50 p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-600/10 px-3 py-0.5 text-xs font-black uppercase text-blue-800 border border-blue-200">
+              <span>🏫</span> Fase Presencial vs Material Digital OS-10
+            </div>
+            <h3 className="text-base font-extrabold text-apre-blue mt-1">
+              Control de Material de Estudio Guardia OS-10
+            </h3>
+            <p className="text-xs text-slate-600 mt-0.5 max-w-2xl leading-relaxed">
+              Por defecto, los alumnos presenciales de OS-10 tienen el material digital y cuestionarios bloqueados mientras están en clases en sede. Puedes habilitar el material para todos con 1 clic al finalizar las clases, o alumno por alumno individualmente.
+            </p>
+          </div>
+          <button
+            onClick={toggleGlobalOS10}
+            className={`rounded-xl px-4 py-2.5 text-xs font-black text-white transition shadow-sm flex items-center gap-2 ${
+              os10GlobalHabilitado
+                ? "bg-amber-600 hover:bg-amber-700"
+                : "bg-emerald-600 hover:bg-emerald-700"
+            }`}
+          >
+            <span>{os10GlobalHabilitado ? "🔒" : "📚"}</span>
+            <span>
+              {os10GlobalHabilitado
+                ? "Bloquear Material OS-10 para Todos (Fase Presencial)"
+                : "Habilitar Material OS-10 para Todos los Alumnos"}
+            </span>
+          </button>
+        </div>
+      )}
+
+      {/* Buscador de Usuarios */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="w-full sm:w-80">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder={`🔍 Buscar ${filtroRol === "profesor" ? "profesor" : "alumno"} por nombre, RUT o email…`}
+            className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+        <p className="text-xs font-bold text-gray-500">
+          Mostrando {listaFiltrada.length} de {lista.length} {filtroRol === "profesor" ? "profesores" : "alumnos"}
+        </p>
+      </div>
+
+      {listaFiltrada.map((u) => {
         const susEnrolls = enrolls.filter((e) => e.uid === u.id);
         const isOnline = Boolean(u.accesoOnline || u.accesoClasesVivo || u.modalidadOnline);
+        const hasOS10 = susEnrolls.some((e) => e.courseSlug === "guardia-de-seguridad") || u.accesoOS10;
+        const os10Habilitado = Boolean(u.habilitadoMaterialOS10 || u.materialOS10Habilitado || os10GlobalHabilitado);
+
         return (
           <div key={u.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -2322,6 +2470,36 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
                       }`}
                     >
                       {isOnline ? "✕ Cambiar a Presencial" : "✓ Dar Acceso a Clases Online"}
+                    </button>
+                  </div>
+                )}
+
+                {/* Control de Material OS-10 si es alumno matriculado en OS-10 */}
+                {u.rol === "alumno" && hasOS10 && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold border ${
+                        os10Habilitado
+                          ? "bg-blue-50 text-blue-900 border-blue-300"
+                          : "bg-amber-50 text-amber-900 border-amber-300"
+                      }`}
+                    >
+                      <span>{os10Habilitado ? "📚" : "🔒"}</span>
+                      <span>
+                        {os10Habilitado
+                          ? "Material Digital OS-10: Habilitado"
+                          : "Material Digital OS-10: Bloqueado (Fase Presencial)"}
+                      </span>
+                    </span>
+                    <button
+                      onClick={() => toggleMaterialOS10(u)}
+                      className={`rounded-lg px-2.5 py-1 text-xs font-bold transition shadow-2xs ${
+                        u.habilitadoMaterialOS10
+                          ? "bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200"
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                      }`}
+                    >
+                      {u.habilitadoMaterialOS10 ? "🔒 Bloquear Material OS-10" : "📚 Habilitar Material OS-10"}
                     </button>
                   </div>
                 )}
@@ -3106,8 +3284,10 @@ function ReportesTab() {
       const q = busqueda.toLowerCase().trim();
       const nom = nombreDe(r.userId).toLowerCase();
       const rut = rutDe(r.userId, r.userRut).toLowerCase();
+      const email = emailDe(r.userId, r.userEmail).toLowerCase();
       const mod = (r.moduloNombre || "").toLowerCase();
-      if (!nom.includes(q) && !rut.includes(q) && !mod.includes(q)) return false;
+      const curso = (r.courseSlug ? cursoNombreDe(r.courseSlug) : "").toLowerCase();
+      if (!nom.includes(q) && !rut.includes(q) && !email.includes(q) && !mod.includes(q) && !curso.includes(q)) return false;
     }
 
     return true;
