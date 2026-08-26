@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -57,9 +57,14 @@ export default function FinalExam({
   tag,
 }: FinalExamProps) {
   const { user, userData } = useAuth();
-  const [preguntas] = useState<ExamQuestion[]>(() =>
-    seleccionarBalanceadas(banco, totalPreguntas).map(barajarOpciones)
-  );
+  const [preguntas, setPreguntas] = useState<ExamQuestion[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setPreguntas(seleccionarBalanceadas(banco, totalPreguntas).map(barajarOpciones));
+    setIsMounted(true);
+  }, [banco, totalPreguntas]);
+
   const [currentIdx, setCurrentIdx] = useState(0);
   const [respuestas, setRespuestas] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -155,6 +160,17 @@ export default function FinalExam({
         failedModules={failedModules}
         onRetry={handleRetry}
       />
+    );
+  }
+
+  if (!isMounted || preguntas.length === 0) {
+    return (
+      <div className={styles.examContainer}>
+        <div className="p-12 text-center text-slate-300">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-cyan-400 border-t-transparent mb-4" />
+          <p>Preparando examen...</p>
+        </div>
+      </div>
     );
   }
 
