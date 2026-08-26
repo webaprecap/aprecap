@@ -5335,8 +5335,12 @@ function ZoomGrabacionesTab({
                       <button
                         onClick={() => {
                           if (m.share_url) {
-                            navigator.clipboard.writeText(m.share_url);
-                            alert("Enlace de Zoom copiado al portapapeles:\n" + m.share_url);
+                            let textoCopiar = `Enlace de grabación: ${m.share_url}`;
+                            if (m.recording_play_passcode) {
+                              textoCopiar += `\nCódigo de acceso: ${m.recording_play_passcode}`;
+                            }
+                            navigator.clipboard.writeText(textoCopiar);
+                            alert("Copiado al portapapeles:\n\n" + textoCopiar);
                           } else {
                             alert("Esta grabación no tiene enlace para compartir disponible de parte de Zoom.");
                           }

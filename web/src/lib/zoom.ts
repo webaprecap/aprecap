@@ -177,6 +177,7 @@ export interface ZoomRecordingMeeting {
   total_size: number;
   recording_count: number;
   share_url?: string;
+  recording_play_passcode?: string;
   recording_files: ZoomRecordingFile[];
 }
 
