@@ -47,6 +47,7 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { user, userData, loading } = useAuth();
   const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown }[]>([]);
+  const [loadingEnrollments, setLoadingEnrollments] = useState(true);
 
   useEffect(() => {
     const db = getFirestoreDb();
@@ -59,6 +60,7 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
           fecha: d.data().fecha,
         }))
       );
+      setLoadingEnrollments(false);
     });
     return unsub;
   }, [user]);
@@ -98,7 +100,12 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
   const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
   const hasAccess = canAccessCourse(userData, slug, enrollments);
 
-  if (!loading && !hasAccess && !isAdmin) {
+  // Prevenir redirección prematura si las matrículas aún están cargando
+  if (loading || loadingEnrollments) {
+    return <div className="min-h-screen flex items-center justify-center p-8 text-white">Verificando accesos...</div>;
+  }
+
+  if (!hasAccess && !isAdmin) {
     redirect(`/materiales/${slug}`);
   }
 

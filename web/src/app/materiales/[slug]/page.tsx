@@ -96,6 +96,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const { slug } = use(params);
   const { user, userData, loading: authLoading } = useAuth();
   const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown }[]>([]);
+  const [loadingEnrollments, setLoadingEnrollments] = useState(true);
   const [solicitando, setSolicitando] = useState(false);
   const [cuestionariosHabilitados, setCuestionariosHabilitados] = useState(false);
 
@@ -130,6 +131,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
           fecha: d.data().fecha,
         }))
       );
+      setLoadingEnrollments(false);
     });
     return unsub;
   }, [user]);
@@ -185,7 +187,11 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const status = getCourseStatus(userData, slug, enrollments);
   const hasAccess = canAccessCourse(userData, slug, enrollments);
 
-  if (!authLoading && !hasAccess) {
+  if (authLoading || loadingEnrollments) {
+    return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">Verificando accesos...</div>;
+  }
+
+  if (!hasAccess) {
     return (
       <CursoAccessGate
         cursoTitulo={cursoActual.title}

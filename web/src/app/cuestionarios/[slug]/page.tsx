@@ -28,6 +28,7 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { user, userData, loading: authLoading } = useAuth();
   const [enrollments, setEnrollments] = useState<{ courseSlug?: string }[]>([]);
+  const [loadingEnrollments, setLoadingEnrollments] = useState(true);
   const [solicitando, setSolicitando] = useState(false);
   const [activoIdx, setActivoIdx] = useState(0);
   const [cuestionariosHabilitados, setCuestionariosHabilitados] = useState(false);
@@ -45,6 +46,7 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
     const q = query(collection(db, "enrollments"), where("uid", "==", user.uid));
     const unsub = onSnapshot(q, (snap) => {
       setEnrollments(snap.docs.map((d) => ({ courseSlug: d.data().courseSlug })));
+      setLoadingEnrollments(false);
     });
     return unsub;
   }, [user]);
@@ -89,7 +91,11 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
   const status = getCourseStatus(userData, slug, enrollments);
   const hasAccess = canAccessCourse(userData, slug, enrollments);
 
-  if (!authLoading && !hasAccess) {
+  if (authLoading || loadingEnrollments) {
+    return <div className="min-h-[70vh] flex items-center justify-center">Verificando accesos...</div>;
+  }
+
+  if (!hasAccess) {
     return (
       <CursoAccessGate
         cursoTitulo={cursoCuestionarios.titulo}
