@@ -4998,6 +4998,25 @@ function ReunionesTab() {
     }
   };
 
+  const forzarCierreZoom = async (meetingId: number | string) => {
+    if (!confirm("¿Seguro que deseas forzar el cierre de esta sala? Esto expulsará a todos y cortará la grabación.")) return;
+    try {
+      const res = await fetch("/api/zoom/end", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: meetingId }),
+      });
+      const d = await res.json();
+      if (res.ok && d.ok) {
+        alert("Sala cerrada a la fuerza con éxito.");
+      } else {
+        alert(d.error || "Error al cerrar la sala");
+      }
+    } catch {
+      alert("Error de conexión al apagar la sala");
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Banner explicativo */}
@@ -5065,11 +5084,18 @@ function ReunionesTab() {
                 </a>
               )}
               <button
+                onClick={() => forzarCierreZoom(m.id)}
+                className="rounded-xl bg-orange-100 hover:bg-orange-200 text-orange-700 px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5"
+                title="Cierra la sala y detiene la grabación"
+              >
+                <span>🛑</span> Forzar Cierre
+              </button>
+              <button
                 onClick={() => eliminarReunionZoom(m.id)}
-                className="rounded-xl bg-red-50 hover:bg-red-100 text-apre-red px-3.5 py-2 text-xs font-bold transition"
+                className="rounded-xl bg-red-50 hover:bg-red-100 text-apre-red px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5"
                 title="Eliminar permanentemente de la cuenta de Zoom"
               >
-                🗑 Eliminar de Zoom
+                <span>🗑</span> Eliminar
               </button>
             </div>
           </div>

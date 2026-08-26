@@ -68,6 +68,28 @@ async function zoomPost<T>(path: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+async function zoomPut(path: string, body: unknown): Promise<boolean> {
+  if (!zoomEnabled()) throw new Error("Zoom no configurado");
+  const token = await getZoomToken();
+  const res = await fetch(`https://api.zoom.us/v2${path}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+  if (res.status === 204 || res.status === 200 || res.status === 404) {
+    return true;
+  }
+  let errorDetail = "";
+  try {
+    const json = await res.json();
+    errorDetail = json.message || JSON.stringify(json);
+  } catch {
+    errorDetail = await res.text();
+  }
+  throw new Error(errorDetail || `Zoom API ${res.status}`);
+}
+
 export async function createMeeting(
   topic: string,
   startTime: string,
@@ -94,8 +116,9 @@ export async function createMeeting(
   });
 }
 
-export async function listMeetings(): Promise<ZoomMeeting[]> {
-  const data = await zoomFetch<{ meetings: ZoomMeeting[] }>("/users/me/meetings?page_size=30");
+export async function listMeetings(type?: "scheduled" | "live" | "upcoming"): Promise<ZoomMeeting[]> {
+  const query = type ? `?type=${type}&page_size=30` : `?page_size=30`;
+  const data = await zoomFetch<{ meetings: ZoomMeeting[] }>(`/users/me/meetings${query}`);
   return data.meetings ?? [];
 }
 
@@ -187,6 +210,11 @@ export async function deleteMeetingRecordings(
 ): Promise<boolean> {
   const cleanId = String(meetingId).trim();
   return zoomDelete(`/meetings/${encodeURIComponent(cleanId)}/recordings?action=${action}`);
+}
+
+export async function endMeeting(meetingId: number | string): Promise<boolean> {
+  const cleanId = String(meetingId).trim();
+  return zoomPut(`/meetings/${encodeURIComponent(cleanId)}/status`, { action: "end" });
 }
 
 

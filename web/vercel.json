@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/zoom-cleanup",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
