@@ -5332,13 +5332,27 @@ function ZoomGrabacionesTab({
                         </button>
                       )}
 
+                      {m.share_url && (
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(m.share_url);
+                            alert("Enlace de Zoom copiado al portapapeles:\n" + m.share_url);
+                          }}
+                          className="rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-2 text-xs font-bold transition flex items-center gap-1"
+                          title="Copiar enlace de Zoom para compartir con alumnos"
+                        >
+                          <span>🔗</span>
+                          <span>Copiar Link Zoom</span>
+                        </button>
+                      )}
+
                       <button
                         onClick={() => copiarDatos(m.topic || "Clase", fechaStr)}
                         className="rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 text-xs font-bold transition flex items-center gap-1"
                         title="Copiar nombre y fecha"
                       >
                         <span>📋</span>
-                        <span>Copiar</span>
+                        <span>Copiar Datos</span>
                       </button>
 
                       <button
