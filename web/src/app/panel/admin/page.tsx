@@ -5332,19 +5332,25 @@ function ZoomGrabacionesTab({
                         </button>
                       )}
 
-                      {m.share_url && (
-                        <button
-                          onClick={() => {
+                      <button
+                        onClick={() => {
+                          if (m.share_url) {
                             navigator.clipboard.writeText(m.share_url);
                             alert("Enlace de Zoom copiado al portapapeles:\n" + m.share_url);
-                          }}
-                          className="rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-2 text-xs font-bold transition flex items-center gap-1"
-                          title="Copiar enlace de Zoom para compartir con alumnos"
-                        >
-                          <span>🔗</span>
-                          <span>Copiar Link Zoom</span>
-                        </button>
-                      )}
+                          } else {
+                            alert("Esta grabación no tiene enlace para compartir disponible de parte de Zoom.");
+                          }
+                        }}
+                        className={`rounded-xl px-3 py-2 text-xs font-bold transition flex items-center gap-1 ${
+                          m.share_url 
+                            ? "bg-indigo-50 hover:bg-indigo-100 text-indigo-700" 
+                            : "bg-gray-50 text-gray-400 cursor-not-allowed opacity-50"
+                        }`}
+                        title="Copiar enlace de Zoom para compartir con alumnos"
+                      >
+                        <span>🔗</span>
+                        <span>Copiar Link Zoom</span>
+                      </button>
 
                       <button
                         onClick={() => copiarDatos(m.topic || "Clase", fechaStr)}
@@ -5352,7 +5358,7 @@ function ZoomGrabacionesTab({
                         title="Copiar nombre y fecha"
                       >
                         <span>📋</span>
-                        <span>Copiar Datos</span>
+                        <span>Copiar Nombre</span>
                       </button>
 
                       <button
