@@ -95,10 +95,14 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
     userData?.rol === "profesor"
   );
 
+  const isDevSuperStudent = process.env.NODE_ENV === "development" && user?.email === "nenepaz.lol@gmail.com";
   const matriculaActual = enrollments.find((e) => e.courseSlug === slug);
-  const rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
+  let rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
+  if (isDevSuperStudent) {
+    rawFechaMatricula = new Date("2010-01-01T00:00:00Z");
+  }
   const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
-  const hasAccess = canAccessCourse(userData, slug, enrollments);
+  const hasAccess = canAccessCourse(userData, slug, enrollments) || isDevSuperStudent;
 
   // Prevenir redirección prematura si las matrículas aún están cargando
   if (loading || loadingEnrollments) {

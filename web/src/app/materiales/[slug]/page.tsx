@@ -183,6 +183,8 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     notFound();
   }
 
+  const isDevSuperStudent = process.env.NODE_ENV === "development" && user?.email === "nenepaz.lol@gmail.com";
+
   // Verificación de acceso general al curso
   const status = getCourseStatus(userData, slug, enrollments);
   const hasAccess = canAccessCourse(userData, slug, enrollments);
@@ -211,7 +213,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   );
 
   // Verificación específica de Fase Presencial para Guardia OS-10
-  const materialHabilitado = isMaterialHabilitado(userData, slug, globalOS10Habilitado);
+  const materialHabilitado = isMaterialHabilitado(userData, slug, globalOS10Habilitado) || isDevSuperStudent;
   if (!authLoading && !isAdmin && !materialHabilitado) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
@@ -244,11 +246,21 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
 
   // --- Lógica de Desbloqueo Progresivo Temporal (Drip Content) ---
   const matriculaActual = enrollments.find((e) => e.courseSlug === slug);
-  const rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
+  let rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
+  if (isDevSuperStudent) {
+    rawFechaMatricula = new Date("2010-01-01T00:00:00Z"); // Finge que se matriculó hace muchos años
+  }
+  
   const timingConfig = COURSE_TIMING_CONFIG[slug];
   const diaActual = getDiaActualCurso(rawFechaMatricula);
   const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
   const moduloActualUnlock = getModuleUnlockStatus(slug, expandedModuloIdx, rawFechaMatricula, isAdmin);
+
+  useEffect(() => {
+    if (isDevSuperStudent && cursoActual && completados.length !== cursoActual.modulos.length) {
+      setCompletados(cursoActual.modulos.map((_, i) => i));
+    }
+  }, [isDevSuperStudent, cursoActual, completados.length, setCompletados]);
 
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];
   const hasSubModulos = Boolean(moduloActual.subModulos && moduloActual.subModulos.length > 0);
