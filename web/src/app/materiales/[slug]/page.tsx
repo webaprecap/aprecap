@@ -179,11 +179,17 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
     return unsub;
   }, []);
 
+  const isDevSuperStudent = process.env.NODE_ENV === "development" && user?.email === "nenepaz.lol@gmail.com";
+
+  useEffect(() => {
+    if (isDevSuperStudent && cursoActual && completados.length !== cursoActual.modulos.length) {
+      setCompletados(cursoActual.modulos.map((_, i) => i));
+    }
+  }, [isDevSuperStudent, cursoActual, completados.length, setCompletados]);
+
   if (!cursoActual) {
     notFound();
   }
-
-  const isDevSuperStudent = process.env.NODE_ENV === "development" && user?.email === "nenepaz.lol@gmail.com";
 
   // Verificación de acceso general al curso
   const status = getCourseStatus(userData, slug, enrollments);
@@ -255,12 +261,6 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
   const diaActual = getDiaActualCurso(rawFechaMatricula);
   const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
   const moduloActualUnlock = getModuleUnlockStatus(slug, expandedModuloIdx, rawFechaMatricula, isAdmin);
-
-  useEffect(() => {
-    if (isDevSuperStudent && cursoActual && completados.length !== cursoActual.modulos.length) {
-      setCompletados(cursoActual.modulos.map((_, i) => i));
-    }
-  }, [isDevSuperStudent, cursoActual, completados.length, setCompletados]);
 
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];
   const hasSubModulos = Boolean(moduloActual.subModulos && moduloActual.subModulos.length > 0);
@@ -360,7 +360,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
       <section className="bg-slate-900 py-8 min-h-[75vh]">
         <div className="mx-auto max-w-7xl px-4 grid gap-8 lg:grid-cols-12">
           {/* Sidebar Menu: Acordeón de Módulos y Sub-Módulos */}
-          <aside className="lg:col-span-4 space-y-6">
+          <aside className="lg:col-span-4 space-y-6 order-2 lg:order-1">
             <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5 shadow-xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
                 <h2 className="text-xs font-black uppercase tracking-wider text-cyan-400">
@@ -572,7 +572,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
           </aside>
 
           {/* Main Viewer Area */}
-          <main className="lg:col-span-8 space-y-4">
+          <main className="lg:col-span-8 space-y-4 order-1 lg:order-2">
             <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-slate-300">
