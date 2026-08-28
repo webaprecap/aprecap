@@ -11,6 +11,7 @@ import { cursosLP } from "@/data/cursos";
 import ConsentModal from "@/components/ConsentModal";
 import PrivacidadPanel from "@/components/PrivacidadPanel";
 import { formatDetalleHorario, getClaseLiveStatus } from "@/lib/claseHorario";
+import { formatMeetingId, getZoomCredentials } from "@/lib/zoomWeb";
 
 export default function PanelProfesor() {
   const { userData, loading, signOut } = useAuth();
@@ -107,6 +108,25 @@ export default function PanelProfesor() {
 function ReunionesProfesor() {
   const db = getFirestoreDb();
   const [clases, setClases] = useState<any[]>([]);
+  const [zoomHostKey, setZoomHostKey] = useState<string>("");
+  const [copiadoId, setCopiadoId] = useState<string | null>(null);
+
+  const copiarAlPortapapeles = (texto: string, idFeedback: string) => {
+    if (!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+      setCopiadoId(idFeedback);
+      setTimeout(() => setCopiadoId(null), 2500);
+    });
+  };
+
+  useEffect(() => {
+    fetch("/api/zoom", { method: "GET" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.hostKey) setZoomHostKey(data.hostKey);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!db) return;
@@ -139,19 +159,48 @@ function ReunionesProfesor() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
-        <div className="inline-flex items-center gap-2 rounded-full bg-apre-pink/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-apre-pink">
-          <span>📹</span> Sala de Clases Virtuales
+      {/* Tarjeta Informativa de Clave de Anfitrión e Instrucciones para Docentes */}
+      <div className="rounded-2xl border border-amber-300/80 bg-linear-to-r from-amber-50 to-orange-50 p-5 shadow-xs">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">👨‍🏫</span>
+              <h3 className="text-sm font-black text-amber-950">
+                Acceso Docente y Rol de Anfitrión (Host) en Zoom APRECAP
+              </h3>
+              <span className="rounded-full bg-amber-200/70 border border-amber-300 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-900">
+                ACCESO TOTAL DOCENTE
+              </span>
+            </div>
+            <p className="text-xs text-amber-900/90 leading-relaxed">
+              Como docente de APRECAP, puedes dictar cualquier clase programada o en vivo. Al presionar <strong>&ldquo;👑 Abrir en Zoom (Host)&rdquo;</strong> ingresarás directamente con el control de la sesión (compartir material, silenciar, grabar y moderar a los estudiantes).
+            </p>
+            <p className="text-[11px] text-amber-800/80 leading-relaxed">
+              💡 <em>¿Te conectaste desde la App de Zoom o te reconoció como participante?</em> Dentro de la videollamada, ve a <strong>Participantes &gt; Reclamar el rol de anfitrión (Claim Host)</strong> e ingresa tu Clave de Anfitrión institucional de 6 dígitos.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-amber-200 bg-white/90 p-3 text-center shadow-xs min-w-[200px]">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Clave de Anfitrión (Host Key)</p>
+            <p className="font-mono text-lg font-black text-slate-900 mt-0.5 tracking-widest">
+              {zoomHostKey || process.env.NEXT_PUBLIC_ZOOM_HOST_KEY || "6 dígitos"}
+            </p>
+            <button
+              type="button"
+              onClick={() => copiarAlPortapapeles(zoomHostKey || process.env.NEXT_PUBLIC_ZOOM_HOST_KEY || "", "hostkey-prof")}
+              className="mt-1.5 w-full rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1 text-[11px] font-extrabold text-slate-950 transition flex items-center justify-center gap-1 cursor-pointer shadow-xs"
+            >
+              <span>{copiadoId === "hostkey-prof" ? "✅ ¡Copiada!" : "📋 Copiar Clave"}</span>
+            </button>
+          </div>
         </div>
-        <h2 className="text-xl font-extrabold text-apre-blue mt-2">Transmisión de Clases y Ciclos de Estudio</h2>
-        <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-          Aquí puedes ver todas las clases creadas por la administración. Puedes ingresar como docente para dictar o acompañar la sesión en vivo.
-        </p>
       </div>
 
       <div className="space-y-3">
         {vigentes.map((c) => {
           const isLive = c.liveStatus === "en_vivo";
+          const creds = getZoomCredentials(c.joinUrl, c.startUrl, c.meetingId, c.password);
+
           return (
             <div
               key={c.id}
@@ -182,6 +231,40 @@ function ReunionesProfesor() {
               </div>
 
               {c.descripcion && <p className="mt-2 text-xs text-gray-600 leading-relaxed italic">{c.descripcion}</p>}
+
+              {/* Credenciales de Acceso Zoom (ID, Contraseña y Copia Rápida) */}
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                {creds.meetingId && (
+                  <div className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-200 bg-cyan-50/90 px-2.5 py-1 text-cyan-950">
+                    <span className="text-cyan-800 font-bold">🆔 ID:</span>
+                    <span className="font-mono font-extrabold">{creds.formattedId || creds.meetingId}</span>
+                    <button
+                      type="button"
+                      onClick={() => copiarAlPortapapeles(creds.meetingId, `prof-id-${c.id}`)}
+                      className="text-cyan-800 hover:text-cyan-950 font-bold text-[11px] underline ml-1 cursor-pointer"
+                      title="Copiar ID numérico de Zoom"
+                    >
+                      {copiadoId === `prof-id-${c.id}` ? "✅ Copiado" : "📋 Copiar"}
+                    </button>
+                  </div>
+                )}
+
+                {creds.password && (
+                  <div className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50/90 px-2.5 py-1 text-amber-950">
+                    <span className="text-amber-800 font-bold">🔑 Código/Clave:</span>
+                    <span className="font-mono font-extrabold">{creds.password}</span>
+                    <button
+                      type="button"
+                      onClick={() => copiarAlPortapapeles(creds.password!, `prof-pwd-${c.id}`)}
+                      className="text-amber-800 hover:text-amber-950 font-bold text-[11px] underline ml-1 cursor-pointer"
+                      title="Copiar Contraseña de acceso a Zoom"
+                    >
+                      {copiadoId === `prof-pwd-${c.id}` ? "✅ Copiado" : "📋 Copiar"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Link
                   href={`/aula-en-vivo?id=${c.id}`}
@@ -190,12 +273,12 @@ function ReunionesProfesor() {
                   <span>🚀</span>
                   <span>Entrar al Aula Virtual como Docente</span>
                 </Link>
-                {c.startUrl && (
+                {(c.startUrl || creds.hostUrl) && (
                   <a
-                    href={c.startUrl}
+                    href={c.startUrl || creds.hostUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-xl bg-amber-500 hover:bg-amber-600 px-4 py-3 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5"
+                    className="rounded-xl bg-amber-500 hover:bg-amber-600 px-4 py-3 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5 transition"
                   >
                     <span>👑</span>
                     <span>Abrir en Zoom (Host)</span>

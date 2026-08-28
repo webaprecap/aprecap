@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
+import ComparativoVigilanteGuardia from "@/components/cursos/ComparativoVigilanteGuardia";
 import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
 import { CONTACTO } from "@/data/site";
@@ -258,6 +259,10 @@ export default async function CursoDetalle({ params }: Props) {
                 })()}
               </div>
             </>
+          )}
+
+          {(c.slug === "guardia-de-seguridad" || c.slug === "supervisor-de-seguridad") && (
+            <ComparativoVigilanteGuardia />
           )}
 
           {c.faq.length > 0 && (

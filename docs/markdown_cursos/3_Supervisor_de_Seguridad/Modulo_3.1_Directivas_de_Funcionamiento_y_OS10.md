@@ -1,67 +1,102 @@
-# Submódulo 3.1: Directivas de Funcionamiento y Relación con OS-10
+# Submódulo 3.1: Directivas de Funcionamiento y Relación con OS-10 / SPD
 
-## 1. La administración de la seguridad
+---
 
-Administrar es la coordinación de los esfuerzos humanos para que los esfuerzos individuales se traduzcan en el logro de los objetivos de la organización. En seguridad, la administración comprende:
+## 1. La Administración de la Seguridad en la Instalación
 
-- **Planificación:** definir objetivos, recursos y plazos.
-- **Organización:** asignar funciones y responsabilidades.
-- **Dirección:** guiar y coordinar al personal.
-- **Control:** verificar el cumplimiento y corregir desviaciones.
+Administrar es la coordinación estructurada de los recursos y esfuerzos humanos para que las acciones individuales se traduzcan en el logro de los objetivos de protección de la organización. En seguridad privada, la administración profesional comprende cuatro etapas fundamentales:
 
-La visión global de la seguridad exige conocer los riesgos y peligros a los que está expuesta la instalación para poder gestionarlos.
+- **Planificación:** Definir objetivos de protección, evaluar vulnerabilidades, asignar recursos y establecer cronogramas de operación.
+- **Organización:** Asignar funciones, puestos y responsabilidades operativas claras a cada integrante del equipo.
+- **Dirección:** Guiar, liderar, instruir y coordinar al personal operativo en terreno de manera continua.
+- **Control:** Verificar en terreno el estricto cumplimiento de los procedimientos, fiscalizar novedades y corregir desviaciones operativas.
 
-## 2. Marco normativo vigente
+La visión global de la seguridad exige conocer en profundidad los riesgos y amenazas específicos a los que está expuesta la instalación para poder gestionarlos preventivamente.
 
-El marco actual de la seguridad privada es la **Ley N° 21.659** (publicada en 2024) y su reglamento, el **Decreto Supremo N° 209** (publicado el 27 de mayo de 2025), que reemplazaron el antiguo régimen del Decreto Ley N° 3.607 y sus reglamentos (Decretos N° 867, N° 1.773 y otros), los que rigen solo en lo que no sea contrario a la nueva ley.
+---
 
-El reglamento detalla, en 136 artículos, la operación de la seguridad privada: entidades obligadas y estudios de seguridad (artículos 7 a 20), jefe y encargado de seguridad (artículos 22 a 24), vigilantes privados y armas (artículos 26 a 31), empresas de seguridad privada (artículos 47 a 53), transporte de valores (artículos 54 a 75) y seguridad electrónica (artículos 76 a 86).
+## 2. Marco Normativo Vigente (Ley N° 21.659 y Decreto Supremo N° 209)
 
-Los **guardias de seguridad** se regulan en los artículos 87 a 94: el empleador debe contratarles un **seguro de vida con cobertura mínima de 132 UF** (artículo 88), la capacitación se gradúa según el nivel de riesgo (artículo 89), el uniforme y la credencial son obligatorios (artículos 90 y 91), los servicios se comunican en la **directiva de funcionamiento** (artículo 92), solo pueden usar los elementos defensivos autorizados (artículo 93) y los de riesgo alto deben contar con registro audiovisual (artículo 94). Los **porteros, nocheros y rondines** cursan una capacitación especializada (artículos 95 a 99) y la **capacitación** se regula en los artículos 100 a 107. El reglamento reconoce además la función del **supervisor de seguridad privada** (artículo 108), la **plataforma informática** de trámites (artículo 115) y el **Registro de Seguridad Privada** (artículos 118 a 127), condición para ejercer.
+El marco legal regulador de la seguridad privada en Chile está constituido por la **Ley N° 21.659** y su reglamento complementario, el **Decreto Supremo N° 209** (publicado el 27 de mayo de 2025), los cuales sustituyeron íntegramente el antiguo régimen del Decreto Ley N° 3.607.
 
-La autoridad fiscalizadora de la seguridad privada es la **Prefectura de Seguridad Privada de Carabineros de Chile (OS-10)** (artículos 128 a 136), con participación de la **Subsecretaría de Prevención del Delito**.
+El Decreto N° 209 detalla, a lo largo de sus 136 artículos, los requisitos y procedimientos que rigen los servicios de seguridad privada:
+- **Entidades obligadas y Estudios de Seguridad:** Artículos 7 al 20.
+- **Jefe y Encargado de Seguridad:** Artículos 22 al 24.
+- **Vigilantes Privados y Régimen de Armas:** Artículos 26 al 31.
+- **Empresas de Seguridad Privada:** Artículos 47 al 53.
+- **Transporte de Valores:** Artículos 54 al 75.
+- **Sistemas de Seguridad Electrónica y Monitoreo:** Artículos 76 al 86.
+- **Guardias de Seguridad:** Artículos 87 al 94. Se consagra la obligación del empleador de contratar un **seguro de vida con cobertura mínima de 132 UF** (Art. 88), capacitación obligatoria según nivel de riesgo (Art. 89), uso estricto de uniforme y credencial oficial (Arts. 90 y 91), prestación mediante **Directiva de Funcionamiento** (Art. 92), prohibición absoluta de portar armas de fuego (Art. 93) y registro audiovisual obligatorio para guardias en instalaciones de riesgo alto (Art. 94).
+- **Porteros, Nocheros y Rondines:** Capacitación especializada obligatoria (Arts. 95 al 99).
+- **Supervisor de Seguridad Privada:** Reconocido formalmente como la función de coordinación, control y supervisión directa en terreno (Art. 108).
+- **Plataforma Informática y Registro de Seguridad Privada:** Tramitación digital y registro obligatorio de personas y empresas (Arts. 115 al 127).
+- **Autoridad Fiscalizadora:** La **Prefectura de Seguridad Privada de Carabineros de Chile (OS-10)** en coordinación con la **Subsecretaría de Prevención del Delito (SPD)** (Arts. 128 al 136).
 
-## 3. La Directiva de Funcionamiento
+---
 
-- Es el **documento que implementa el servicio de guardias de seguridad** en una instalación.
-- Debe ser confeccionada por el **empleador de los guardias** que realizarán el servicio.
-- Regula las tareas específicas, los medios del guardia y el espacio físico limitado de acción.
-- Debe ser **autorizada por la autoridad competente** (Subsecretaría de Prevención del Delito / OS-10 según el procedimiento vigente).
+## 3. La Directiva de Funcionamiento: Concepto, Importancia y Pilares
 
-El guardia obtiene de la directiva su **misión y el objeto fundamental** para cumplir su trabajo.
+La **Directiva de Funcionamiento** es el instrumento legal y operativo que organiza la prestación de servicios de seguridad privada dentro de una instalación determinada.
 
-## 4. El Estudio de Seguridad
+Su trascendencia radica en que transforma la presencia aislada del personal en una **operación estructurada**, definiendo funciones, responsabilidades y criterios técnicos de actuación para guardias, porteros, nocheros, rondines u otros trabajadores que cumplen labores de seguridad o vigilancia.
 
-- Es un **documento secreto** que señala el funcionamiento de las empresas de riesgo mediano y alto.
-- Contiene las **vulnerabilidades y debilidades** de la empresa que se va a asegurar, y las conclusiones para abordar las soluciones.
-- Para entidades de riesgo alto, el estudio tiene una vigencia de **2 años**; riesgo medio, **4 años**; y empresas de transporte de valores, **1 año**.
-- Es responsabilidad de la **gerencia** de la entidad y debe ser suscrito por su representante legal.
+### Este instrumento permite establecer de forma obligatoria:
+1. 🔹 **Qué funciones específicas debe cumplir cada integrante del servicio** en cada puesto y turno.
+2. 🔹 **Cómo se organiza y distribuye el personal** en la infraestructura (puestos fijos, móviles y garitas).
+3. 🔹 **Qué procedimientos operativos deben aplicarse en la instalación** (control de acceso de personas y vehículos, revisión de bultos, registro de proveedores y rondas perimetrales).
+4. 🔹 **Cómo se protege integralmente a las personas, bienes y procesos críticos**.
+5. 🔹 **Qué responsabilidades corresponden ante incidentes, emergencias o contingencias** (protocolos de enlace, evacuación, detención en flagrancia y preservación del sitio del suceso).
+6. 🔹 **Cómo debe operar el servicio conforme a la normativa legal vigente** (Ley 21.659, D.S. 209 y normativas sectoriales).
 
-## 5. Funciones del supervisor en la gestión de seguridad
+---
 
-Entre las funciones del jefe o supervisor de seguridad están:
+## 4. Consecuencias Operativas de la Falta de Instrucciones Claras
 
-- La **detección y análisis de situaciones de riesgo**.
-- La planificación y programación de las medidas de seguridad.
-- La supervisión del cumplimiento de directivas y procedimientos.
-- La coordinación con la autoridad fiscalizadora en inspecciones y trámites.
+Una instalación puede contar con personal suficiente, cámaras de alta tecnología y barreras de control de acceso; sin embargo, **si no existen instrucciones claras en la Directiva de Funcionamiento, cada trabajador podría actuar según su propio criterio personal**.
 
-## 6. Aspectos que debe revisar el supervisor
+Cuando la directiva es deficiente o desconocida por el equipo, surgen los problemas operativos más frecuentes en terreno:
+- ❌ **Puestos de vigilancia abandonados o desatendidos.**
+- ❌ **Rondas perimetrales incompletas o realizadas sin horario estricto.**
+- ❌ **Novedades críticas e incidentes que no se informan oportunamente.**
+- ❌ **Respuestas descoordinadas ante emergencias, intrusiones o conatos de incendio.**
+- ❌ **Límites de responsabilidad difusos**, donde nadie asume la toma de decisiones.
 
-- **Organización y cualificación del personal de seguridad:** acreditaciones, uniformes, credenciales.
-- **Planes y procedimientos de seguridad:** directivas vigentes, pautas de puesto.
-- **Sistemas técnicos de seguridad:** alarmas, CCTV, control de accesos.
-- **Identificación de puntos débiles:** para desarrollar planes de emergencia que contemplen todos los factores de riesgo.
+> **Principio Clave del Supervisor:** La Directiva de Funcionamiento no debe ser un documento archivado o conocido únicamente por la gerencia. Debe comunicarse activamente al personal, aplicarse rigurosamente en terreno, auditarse en cada turno y actualizarse cada vez que cambien los riesgos, la infraestructura o las condiciones contractuales del servicio.
 
-## 7. Relación con OS-10
+Un guardia debidamente capacitado necesita saber **qué hacer, cuándo hacerlo, cómo informarlo y hasta dónde llegan sus facultades y responsabilidades legales**.
 
-- El supervisor debe conocer la prefectura de su sector y los canales de comunicación oficiales.
-- En fiscalizaciones: facilitar la información, mostrar la documentación vigente y corregir las observaciones en los plazos indicados.
-- Los trámites de autorización y modificación de directivas y estudios se realizan por los canales oficiales de la Subsecretaría de Prevención del Delito.
+---
 
-## 8. Reglas de oro
+## 5. El Estudio de Seguridad (Diferencia con la Directiva)
 
-1. La directiva es la ley interna del servicio: se conoce y se cumple.
-2. El estudio de seguridad es secreto: se protege.
-3. La documentación vigente y ordenada facilita toda fiscalización.
-4. El supervisor es el puente entre la instalación y la autoridad.
+Mientras la Directiva de Funcionamiento implementa los servicios de guardias de seguridad en un recinto, el **Estudio de Seguridad** es el instrumento de las entidades obligadas y de riesgo medio/alto:
+- Es un **documento formal y secreto** suscrito por el representante legal de la entidad obligada.
+- Determina las medidas estructurales, electrónicas y de recursos humanos de la instalación.
+- **Vigencia legal:** 2 años para riesgo alto, 4 años para riesgo medio y 1 año para empresas de transporte de valores.
+
+---
+
+## 6. Funciones del Supervisor en la Gestión y Control de la Directiva
+
+El supervisor de seguridad es el garante de que la directiva se cumpla en cada turno. Sus funciones clave abarcan:
+- **Instrucción de Puesto:** Capacitar y evaluar a los guardias en las tareas descritas en la directiva antes de asignarles un turno.
+- **Fiscalización en Terreno:** Comprobar libro de novedades, registros de accesos, porte de credencial oficial y uso correcto del uniforme.
+- **Auditoría de Sistemas Técnicos:** Verificar operatividad de pulsadores de pánico, enlaces radiales, cámaras CCTV y sistemas contra incendios.
+- **Coordinación con la Autoridad Fiscalizadora:** Atender fiscalizaciones de Carabineros (OS-10) o inspectores de la SPD, exhibiendo la directiva de funcionamiento aprobada y la documentación laboral y de seguridad al día.
+
+---
+
+## 7. Pregunta de Reflexión Profesional para el Supervisor
+
+Para los profesionales que lideran operaciones de seguridad privada, supervisión y control:
+
+> *¿Cuál es la falla más recurrente que has observado en una directiva de funcionamiento en terreno: instrucciones poco claras, falta de capacitación inicial, escasa supervisión operativa o procedimientos teóricos que no reflejan la realidad de la instalación?*
+
+---
+
+## 8. Reglas de Oro de la Supervisión de Seguridad
+
+1. **La Directiva es la ley interna del puesto:** Todo el personal debe conocerla, entenderla y cumplirla sin excepciones.
+2. **El Estudio de Seguridad es confidencial:** Su contenido se resguarda bajo estricta reserva.
+3. **La documentación vigente evita sanciones:** Credenciales al día, contratos, seguro de 132 UF y libros foliados previenen multas de 650 a 13.500 UTM.
+4. **El Supervisor es el puente de enlace:** Conecta la gerencia de seguridad, el personal operativo en garita y la autoridad fiscalizadora.

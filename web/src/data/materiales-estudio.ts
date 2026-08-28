@@ -211,6 +211,38 @@ export const materialesEstudio: CursoMaterial[] = [
             ]
           }
         ]
+      },
+      {
+        nombre: "Ley Corta N° 21.825 · Prórroga de Autorizaciones y Credenciales",
+        videoUrl: "https://youtu.be/9XDp6K17ilg",
+        slides: [
+          {
+            id: "ley-corta-1",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Ley Corta N° 21.825",
+            slideNumber: 1,
+            title: "¿Qué es la Ley Corta N° 21.825?",
+            contentBullets: [
+              "Publicada para regular los plazos de transición hacia la nueva Ley N° 21.659.",
+              "Otorga prórroga legal automática a las autorizaciones y credenciales vigentes de guardias de seguridad y vigilantes.",
+              "Garantiza la continuidad operacional de las empresas de seguridad privada y la estabilidad de los trabajadores.",
+              "Reconocida oficialmente por la Subsecretaría de Prevención del Delito (SPD) y Carabineros de Chile (OS-10)."
+            ]
+          },
+          {
+            id: "ley-corta-2",
+            courseSlug: "guardia-de-seguridad",
+            moduleName: "Ley Corta N° 21.825",
+            slideNumber: 2,
+            title: "Puntos Clave para el Guardia en Servicio",
+            contentBullets: [
+              "Las credenciales y tarjetas de identificación conservan plena validez durante el período de prórroga legal.",
+              "Las fiscalizaciones de Carabineros (OS-10) reconocen la vigencia extendida por ley.",
+              "El guardia debe mantener su contrato de trabajo al día, seguro de vida de 132 UF y Directiva de Funcionamiento aprobada.",
+              "Es deber del personal y de la empresa conocer el calendario de homologación oficial de la SPD."
+            ]
+          }
+        ]
       }
     ]
   },
@@ -450,6 +482,40 @@ export const materialesEstudio: CursoMaterial[] = [
             nombre: "Decreto Supremo N° 594 — Higiene y Seguridad",
             videoUrl: "https://youtu.be/k-aQSMYdK5c",
             pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/9b177d6f050d783be0d50e75a3b9961cf3b509fc.pdf"
+          },
+          {
+            id: "sup-1-8",
+            codigo: "1.8",
+            nombre: "Ley Corta N° 21.825 — Prórroga de Autorizaciones de Seguridad",
+            videoUrl: "https://youtu.be/9XDp6K17ilg",
+            slides: [
+              {
+                id: "sup-ley-corta-1",
+                courseSlug: "supervisor-de-seguridad",
+                moduleName: "Ley Corta N° 21.825",
+                slideNumber: 1,
+                title: "Aplicación de la Ley Corta N° 21.825 en la Supervisión",
+                contentBullets: [
+                  "Otorga prórroga legal a las autorizaciones y credenciales vigentes de guardias y vigilantes.",
+                  "El supervisor debe verificar el calendario de vigencias del personal operativo a su cargo.",
+                  "Garantiza la continuidad operativa de los puestos de vigilancia durante la transición hacia la Ley N° 21.659.",
+                  "Fiscalizada en terreno por la Prefectura OS-10 de Carabineros y la Subsecretaría de Prevención del Delito."
+                ]
+              },
+              {
+                id: "sup-ley-corta-2",
+                courseSlug: "supervisor-de-seguridad",
+                moduleName: "Ley Corta N° 21.825",
+                slideNumber: 2,
+                title: "Obligaciones Operativas del Supervisor",
+                contentBullets: [
+                  "Mantener las carpetas del personal con sus certificados y documentación legal al día.",
+                  "Asegurar la vigencia de la póliza del seguro de vida obligatorio de 132 UF por guardia.",
+                  "Coordinar oportunamente con la administración los cursos de perfeccionamiento o formación requeridos.",
+                  "Exhibir la nómina y directivas aprobadas ante fiscalizaciones de la autoridad."
+                ]
+              }
+            ]
           }
         ]
       },
@@ -478,9 +544,9 @@ export const materialesEstudio: CursoMaterial[] = [
           {
             id: "sup-3-1",
             codigo: "3.1",
-            nombre: "Directivas de Funcionamiento y Relación con OS-10",
-            videoUrl: "https://youtu.be/Mh6vSchtoYU",
-            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/f69c41e52591534c24bedc7678fd0ddcd50481d1.pdf"
+            nombre: "Directivas de Funcionamiento y Plano de Mando Operativo",
+            videoUrl: "https://youtu.be/9KzoF5UqFAs",
+            pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/0881b0558b9ab3dfae63fa30ca26391f263e69aa.pdf"
           },
           {
             id: "sup-3-2",

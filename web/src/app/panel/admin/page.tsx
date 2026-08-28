@@ -37,6 +37,11 @@ import {
   formatRangoHorario,
   getClaseLiveStatus,
 } from "@/lib/claseHorario";
+import {
+  formatMeetingId,
+  getMeetingIdAndPwd,
+  getZoomCredentials,
+} from "@/lib/zoomWeb";
 
 type Tab =
   | "pendientes"
@@ -3819,8 +3824,18 @@ function ClasesTab({
   const [editandoUrlId, setEditandoUrlId] = useState<string | null>(null);
   const [nuevaUrl, setNuevaUrl] = useState("");
   const [zoomMeetings, setZoomMeetings] = useState<any[]>([]);
+  const [zoomHostKey, setZoomHostKey] = useState<string>("");
+  const [copiadoId, setCopiadoId] = useState<string | null>(null);
   const [creandoZoom, setCreandoZoom] = useState(false);
   const [zoomMsg, setZoomMsg] = useState("");
+
+  const copiarAlPortapapeles = (texto: string, idFeedback: string) => {
+    if (!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+      setCopiadoId(idFeedback);
+      setTimeout(() => setCopiadoId(null), 2500);
+    });
+  };
 
   useEffect(() => {
     if (!db) return;
@@ -3858,6 +3873,9 @@ function ClasesTab({
       .then((data) => {
         if (data.meetings && Array.isArray(data.meetings)) {
           setZoomMeetings(data.meetings);
+        }
+        if (data.hostKey) {
+          setZoomHostKey(data.hostKey);
         }
       })
       .catch(() => {});
@@ -3909,6 +3927,9 @@ function ClasesTab({
       if (res.ok && data.meeting?.join_url) {
         const joinUrl = data.meeting.join_url;
         const startUrl = data.meeting.start_url || "";
+        const meetingId = String(data.meeting.id || "");
+        const password = String(data.meeting.password || "");
+        if (data.hostKey) setZoomHostKey(data.hostKey);
 
         if (db) {
           const diasArray = getDiasPermitidosArray(diasSemana);
@@ -3918,6 +3939,8 @@ function ClasesTab({
             cursoSlug: form.cursoSlug,
             joinUrl,
             startUrl,
+            meetingId,
+            password,
             tipoHorario,
             fechaCreacion: serverTimestamp(),
             creadoPor: userData?.email || "",
@@ -3949,7 +3972,7 @@ function ClasesTab({
               estado: "activa",
               fechaInicio: serverTimestamp(),
             });
-            setZoomMsg("✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos ya pueden entrar directamente.");
+            setZoomMsg("✅ ¡Sala Zoom creada y ACTIVADA EN VIVO! Los alumnos y docentes ya pueden entrar.");
           }
 
           setForm({ nombre: "", descripcion: "", cursoSlug: "", joinUrl: "" });
@@ -3971,12 +3994,16 @@ function ClasesTab({
       url = "https://" + url;
     }
 
+    const extracted = getMeetingIdAndPwd(url);
     const diasArray = getDiasPermitidosArray(diasSemana);
     const payloadBase: any = {
       nombre: form.nombre.trim(),
       descripcion: form.descripcion.trim(),
       cursoSlug: form.cursoSlug,
       joinUrl: url,
+      startUrl: url,
+      meetingId: extracted?.meetingId || "",
+      password: extracted?.pwd || "",
       tipoHorario,
       fechaCreacion: serverTimestamp(),
       creadoPor: userData?.email || "",
@@ -4020,9 +4047,14 @@ function ClasesTab({
     if (url && !url.startsWith("http://") && !url.startsWith("https://")) {
       url = "https://" + url;
     }
-    await updateDoc(doc(db, "clases", c.id), {
+    const extracted = getMeetingIdAndPwd(url);
+    const updatePayload: any = {
       joinUrl: url,
-    });
+    };
+    if (extracted?.meetingId) updatePayload.meetingId = extracted.meetingId;
+    if (extracted?.pwd) updatePayload.password = extracted.pwd;
+
+    await updateDoc(doc(db, "clases", c.id), updatePayload);
     setEditandoUrlId(null);
     setNuevaUrl("");
   };
@@ -4358,6 +4390,43 @@ function ClasesTab({
         )}
       </div>
 
+      {/* Tarjeta Informativa de Clave de Anfitrión e Instrucciones de Zoom */}
+      <div className="rounded-2xl border border-amber-300/80 bg-linear-to-r from-amber-50 to-orange-50 p-5 shadow-xs">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">👑</span>
+              <h3 className="text-sm font-black text-amber-950">
+                Acceso de Anfitrión (Host / Administrador) en Zoom APRECAP
+              </h3>
+              <span className="rounded-full bg-amber-200/70 border border-amber-300 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-900">
+                HABILITADO PARA TODOS LOS ADMINS Y PROFESORES
+              </span>
+            </div>
+            <p className="text-xs text-amber-900/90 leading-relaxed">
+              Cualquier administrador o profesor puede abrir y dictar la clase como <strong>Anfitrión (Host)</strong>. Al hacer clic en <strong>&ldquo;👑 Abrir en Zoom (Host)&rdquo;</strong> ingresarás con permisos de transmisión total (compartir pantalla, grabar en la nube, silenciar micrófonos y admitir alumnos).
+            </p>
+            <p className="text-[11px] text-amber-800/80 leading-relaxed">
+              💡 <em>¿Entraste desde la aplicación de Zoom o como participante?</em> Abre la lista de <strong>Participantes &gt; Reclamar el rol de anfitrión (Claim Host)</strong> e ingresa la clave institucional de 6 dígitos.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-amber-200 bg-white/90 p-3 text-center shadow-xs min-w-[200px]">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Clave de Anfitrión (Host Key)</p>
+            <p className="font-mono text-lg font-black text-slate-900 mt-0.5 tracking-widest">
+              {zoomHostKey || process.env.NEXT_PUBLIC_ZOOM_HOST_KEY || "6 dígitos"}
+            </p>
+            <button
+              type="button"
+              onClick={() => copiarAlPortapapeles(zoomHostKey || process.env.NEXT_PUBLIC_ZOOM_HOST_KEY || "", "hostkey-admin")}
+              className="mt-1.5 w-full rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1 text-[11px] font-extrabold text-slate-950 transition flex items-center justify-center gap-1 cursor-pointer shadow-xs"
+            >
+              <span>{copiadoId === "hostkey-admin" ? "✅ ¡Copiada!" : "📋 Copiar Clave"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Barra de Filtros de Clases */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
         <div className="flex flex-wrap gap-1.5">
@@ -4405,6 +4474,7 @@ function ClasesTab({
           const isLive = c.liveStatus === "en_vivo";
           const isProg = c.liveStatus === "programada";
           const isFin = c.liveStatus === "finalizada";
+          const creds = getZoomCredentials(c.joinUrl, c.startUrl, c.meetingId, c.password);
 
           return (
             <div key={c.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
@@ -4452,6 +4522,51 @@ function ClasesTab({
                     </span>
                   </div>
 
+                  {/* Credenciales de Acceso Zoom (ID, Contraseña y Copia Rápida) */}
+                  <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
+                    {creds.meetingId && (
+                      <div className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-200 bg-cyan-50/90 px-2.5 py-1 text-cyan-950">
+                        <span className="text-cyan-800 font-bold">🆔 ID:</span>
+                        <span className="font-mono font-extrabold">{creds.formattedId || creds.meetingId}</span>
+                        <button
+                          type="button"
+                          onClick={() => copiarAlPortapapeles(creds.meetingId, `id-${c.id}`)}
+                          className="text-cyan-800 hover:text-cyan-950 font-bold text-[11px] underline ml-1 cursor-pointer"
+                          title="Copiar ID numérico de Zoom"
+                        >
+                          {copiadoId === `id-${c.id}` ? "✅ Copiado" : "📋 Copiar"}
+                        </button>
+                      </div>
+                    )}
+
+                    {creds.password && (
+                      <div className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50/90 px-2.5 py-1 text-amber-950">
+                        <span className="text-amber-800 font-bold">🔑 Contraseña / Código:</span>
+                        <span className="font-mono font-extrabold">{creds.password}</span>
+                        <button
+                          type="button"
+                          onClick={() => copiarAlPortapapeles(creds.password!, `pwd-${c.id}`)}
+                          className="text-amber-800 hover:text-amber-950 font-bold text-[11px] underline ml-1 cursor-pointer"
+                          title="Copiar Contraseña de acceso a Zoom"
+                        >
+                          {copiadoId === `pwd-${c.id}` ? "✅ Copiado" : "📋 Copiar"}
+                        </button>
+                      </div>
+                    )}
+
+                    {c.joinUrl && (
+                      <button
+                        type="button"
+                        onClick={() => copiarAlPortapapeles(c.joinUrl, `url-${c.id}`)}
+                        className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-gray-700 hover:bg-gray-100 font-medium text-[11px] cursor-pointer"
+                        title="Copiar enlace de invitación para alumnos"
+                      >
+                        <span>🔗</span>
+                        <span>{copiadoId === `url-${c.id}` ? "✅ Enlace Copiado" : "Copiar Enlace Alumnos"}</span>
+                      </button>
+                    )}
+                  </div>
+
                   {/* Edición rápida del enlace de la clase */}
                   <div className="mt-2">
                     {editandoUrlId === c.id ? (
@@ -4465,21 +4580,21 @@ function ClasesTab({
                         />
                         <button
                           onClick={() => guardarUrlClase(c)}
-                          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white"
+                          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white cursor-pointer"
                         >
                           Guardar enlace
                         </button>
                         <button
                           onClick={() => setEditandoUrlId(null)}
-                          className="text-xs text-gray-500 hover:text-gray-700"
+                          className="text-xs text-gray-500 hover:text-gray-700 cursor-pointer"
                         >
                           Cancelar
                         </button>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="text-gray-500">Enlace Zoom:</span>
-                        <code className="bg-gray-100 px-2 py-0.5 rounded text-gray-700 text-[11px]">
+                        <span className="text-gray-500">Enlace directo:</span>
+                        <code className="bg-gray-100 px-2 py-0.5 rounded text-gray-700 text-[11px] max-w-xs truncate">
                           {c.joinUrl || "Sin enlace asignado"}
                         </code>
                         <button
@@ -4487,7 +4602,7 @@ function ClasesTab({
                             setEditandoUrlId(c.id);
                             setNuevaUrl(c.joinUrl || "");
                           }}
-                          className="text-blue-600 hover:underline font-bold text-[11px]"
+                          className="text-blue-600 hover:underline font-bold text-[11px] cursor-pointer"
                         >
                           ✏️ Editar enlace
                         </button>
@@ -4497,6 +4612,19 @@ function ClasesTab({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
+                  {(c.startUrl || creds.hostUrl) && (
+                    <a
+                      href={c.startUrl || creds.hostUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-xl bg-amber-500 hover:bg-amber-600 px-4 py-2 text-xs font-black text-slate-950 shadow-sm inline-flex items-center gap-1.5 transition"
+                      title="Abrir e iniciar clase en Zoom como Anfitrión (Host)"
+                    >
+                      <span>👑</span>
+                      <span>Abrir en Zoom (Host)</span>
+                    </a>
+                  )}
+
                   {c.joinUrl && (
                     <Link
                       href={`/aula-en-vivo?id=${c.id}`}
@@ -4939,6 +5067,15 @@ function ReunionesTab() {
   const [form, setForm] = useState({ topic: "", start_time: "", duration: "60" });
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
+  const [copiadoId, setCopiadoId] = useState<string | null>(null);
+
+  const copiarAlPortapapeles = (texto: string, idFeedback: string) => {
+    if (!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+      setCopiadoId(idFeedback);
+      setTimeout(() => setCopiadoId(null), 2500);
+    });
+  };
 
   const cargar = useCallback(() => {
     fetch("/api/zoom", { method: "GET" })
@@ -4965,7 +5102,7 @@ function ReunionesTab() {
       });
       const data = await res.json();
       if (res.ok) {
-        setMsg(`Reunión creada: ${data.join_url}`);
+        setMsg(`Reunión creada: ${data.meeting?.join_url || data.join_url || ""}`);
         setForm({ topic: "", start_time: "", duration: "60" });
         cargar();
       } else {
@@ -5054,7 +5191,7 @@ function ReunionesTab() {
         <button
           onClick={crear}
           disabled={busy}
-          className="mt-4 rounded-xl bg-apre-red px-5 py-2.5 text-xs font-bold text-white disabled:opacity-50"
+          className="mt-4 rounded-xl bg-apre-red px-5 py-2.5 text-xs font-bold text-white disabled:opacity-50 cursor-pointer"
         >
           {busy ? "Creando…" : "Crear reunión"}
         </button>
@@ -5062,44 +5199,86 @@ function ReunionesTab() {
       </div>
 
       <div className="space-y-3">
-        {meetings.map((m) => (
-          <div key={m.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-            <div>
-              <p className="font-extrabold text-apre-blue text-sm">{m.topic}</p>
-              <p className="text-xs text-gray-600 mt-0.5">
-                {m.start_time ? new Date(m.start_time).toLocaleString("es-CL") : "Sin fecha"} ·{" "}
-                {m.duration} min
-              </p>
-              <p className="text-[11px] font-mono text-gray-400 mt-1">ID Zoom: {m.id}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              {m.join_url && (
-                <a
-                  href={m.join_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-bold text-white shadow-xs hover:brightness-105"
+        {meetings.map((m) => {
+          const creds = getZoomCredentials(m.join_url, m.start_url, m.id, m.password);
+
+          return (
+            <div key={m.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+              <div className="space-y-1">
+                <p className="font-extrabold text-apre-blue text-sm">{m.topic}</p>
+                <p className="text-xs text-gray-600">
+                  {m.start_time ? new Date(m.start_time).toLocaleString("es-CL") : "Sin fecha"} ·{" "}
+                  {m.duration} min
+                </p>
+
+                {/* Credenciales de la reunión */}
+                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                  <div className="inline-flex items-center gap-1 rounded-md bg-cyan-50 border border-cyan-200 px-2 py-0.5 font-mono text-[11px] text-cyan-900">
+                    <span>🆔 ID: <strong>{creds.formattedId || m.id}</strong></span>
+                    <button
+                      type="button"
+                      onClick={() => copiarAlPortapapeles(String(m.id), `zm-id-${m.id}`)}
+                      className="text-cyan-700 hover:text-cyan-950 font-bold ml-1 cursor-pointer"
+                    >
+                      {copiadoId === `zm-id-${m.id}` ? "✅" : "📋"}
+                    </button>
+                  </div>
+
+                  {creds.password && (
+                    <div className="inline-flex items-center gap-1 rounded-md bg-amber-50 border border-amber-200 px-2 py-0.5 font-mono text-[11px] text-amber-900">
+                      <span>🔑 Clave: <strong>{creds.password}</strong></span>
+                      <button
+                        type="button"
+                        onClick={() => copiarAlPortapapeles(creds.password!, `zm-pwd-${m.id}`)}
+                        className="text-amber-700 hover:text-amber-950 font-bold ml-1 cursor-pointer"
+                      >
+                        {copiadoId === `zm-pwd-${m.id}` ? "✅" : "📋"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {(m.start_url || creds.hostUrl) && (
+                  <a
+                    href={m.start_url || creds.hostUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-2 text-xs font-black text-slate-950 shadow-xs inline-flex items-center gap-1"
+                    title="Iniciar reunión como Anfitrión (Host)"
+                  >
+                    <span>👑</span> Iniciar como Host
+                  </a>
+                )}
+                {m.join_url && (
+                  <a
+                    href={m.join_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-whatsapp px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:brightness-105"
+                  >
+                    Unirse
+                  </a>
+                )}
+                <button
+                  onClick={() => forzarCierreZoom(m.id)}
+                  className="rounded-xl bg-orange-100 hover:bg-orange-200 text-orange-700 px-3 py-2 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  title="Cierra la sala y detiene la grabación"
                 >
-                  Unirse
-                </a>
-              )}
-              <button
-                onClick={() => forzarCierreZoom(m.id)}
-                className="rounded-xl bg-orange-100 hover:bg-orange-200 text-orange-700 px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5"
-                title="Cierra la sala y detiene la grabación"
-              >
-                <span>🛑</span> Forzar Cierre
-              </button>
-              <button
-                onClick={() => eliminarReunionZoom(m.id)}
-                className="rounded-xl bg-red-50 hover:bg-red-100 text-apre-red px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5"
-                title="Eliminar permanentemente de la cuenta de Zoom"
-              >
-                <span>🗑</span> Eliminar
-              </button>
+                  <span>🛑</span> Forzar Cierre
+                </button>
+                <button
+                  onClick={() => eliminarReunionZoom(m.id)}
+                  className="rounded-xl bg-red-50 hover:bg-red-100 text-apre-red px-3 py-2 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  title="Eliminar permanentemente de la cuenta de Zoom"
+                >
+                  <span>🗑</span> Eliminar
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {meetings.length === 0 && (
           <div className="rounded-2xl border border-dashed border-gray-200 p-8 text-center">
             <p className="text-gray-500 text-xs">No hay reuniones agendadas en tu cuenta de Zoom.</p>

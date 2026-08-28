@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createMeeting, deleteMeeting, listMeetings, zoomEnabled } from "@/lib/zoom";
+import { createMeeting, deleteMeeting, getZoomHostKey, listMeetings, zoomEnabled } from "@/lib/zoom";
 import { logAuditAction } from "@/lib/auditLogger";
 
 // Reuniones Zoom (server-side, requiere credenciales Server-to-Server en .env).
@@ -12,7 +12,8 @@ export async function GET() {
   }
   try {
     const meetings = await listMeetings();
-    return NextResponse.json({ meetings });
+    const hostKey = getZoomHostKey();
+    return NextResponse.json({ meetings, hostKey });
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Error al listar reuniones" },
@@ -60,8 +61,9 @@ export async function POST(req: Request) {
       Number(duration) || 90,
       tz
     );
+    const hostKey = getZoomHostKey();
     await logAuditAction("MEETING_CREATED", { detalle: topic });
-    return NextResponse.json({ meeting });
+    return NextResponse.json({ meeting, hostKey });
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Error al crear reunión" },

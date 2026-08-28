@@ -34,7 +34,7 @@ export default function CartaDirectorPage() {
               <strong>1989</strong>, cuando inicié mi camino como Instructor de
               Seguridad Privada en la empresa{" "}
               <strong>“Seguridad y Servicios S.A.”</strong>, reconocida en
-              aquella época como una empresa escuela del sector.
+              aquella época como una empresa escuela del rubro.
             </p>
             <p className="mt-4">
               Desde entonces, han sido más de tres décadas de aprendizaje,

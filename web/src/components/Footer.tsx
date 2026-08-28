@@ -86,14 +86,21 @@ export default function Footer() {
             <li>{CONTACTO.horario}</li>
             <li>
               <a href={`tel:${CONTACTO.telefono.replace(/\s/g, "")}`} className="hover:text-white transition flex items-center gap-1.5">
-                <span>📞</span> {CONTACTO.telefono}
+                <span>📱</span> {CONTACTO.telefono}
               </a>
             </li>
             <li>
               <a href={`tel:${CONTACTO.telefono2.replace(/\s/g, "")}`} className="hover:text-white transition flex items-center gap-1.5">
-                <span>📞</span> {CONTACTO.telefono2}
+                <span>📱</span> {CONTACTO.telefono2}
               </a>
             </li>
+            {CONTACTO.telefonoFijo && (
+              <li>
+                <a href={`tel:${CONTACTO.telefonoFijo.replace(/\s/g, "")}`} className="hover:text-white transition flex items-center gap-1.5">
+                  <span>☎️</span> Oficina: {CONTACTO.telefonoFijo}
+                </a>
+              </li>
+            )}
             <li>
               <a href={`mailto:${CONTACTO.email}`} className="hover:text-white transition flex items-center gap-1.5">
                 <span>✉️</span> {CONTACTO.email}

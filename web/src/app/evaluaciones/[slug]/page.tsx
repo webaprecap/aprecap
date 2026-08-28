@@ -11,6 +11,7 @@ import { doc } from "firebase/firestore";
 import { getExamUnlockStatus } from "@/lib/courseTiming";
 import FinalExam from "@/components/cursos/FinalExam";
 import FinalExamVF from "@/components/cursos/FinalExamVF";
+import GuardiaEvaluacionesHub from "@/components/cursos/GuardiaEvaluacionesHub";
 import {
   CCTV_QUESTION_BANK,
   EXAMEN_FINAL_PREGUNTAS_CCTV,
@@ -241,13 +242,9 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
   if (slug === "guardia-de-seguridad") {
     return (
       <div className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10">
-        <FinalExamVF
+        <GuardiaEvaluacionesHub
           cursoSlug={slug}
-          cursoTitulo="Curso de Guardia de Seguridad (OS-10)"
           volverHref={`/materiales/${slug}`}
-          preguntas={getExamenFinalPreguntas()}
-          umbral={EXAMEN_UMBRAL_APROBACION}
-          tag="Examen Final OS-10"
         />
       </div>
     );

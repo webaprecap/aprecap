@@ -46,6 +46,7 @@ export interface DatosContacto {
   metro: string;
   telefono: string;
   telefono2: string;
+  telefonoFijo?: string;
   telefonos?: string[];
   whatsapp: string;
   whatsappLink: string;

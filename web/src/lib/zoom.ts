@@ -2,12 +2,13 @@
 // Las claves se obtienen al crear la app en marketplace.zoom.us con la cuenta del cliente.
 
 export interface ZoomMeeting {
-  id: number;
+  id: number | string;
   topic: string;
   start_time: string;
   join_url: string;
   start_url?: string;
   password?: string;
+  encrypted_password?: string;
   duration: number;
   timezone?: string;
 }
@@ -15,9 +16,14 @@ export interface ZoomMeeting {
 const ZOOM_ACCOUNT_ID = process.env.ZOOM_ACCOUNT_ID;
 const ZOOM_CLIENT_ID = process.env.ZOOM_CLIENT_ID;
 const ZOOM_CLIENT_SECRET = process.env.ZOOM_CLIENT_SECRET;
+const ZOOM_HOST_KEY = process.env.ZOOM_HOST_KEY || process.env.NEXT_PUBLIC_ZOOM_HOST_KEY || "";
 
 export function zoomEnabled() {
   return Boolean(ZOOM_ACCOUNT_ID && ZOOM_CLIENT_ID && ZOOM_CLIENT_SECRET);
+}
+
+export function getZoomHostKey(): string {
+  return ZOOM_HOST_KEY;
 }
 
 let tokenCache: { token: string; expires: number } | null = null;

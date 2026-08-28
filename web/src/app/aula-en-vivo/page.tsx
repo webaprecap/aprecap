@@ -7,7 +7,7 @@ import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { canAccessCourse } from "@/lib/courseAccess";
-import { getMeetingIdAndPwd, getZoomWebClientUrl } from "@/lib/zoomWeb";
+import { formatMeetingId, getMeetingIdAndPwd, getZoomCredentials, getZoomWebClientUrl } from "@/lib/zoomWeb";
 import {
   formatDetalleHorario,
   formatRangoHorario,
@@ -20,6 +20,9 @@ interface ClaseData {
   descripcion?: string;
   cursoSlug?: string;
   joinUrl?: string;
+  startUrl?: string;
+  meetingId?: string;
+  password?: string;
   estado?: string;
   creadoPor?: string;
   tipoHorario?: string;
@@ -50,7 +53,16 @@ function AulaEnVivoInner() {
   const [loadingClase, setLoadingClase] = useState(true);
   const [enrolls, setEnrolls] = useState<{ courseSlug?: string }[]>([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [copiadoId, setCopiadoId] = useState<string | null>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
+
+  const copiarAlPortapapeles = (texto: string, idFeedback: string) => {
+    if (!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+      setCopiadoId(idFeedback);
+      setTimeout(() => setCopiadoId(null), 2500);
+    });
+  };
 
   // Escuchar la clase en tiempo real desde Firestore
   useEffect(() => {
@@ -105,9 +117,9 @@ function AulaEnVivoInner() {
     return getZoomWebClientUrl(clase.joinUrl, nombreUsuario);
   }, [clase?.joinUrl, nombreUsuario]);
 
-  const meetingInfo = useMemo(() => {
-    return getMeetingIdAndPwd(clase?.joinUrl);
-  }, [clase?.joinUrl]);
+  const creds = useMemo(() => {
+    return getZoomCredentials(clase?.joinUrl, clase?.startUrl, clase?.meetingId, clase?.password);
+  }, [clase]);
 
   // Manejar pantalla completa del reproductor
   const toggleFullscreen = () => {
@@ -268,6 +280,19 @@ function AulaEnVivoInner() {
 
           {/* Botones de acción */}
           <div className="flex items-center gap-2">
+            {esAdminOProfesor && (clase.startUrl || creds.hostUrl) && (
+              <a
+                href={clase.startUrl || creds.hostUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Abrir e iniciar sesión con permisos de Anfitrión (Host)"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 px-3 py-2 text-xs font-black text-slate-950 transition shadow-md"
+              >
+                <span>👑</span>
+                <span>Iniciar como Host</span>
+              </a>
+            )}
+
             {clase.joinUrl && (
               <a
                 href={clase.joinUrl}
@@ -277,7 +302,7 @@ function AulaEnVivoInner() {
                 className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-bold text-slate-200 transition hover:bg-slate-700"
               >
                 <span>📱</span>
-                <span>Abrir en App Zoom</span>
+                <span>App Zoom</span>
               </a>
             )}
 
@@ -326,21 +351,44 @@ function AulaEnVivoInner() {
           )}
         </div>
 
-        {/* Barra de Ayuda y Accesos Directos Institucionales */}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 p-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <span>🛡️</span>
-            <span>
-              <strong>Aula Virtual APRECAP Web:</strong> Transmisión segura con credenciales institucionales.
-              {meetingInfo?.meetingId && (
-                <span className="ml-2 font-mono text-[11px] text-cyan-400">
-                  ID: {meetingInfo.meetingId}
-                </span>
-              )}
-            </span>
+        {/* Barra de Ayuda y Credenciales Institucionales */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-900/80 border border-slate-800 p-4 text-xs text-slate-300">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5 font-bold text-slate-200">
+              <span>🛡️</span>
+              <span>Aula Virtual APRECAP</span>
+            </div>
+
+            {creds.meetingId && (
+              <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-800 border border-slate-700 px-2.5 py-1 text-slate-200">
+                <span className="text-cyan-400 font-bold">🆔 ID:</span>
+                <span className="font-mono font-bold text-white">{creds.formattedId || creds.meetingId}</span>
+                <button
+                  type="button"
+                  onClick={() => copiarAlPortapapeles(creds.meetingId, "aula-id")}
+                  className="text-cyan-400 hover:text-cyan-300 font-bold ml-1 cursor-pointer text-[11px] underline"
+                >
+                  {copiadoId === "aula-id" ? "✅ Copiado" : "📋 Copiar"}
+                </button>
+              </div>
+            )}
+
+            {creds.password && (
+              <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-800 border border-slate-700 px-2.5 py-1 text-slate-200">
+                <span className="text-amber-400 font-bold">🔑 Contraseña:</span>
+                <span className="font-mono font-bold text-white">{creds.password}</span>
+                <button
+                  type="button"
+                  onClick={() => copiarAlPortapapeles(creds.password!, "aula-pwd")}
+                  className="text-amber-400 hover:text-amber-300 font-bold ml-1 cursor-pointer text-[11px] underline"
+                >
+                  {copiadoId === "aula-pwd" ? "✅ Copiado" : "📋 Copiar"}
+                </button>
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             {webClientUrl && (
               <a
                 href={webClientUrl}
@@ -349,7 +397,7 @@ function AulaEnVivoInner() {
                 className="font-bold text-cyan-400 hover:underline flex items-center gap-1"
               >
                 <span>🌐</span>
-                <span>Abrir Web en pestaña nueva</span>
+                <span>Pestaña nueva</span>
               </a>
             )}
             {clase.joinUrl && (
@@ -360,7 +408,7 @@ function AulaEnVivoInner() {
                 className="font-bold text-emerald-400 hover:underline flex items-center gap-1"
               >
                 <span>📱</span>
-                <span>Abrir con App Zoom</span>
+                <span>Abrir en Zoom App</span>
               </a>
             )}
           </div>

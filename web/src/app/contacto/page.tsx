@@ -37,17 +37,25 @@ export default function ContactoPage() {
               <h2 className="font-extrabold text-apre-blue">Teléfonos de Contacto Directo</h2>
               <div className="mt-2 space-y-2">
                 <p className="text-gray-700 font-semibold flex items-center gap-2">
-                  <span>📞</span>
+                  <span>📱</span>
                   <a href={`tel:${CONTACTO.telefono.replace(/\s/g, "")}`} className="hover:text-apre-red transition">
                     {CONTACTO.telefono}
                   </a>
                 </p>
                 <p className="text-gray-700 font-semibold flex items-center gap-2">
-                  <span>📞</span>
+                  <span>📱</span>
                   <a href={`tel:${CONTACTO.telefono2.replace(/\s/g, "")}`} className="hover:text-apre-red transition">
                     {CONTACTO.telefono2}
                   </a>
                 </p>
+                {CONTACTO.telefonoFijo && (
+                  <p className="text-gray-700 font-semibold flex items-center gap-2">
+                    <span>☎️</span>
+                    <a href={`tel:${CONTACTO.telefonoFijo.replace(/\s/g, "")}`} className="hover:text-apre-red transition">
+                      Oficina: {CONTACTO.telefonoFijo}
+                    </a>
+                  </p>
+                )}
               </div>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
