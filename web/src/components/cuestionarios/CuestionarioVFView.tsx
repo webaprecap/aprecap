@@ -1,31 +1,86 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { PreguntaCuestionario } from "@/data/cuestionarios";
 
 type Respuesta =
   | { tipo: "vf"; valor: boolean }
   | { tipo: "alternativa"; valor: string };
 
-function esCorrecta(p: PreguntaCuestionario, r: Respuesta | undefined): boolean {
+function cleanOptionText(text: string): string {
+  if (!text) return "";
+  return text.replace(/^[a-eA-E][\)\.\-]\s*/, "").trim();
+}
+
+function normalizeText(text?: string): string {
+  if (!text) return "";
+  return text.replace(/^[a-eA-E][\)\.\-]\s*/, "").trim().toLowerCase();
+}
+
+function esCorrecta(p: ProcessedPregunta, r: Respuesta | undefined): boolean {
   if (!r) return false;
   if (p.tipo === "vf" && r.tipo === "vf") return r.valor === p.respuesta;
-  if (p.tipo === "alternativa" && r.tipo === "alternativa")
-    return r.valor === p.respuestaCorrecta;
+  if (p.tipo === "alternativa" && r.tipo === "alternativa") {
+    return normalizeText(r.valor) === normalizeText(p.respuestaCorrecta);
+  }
   return false;
+}
+
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+interface ProcessedOption {
+  original: string;
+  textoLimpio: string;
+}
+
+interface ProcessedPregunta extends PreguntaCuestionario {
+  opcionesProcesadas?: ProcessedOption[];
+}
+
+function processAndShuffle(preguntas: PreguntaCuestionario[]): ProcessedPregunta[] {
+  // Baraja el orden de las preguntas
+  const shuffledPreguntas = shuffleArray(preguntas);
+
+  // Baraja el orden de las alternativas de cada pregunta
+  return shuffledPreguntas.map((p) => {
+    if (p.tipo === "alternativa" && p.opciones && p.opciones.length > 0) {
+      const opcionesConFormato: ProcessedOption[] = p.opciones.map((op) => ({
+        original: op,
+        textoLimpio: cleanOptionText(op),
+      }));
+      return {
+        ...p,
+        opcionesProcesadas: shuffleArray(opcionesConFormato),
+      };
+    }
+    return p;
+  });
 }
 
 const ES_DEV = process.env.NODE_ENV === "development";
 
 export default function CuestionarioVFView({
   titulo,
-  preguntas,
+  preguntas: preguntasProps,
 }: {
   titulo: string;
   preguntas: PreguntaCuestionario[];
 }) {
+  const [preguntas, setPreguntas] = useState<ProcessedPregunta[]>([]);
   const [respuestas, setRespuestas] = useState<Record<string, Respuesta>>({});
   const [mostrarTodas, setMostrarTodas] = useState(false);
+
+  useEffect(() => {
+    setPreguntas(processAndShuffle(preguntasProps));
+    setRespuestas({});
+  }, [preguntasProps]);
 
   const respondidas = useMemo(
     () => preguntas.filter((p) => respuestas[p.id]).length,
@@ -37,14 +92,15 @@ export default function CuestionarioVFView({
   );
   const total = preguntas.length;
   const pct = total > 0 ? Math.round((correctas / total) * 100) : 0;
-  const todoRespondido = respondidas === total;
+  const todoRespondido = total > 0 && respondidas === total;
 
-  const seleccionar = (p: PreguntaCuestionario, r: Respuesta) => {
+  const seleccionar = (p: ProcessedPregunta, r: Respuesta) => {
     if (respuestas[p.id]) return;
     setRespuestas((prev) => ({ ...prev, [p.id]: r }));
   };
 
   const reiniciar = () => {
+    setPreguntas(processAndShuffle(preguntasProps));
     setRespuestas({});
     setMostrarTodas(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -57,12 +113,14 @@ export default function CuestionarioVFView({
       <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wider text-cyan-400">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-400 mb-1.5">
+              <span>🎲</span> Preguntas y Alternativas Aleatorias
+            </div>
+            <h2 className="text-base font-black uppercase tracking-wider text-white">
               {titulo}
             </h2>
             <p className="mt-1 text-xs text-slate-400">
-              {total} preguntas · Corrección inmediata: al responder verás si
-              acertaste y cuál era la respuesta correcta.
+              {total} preguntas · Las alternativas se ordenan al azar en cada intento. Al responder verás de inmediato la corrección explicada.
             </p>
           </div>
           <div className="w-full max-w-[220px]">
@@ -104,9 +162,9 @@ export default function CuestionarioVFView({
           </p>
           <button
             onClick={reiniciar}
-            className="rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark"
+            className="rounded-xl bg-apre-red px-6 py-3 text-sm font-black text-white transition hover:bg-apre-red-dark cursor-pointer shadow-lg"
           >
-            ↻ Reintentar cuestionario
+            ↻ Reintentar cuestionario (Nuevo orden aleatorio)
           </button>
         </div>
       )}
@@ -158,7 +216,7 @@ export default function CuestionarioVFView({
                           ? "bg-emerald-500/20 text-emerald-300 border-emerald-500"
                           : respondida
                             ? "bg-slate-900/50 text-slate-600 border-slate-800"
-                            : "bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800"
+                            : "bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800 cursor-pointer"
                     }`}
                   >
                     ✓ VERDADERO
@@ -175,7 +233,7 @@ export default function CuestionarioVFView({
                           ? "bg-emerald-500/20 text-emerald-300 border-emerald-500"
                           : respondida
                             ? "bg-slate-900/50 text-slate-600 border-slate-800"
-                            : "bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800"
+                            : "bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800 cursor-pointer"
                     }`}
                   >
                     ✗ FALSO
@@ -185,13 +243,20 @@ export default function CuestionarioVFView({
 
               {p.tipo === "alternativa" && (
                 <div className="mt-4 grid gap-2 md:grid-cols-2">
-                  {p.opciones?.map((op, opIdx) => {
-                    const marcada = r?.tipo === "alternativa" && r.valor === op;
-                    const esLaCorrecta = op === p.respuestaCorrecta;
+                  {(p.opcionesProcesadas || []).map((op, opIdx) => {
+                    const marcada =
+                      r?.tipo === "alternativa" &&
+                      normalizeText(r.valor) === normalizeText(op.original);
+                    const esLaCorrecta =
+                      normalizeText(op.original) ===
+                      normalizeText(p.respuestaCorrecta);
+
                     return (
                       <button
-                        key={op}
-                        onClick={() => seleccionar(p, { tipo: "alternativa", valor: op })}
+                        key={`${op.original}-${opIdx}`}
+                        onClick={() =>
+                          seleccionar(p, { tipo: "alternativa", valor: op.original })
+                        }
                         disabled={respondida}
                         className={`rounded-xl px-4 py-2.5 text-left text-xs font-semibold transition border ${
                           esLaCorrecta && (respondida || revelar)
@@ -202,13 +267,13 @@ export default function CuestionarioVFView({
                                 : "bg-apre-red/20 text-apre-red border-apre-red"
                               : respondida
                                 ? "bg-slate-900/50 text-slate-600 border-slate-800"
-                                : "bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800"
+                                : "bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800 cursor-pointer"
                         }`}
                       >
                         <span className="mr-2 font-black text-slate-500">
                           {letraOpcion(opIdx)}){" "}
                         </span>
-                        {op}
+                        {op.textoLimpio}
                       </button>
                     );
                   })}
@@ -231,7 +296,7 @@ export default function CuestionarioVFView({
                           ? p.respuesta
                             ? "Verdadero"
                             : "Falso"
-                          : `${p.respuestaCorrecta}`}
+                          : `${cleanOptionText(p.respuestaCorrecta || "")}`}
                       </span>
                     )}
                   </p>
@@ -248,7 +313,7 @@ export default function CuestionarioVFView({
 
               {revelar && p.tipo === "alternativa" && (
                 <p className="mt-3 text-xs font-bold text-emerald-400">
-                  Respuesta correcta: {p.respuestaCorrecta}
+                  Respuesta correcta: {cleanOptionText(p.respuestaCorrecta || "")}
                 </p>
               )}
             </div>
@@ -258,3 +323,4 @@ export default function CuestionarioVFView({
     </div>
   );
 }
+
