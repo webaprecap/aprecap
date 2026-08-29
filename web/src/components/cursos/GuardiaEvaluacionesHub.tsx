@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { cuestionariosGuardiaOS10 } from "@/data/cuestionarios-os10";
 import CuestionarioVFView from "@/components/cuestionarios/CuestionarioVFView";
@@ -28,6 +28,44 @@ export default function GuardiaEvaluacionesHub({
     "📡", // 8. Alarmas y Comunicación
   ];
 
+  // Escuchar el botón atrás/adelante del navegador (popstate)
+  useEffect(() => {
+    const sincronizarEstadoConUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const pruebaParam = params.get("prueba");
+      if (pruebaParam) {
+        const idx = parseInt(pruebaParam, 10) - 1;
+        if (!isNaN(idx) && idx >= 0 && idx < cuestionariosGuardiaOS10.length) {
+          setEvalSeleccionadaIdx(idx);
+          return;
+        }
+      }
+      setEvalSeleccionadaIdx(null);
+    };
+
+    // Revisar estado inicial al cargar
+    sincronizarEstadoConUrl();
+
+    window.addEventListener("popstate", sincronizarEstadoConUrl);
+    return () => window.removeEventListener("popstate", sincronizarEstadoConUrl);
+  }, []);
+
+  const handleSeleccionarEval = (idx: number) => {
+    setEvalSeleccionadaIdx(idx);
+    const url = new URL(window.location.href);
+    url.searchParams.set("prueba", String(idx + 1));
+    window.history.pushState({ pruebaIdx: idx }, "", url.toString());
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleVolverALista = () => {
+    setEvalSeleccionadaIdx(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("prueba");
+    window.history.pushState(null, "", url.toString());
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (evalSeleccionadaIdx !== null) {
     const evaluacionActual: Cuestionario = cuestionariosGuardiaOS10[evalSeleccionadaIdx];
     return (
@@ -36,8 +74,8 @@ export default function GuardiaEvaluacionesHub({
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-900 border border-slate-800 p-4">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setEvalSeleccionadaIdx(null)}
-              className="flex items-center gap-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 px-3.5 py-2 text-xs font-black text-cyan-400 border border-slate-700 transition"
+              onClick={handleVolverALista}
+              className="flex items-center gap-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 px-3.5 py-2 text-xs font-black text-cyan-400 border border-slate-700 transition cursor-pointer shadow-xs"
             >
               <span>←</span>
               <span>Volver a la lista de pruebas</span>
@@ -55,11 +93,12 @@ export default function GuardiaEvaluacionesHub({
           </Link>
         </div>
 
-        {/* Componente interactivo del examen seleccionado */}
+        {/* Componente interactivo del examen seleccionado con soporte de reinicio aleatorio y regreso */}
         <div className="rounded-3xl border border-slate-800 bg-slate-900/90 p-4 md:p-8 shadow-2xl">
           <CuestionarioVFView
             titulo={evaluacionActual.titulo}
             preguntas={evaluacionActual.preguntas}
+            onVolver={handleVolverALista}
           />
         </div>
       </div>
@@ -79,7 +118,7 @@ export default function GuardiaEvaluacionesHub({
               Módulos de Examen y Ensayos Oficiales (OS-10 / SPD)
             </h1>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed">
-              Rinde las pruebas y cuestionarios oficiales de capacitación de forma independiente por módulo temático. Cada evaluación cuenta con corrección instantánea y retroalimentación normativa.
+              Rinde las pruebas y cuestionarios oficiales de capacitación de forma independiente por módulo temático. Cada evaluación cuenta con corrección instantánea y orden aleatorio en cada intento.
             </p>
           </div>
 
@@ -126,10 +165,7 @@ export default function GuardiaEvaluacionesHub({
                 </span>
 
                 <button
-                  onClick={() => {
-                    setEvalSeleccionadaIdx(idx);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
+                  onClick={() => handleSeleccionarEval(idx)}
                   className="rounded-xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-black text-slate-950 transition shadow-md flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>✍️</span>
