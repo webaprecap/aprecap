@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { collection, doc, onSnapshot, query, updateDoc, where, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where, addDoc, serverTimestamp, setDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { CONTACTO } from "@/data/site";
@@ -126,7 +126,7 @@ export default function PanelAlumno() {
     }
 
     const db = getFirestoreDb();
-    if (!db || !userData) return;
+    if (!db || (!userData && !user)) return;
     setGuardandoPerfil(true);
     try {
       const nombreCompleto = [
@@ -138,14 +138,26 @@ export default function PanelAlumno() {
         .join(" ")
         .trim();
 
-      await updateDoc(doc(db, "usuarios", userData.uid), {
+      const targetUid = user?.uid || userData?.uid;
+      if (!targetUid) throw new Error("No hay identificador de usuario disponible");
+
+      const updatePayload = {
         nombre: nombreCompleto,
         nombres: formPerfil.nombres.trim(),
         apellidoPaterno: formPerfil.apellidoPaterno.trim(),
         apellidoMaterno: formPerfil.apellidoMaterno.trim(),
         rut: formPerfil.rut.trim(),
         telefono: formPerfil.telefono.trim(),
-      });
+      };
+
+      // 1. Guardar o mergear en el UID oficial autenticado
+      await setDoc(doc(db, "usuarios", targetUid), updatePayload, { merge: true });
+
+      // 2. Si userData.uid era distinto del UID autenticado (doc temporal del admin), limpiar para evitar duplicados
+      if (userData?.uid && userData.uid !== targetUid) {
+        await deleteDoc(doc(db, "usuarios", userData.uid)).catch(() => {});
+      }
+
       setShowModalCompletarPerfil(false);
       window.location.reload();
     } catch {

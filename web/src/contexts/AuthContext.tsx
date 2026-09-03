@@ -29,6 +29,7 @@ import {
   updateDoc,
   where,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import {
   getFirebaseAuth,
@@ -91,11 +92,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const db = getFirestoreDb();
 
   const findUserByEmail = useCallback(
-    async (email: string): Promise<UserData | null> => {
+    async (email: string, targetUid?: string): Promise<UserData | null> => {
       if (!db) return null;
       const q = query(collection(db, "usuarios"), where("email", "==", email));
       const snap = await getDocs(q);
       if (snap.empty) return null;
+
+      // Si hay más de un documento con este email (ej: uno temporal y uno con UID)
+      if (snap.docs.length > 1) {
+        if (targetUid) {
+          const exactDoc = snap.docs.find((d) => d.id === targetUid || d.data().uid === targetUid);
+          if (exactDoc) {
+            const d = exactDoc.data() as UserData;
+            return { ...d, uid: targetUid };
+          }
+        }
+        // Priorizar el documento que ya tenga RUT completo registrado
+        const docConRut = snap.docs.find((d) => Boolean(d.data().rut));
+        if (docConRut) {
+          const d = docConRut.data() as UserData;
+          return { ...d, uid: d.uid || docConRut.id };
+        }
+      }
+
       const d = snap.docs[0].data() as UserData;
       return { ...d, uid: d.uid || snap.docs[0].id };
     },
@@ -108,7 +127,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!db) return;
       const email = u.email?.toLowerCase() ?? "";
 
-      let found = await findUserByEmail(email);
+      // 1. Intentar cargar directamente por u.uid primero (garantiza persistencia del perfil oficial guardado)
+      const userDocRef = doc(db, "usuarios", u.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      let found: UserData | null = userDocSnap.exists()
+        ? ({ ...userDocSnap.data(), uid: u.uid } as UserData)
+        : null;
+
+      // 2. Si no existe por u.uid directo, buscar por email para vincular fichas creadas por el admin o solicitudes previas
+      if (!found) {
+        const foundByEmail = await findUserByEmail(email, u.uid);
+        if (foundByEmail) {
+          found = { ...foundByEmail, uid: u.uid };
+          // Guardar bajo u.uid oficial con merge para consolidar
+          await setDoc(userDocRef, { ...foundByEmail, uid: u.uid }, { merge: true }).catch(() => {});
+          if (foundByEmail.uid && foundByEmail.uid !== u.uid) {
+            await deleteDoc(doc(db, "usuarios", foundByEmail.uid)).catch(() => {});
+          }
+        }
+      } else {
+        // Si ya existe por u.uid directo pero en Firestore todavía queda un doc temporal duplicado por email, limpiarlo
+        const qDup = query(collection(db, "usuarios"), where("email", "==", email));
+        getDocs(qDup).then((dupSnap) => {
+          dupSnap.docs.forEach((d) => {
+            if (d.id !== u.uid) {
+              deleteDoc(doc(db, "usuarios", d.id)).catch(() => {});
+            }
+          });
+        }).catch(() => {});
+      }
 
       if (found && found.activo === false) {
         setError("Tu cuenta está desactivada. Contacta al administrador.");
@@ -145,12 +192,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setError(null);
           return;
         }
-      } else if (found.uid !== u.uid) {
-        // Migración de documento temporal (creado por admin) al UID real
-        const tempDoc = doc(db, "usuarios", found.uid!);
-        await setDoc(doc(db, "usuarios", u.uid), { ...found, uid: u.uid });
-        await deleteDoc(tempDoc).catch(() => {});
-        found = { ...found, uid: u.uid };
       }
 
       // Si el email tiene un rol administrativo por configuración y su doc no lo tenía, actualizar

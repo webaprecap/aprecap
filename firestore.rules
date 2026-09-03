@@ -51,14 +51,15 @@ service cloud.firestore {
         isAdmin() ||
         (
           userId == request.auth.uid &&
-          request.resource.data.rol == resource.data.rol &&
-          request.resource.data.activo == resource.data.activo &&
-          request.resource.data.email == resource.data.email
+          (!('rol' in request.resource.data) || !('rol' in resource.data) || request.resource.data.rol == resource.data.rol) &&
+          (!('activo' in request.resource.data) || !('activo' in resource.data) || request.resource.data.activo == resource.data.activo) &&
+          (!('email' in request.resource.data) || !('email' in resource.data) || request.resource.data.email == resource.data.email)
         )
       );
       allow delete: if isSignedIn() && (
         isAdmin() ||
-        resource.data.email == request.auth.token.email
+        userId == request.auth.uid ||
+        (resource.data.email == request.auth.token.email)
       );
     }
 
