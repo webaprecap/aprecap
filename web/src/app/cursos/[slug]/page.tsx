@@ -1,10 +1,12 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
 import ComparativoVigilanteGuardia from "@/components/cursos/ComparativoVigilanteGuardia";
 import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
-import { getCursoOTECLaboralBySlug } from "@/data/cursos-otec-laborales";
+import { CURSOS_OTEC_LABORALES, getCursoOTECLaboralBySlug } from "@/data/cursos-otec-laborales";
+import { CURSOS_LABORALES } from "@/data/cursos-home";
 import { CONTACTO } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -40,25 +42,158 @@ export function generateStaticParams() {
   return [
     ...cursosLP.map((c) => ({ slug: c.slug })),
     ...cursosOtec.map((c) => ({ slug: c.slug })),
+    ...CURSOS_OTEC_LABORALES.map((c) => ({ slug: c.slug })),
   ];
 }
 
 export default async function CursoDetalle({ params }: Props) {
   const { slug } = await params;
 
-  // Si es un curso OTEC laboral (Nochero, Electricidad, Sustancias, etc.), redirigir al aula interactiva con Visor A4
+  // Si es un curso OTEC laboral (Nochero, Electricidad, Sustancias, etc.), renderizar la ficha informativa oficial con botones de inscripción
   const otecLaboral = getCursoOTECLaboralBySlug(slug);
   const isSecurityCourse = ["guardia-de-seguridad", "supervisor-de-seguridad", "operador-cctv-y-alarmas", "baston-y-esposas"].includes(slug);
   
   if (otecLaboral && !isSecurityCourse) {
-    redirect(`/cursos-otec/${otecLaboral.slug}`);
+    const cursoHome = CURSOS_LABORALES.find((c) => c.slug === otecLaboral.slug);
+    const imagenPortada = cursoHome?.image || `/images/cursos/${otecLaboral.slug}.jpg`;
+
+    return (
+      <>
+        <section className="bg-apre-blue text-white">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2 md:items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-bold text-cyan-300 uppercase tracking-wider mb-2">
+                <span>{otecLaboral.icono}</span>
+                <span>{otecLaboral.categoria}</span>
+              </div>
+              <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold">{otecLaboral.titulo}</h1>
+              <div className="mt-5 flex flex-wrap gap-2.5">
+                <span className="rounded-full bg-white/10 px-4 py-1.5 text-xs sm:text-sm font-semibold">
+                  ⏱ {otecLaboral.horas}
+                </span>
+                <span className="rounded-full bg-white/10 px-4 py-1.5 text-xs sm:text-sm font-semibold">
+                  📍 {otecLaboral.modalidad}
+                </span>
+                <span className="rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 px-4 py-1.5 text-xs sm:text-sm font-semibold">
+                  💰 Financiado por SENCE para empresas
+                </span>
+              </div>
+
+              {/* Botones de acción principales */}
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Boton href={`/solicitar-acceso?curso=${otecLaboral.slug}`} variant="red">
+                  📝 Solicitar Matrícula / Inscribirme
+                </Boton>
+                <WhatsAppButton texto={`Hola, quiero solicitar información e inscribirme al curso ${otecLaboral.titulo}`} />
+                <Link
+                  href={`/cursos-otec/${otecLaboral.slug}`}
+                  className="rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-xs sm:text-sm font-bold text-white transition hover:bg-white/20 flex items-center gap-1.5 shadow-md"
+                >
+                  <span>🎓</span>
+                  <span>Ingresar al Aula Virtual</span>
+                </Link>
+              </div>
+            </div>
+
+            {imagenPortada && (
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+                <img
+                  src={imagenPortada}
+                  alt={otecLaboral.titulo}
+                  className="w-full object-cover aspect-video"
+                />
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="bg-white py-14 border-b border-gray-100">
+          <div className="mx-auto max-w-4xl px-4 space-y-10">
+            <div>
+              <h2 className="text-2xl font-extrabold text-apre-blue">
+                Sobre este curso
+              </h2>
+              <p className="mt-4 leading-relaxed text-gray-700 text-base">
+                {otecLaboral.resumen}
+              </p>
+            </div>
+
+            {/* Módulos y Manuales de Estudio */}
+            {otecLaboral.documentos && otecLaboral.documentos.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-extrabold text-apre-blue mb-4">
+                  Programa de Estudio y Manuales Oficiales
+                </h2>
+                <div className="grid gap-3.5 sm:grid-cols-2">
+                  {otecLaboral.documentos.map((doc, idx) => (
+                    <div
+                      key={doc.id || idx}
+                      className="rounded-2xl border border-gray-200 bg-gray-50/60 p-4 hover:bg-white hover:border-apre-blue/30 transition shadow-xs"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700 font-bold text-sm">
+                          {doc.esPrograma ? "📋" : "📄"}
+                        </span>
+                        <div>
+                          <h3 className="font-bold text-sm text-apre-blue">
+                            {doc.nombre}
+                          </h3>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {doc.descripcion}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Evaluaciones y Clases */}
+            <div className="rounded-3xl bg-linear-to-r from-slate-900 to-apre-blue p-6 sm:p-8 text-white shadow-xl">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-300">
+                    <span>⚡</span> Campus Virtual Integrado
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-black mt-2">
+                    Clases interactivas y evaluaciones digitales
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-xl leading-relaxed">
+                    Incluye visor de diapositivas y manuales A4 página por página, videos explicativos en terreno y cuestionarios de aprobación para validar tus conocimientos.
+                  </p>
+                </div>
+                <div className="shrink-0">
+                  <Boton href={`/solicitar-acceso?curso=${otecLaboral.slug}`} variant="red">
+                    Solicitar Matrícula Ahora
+                  </Boton>
+                </div>
+              </div>
+            </div>
+
+            {/* Cierre con botones */}
+            <div className="pt-6 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
+              <div className="flex flex-wrap gap-3">
+                <Boton href={`/solicitar-acceso?curso=${otecLaboral.slug}`} variant="red">
+                  Inscribirme a este curso
+                </Boton>
+                <WhatsAppButton texto={`Hola, quiero solicitar información e inscribirme al curso ${otecLaboral.titulo}`} />
+              </div>
+              <Link
+                href="/cursos"
+                className="text-xs font-bold text-gray-500 hover:text-apre-blue transition"
+              >
+                ← Volver a todos los cursos
+              </Link>
+            </div>
+          </div>
+        </section>
+      </>
+    );
   }
 
   const found = findCurso(slug);
   if (!found) {
-    if (otecLaboral) {
-      redirect(`/cursos-otec/${otecLaboral.slug}`);
-    }
     notFound();
   }
 

@@ -22,6 +22,7 @@ export const CURSO_KEY_MAP: Record<string, string> = {
   "operador-de-calderas": "acceso_operador_calderas",
   "guardia-nochero-rondin-portero": "acceso_nochero_portero",
   "nochero-portero-y-rondin": "acceso_nochero_portero",
+  "electricidad-basica-industrial": "acceso_electricidad_industrial",
 };
 
 export interface CursoItemLista {
@@ -162,6 +163,15 @@ export const CURSOS_OTEC: CursoItemLista[] = [
     fieldKey: "acceso_nochero_portero",
     horas: "32",
     icono: "🚪",
+    categoria: "otec",
+  },
+  {
+    slug: "electricidad-basica-industrial",
+    nombre: "Electricidad Básica Industrial",
+    shortName: "Electricidad Industrial",
+    fieldKey: "acceso_electricidad_industrial",
+    horas: "40",
+    icono: "⚡",
     categoria: "otec",
   },
 ];

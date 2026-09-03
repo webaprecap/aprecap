@@ -58,7 +58,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "40 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/alfabetizacion-digital",
+    href: "/cursos/alfabetizacion-digital",
   },
   {
     slug: "grua-horquilla",
@@ -67,7 +67,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "32 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/grua-horquilla",
+    href: "/cursos/grua-horquilla",
   },
   {
     slug: "trabajo-en-altura",
@@ -76,7 +76,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "24 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/trabajo-en-altura",
+    href: "/cursos/trabajo-en-altura",
   },
   {
     slug: "manejo-de-sustancias-peligrosas",
@@ -85,7 +85,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "30 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/manejo-de-sustancias-peligrosas",
+    href: "/cursos/manejo-de-sustancias-peligrosas",
   },
   {
     slug: "tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia",
@@ -94,7 +94,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "20 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia",
+    href: "/cursos/tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia",
   },
   {
     slug: "tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas",
@@ -103,7 +103,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "30 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas",
+    href: "/cursos/tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas",
   },
   {
     slug: "trabajo-en-espacios-confinados",
@@ -112,7 +112,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "24 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/trabajo-en-espacios-confinados",
+    href: "/cursos/trabajo-en-espacios-confinados",
   },
   {
     slug: "operador-de-calderas-y-generadores-de-vapor",
@@ -121,7 +121,7 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "40 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/operador-de-calderas-y-generadores-de-vapor",
+    href: "/cursos/operador-de-calderas-y-generadores-de-vapor",
   },
   {
     slug: "guardia-nochero-rondin-portero",
@@ -130,6 +130,15 @@ export const CURSOS_LABORALES: CursoHome[] = [
     duracion: "32 horas",
     modalidad: "Online Asincrónico",
     acreditado: false,
-    href: "/cursos-otec/guardia-nochero-rondin-portero",
+    href: "/cursos/guardia-nochero-rondin-portero",
+  },
+  {
+    slug: "electricidad-basica-industrial",
+    title: "Electricidad Básica Industrial",
+    image: "/images/cursos/electricidad-basica-industrial.jpg",
+    duracion: "40 horas",
+    modalidad: "Online Asincrónico",
+    acreditado: false,
+    href: "/cursos/electricidad-basica-industrial",
   },
 ];
