@@ -72,6 +72,12 @@ const NAV_GROUPS: {
   items: { id: Tab; label: string; emoji: string; slug?: string }[];
 }[] = [
   {
+    section: "GRUPOS Y CONVOCATORIAS",
+    items: [
+      { id: "cohortes", label: "Grupos por Fecha (Convocatorias)", emoji: "🗓️" },
+    ],
+  },
+  {
     section: "SOLICITUDES",
     items: [
       { id: "pendientes", label: "Nuevos Registros (Global)", emoji: "📋" },
@@ -303,6 +309,7 @@ export default function PanelAdmin() {
     };
   }, []);
 
+  const cohortesCount = useCount("cohortes");
   const pendientesCount = useCount("solicitudes", "estado", "pendiente");
   const alumnosCount = useCount("usuarios", "rol", "alumno");
   const profesoresCount = useCount("usuarios", "rol", "profesor");
@@ -369,6 +376,8 @@ export default function PanelAdmin() {
     }
 
     switch (id) {
+      case "cohortes":
+        return cohortesCount ? { val: cohortesCount, variant: "yellow" } : null;
       case "pendientes":
         return pendientesCount ? { val: pendientesCount, variant: "yellow" } : null;
       case "alumnos":
@@ -417,21 +426,97 @@ export default function PanelAdmin() {
     <>
       <div className="flex min-h-screen flex-col lg:flex-row">
         {/* Barra Rápida Móvil (Celulares y Tablets) */}
-        <div className="sticky top-[var(--header-total-height,130px)] z-20 flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-2.5 shadow-xs lg:hidden print:hidden">
-          <button
-            type="button"
-            onClick={() => setMenuMobileAbierto(true)}
-            className="flex items-center gap-2 rounded-xl bg-apre-blue px-3.5 py-2 text-xs font-black text-white shadow-xs active:scale-95 transition cursor-pointer"
-          >
-            <span>☰</span>
-            <span>Ver Secciones y Cursos</span>
-            <span className="rounded-full bg-apre-red px-1.5 py-0.2 text-[10px] font-black text-white">
-              {NAV_GROUPS.reduce((acc, g) => acc + g.items.length, 0)}
-            </span>
-          </button>
-          <div className="flex items-center gap-1.5 truncate text-xs font-extrabold text-apre-blue max-w-[50%]">
-            <span className="shrink-0">{tituloTab?.emoji}</span>
-            <span className="truncate">{tituloTab?.label}</span>
+        <div className="sticky top-[var(--header-total-height,130px)] z-20 flex flex-col gap-2 border-b border-gray-200 bg-white px-3.5 py-2 shadow-xs lg:hidden print:hidden">
+          <div className="flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={() => setMenuMobileAbierto(true)}
+              className="flex items-center gap-2 rounded-xl bg-apre-blue px-3 py-1.5 text-xs font-black text-white shadow-xs active:scale-95 transition cursor-pointer"
+            >
+              <span>☰</span>
+              <span>Menú Completo</span>
+              <span className="rounded-full bg-apre-red px-1.5 py-0.2 text-[10px] font-black text-white">
+                {NAV_GROUPS.reduce((acc, g) => acc + g.items.length, 0)}
+              </span>
+            </button>
+            <div className="flex items-center gap-1.5 truncate text-xs font-extrabold text-apre-blue max-w-[55%]">
+              <span className="shrink-0">{tituloTab?.emoji}</span>
+              <span className="truncate">{tituloTab?.label}</span>
+            </div>
+          </div>
+
+          {/* Accesos Directos Frecuentes en Móvil */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-xs no-scrollbar">
+            <button
+              type="button"
+              onClick={() => setTab("cohortes")}
+              className={`shrink-0 flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition cursor-pointer ${
+                tab === "cohortes"
+                  ? "bg-amber-400 text-slate-950 shadow-xs ring-2 ring-amber-500"
+                  : "bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100"
+              }`}
+            >
+              <span>🗓️</span>
+              <span>Grupos por Fecha</span>
+              {cohortesCount !== null && cohortesCount > 0 && (
+                <span className="rounded-full bg-amber-600 px-1.5 py-0.1 text-[9px] text-white font-black">
+                  {cohortesCount}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("pendientes")}
+              className={`shrink-0 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+                tab === "pendientes"
+                  ? "bg-apre-blue text-white shadow-xs"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <span>📋</span>
+              <span>Solicitudes</span>
+              {pendientesCount !== null && pendientesCount > 0 && (
+                <span className="rounded-full bg-amber-400 px-1.5 py-0.1 text-[9px] text-slate-950 font-black">
+                  {pendientesCount}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("curso:guardia-de-seguridad:cursando")}
+              className={`shrink-0 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+                tab === "curso:guardia-de-seguridad:cursando"
+                  ? "bg-apre-blue text-white shadow-xs"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <span>🛡️</span>
+              <span>Cursando OS-10</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("alumnos")}
+              className={`shrink-0 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+                tab === "alumnos"
+                  ? "bg-apre-blue text-white shadow-xs"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <span>👨‍🎓</span>
+              <span>Alumnos</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("clases")}
+              className={`shrink-0 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+                tab === "clases"
+                  ? "bg-apre-red text-white shadow-xs"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <span>🔴</span>
+              <span>Zoom</span>
+            </button>
           </div>
         </div>
 
@@ -647,6 +732,23 @@ export default function PanelAdmin() {
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setTab("cohortes")}
+                  className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-black transition shadow-xs cursor-pointer ${
+                    tab === "cohortes"
+                      ? "bg-amber-400 text-slate-950 ring-2 ring-amber-500"
+                      : "bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100"
+                  }`}
+                >
+                  <span>🗓️</span>
+                  <span>Grupos por Fecha</span>
+                  {cohortesCount !== null && cohortesCount > 0 && (
+                    <span className="rounded-full bg-amber-600 px-1.5 py-0.2 text-[10px] text-white font-black">
+                      {cohortesCount}
+                    </span>
+                  )}
+                </button>
                 <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-apre-blue/10 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-apre-blue border border-apre-blue/15">
                   <span>{userData.rol === "superadmin" ? "👑" : "🛡️"}</span>
                   <span>{userData.rol === "superadmin" ? "Superadmin" : "Admin"}</span>

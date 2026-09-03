@@ -146,5 +146,17 @@ service cloud.firestore {
       // Prohibido editar o borrar (INMUTABILIDAD)
       allow update, delete: if false;
     }
+
+    // 10. CONVOCATORIAS Y GRUPOS POR FECHA (COHORTES)
+    match /cohortes/{cohorteId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 11. CONFIGURACIÓN DEL SISTEMA (MATERIALES OS-10 Y GENERAL)
+    match /configuracion/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
   }
 }
