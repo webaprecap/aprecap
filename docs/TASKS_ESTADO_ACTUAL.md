@@ -1,7 +1,7 @@
 # 📌 Estado de Tareas y Transferencia de Contexto (Agent Handoff)
 
 > **Documento de Control y Continuidad para Agentes IA y Desarrolladores.**
-> Última actualización: 2026-08-19
+> Última actualización: 2026-09-03
 
 ---
 
@@ -175,6 +175,16 @@
     - En **WhatsApp Flotante**: Fijo en pantalla (`fixed bottom-6 right-6 z-50`), sombrero posado en el borde superior derecho (`top: -12px, right: -2px`) y teléfono 100% visible.
 96. **Insignia Patria en Cursos (`VolantinBadge.tsx`)**: Volantín tricolor animado con badge "¡Especial 18!".
 97. **Eliminación Total de "CL" y Respeto de Paleta**: Eliminado el emoji `🇨🇱` para evitar que Windows lo renderice como texto `CL`. Eliminado el exceso de amarillo; paleta estricta de APRECAP (azul marino `#002159` / `#0e2a47`, rojo `#d52b1e` / `#ff1212` y blanco). Banner original de inicio restaurado al 100%.
+
+### M. Catálogo OTEC en Producción, CDN Sanity (49 PPTs), Adaptabilidad Móvil y Persistencia de Alumnos (2026-09-03)
+98. **Landing Pages Oficiales para 10 Cursos OTEC (`/cursos/[slug]`)**: Implementada la plantilla informativa oficial con temario, horas cronológicas, financiamiento SENCE, botón WhatsApp y botón de solicitud de matrícula (`/solicitar-acceso?curso=slug`). Eliminado el redirect forzado que enviaba al aula interior.
+99. **Vinculación Oficial de 49 PPTs/PDFs en Sanity CDN**: 49 manuales y presentaciones de los 10 cursos OTEC vinculados al CDN oficial de Sanity (`cdn.sanity.io/files/mwwotgjc/production/...`).
+100. **Corrección de Visor A4 (`CajonVisorA4.tsx`)**: Agregado `"use client";`, resuelto el bloqueo CORS mediante proxy `/api/pdf?url=...`, acondicionamiento de renderizado cuando `numPages > 0` y botón de descarga directa de respaldo.
+101. **Aislamiento y Scroll del Panel Admin**: Footer adaptativo con `lg:pl-[280px]` para no tapar opciones de administración; barra lateral izquierda con `overflow-y-auto` y z-index corregido para pantallas táctiles y móviles.
+102. **Cursos OTEC en Panel Admin**: Integración de los 10 cursos laborales OTEC en la sección de cursos desbloqueados para auditoría de solicitudes, avance y egresados.
+103. **Obligatoriedad de Datos Personales y Ficha de Alumno**: Validación estricta de Nombres, Apellidos, RUT chileno válido y Teléfono. Regularización de alumnos legacy con banner y modal interactivo en `/panel/alumno`.
+104. **Persistencia Definitiva en Firestore y Limpieza de Duplicados**: Eliminada la sobreescritura de perfiles por documentos temporales; `AuthContext.tsx` prioriza `u.uid` oficial y limpia temporales; `firestore.rules` permite borrado seguro de temporales con el mismo email y actualización flexible.
+105. **Desvío en Login Eliminado y Preferencias de Cookies en Footer**: Removida la redirección apresurada hacia `/solicitar-acceso`; los alumnos van directo a `/panel/alumno`. Añadido botón `[ 🍪 Preferencias de Cookies ]` en el footer mediante evento `open-cookie-banner`.
 
 ---
 

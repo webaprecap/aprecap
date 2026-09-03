@@ -398,15 +398,64 @@
 
 ---
 
+---
+
+## Sesión 10 — 2026-09-03 · Catálogo OTEC en Producción, CDN Sanity 49 PPTs, Auditoría Móvil, Obligatoriedad de Datos y Persistencia de Alumnos
+
+### 1. Catálogo Completo de 10 Cursos OTEC en Producción
+- **Alineación con Moodle y Programas Oficiales**:
+  - Incorporados 10 cursos laborales OTEC: Grúa Horquilla, Calderas de Vapor, Sustancias Peligrosas, Trabajo en Altura, Primeros Auxilios y RCP, Manejo de Extintores, Electricidad Básica Industrial, Técnicas de Soldadura, Gestión del Buen Trato (Ley Karin) y Nochero / Rondín / Portero.
+  - Generadas portadas en alta definición y fichas curriculares completas con horas, modalidad y código SENCE.
+- **Páginas Informativas Públicas (`/cursos/[slug]`)**:
+  - Eliminado el redirect forzado que enviaba al aula interior; ahora cada curso dispone de su landing page pública con temario oficial, horas cronológicas, financiamiento SENCE, botón WhatsApp y botón de solicitud de matrícula (`/solicitar-acceso?curso=slug`).
+  - Botón de acceso al Aula Virtual (`/cursos-otec/[slug]`) con compuerta de bloqueo (`CursoAccessGate`) activa para usuarios sin matrícula o no autenticados.
+
+### 2. Visor A4 y Vinculación Total a Sanity CDN (49 PPTs/PDFs)
+- **49 Documentos Oficiales en Sanity CDN**:
+  - Subidos e integrados los 49 manuales y presentaciones de los 10 cursos OTEC en el CDN oficial de Sanity (`cdn.sanity.io/files/mwwotgjc/production/...`).
+- **Corrección de Renderizado en `CajonVisorA4.tsx`**:
+  - Agregado `"use client";` al componente.
+  - Canalización de PDFs a través del proxy local `/api/pdf?url=...` para eludir el bloqueo de CORS del navegador.
+  - Corrección de condición de renderizado en `react-pdf`: `<Page>` solo se ejecuta cuando `numPages > 0`.
+  - Botón de respaldo de descarga directa ante cualquier anomalía de red.
+
+### 3. Aislamiento y Adaptabilidad del Panel de Administración
+- **Footer Adaptativo**: Agregado padding izquierdo condicional (`lg:pl-[280px]`) para que el pie de página no cubra ni traslape las opciones del panel de administración.
+- **Scrollbar y Navegación Lateral Izquierda**:
+  - Arreglado el scrollbar independiente del panel admin con `overflow-y-auto`.
+  - Corregido el `z-index` para evitar que el header/navbar tape las opciones superiores.
+  - Optimización completa para navegación táctil y pantallas de teléfonos móviles.
+- **Cursos OTEC en Panel Admin**:
+  - Integrados los 10 cursos OTEC en la sección de auditoría del panel de administración para supervisión directa de solicitudes, progreso de alumnos y titulados.
+
+### 4. Obligatoriedad de Datos Personales y Ficha de Alumno Oficial
+- **Formularios con Validación Estricta**:
+  - Nombres, Apellido Paterno, Apellido Materno, RUT chileno válido (módulo 11) y Teléfono (mínimo 8 dígitos) como campos estrictamente obligatorios tanto en `/solicitar-acceso` como en el panel de alumno.
+- **Detección y Regularización de Cuentas Legacy**:
+  - Sistema de detección de fichas incompletas (`faltaCompletarFicha`).
+  - Banner institucional y modal emergente oficial en `/panel/alumno` para completar los datos sin desconectar al alumno.
+
+### 5. Persistencia Definitiva en Firestore y Solución a Duplicados
+- **Colisión Resuelta entre UID Temporal y UID Oficial**:
+  - Se identificó que los documentos temporales creados por correo en `usuarios/{uidTemp}` generaban duplicidad y sobreescribían los perfiles al reingresar.
+  - En `AuthContext.tsx`, la carga de usuario prioriza siempre el documento canónico `usuarios/{u.uid}`. Si existen múltiples registros, se prioriza el que tiene RUT y datos completos, y se limpian los temporales huérfanos.
+  - En `firestore.rules`, se autorizó el borrado seguro de documentos temporales viejos que contengan el mismo correo del usuario autenticado (`resource.data.email == request.auth.token.email`) y se flexibilizó la regla de actualización de perfil para que no falle ante campos administrativos faltantes.
+  - En `panel/alumno/page.tsx`, `handleGuardarPerfil` utiliza `setDoc(..., { merge: true })` sobre el UID autenticado oficial.
+
+### 6. Desvío de Login Corregido y Acceso Manual a Cookies
+- **Eliminación de Carrera en `/login`**:
+  - Se eliminó la redirección apresurada hacia `/solicitar-acceso` que expulsaba a los estudiantes ya matriculados. Al autenticarse con Google, el sistema reconoce su perfil de alumno y los dirige directo a `/panel/alumno`.
+- **Preferencias de Cookies**:
+  - Añadido acceso directo en el pie de página (`[ 🍪 Preferencias de Cookies ]`) mediante evento global `open-cookie-banner` para que cualquier usuario pueda abrir y reconfigurar el banner en cualquier momento, incluso si ya lo había aceptado previamente.
+
+---
+
 ## 📌 Próxima Sesión:
 1. ⚙️ **Módulos Interactivos y Simuladores Técnicos en Cursos OTEC**:
-   - Desarrollar simuladores interactivos directamente en el navegador:
-     - **Operador de Calderas y Generadores de Vapor (D.S. N° 10)**: Manómetro interactivo (bar/psi), nivel de agua en tubo de vidrio, purgas de fondo y prueba de válvula de seguridad.
-     - **Grúa Horquilla**: Checklist de inspección pre-operacional interactivo y cálculo de centro de carga.
-     - **Trabajo en Altura (NCh1258)**: Inspección visual de arnés de cuerpo completo (puntos de impacto y costuras).
-     - **Sustancias Peligrosas (NCh382 / SGA)**: Matriz interactiva de incompatibilidad química en bodega.
+   - Desarrollar simuladores interactivos en navegador para Calderas (presión/purga), Grúa Horquilla (estabilidad/inspección), Sustancias Peligrosas (matriz de compatibilidad) y Trabajo en Altura.
 2. 💳 **Pasarela de Pagos (WebPay / Transbank)**:
-   - Reactivación y configuración de tarifas una vez aprobadas por la administración.
+   - Configuración final de cobro una vez autorizadas las tarifas por la administración.
+
 
 
 
