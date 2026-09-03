@@ -7,7 +7,7 @@ import { formatRut } from "@/lib/rut";
 export const CURSOS_CERTIFICADO = [
   {
     slug: "guardia-de-seguridad",
-    nombre: "CURSO DE FORMACIÓN DE GUARDIA DE SEGURIDAD OS-10",
+    nombre: "CURSO DE FORMACIÓN DE GUARDIA DE SEGURIDAD SPD",
     horas: "90",
   },
   {
@@ -23,7 +23,7 @@ export const CURSOS_CERTIFICADO = [
   {
     slug: "baston-y-esposas",
     nombre: "CURSO DE BASTÓN Y ESPOSAS",
-    horas: "8",
+    horas: "10",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function DiplomaCertificado({
             del Trabajo y Previsión Social
           </p>
           <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
-            Autorizado por la Subsecretaría Prevención del Delito · Autorizada por OS-10 de Carabineros · Autorizada por DIRECTEMAR
+            Autorizado por la Subsecretaría de Prevención del Delito (SPD) · Fiscalizado por Carabineros de Chile · DIRECTEMAR
           </p>
           <p className="mt-2 text-sm font-black text-apre-blue uppercase tracking-wide">
             Aprecap Spa · Centro de Capacitación y Desarrollo Humano

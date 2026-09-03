@@ -29,13 +29,13 @@ export interface CursoMaterial {
 export const materialesEstudio: CursoMaterial[] = [
     {
     slug: "guardia-de-seguridad",
-    title: "Curso de Guardia de Seguridad (OS-10)",
-    categoria: "Seguridad Privada Acreditada (Carabineros de Chile)",
+    title: "Curso de Guardia de Seguridad (SPD)",
+    categoria: "Seguridad Privada Acreditada (Subsecretaría de Prevención del Delito - SPD)",
     pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7ea50e400ad6ec69eda48a5fc38f3a9ed99a9e42.pdf",
     banco: "os10",
     modulos: [
       {
-        nombre: "Legislación OS 10",
+        nombre: "Legislación de Seguridad Privada SPD",
         videoUrl: "https://youtu.be/M1lEmsruPHI",
         pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/7ea50e400ad6ec69eda48a5fc38f3a9ed99a9e42.pdf"
       },
@@ -85,7 +85,7 @@ export const materialesEstudio: CursoMaterial[] = [
         pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/0265519810833a4c1728e9004917b547e24c5021.pdf"
       },
       {
-        nombre: "Seguridad de Instalaciones OS-10",
+        nombre: "Seguridad de Instalaciones SPD",
         videoUrl: "https://youtu.be/AHhDEfJAM1s",
         pdfUrl: "https://cdn.sanity.io/files/mwwotgjc/production/84238022a76a9fa487d354fe10342167e60f7aef.pdf"
       },
@@ -207,7 +207,7 @@ export const materialesEstudio: CursoMaterial[] = [
               "La resolución establece disposiciones generales para el examen práctico y pautas de evaluación de los exámenes prácticos.",
               "Regula los procedimientos asociados a la rendición y calificación de los exámenes.",
               "La Subsecretaría de Prevención del Delito dicta estas instrucciones y Carabineros de Chile las fiscaliza en terreno.",
-              "Conocer esta normativa es parte del perfil profesional del Guardia OS-10."
+              "Conocer esta normativa es parte del perfil profesional del Guardia de Seguridad (SPD)."
             ]
           }
         ]

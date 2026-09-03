@@ -123,7 +123,7 @@ function CuestionariosInner({ params }: { params: Promise<{ slug: string }> }) {
             Cuestionarios Oficiales Bloqueados
           </h2>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Por disposición académica de OTEC APRECAP, las pruebas y cuestionarios oficiales del curso <strong>Guardia de Seguridad OS-10</strong> se habilitan al concluir la formación presencial en aula con el docente, para garantizar un aprendizaje integral.
+            Por disposición académica de OTEC APRECAP, las pruebas y cuestionarios oficiales del curso <strong>Guardia de Seguridad (SPD)</strong> se habilitan al concluir la formación presencial en aula con el docente, para garantizar un aprendizaje integral.
           </p>
           <div className="pt-4 border-t border-gray-100 flex flex-col gap-2">
             <Link

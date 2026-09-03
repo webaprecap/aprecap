@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
-  const { userData, loading, error, signInGoogle, signOut, requiresMfaEnrollment, mfaResolver } =
+  const { userData, loading, error, signInGoogle, signOut, requiresMfaEnrollment, mfaResolver, user } =
     useAuth();
   const router = useRouter();
 
@@ -17,16 +17,21 @@ export default function LoginPage() {
   const [smsSent, setSmsSent] = useState(false);
 
   useEffect(() => {
-    if (!loading && userData) {
-      const target =
-        userData.rol === "admin" || userData.rol === "superadmin"
-          ? "/panel/admin"
-          : userData.rol === "profesor"
-          ? "/panel/profesor"
-          : "/panel/alumno";
-      router.push(target);
+    if (!loading) {
+      if (userData) {
+        const target =
+          userData.rol === "admin" || userData.rol === "superadmin"
+            ? "/panel/admin"
+            : userData.rol === "profesor"
+            ? "/panel/profesor"
+            : "/panel/alumno";
+        router.push(target);
+      } else if (user) {
+        // Autenticado en Google pero sin ficha de registro: redirigir a formulario obligatorio
+        router.push("/solicitar-acceso");
+      }
     }
-  }, [userData, loading, router]);
+  }, [userData, user, loading, router]);
 
   const handleGoogle = async () => {
     try {

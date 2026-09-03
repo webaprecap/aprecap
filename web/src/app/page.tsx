@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
 import { CursoCard } from "@/components/CursoCard";
-import { CURSOS_PRESENCIAL_ONLINE, CURSOS_ONLINE } from "@/data/cursos-home";
+import { CURSOS_PRESENCIAL_ONLINE, CURSOS_ONLINE, CURSOS_LABORALES } from "@/data/cursos-home";
 import GoogleMapLocation from "@/components/GoogleMapLocation";
 import LogosCarrusel from "@/components/LogosCarrusel";
 import NuestraEsenciaCards from "@/components/NuestraEsenciaCards";
 import ScrollReveal from "@/components/ScrollReveal";
+import HeroBackgroundFlag from "@/components/fiestas-patrias/HeroBackgroundFlag";
 
 export const metadata: Metadata = {
   title: "OTEC APRECAP — Capacitación, Asesorías y Seguridad Privada",
@@ -16,7 +17,10 @@ export default function Home() {
     <>
       {/* Hero Principal con animaciones */}
       <section className="relative overflow-hidden bg-gradient-to-br from-apre-blue via-apre-blue to-apre-blue-light text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-2 md:items-center">
+        {/* Bandera Chilena Flameando con la Cordillera en Modo Fiestas Patrias */}
+        <HeroBackgroundFlag />
+
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-2 md:items-center relative z-10">
           <ScrollReveal animation="fade-right" duration={800}>
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-apre-red">
@@ -27,11 +31,10 @@ export default function Home() {
                 <span className="text-apre-red">Seguridad Privada</span>
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-white/80">
-                Equipo de profesionales confiables certificados por SENCE, con
+                Equipo de profesionales de excelencia certificados por SENCE, con
                 programas autorizados por la Subsecretaría de Prevención del Delito
                 (SPD como órgano rector bajo la Ley N° 21.659), y fiscalizados con
-                examen final rendido ante la Prefectura de Seguridad Privada OS-10
-                de Carabineros de Chile.
+                examen final rendido ante Carabineros de Chile.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Boton href="/cursos" variant="red">
@@ -56,7 +59,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner Destacado: Próximo Inicio 15 de Septiembre 2026 */}
+      {/* Banner de Convocatoria Original */}
       <section className="bg-gradient-to-r from-slate-900 via-apre-blue to-slate-900 py-6 text-white border-y border-white/10 shadow-lg">
         <div className="mx-auto max-w-6xl px-4">
           <div className="rounded-2xl bg-gradient-to-r from-apre-red/20 via-red-500/10 to-transparent p-5 border border-red-500/30 flex flex-wrap items-center justify-between gap-4">
@@ -96,17 +99,19 @@ export default function Home() {
       {/* Carrusel Infinito Continuo de Logos Autorizados */}
       <LogosCarrusel />
 
-      {/* Cursos Presenciales */}
-      <section className="bg-gray-50 py-16 overflow-hidden">
+      {/* 1. Cursos Presenciales (Guardia SPD, Bastón y Esposas) */}
+      <section className="bg-white py-16 overflow-hidden border-b border-gray-100">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up" duration={600}>
             <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/10 px-3.5 py-1 text-xs font-black text-apre-red uppercase tracking-wider mb-2">
+                <span>🏫</span> Formación en Sede con Apoyo en Línea
+              </div>
               <h2 className="text-3xl font-extrabold text-apre-blue">
                 Cursos Presenciales
               </h2>
               <p className="mt-2 text-gray-600">
-                Clases 100% presenciales en sede con material y apoyo de estudio en
-                nuestra plataforma en línea.
+                Clases presenciales en sede central con talleres prácticos y acceso a nuestra plataforma de estudio digital.
               </p>
             </div>
           </ScrollReveal>
@@ -126,7 +131,7 @@ export default function Home() {
                   duracion={c.duracion}
                   modalidad={c.modalidad}
                   acreditado={c.acreditado}
-                  href={`/cursos/${c.slug}`}
+                  href={c.href || `/cursos/${c.slug}`}
                 />
               </ScrollReveal>
             ))}
@@ -134,17 +139,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cursos Online */}
-      <section className="bg-white py-16 overflow-hidden">
+      {/* 2. Cursos en Línea y Asincrónicos (Supervisor, Operador CCTV) */}
+      <section className="bg-slate-50 py-16 overflow-hidden border-b border-gray-100">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up" duration={600}>
             <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-apre-blue/10 px-3.5 py-1 text-xs font-black text-apre-blue uppercase tracking-wider mb-2">
+                <span>🌐</span> Modalidad 100% Online Asincrónica
+              </div>
               <h2 className="text-3xl font-extrabold text-apre-blue">
-                Cursos Online
+                Cursos en Línea y Asincrónicos
               </h2>
               <p className="mt-2 text-gray-600">
-                Cursos completos en línea con certificación, disponibles desde
-                cualquier lugar.
+                Avanza a tu propio ritmo con materiales digitales, clases en video y evaluaciones con acreditación de la Subsecretaría de Prevención del Delito (SPD).
               </p>
             </div>
           </ScrollReveal>
@@ -164,7 +171,47 @@ export default function Home() {
                   duracion={c.duracion}
                   modalidad={c.modalidad}
                   acreditado={c.acreditado}
-                  href={`/cursos/${c.slug}`}
+                  href={c.href || `/cursos/${c.slug}`}
+                />
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Cursos OTEC (Laborales y Técnicos) */}
+      <section className="bg-white py-16 overflow-hidden">
+        <div className="mx-auto max-w-6xl px-4">
+          <ScrollReveal animation="fade-up" duration={600}>
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3.5 py-1 text-xs font-black text-emerald-700 uppercase tracking-wider mb-2">
+                <span>🛠️</span> Formación Laboral y Oficios
+              </div>
+              <h2 className="text-3xl font-extrabold text-apre-blue">
+                Cursos OTEC
+              </h2>
+              <p className="mt-2 text-gray-600">
+                Programas de capacitación práctica y oficios técnicos con manuales oficiales A4 y videos interactivos.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {CURSOS_LABORALES.map((c, idx) => (
+              <ScrollReveal
+                key={c.slug}
+                animation="fade-up"
+                delay={idx * 100}
+                duration={650}
+              >
+                <CursoCard
+                  slug={c.slug}
+                  title={c.title}
+                  image={c.image}
+                  duracion={c.duracion}
+                  modalidad={c.modalidad}
+                  acreditado={c.acreditado}
+                  href={c.href || `/cursos/${c.slug}`}
                 />
               </ScrollReveal>
             ))}
@@ -172,8 +219,8 @@ export default function Home() {
 
           <div className="mt-10 text-center">
             <ScrollReveal animation="zoom-in" delay={250} duration={600}>
-              <Boton href="/cursos" variant="outline">
-                Ver todos los cursos
+              <Boton href="/cursos-otec" variant="outline">
+                Ver todos los Cursos OTEC ➔
               </Boton>
             </ScrollReveal>
           </div>

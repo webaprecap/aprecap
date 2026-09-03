@@ -1,10 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CONTACTO, NAV_LINKS, REDES_SOCIALES, SITE_NAME } from "@/data/site";
 import { Logo } from "./Logo";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isPanelAdmin = pathname?.startsWith("/panel/admin");
+
   return (
-    <footer className="bg-apre-blue text-white print:hidden">
+    <footer
+      className={`bg-apre-blue text-white print:hidden transition-all duration-200 ${
+        isPanelAdmin ? "lg:pl-[280px]" : ""
+      }`}
+    >
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
         <div>
           <Logo light />
@@ -50,7 +60,7 @@ export default function Footer() {
             />
             <img
               src="/logos/os10-logo.webp"
-              alt="Prefectura de Seguridad Privada OS-10 Carabineros de Chile"
+              alt="Autoridad y Fiscalización de Seguridad Privada Carabineros de Chile"
               className="h-10 w-auto rounded-xl bg-white p-1.5 shadow-xs"
             />
             <img

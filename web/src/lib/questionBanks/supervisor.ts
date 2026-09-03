@@ -86,7 +86,7 @@ export const SUPERVISOR_QUESTION_BANK: ExamQuestion[] = [
     ["Solo mayoría de edad", "Acreditación/licencia otorgada por la autoridad competente",
      "Una carta de recomendación del empleador", "Aprobar un examen psicológico municipal"],
     "Acreditación/licencia otorgada por la autoridad competente",
-    "El D.S. 209 exige que los agentes de seguridad privada estén acreditados por la autoridad (Prefectura de Carabineros OS-10) y que los guardias porten su credencial vigente. La mayoría de edad es un requisito, pero no el único; las recomendaciones o exámenes municipales no reemplazan la acreditación legal."
+    "El D.S. 209 exige que los agentes de seguridad privada estén acreditados por la autoridad competente (Subsecretaría de Prevención del Delito - SPD) y que los guardias porten su credencial vigente. La mayoría de edad es un requisito, pero no el único; las recomendaciones o exámenes municipales no reemplazan la acreditación legal."
   ),
   q(
     "sup1_07",
@@ -383,16 +383,16 @@ export const SUPERVISOR_QUESTION_BANK: ExamQuestion[] = [
     ["Un documento que norma la operación de seguridad de un puesto específico, aprobado por la autoridad",
      "Un contrato de trabajo", "Un manual de marca de extintores", "Una carta de recomendación"],
     "Un documento que norma la operación de seguridad de un puesto específico, aprobado por la autoridad",
-    "La directiva de funcionamiento regula cómo se presta el servicio de seguridad en un puesto (funciones, procedimientos, dotación) y requiere aprobación de la autoridad (Prefectura OS-10). No es un contrato, un manual técnico ni una recomendación."
+    "La directiva de funcionamiento regula cómo se presta el servicio de seguridad en un puesto (funciones, procedimientos, dotación) y requiere aprobación de la autoridad competente (Subsecretaría de Prevención del Delito - SPD / Carabineros). No es un contrato, un manual técnico ni una recomendación."
   ),
   q(
     "sup3_02",
     M3,
-    "La autoridad fiscalizadora de la seguridad privada es:",
-    ["El Ministerio de Educación", "La Prefectura de Carabineros OS-10 de Seguridad Privada",
+    "El órgano rector y la autoridad fiscalizadora de la seguridad privada son:",
+    ["El Ministerio de Educación", "La Subsecretaría de Prevención del Delito (SPD) y Carabineros de Chile",
      "La Superintendencia de Electricidad", "El Servicio Nacional de Aduanas"],
-    "La Prefectura de Carabineros OS-10 de Seguridad Privada",
-    "La fiscalización de la seguridad privada corresponde a la Prefectura de Carabineros de Chile a través de sus departamentos OS-10 de Seguridad Privada, que además aprueban directivas, estudios de seguridad y acreditan al personal. Los otros organismos no tienen esa competencia."
+    "La Subsecretaría de Prevención del Delito (SPD) y Carabineros de Chile",
+    "La regulación y acreditación de la seguridad privada corresponde a la Subsecretaría de Prevención del Delito (SPD) como órgano rector, mientras que la fiscalización operativa en terreno es ejercida por Carabineros de Chile. Los otros organismos no tienen esa competencia."
   ),
   q(
     "sup3_03",
@@ -424,12 +424,12 @@ export const SUPERVISOR_QUESTION_BANK: ExamQuestion[] = [
   q(
     "sup3_06",
     M3,
-    "La relación del supervisor con la Prefectura OS-10 en la práctica implica:",
+    "La relación del supervisor con la autoridad competente (SPD / Carabineros) en la práctica implica:",
     ["Coordinar la fiscalización y dar cuenta de las novedades que exige la autoridad",
-     "Evitar todo contacto con Carabineros", "Pagar permisos de funcionamiento",
-     "Reemplazar las funciones del OS-10"],
+     "Evitar todo contacto con las autoridades", "Pagar permisos de funcionamiento",
+     "Reemplazar las funciones de la autoridad fiscalizadora"],
     "Coordinar la fiscalización y dar cuenta de las novedades que exige la autoridad",
-    "El supervisor mantiene relación formal con la OS-10: facilita la fiscalización, responde requerimientos y da cuenta de novedades (hechos delictuales, uso de fuerza, cambios de servicio). Evitar el contacto, pagar permisos o reemplazar sus funciones contradicen el marco regulatorio."
+    "El supervisor mantiene relación formal con la autoridad: facilita la fiscalización, responde requerimientos y da cuenta de novedades (hechos delictuales, uso de fuerza, cambios de servicio). Evitar el contacto, pagar permisos o reemplazar funciones contradicen el marco regulatorio."
   ),
   q(
     "sup3_07",
@@ -622,11 +622,11 @@ export const SUPERVISOR_QUESTION_BANK: ExamQuestion[] = [
     "sup6_01",
     M6,
     "Para la realización de un evento masivo, la organización debe contar con:",
-    ["La autorización y el plan de seguridad aprobados por la autoridad competente (OS-10)",
+    ["La autorización y el plan de seguridad aprobados por la autoridad competente (SPD / Delegación)",
      "Solo un permiso municipal de sonido", "La aprobación de la junta de vecinos",
      "Un seguro de accidentes del público"],
-    "La autorización y el plan de seguridad aprobados por la autoridad competente (OS-10)",
-    "Los eventos masivos exigen autorización previa y un plan de seguridad aprobado por la autoridad competente (Prefectura de Carabineros OS-10), conforme a la Ley 21.659 y el D.S. 208. El permiso de sonido, la junta de vecinos o un seguro no reemplazan esa autorización."
+    "La autorización y el plan de seguridad aprobados por la autoridad competente (SPD / Delegación)",
+    "Los eventos masivos exigen autorización previa y un plan de seguridad aprobado por la autoridad competente, conforme a la Ley 21.659 y el D.S. 208. El permiso de sonido, la junta de vecinos o un seguro no reemplazan esa autorización."
   ),
   q(
     "sup6_02",

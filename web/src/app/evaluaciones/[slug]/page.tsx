@@ -47,7 +47,7 @@ export default function ExamenFinalPage({ params }: PageProps) {
 function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { user, userData, loading } = useAuth();
-  const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown }[]>([]);
+  const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown; sinRestriccionTiempo?: boolean }[]>([]);
   const [loadingEnrollments, setLoadingEnrollments] = useState(true);
 
   useEffect(() => {
@@ -59,6 +59,7 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
         snap.docs.map((d) => ({
           courseSlug: d.data().courseSlug,
           fecha: d.data().fecha,
+          sinRestriccionTiempo: d.data().sinRestriccionTiempo,
         }))
       );
       setLoadingEnrollments(false);
@@ -98,11 +99,16 @@ function ExamenFinalInner({ params }: { params: Promise<{ slug: string }> }) {
 
   const isDevSuperStudent = process.env.NODE_ENV === "development" && user?.email === "nenepaz.lol@gmail.com";
   const matriculaActual = enrollments.find((e) => e.courseSlug === slug);
+  const sinRestriccionTiempo = Boolean(
+    matriculaActual?.sinRestriccionTiempo === true ||
+    (userData as any)?.sinRestriccionTiempo === true ||
+    (userData as any)?.[`sinRestriccionTiempo_${slug.replace(/-/g, "_")}`] === true
+  );
   let rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
-  if (isDevSuperStudent) {
+  if (isDevSuperStudent || sinRestriccionTiempo) {
     rawFechaMatricula = new Date("2010-01-01T00:00:00Z");
   }
-  const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
+  const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin, sinRestriccionTiempo);
   const hasAccess = canAccessCourse(userData, slug, enrollments) || isDevSuperStudent;
 
   // Prevenir redirección prematura si las matrículas aún están cargando

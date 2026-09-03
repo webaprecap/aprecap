@@ -20,9 +20,9 @@ function alt(
 
 const cuestionarioOS10: Cuestionario = {
   id: "cuestionario-os10",
-  titulo: "Cuestionario de Preguntas para Examen OS-10",
+  titulo: "Cuestionario Oficial para Acreditación SPD (82 Preguntas)",
   descripcion:
-    "Cuestionario oficial del cliente con 82 preguntas de desarrollo presentadas en alternativas. Al responder verás de inmediato si acertaste y cuál era la respuesta correcta.",
+    "Cuestionario oficial del cliente con 82 preguntas de desarrollo presentadas en alternativas conforme a la normativa de la Subsecretaría de Prevención del Delito (SPD). Al responder verás de inmediato si acertaste y cuál era la respuesta correcta.",
   preguntas: [
     alt("c-1", "¿Qué es Seguridad?",
       "Es la sensación de estar cubiertos de todo riesgo o amenaza.",

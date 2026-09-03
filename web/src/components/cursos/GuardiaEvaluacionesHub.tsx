@@ -115,7 +115,7 @@ export default function GuardiaEvaluacionesHub({
               <span>🎓</span> Evaluaciones Oficiales de la Escuela APRECAP
             </div>
             <h1 className="text-2xl md:text-3xl font-black text-white leading-tight">
-              Módulos de Examen y Ensayos Oficiales (OS-10 / SPD)
+              Módulos de Examen y Ensayos Oficiales (SPD - Subsecretaría de Prevención del Delito)
             </h1>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed">
               Rinde las pruebas y cuestionarios oficiales de capacitación de forma independiente por módulo temático. Cada evaluación cuenta con corrección instantánea y orden aleatorio en cada intento.

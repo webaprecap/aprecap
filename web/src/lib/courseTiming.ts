@@ -96,16 +96,17 @@ export function getModuleUnlockStatus(
   cursoSlug: string,
   moduloIdx: number,
   fechaMatricula?: unknown,
-  isAdmin: boolean = false
+  isAdmin: boolean = false,
+  sinRestriccionTiempo: boolean = false
 ): ModuleUnlockStatus {
   const config = COURSE_TIMING_CONFIG[cursoSlug];
 
-  // Si es Admin/Profesor o el curso no tiene configuración temporal -> Siempre desbloqueado
-  if (isAdmin || !config) {
+  // Si es Admin/Profesor, bypass de tiempo activo, o el curso no tiene configuración temporal -> Siempre desbloqueado
+  if (isAdmin || sinRestriccionTiempo || !config) {
     return {
       isUnlocked: true,
       diaRequerido: 1,
-      diaActual: 1,
+      diaActual: config ? config.totalDias : 1,
       totalDiasCurso: config ? config.totalDias : 1,
       fechaDesbloqueo: null,
       horasRestantes: 0,
@@ -168,16 +169,17 @@ export function getModuleUnlockStatus(
 export function getExamUnlockStatus(
   cursoSlug: string,
   fechaMatricula?: unknown,
-  isAdmin: boolean = false
+  isAdmin: boolean = false,
+  sinRestriccionTiempo: boolean = false
 ): ExamUnlockStatus {
   const config = COURSE_TIMING_CONFIG[cursoSlug];
 
-  // Si es Admin/Profesor o el curso no tiene configuración temporal -> Siempre desbloqueado
-  if (isAdmin || !config) {
+  // Si es Admin/Profesor, bypass de tiempo activo, o el curso no tiene configuración temporal -> Siempre desbloqueado
+  if (isAdmin || sinRestriccionTiempo || !config) {
     return {
       isUnlocked: true,
       diaRequerido: 1,
-      diaActual: 1,
+      diaActual: config ? config.totalDias : 1,
       totalDiasCurso: config ? config.totalDias : 1,
       fechaDesbloqueo: null,
       horasRestantes: 0,
@@ -247,7 +249,8 @@ export interface AlumnoSeguimientoTiming {
  */
 export function getAlumnoSeguimientoTiming(
   cursoSlug: string,
-  fechaMatricula?: unknown
+  fechaMatricula?: unknown,
+  sinRestriccionTiempo: boolean = false
 ): AlumnoSeguimientoTiming {
   const config = COURSE_TIMING_CONFIG[cursoSlug];
   const fecha = normalizarFechaMatricula(fechaMatricula);
@@ -263,6 +266,19 @@ export function getAlumnoSeguimientoTiming(
       examenDisponible: true,
       esCursoConTiempo: false,
       etiquetaProgreso: "Sin restricción de días (Acceso inmediato)",
+    };
+  }
+
+  if (sinRestriccionTiempo) {
+    return {
+      diaActual: config.totalDias,
+      totalDiasCurso: config.totalDias,
+      diasRestantes: 0,
+      horasRestantes: 0,
+      fechaDesbloqueoExamen: null,
+      examenDisponible: true,
+      esCursoConTiempo: true,
+      etiquetaProgreso: "⚡ Sin restricción de tiempo (Bypass activo)",
     };
   }
 

@@ -1,9 +1,10 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
 import ComparativoVigilanteGuardia from "@/components/cursos/ComparativoVigilanteGuardia";
 import { cursosLP } from "@/data/cursos";
 import { cursosOtec } from "@/data/cursos-otec";
+import { getCursoOTECLaboralBySlug } from "@/data/cursos-otec-laborales";
 import { CONTACTO } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -19,7 +20,16 @@ function findCurso(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const found = findCurso(slug);
-  if (!found) return { title: "Curso no encontrado — OTEC APRECAP" };
+  if (!found) {
+    const otecLaboral = getCursoOTECLaboralBySlug(slug);
+    if (otecLaboral) {
+      return {
+        title: `${otecLaboral.titulo} — OTEC APRECAP`,
+        description: otecLaboral.resumen,
+      };
+    }
+    return { title: "Curso no encontrado — OTEC APRECAP" };
+  }
   return {
     title: `${found.curso.title} — OTEC APRECAP`,
     description: found.curso.description,
@@ -35,8 +45,22 @@ export function generateStaticParams() {
 
 export default async function CursoDetalle({ params }: Props) {
   const { slug } = await params;
+
+  // Si es un curso OTEC laboral (Nochero, Electricidad, Sustancias, etc.), redirigir al aula interactiva con Visor A4
+  const otecLaboral = getCursoOTECLaboralBySlug(slug);
+  const isSecurityCourse = ["guardia-de-seguridad", "supervisor-de-seguridad", "operador-cctv-y-alarmas", "baston-y-esposas"].includes(slug);
+  
+  if (otecLaboral && !isSecurityCourse) {
+    redirect(`/cursos-otec/${otecLaboral.slug}`);
+  }
+
   const found = findCurso(slug);
-  if (!found) notFound();
+  if (!found) {
+    if (otecLaboral) {
+      redirect(`/cursos-otec/${otecLaboral.slug}`);
+    }
+    notFound();
+  }
 
   if (found.tipo === "otec") {
     const c = found.curso;
@@ -57,8 +81,8 @@ export default async function CursoDetalle({ params }: Props) {
                   📍 {c.modalidad}
                 </span>
                 {c.acreditado && (
-                  <span className="rounded-full bg-apre-red px-4 py-1.5 text-sm font-bold">
-                    Acreditado OS-10
+                  <span className="rounded-full bg-apre-red px-4 py-1.5 text-sm font-bold shadow-xs">
+                    Acreditado SPD
                   </span>
                 )}
                 {c.financiadoSence && (
@@ -117,8 +141,8 @@ export default async function CursoDetalle({ params }: Props) {
               <span className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold">
                 👥 {c.students} estudiantes
               </span>
-              <span className="rounded-full bg-apre-red px-4 py-1.5 text-sm font-bold">
-                Acreditado OS-10
+              <span className="rounded-full bg-apre-red px-4 py-1.5 text-sm font-bold shadow-xs">
+                Acreditado SPD
               </span>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">

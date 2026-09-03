@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { CursoCard } from "@/components/CursoCard";
-import { CURSOS_PRESENCIAL_ONLINE, CURSOS_ONLINE } from "@/data/cursos-home";
+import { CURSOS_PRESENCIAL_ONLINE, CURSOS_ONLINE, CURSOS_LABORALES } from "@/data/cursos-home";
 
 export const metadata: Metadata = {
   title: "Cursos y Capacitación — OTEC APRECAP",
   description:
-    "Cursos de seguridad privada acreditados por SENCE y OS-10: Guardia de Seguridad, Supervisor, CCTV y más.",
+    "Cursos de seguridad privada autorizados por la Subsecretaría de Prevención del Delito (SPD) y certificados por SENCE: Guardia de Seguridad, Supervisor, Jefe de Seguridad, CCTV y cursos laborales.",
 };
 
 export default function CursosPage() {
@@ -19,9 +19,9 @@ export default function CursosPage() {
           <h1 className="mt-3 text-4xl font-extrabold">Cursos y Capacitación</h1>
           <p className="mt-4 max-w-3xl leading-relaxed text-white/80">
             Acreditados por SENCE bajo NCh-2728:2015. Nuestros programas de capacitación
-            cuentan con la autorización de la Subsecretaría de Prevención del Delito (SPD) como
-            órgano rector, con fiscalización operativa y examen final rendido ante Carabineros
-            de Chile (Prefectura de Seguridad Privada OS-10).
+            cuentan con la autorización de la <strong>Subsecretaría de Prevención del Delito (SPD)</strong> como
+            órgano rector bajo la <strong>Ley N° 21.659</strong>, con fiscalización operativa y examen final rendido ante Carabineros
+            de Chile.
           </p>
 
           {/* Banner de Próximo Inicio */}
@@ -44,14 +44,17 @@ export default function CursosPage() {
         </div>
       </section>
 
-      <section className="bg-gray-50 py-16">
+      {/* 1. Cursos Presenciales */}
+      <section className="bg-white py-16 border-b border-gray-100">
         <div className="mx-auto max-w-6xl px-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-apre-red/10 px-3.5 py-1 text-xs font-black text-apre-red uppercase tracking-wider mb-2">
+            <span>🏫</span> Formación Presencial en Sede
+          </div>
           <h2 className="text-2xl font-extrabold text-apre-blue">
-            Cursos Presenciales
+            Cursos Presenciales (con apoyo en línea)
           </h2>
           <p className="mt-2 text-gray-600">
-            Formación 100% presencial en sede con material y apoyo de estudio en
-            nuestra plataforma en línea.
+            Clases 100% presenciales en sede con talleres prácticos, docentes expertos y acceso a material de estudio digital.
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             {CURSOS_PRESENCIAL_ONLINE.map((c) => (
@@ -63,20 +66,24 @@ export default function CursosPage() {
                 duracion={c.duracion}
                 modalidad={c.modalidad}
                 acreditado={c.acreditado}
-                href={`/cursos/${c.slug}`}
+                href={c.href || `/cursos/${c.slug}`}
               />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-16">
+      {/* 2. Cursos en Línea y Asincrónicos */}
+      <section className="bg-slate-50 py-16 border-b border-gray-100">
         <div className="mx-auto max-w-6xl px-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-apre-blue/10 px-3.5 py-1 text-xs font-black text-apre-blue uppercase tracking-wider mb-2">
+            <span>🌐</span> Modalidad Online Asincrónica
+          </div>
           <h2 className="text-2xl font-extrabold text-apre-blue">
-            Cursos Online
+            Cursos en Línea y Asincrónicos
           </h2>
           <p className="mt-2 text-gray-600">
-            Cursos completos en línea con certificación.
+            Programas flexibles con aula virtual 24/7, videos explicativos y evaluaciones interactivas acreditadas por la Subsecretaría de Prevención del Delito (SPD).
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             {CURSOS_ONLINE.map((c) => (
@@ -88,7 +95,36 @@ export default function CursosPage() {
                 duracion={c.duracion}
                 modalidad={c.modalidad}
                 acreditado={c.acreditado}
-                href={`/cursos/${c.slug}`}
+                href={c.href || `/cursos/${c.slug}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Cursos OTEC */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3.5 py-1 text-xs font-black text-emerald-700 uppercase tracking-wider mb-2">
+            <span>🛠️</span> Formación Laboral y Oficios
+          </div>
+          <h2 className="text-2xl font-extrabold text-apre-blue">
+            Cursos OTEC
+          </h2>
+          <p className="mt-2 text-gray-600">
+            Cursos prácticos orientados al desarrollo de habilidades laborales inmediatas y oficios especializados con manuales oficiales A4 y videos interactivos.
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {CURSOS_LABORALES.map((c) => (
+              <CursoCard
+                key={c.slug}
+                slug={c.slug}
+                title={c.title}
+                image={c.image}
+                duracion={c.duracion}
+                modalidad={c.modalidad}
+                acreditado={c.acreditado}
+                href={c.href || `/cursos/${c.slug}`}
               />
             ))}
           </div>

@@ -376,10 +376,17 @@ function CursosProfesorTab() {
   const cursos = [
     {
       slug: "guardia-de-seguridad",
-      nombre: "Curso Guardia de Seguridad (OS-10)",
+      nombre: "Curso Guardia de Seguridad (SPD)",
       horas: "90 hrs",
       icono: "🛡️",
       descripcion: "14 Módulos interactivos, videos temáticos y cuestionarios oficiales.",
+    },
+    {
+      slug: "supervisor-de-seguridad",
+      nombre: "Curso Supervisor de Seguridad",
+      horas: "140 hrs",
+      icono: "⭐",
+      descripcion: "6 Módulos de gestión de seguridad privada, liderazgo de guardias y marco normativo.",
     },
     {
       slug: "operador-cctv-y-alarmas",
@@ -391,16 +398,9 @@ function CursosProfesorTab() {
     {
       slug: "baston-y-esposas",
       nombre: "Curso Bastón y Esposas",
-      horas: "8 hrs",
+      horas: "10 hrs",
       icono: "🥋",
       descripcion: "11 Submódulos de defensa personal policial, bastón retráctil y grilletes.",
-    },
-    {
-      slug: "supervisor-de-seguridad",
-      nombre: "Curso Supervisor de Seguridad",
-      horas: "140 hrs",
-      icono: "⭐",
-      descripcion: "6 Módulos de gestión de seguridad privada, liderazgo de guardias y marco normativo.",
     },
   ];
 

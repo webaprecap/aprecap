@@ -6,7 +6,7 @@ import type { BancoModulo } from "./types";
 
 export const bancoModulo11: BancoModulo = {
   numero: 11,
-  titulo: "Seguridad de Instalaciones OS-10",
+  titulo: "Seguridad de Instalaciones SPD",
   alternativas: [
     {
       id: "m11_a1",

@@ -28,6 +28,7 @@ export const REDES_SOCIALES = {
 export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/cursos", label: "Cursos y Capacitación" },
+  { href: "/cursos-otec", label: "Cursos OTEC" },
   { href: "/asesorias", label: "Asesorías" },
   { href: "/carta-del-director", label: "Carta del Director" },
   { href: "/blog", label: "Blog" },

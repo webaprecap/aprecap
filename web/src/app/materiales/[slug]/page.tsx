@@ -95,7 +95,7 @@ export default function CursoMaterialesPage({ params }: PageProps) {
 function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { user, userData, loading: authLoading } = useAuth();
-  const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown }[]>([]);
+  const [enrollments, setEnrollments] = useState<{ courseSlug?: string; fecha?: unknown; sinRestriccionTiempo?: boolean }[]>([]);
   const [loadingEnrollments, setLoadingEnrollments] = useState(true);
   const [solicitando, setSolicitando] = useState(false);
   const [cuestionariosHabilitados, setCuestionariosHabilitados] = useState(false);
@@ -129,6 +129,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
         snap.docs.map((d) => ({
           courseSlug: d.data().courseSlug,
           fecha: d.data().fecha,
+          sinRestriccionTiempo: d.data().sinRestriccionTiempo,
         }))
       );
       setLoadingEnrollments(false);
@@ -252,15 +253,20 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
 
   // --- Lógica de Desbloqueo Progresivo Temporal (Drip Content) ---
   const matriculaActual = enrollments.find((e) => e.courseSlug === slug);
+  const sinRestriccionTiempo = Boolean(
+    matriculaActual?.sinRestriccionTiempo === true ||
+    (userData as any)?.sinRestriccionTiempo === true ||
+    (userData as any)?.[`sinRestriccionTiempo_${slug.replace(/-/g, "_")}`] === true
+  );
   let rawFechaMatricula = matriculaActual?.fecha || userData?.fechaRegistro;
-  if (isDevSuperStudent) {
+  if (isDevSuperStudent || sinRestriccionTiempo) {
     rawFechaMatricula = new Date("2010-01-01T00:00:00Z"); // Finge que se matriculó hace muchos años
   }
   
   const timingConfig = COURSE_TIMING_CONFIG[slug];
   const diaActual = getDiaActualCurso(rawFechaMatricula);
-  const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin);
-  const moduloActualUnlock = getModuleUnlockStatus(slug, expandedModuloIdx, rawFechaMatricula, isAdmin);
+  const examUnlock = getExamUnlockStatus(slug, rawFechaMatricula, isAdmin, sinRestriccionTiempo);
+  const moduloActualUnlock = getModuleUnlockStatus(slug, expandedModuloIdx, rawFechaMatricula, isAdmin, sinRestriccionTiempo);
 
   const moduloActual = cursoActual.modulos[expandedModuloIdx] || cursoActual.modulos[0];
   const hasSubModulos = Boolean(moduloActual.subModulos && moduloActual.subModulos.length > 0);
@@ -396,7 +402,7 @@ function CursoMaterialesInner({ params }: { params: Promise<{ slug: string }> })
                   const isExpanded = mIdx === expandedModuloIdx;
                   const modSubModulos = m.subModulos || [];
                   const isCompletado = completados.includes(mIdx);
-                  const modUnlock = getModuleUnlockStatus(slug, mIdx, rawFechaMatricula, isAdmin);
+                  const modUnlock = getModuleUnlockStatus(slug, mIdx, rawFechaMatricula, isAdmin, sinRestriccionTiempo);
 
                   return (
                     <div key={mIdx} className="rounded-xl border border-slate-800/80 bg-slate-900/40 overflow-hidden">

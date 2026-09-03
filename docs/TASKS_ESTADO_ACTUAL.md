@@ -156,9 +156,37 @@
     - Fuente principal: manual del cliente `Curso bastón y esposas presentación.pdf` (18 páginas, OCR → `scripts/baston-extraidos/`, script `scripts/ocr_baston_manual.py`). Enriquecido solo con fuentes verificables (Código Penal: legítima defensa; Ley 21.659 y D.S. 209 del Diario Oficial ya en el repo; estándares generales de defensa personal y distancia de reacción). **Nada copiado de Sarmat** (sus PDFs/videos quedaron excluidos por instrucción del cliente).
     - **Pendiente del cliente:** generar los PDFs en NotebookLM y grabar/aportar los videos del curso (no existen videos propios de Aprecap de bastón y esposas).
 
+### K. Plataforma OTEC, Visor A4 Universal, Sanity CDN, Manuales A4 y Actualización Legal (2026-09-01)
+85. **Visor A4 Canvas (`react-pdf`)**: Visor responsivo de hoja A4 (`1 : 1.414`) y Presentación 16:9 sin barras nativas del navegador, con zoom `−`/`+`/`100%` y swipe táctil.
+86. **60 PDFs OTEC en Sanity CDN**: 60 manuales y programas técnicos subidos a `https://cdn.sanity.io/files/mwwotgjc/production/`.
+87. **14 Portadas HD**: 14 imágenes 16:9 cargadas a Sanity para el catálogo OTEC y cursos de seguridad.
+88. **Actualización Legal en Manuales**: Recuadros normativos de Ley Karin (21.643) en Liderazgo y SGA/NCh382 en Sustancias Peligrosas.
+89. **Manuales A4 Nuevos**: Generados manuales A4 oficiales para *Guardia, Nochero, Rondín y Portero* y *Electricidad Básica Industrial*.
+90. **Quizzes OTEC**: Bancos interactivos en `otec.ts` con notas al 80% y confeti.
+
+### L. Modo Fiestas Patrias (18 de Septiembre) y Ambientación Dieciochera (2026-09-02)
+91. **Control Global en Tiempo Real (`fiestasPatrias.ts`)**: Sincronización reactiva por Firestore (`configuracion/fiestasPatrias`) con hook `useFiestasPatrias()`, caché en `localStorage` y cero parpadeos visuales.
+92. **Pestaña en Panel Admin (`AdminFiestasPatriasTab.tsx`)**: Switch on/off en 1 clic para toda la web con badge `ON` en la barra lateral y registro de auditoría.
+93. **Guirnalda Dieciochera Modular (`GuirnaldaDieciochera.tsx`)**: Módulos repetibles de 400px sin deformación en pantallas panorámicas. Banderas chilenas en estricta regla protocolar del **Decreto Supremo N° 1.534** (cantón azul y estrella solitaria arriba a la izquierda).
+94. **Hero con Bandera y Cordillera (`HeroBackgroundFlag.tsx`)**: Bandera chilena flameando al viento sobre la cumbre con la Cordillera de los Andes nevada de fondo y overlay azul marino APRECAP.
+95. **Sombreros Huasos en Logo y WhatsApp (`ChupallaHuasa.tsx`)**:
+    - Sombrero huaso tradicional con cinta tricolor y estrella solitaria.
+    - En el **Logo**: Posicionado en la esquina superior de la tarjeta (`top: -13px, left: -5px`) sin tapar las letras "AC" ni el texto institucional.
+    - En **WhatsApp Flotante**: Fijo en pantalla (`fixed bottom-6 right-6 z-50`), sombrero posado en el borde superior derecho (`top: -12px, right: -2px`) y teléfono 100% visible.
+96. **Insignia Patria en Cursos (`VolantinBadge.tsx`)**: Volantín tricolor animado con badge "¡Especial 18!".
+97. **Eliminación Total de "CL" y Respeto de Paleta**: Eliminado el emoji `🇨🇱` para evitar que Windows lo renderice como texto `CL`. Eliminado el exceso de amarillo; paleta estricta de APRECAP (azul marino `#002159` / `#0e2a47`, rojo `#d52b1e` / `#ff1212` y blanco). Banner original de inicio restaurado al 100%.
+
 ---
 
 ## ⏳ TAREAS PENDIENTES Y PRÓXIMOS PASOS
+
+### 🎯 Próxima Sesión:
+- [ ] ⚙️ **Módulos Interactivos y Simuladores Técnicos en Cursos OTEC:**
+  - **Operador de Calderas (D.S. N° 10)**: Manómetro interactivo bar/psi, nivel de tubo de agua, purga de lodos y prueba de corte de quemador.
+  - **Grúa Horquilla**: Checklist interactivo pre-operacional y cálculo de centro de carga.
+  - **Trabajo en Altura (NCh1258)**: Inspección visual de arnés y líneas de vida.
+  - **Sustancias Peligrosas (NCh382 / SGA)**: Matriz de incompatibilidad química en bodega.
+- [ ] 💳 **Pasarela de Pagos (WebPay / Transbank):** Reactivación y configuración de cobro cuando administración lo disponga.
 
 ### A. Tareas de Infraestructura y Lanzamiento (Cliente / DevOps):
 - [ ] **Cambiar Nameservers en NIC Chile (`nic.cl`):** Apuntar el dominio `aprecap.cl` a los 2 nameservers de Cloudflare.
@@ -169,11 +197,11 @@
 - [ ] **Publicar reglas de Firestore (`firestore.rules`):** Desplegar o actualizar reglas en Firebase Console con los nuevos administradores Saavedra.
 
 ### B. Tareas en Plataforma / Código (100% Completado):
-- [x] **Eliminación de Modo Demo:** ✅ COMPLETADO (2026-08-19). `useModoDemo.ts` desactivado y removidos todos los cuadros y bypasses de prueba en `MiniQuiz.tsx`, `FinalExam.tsx`, `FinalExamVF.tsx` y `ResultadoExamen.tsx`.
-- [x] **Certificación diferenciada (Presencial vs Online):** ✅ COMPLETADO (2026-08-19). Para OS-10 y Bastón y Esposas se indica la entrega presencial de certificados y credenciales en sede APRECAP; para CCTV y Supervisor se mantiene la emisión online tras aprobar.
-- [x] **Favicon e Iconos oficiales:** ✅ COMPLETADO (2026-08-19). Se sobrescribió `favicon.ico`, `icon.png`, `apple-icon.png` y metadatos de `layout.tsx` con el escudo oficial de APRECAP.
-- [x] **Control de Accesos y Bloqueo de Cursos en Producción:** ✅ COMPLETADO. `canAccessCourse` y `getCourseStatus` en `courseAccess.ts` y `materiales/[slug]/page.tsx` controlan estrictamente el acceso por matrícula o aprobación en Firestore.
-- [x] **Quitar herramientas internas del navbar:** ✅ COMPLETADO. El navbar `Header.tsx` no tiene botones de prueba ni accesos demo.
+- [x] **Eliminación de Modo Demo:** ✅ COMPLETADO.
+- [x] **Certificación diferenciada (Presencial vs Online):** ✅ COMPLETADO.
+- [x] **Favicon e Iconos oficiales:** ✅ COMPLETADO.
+- [x] **Control de Accesos y Bloqueo de Cursos en Producción:** ✅ COMPLETADO.
+- [x] **Catálogo y Visor OTEC A4 en Sanity:** ✅ COMPLETADO.
 - [ ] **Firma del acuerdo PDF:** Entregado al cliente (`acuerdo-aprecap-digitalup.pdf`), pendiente de firma.
 
 ---
@@ -182,7 +210,4 @@
 
 - **Sanity CMS Project ID:** `mwwotgjc` · Dataset: `production`
 - **Repositorio GitHub:** `https://github.com/webaprecap/aprecap.git` (Rama `main`)
-- **Materiales locales del cliente:**
-  - OS-10: `C:\Users\Vickoto\Downloads\os10 aprecap\` (PDFs, videos y cuestionarios)
-  - CCTV: `C:\Users\Vickoto\Downloads\cctv aprecap\` (22 videos + 22 PDFs renombrados `Modulo_X.Y_...`)
-  - Bastón y esposas: `C:\Users\Vickoto\Downloads\os10 aprecap\cuestionarios\Curso bastón y esposas presentación.pptx` (reservado)
+

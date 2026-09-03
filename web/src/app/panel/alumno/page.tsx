@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, updateDoc, where, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirestoreDb } from "@/lib/firebase";
 import { CONTACTO } from "@/data/site";
@@ -13,6 +13,7 @@ import { canAccessCourse, getCourseFieldKey, getCourseStatus, isMaterialHabilita
 import { COURSE_TIMING_CONFIG, getDiaActualCurso } from "@/lib/courseTiming";
 import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/youtube";
 import { formatDetalleHorario, formatRangoHorario, getClaseLiveStatus } from "@/lib/claseHorario";
+import { formatRut, validateRut } from "@/lib/rut";
 
 interface Enroll {
   id: string;
@@ -78,6 +79,81 @@ export default function PanelAlumno() {
   const [cursoSolicitadoNombre, setCursoSolicitadoNombre] = useState("");
   const [solicitandoCurso, setSolicitandoCurso] = useState<string | null>(null);
   const [cuestionariosOS10Habilitados, setCuestionariosOS10Habilitados] = useState(false);
+  const [filtroCategoria, setFiltroCategoria] = useState<"todos" | "seguridad" | "otec">("todos");
+
+  // Detección de ficha incompleta (alumnos legacy sin RUT o sin nombre)
+  const faltaCompletarFicha = Boolean(
+    userData &&
+      userData.rol === "alumno" &&
+      (!userData.rut ||
+        !userData.nombre ||
+        userData.nombre.trim().toLowerCase() === (userData.email || "").trim().toLowerCase())
+  );
+
+  const [showModalCompletarPerfil, setShowModalCompletarPerfil] = useState(false);
+  const [formPerfil, setFormPerfil] = useState({
+    nombres: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
+    rut: "",
+    telefono: "",
+  });
+  const [guardandoPerfil, setGuardandoPerfil] = useState(false);
+  const [errPerfil, setErrPerfil] = useState("");
+
+  const handleGuardarPerfil = async () => {
+    setErrPerfil("");
+    if (!formPerfil.nombres.trim() || formPerfil.nombres.trim().length < 2) {
+      setErrPerfil("El campo Nombres es obligatorio (mínimo 2 caracteres).");
+      return;
+    }
+    if (!formPerfil.apellidoPaterno.trim() || formPerfil.apellidoPaterno.trim().length < 2) {
+      setErrPerfil("El Apellido Paterno es obligatorio (mínimo 2 caracteres).");
+      return;
+    }
+    if (!formPerfil.apellidoMaterno.trim() || formPerfil.apellidoMaterno.trim().length < 2) {
+      setErrPerfil("El Apellido Materno es obligatorio (mínimo 2 caracteres).");
+      return;
+    }
+    if (!formPerfil.rut.trim() || !validateRut(formPerfil.rut)) {
+      setErrPerfil("Ingresa un RUT chileno válido (ej: 12.345.678-9).");
+      return;
+    }
+    const cleanTel = formPerfil.telefono.replace(/\D/g, "");
+    if (!formPerfil.telefono.trim() || cleanTel.length < 8) {
+      setErrPerfil("Ingresa un teléfono válido de al menos 8 dígitos.");
+      return;
+    }
+
+    const db = getFirestoreDb();
+    if (!db || !userData) return;
+    setGuardandoPerfil(true);
+    try {
+      const nombreCompleto = [
+        formPerfil.nombres.trim(),
+        formPerfil.apellidoPaterno.trim(),
+        formPerfil.apellidoMaterno.trim(),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+
+      await updateDoc(doc(db, "usuarios", userData.uid), {
+        nombre: nombreCompleto,
+        nombres: formPerfil.nombres.trim(),
+        apellidoPaterno: formPerfil.apellidoPaterno.trim(),
+        apellidoMaterno: formPerfil.apellidoMaterno.trim(),
+        rut: formPerfil.rut.trim(),
+        telefono: formPerfil.telefono.trim(),
+      });
+      setShowModalCompletarPerfil(false);
+      window.location.reload();
+    } catch {
+      setErrPerfil("Error al guardar tus datos. Inténtalo de nuevo.");
+    } finally {
+      setGuardandoPerfil(false);
+    }
+  };
 
   const avisados = useRef<Set<string>>(new Set());
 
@@ -188,7 +264,7 @@ export default function PanelAlumno() {
     return unsub;
   }, [userData, enrolls]);
 
-  const solicitarAccesoCurso = async (fieldKey: string, nombreCurso: string) => {
+  const solicitarAccesoCurso = async (fieldKey: string, nombreCurso: string, slug?: string) => {
     if (!user) return;
     setSolicitandoCurso(fieldKey);
     try {
@@ -198,6 +274,19 @@ export default function PanelAlumno() {
         await updateDoc(userRef, {
           [fieldKey]: "pendiente",
         });
+        if (slug) {
+          await addDoc(collection(db, "solicitudes"), {
+            email: user.email,
+            uid: user.uid,
+            nombres: userData?.nombre || user.displayName || "Alumno",
+            rut: userData?.rut || "",
+            telefono: userData?.telefono || "",
+            tipoSolicitud: "alumno",
+            cursoDeseado: slug,
+            estado: "pendiente",
+            fechaSolicitud: serverTimestamp(),
+          });
+        }
         setCursoSolicitadoNombre(nombreCurso);
         setShowModalSolicitud(true);
       }
@@ -219,6 +308,11 @@ export default function PanelAlumno() {
   const cursosDesbloqueados = CURSOS_LISTA.filter((c) =>
     canAccessCourse(userData, c.slug, enrolls)
   );
+
+  const cursosPendientes = CURSOS_LISTA.filter((c) => {
+    const status = getCourseStatus(userData, c.slug, enrolls);
+    return status === "pendiente";
+  });
 
   const clasesGrabadasFiltradas = clasesGrabadas.filter((cg) => {
     if (cursoFiltroGrabadas === "todos") return true;
@@ -277,6 +371,91 @@ export default function PanelAlumno() {
 
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-6xl space-y-10 px-4">
+          {/* AVISO OBLIGATORIO PARA ALUMNOS LEGACY CON DATOS INCOMPLETOS */}
+          {faltaCompletarFicha && (
+            <div className="rounded-3xl border-2 border-red-400 bg-linear-to-r from-red-50 via-orange-50 to-amber-50 p-6 sm:p-7 shadow-lg">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                <div className="flex items-start sm:items-center gap-4">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-red-500 text-white font-black text-2xl shadow-md animate-bounce">
+                    ⚠️
+                  </span>
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full bg-red-200 text-red-900 border border-red-300 px-3 py-1 text-xs font-black uppercase tracking-wider">
+                      <span>📋</span> REGISTRO OBLIGATORIO DE DATOS PERSONALES
+                    </div>
+                    <h3 className="text-xl font-extrabold text-apre-blue mt-1.5">
+                      Faltan tus datos oficiales (Nombres, Apellidos y RUT)
+                    </h3>
+                    <p className="text-xs text-red-950/80 mt-1 max-w-2xl leading-relaxed">
+                      Por normativa legal y fiscalización de <strong>Carabineros de Chile (OS-10)</strong> y <strong>SENCE</strong>, para validar tu condición de alumno y emitir diplomas con código QR oficial, debes completar obligatoriamente tus datos personales completos.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowModalCompletarPerfil(true)}
+                  className="rounded-2xl bg-red-600 hover:bg-red-700 px-6 py-3.5 text-xs font-black text-white shadow-md transition hover:shadow-lg whitespace-nowrap cursor-pointer shrink-0"
+                >
+                  📝 Completar Ficha Oficial Ahora
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* BANNER OFICIAL SALA DE ESPERA */}
+          {cursosPendientes.length > 0 && (
+            <div className="rounded-3xl border-2 border-amber-400 bg-linear-to-r from-amber-50 via-orange-50/60 to-amber-50/90 p-6 sm:p-7 shadow-lg">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                <div className="flex items-start sm:items-center gap-4">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white font-black text-2xl shadow-md animate-pulse">
+                    ⏳
+                  </span>
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full bg-amber-200/80 text-amber-900 border border-amber-300 px-3 py-1 text-xs font-black uppercase tracking-wider">
+                      <span>🕒</span> SALA DE ESPERA OFICIAL · MATRÍCULA EN PROCESO
+                    </div>
+                    <h3 className="text-xl font-extrabold text-apre-blue mt-1.5">
+                      {cursosPendientes.length === 1
+                        ? `Tu matrícula para "${cursosPendientes[0].nombre}" está en revisión por Administración`
+                        : `Tienes ${cursosPendientes.length} matrículas de cursos en revisión por Administración`}
+                    </h3>
+                    <p className="text-xs text-amber-950/80 mt-1 max-w-2xl leading-relaxed">
+                      La administración de APRECAP está revisando tus antecedentes para habilitar tu acceso al aula virtual. En cuanto sea aprobada, tus módulos y contenidos se desbloquearán automáticamente en esta pantalla.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
+                  <a
+                    href={CONTACTO.whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-whatsapp px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:brightness-110 transition cursor-pointer"
+                  >
+                    <span>💬</span>
+                    <span>Consultar por WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-amber-200/80 flex flex-wrap items-center gap-2">
+                <span className="text-xs font-black text-amber-900 uppercase tracking-wider">
+                  Cursos en Sala de Espera:
+                </span>
+                {cursosPendientes.map((c) => (
+                  <span
+                    key={c.slug}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-amber-300 px-3 py-1.5 text-xs font-bold text-slate-800 shadow-2xs"
+                  >
+                    <span>{c.icono}</span>
+                    <span>{c.nombre}</span>
+                    <span className="rounded bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.5 text-[10px] font-black uppercase">
+                      En Espera Admin
+                    </span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           {claseEnVivo && (
             <div className="rounded-3xl border-2 border-emerald-500 bg-linear-to-r from-emerald-50 via-teal-50/80 to-blue-50/60 p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
@@ -591,12 +770,61 @@ export default function PanelAlumno() {
 
           {/* SECCIÓN DE CURSOS INDIVIDUALES (ESTILO SARMAT: CADA CURSO CON SU ACCESO O SOLICITUD) */}
           <div>
-            <h2 className="text-xl font-extrabold text-apre-blue mb-4">
-              📚 Catálogo de Cursos y Accesos Acreditados
-            </h2>
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-apre-blue">
+                  📚 Catálogo de Cursos y Accesos Acreditados
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Cursos habilitados para tu cuenta o disponibles para solicitar ingreso.
+                </p>
+              </div>
+
+              {/* Filtro por Categorías */}
+              <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-xl border border-gray-200 shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => setFiltroCategoria("todos")}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                    filtroCategoria === "todos"
+                      ? "bg-apre-blue text-white shadow-xs"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Todos ({CURSOS_LISTA.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFiltroCategoria("seguridad")}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition flex items-center gap-1 ${
+                    filtroCategoria === "seguridad"
+                      ? "bg-apre-blue text-white shadow-xs"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <span>🛡️</span>
+                  <span>Seguridad Privada</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFiltroCategoria("otec")}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition flex items-center gap-1 ${
+                    filtroCategoria === "otec"
+                      ? "bg-apre-blue text-white shadow-xs"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <span>💼</span>
+                  <span>Capacitación OTEC</span>
+                </button>
+              </div>
+            </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-              {CURSOS_LISTA.map((c) => {
+              {CURSOS_LISTA.filter((c) => {
+                if (filtroCategoria === "todos") return true;
+                return (c.categoria || "seguridad") === filtroCategoria;
+              }).map((c) => {
                 const status = getCourseStatus(userData, c.slug, enrolls);
                 const isDesbloqueado = status === "desbloqueado";
                 const isPendiente = status === "pendiente";
@@ -606,6 +834,8 @@ export default function PanelAlumno() {
                 const rawFechaCurso = enrollCurso?.fecha || userData?.fechaRegistro;
                 const timing = COURSE_TIMING_CONFIG[c.slug];
                 const diaCurso = timing ? getDiaActualCurso(rawFechaCurso) : null;
+
+                const aulaUrl = c.categoria === "otec" ? `/cursos-otec/${c.slug}` : `/materiales/${c.slug}`;
 
                 return (
                   <div
@@ -641,7 +871,14 @@ export default function PanelAlumno() {
                     </span>
 
                     <div>
-                      <div className="text-3xl mb-2">{c.icono}</div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-3xl">{c.icono}</span>
+                        {c.categoria === "otec" && (
+                          <span className="rounded bg-blue-100 text-blue-800 text-[10px] font-black uppercase px-2 py-0.5">
+                            OTEC APRECAP
+                          </span>
+                        )}
+                      </div>
                       <h3 className="font-extrabold text-apre-blue text-lg">{c.nombre}</h3>
                       <p className="mt-1 text-xs text-gray-600">
                         Duración: {c.horas} horas pedagógicas con certificación oficial.
@@ -672,13 +909,13 @@ export default function PanelAlumno() {
                                 <span>🔒</span> Material y Evaluaciones en Espera
                               </span>
                               <p className="text-[11px] text-amber-800 mt-1 leading-relaxed">
-                                Estás cursando la <strong>Fase Presencial en Sede</strong> de Guardia OS-10. El material de estudio digital y las evaluaciones se habilitarán cuando la administración finalice las clases presenciales.
+                                Estás cursando la <strong>Fase Presencial en Sede</strong> de Guardia de Seguridad (SPD). El material de estudio digital y las evaluaciones se habilitarán cuando la administración finalice las clases presenciales.
                               </p>
                             </div>
                           ) : (
                             <>
                               <Link
-                                href={`/materiales/${c.slug}`}
+                                href={aulaUrl}
                                 className="block w-full rounded-xl bg-emerald-500 py-3 text-center text-xs font-extrabold text-white transition hover:bg-emerald-600 shadow-sm"
                               >
                                 🚀 ENTRAR AL CURSO {c.shortName.toUpperCase()}
@@ -688,7 +925,7 @@ export default function PanelAlumno() {
                                   href="/cuestionarios/guardia-de-seguridad"
                                   className="block w-full rounded-xl bg-apre-red py-2.5 text-center text-xs font-extrabold text-white transition hover:bg-apre-red-dark shadow-sm"
                                 >
-                                  📋 CUESTIONARIOS OFICIALES OS-10
+                                  📋 CUESTIONARIOS OFICIALES SPD
                                 </Link>
                               )}
                             </>
@@ -712,7 +949,7 @@ export default function PanelAlumno() {
                         </a>
                       ) : (
                         <button
-                          onClick={() => solicitarAccesoCurso(c.fieldKey, c.nombre)}
+                          onClick={() => solicitarAccesoCurso(c.fieldKey, c.nombre, c.slug)}
                           disabled={solicitandoCurso === c.fieldKey}
                           className="w-full rounded-xl bg-apre-blue py-3 text-center text-xs font-extrabold text-white transition hover:bg-apre-blue/90 shadow-sm disabled:opacity-50"
                         >
@@ -939,6 +1176,135 @@ export default function PanelAlumno() {
                 <p>{videoActivoModal.descripcion}</p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL OBLIGATORIO PARA REGISTRAR DATOS PERSONALES FALTANTES */}
+      {showModalCompletarPerfil && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 sm:p-8 shadow-2xl space-y-5 border border-gray-200">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-600 text-xl font-bold">
+                  📝
+                </span>
+                <div>
+                  <h3 className="text-base font-black text-apre-blue">
+                    Ficha de Alumno Oficial
+                  </h3>
+                  <p className="text-[11px] text-gray-500">
+                    Acreditación obligatoria OS-10 Carabineros / SENCE
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowModalCompletarPerfil(false)}
+                className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {errPerfil && (
+              <p className="rounded-xl bg-red-50 border border-red-200 p-3 text-xs font-bold text-red-700">
+                ⚠️ {errPerfil}
+              </p>
+            )}
+
+            <div className="space-y-3.5 text-xs">
+              <div>
+                <label className="font-bold uppercase tracking-wider text-apre-blue">
+                  Nombres <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ej: Juan Carlos"
+                  value={formPerfil.nombres}
+                  onChange={(e) => setFormPerfil({ ...formPerfil, nombres: e.target.value })}
+                  className="mt-1 w-full rounded-xl border border-gray-300 p-2.5 text-sm focus:border-apre-blue focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold uppercase tracking-wider text-apre-blue">
+                    Apellido Paterno <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: González"
+                    value={formPerfil.apellidoPaterno}
+                    onChange={(e) => setFormPerfil({ ...formPerfil, apellidoPaterno: e.target.value })}
+                    className="mt-1 w-full rounded-xl border border-gray-300 p-2.5 text-sm focus:border-apre-blue focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold uppercase tracking-wider text-apre-blue">
+                    Apellido Materno <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: Pérez"
+                    value={formPerfil.apellidoMaterno}
+                    onChange={(e) => setFormPerfil({ ...formPerfil, apellidoMaterno: e.target.value })}
+                    className="mt-1 w-full rounded-xl border border-gray-300 p-2.5 text-sm focus:border-apre-blue focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold uppercase tracking-wider text-apre-blue">
+                    RUT Oficial <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="12.345.678-9"
+                    maxLength={12}
+                    value={formPerfil.rut}
+                    onChange={(e) => setFormPerfil({ ...formPerfil, rut: formatRut(e.target.value) })}
+                    className="mt-1 w-full rounded-xl border border-gray-300 p-2.5 text-sm font-mono font-bold focus:border-apre-blue focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold uppercase tracking-wider text-apre-blue">
+                    Teléfono / WhatsApp <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="+56 9 1234 5678"
+                    value={formPerfil.telefono}
+                    onChange={(e) => setFormPerfil({ ...formPerfil, telefono: e.target.value })}
+                    className="mt-1 w-full rounded-xl border border-gray-300 p-2.5 text-sm focus:border-apre-blue focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-end gap-2 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setShowModalCompletarPerfil(false)}
+                className="rounded-xl px-4 py-2.5 text-xs font-bold text-gray-500 hover:bg-gray-100 cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleGuardarPerfil}
+                disabled={guardandoPerfil}
+                className="rounded-xl bg-apre-blue hover:bg-apre-blue-light px-5 py-2.5 text-xs font-black text-white shadow-md transition disabled:opacity-50 cursor-pointer"
+              >
+                {guardandoPerfil ? "Guardando..." : "Guardar mis Datos Oficiales"}
+              </button>
+            </div>
           </div>
         </div>
       )}

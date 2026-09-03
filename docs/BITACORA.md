@@ -342,15 +342,73 @@
 ## Sesión 2026-08-21 · Despliegue de Dominio Oficial `aprecap.cl` en Cloudflare & NIC Chile
 - **Visor PDF (PDFSwipeViewer)**:
   - Estructura visual y gestos 100% alineados con Sarmat (Header con 'Material de Estudio' y 'Desliza o usa los botones para navegar', barra inferior con '← Anterior' y 'Siguiente →' y barra de progreso roja).
-## Sesión 2026-08-24 · Actualización y Alineación del Diploma Oficial APRECAP con Word del Cliente
-- **Acreditaciones Institucionales Completas (`JUANA GONZALEZ.docx`)**:
-  - Se analizó el documento Word original del cliente (`C:\Users\Vickoto\Desktop\fotos aprecap\JUANA GONZALEZ.docx` y `DIPLOMA SUPERVISOR  ERIKA.pdf`).
-  - Se incorporó en `DiplomaCertificado.tsx` la 3ª línea oficial de acreditaciones omitida:
-    `AUTORIZADO POR LA SUBSECRETARÍA PREVENCIÓN DEL DELITO - AUTORIZADA POR OS-10 DE CARABINEROS – AUTORIZADA POR DIRECTEMAR`.
-  - Se ajustó el encabezado con doble escudo institucional flanqueando las acreditaciones.
-  - Se actualizó el título a azul marino institucional (`text-apre-blue`) y la fórmula del destinatario a `A DON / DOÑA: {nombre}` para cobertura inclusiva de todos los egresados.
-- **Verificación y Calidad**:
-  - `tsc --noEmit` completado con 0 errores.
+## Sesión 2026-09-01 · Plataforma Integral de Cursos OTEC, Visor A4 Universal, Sanity CDN, Actualización Legal y Manuales Técnicos
+- **Visor A4 Responsivo y Universal (`react-pdf`)**:
+  - Implementado visor en Canvas HTML5 sin barras nativas ni opciones de descarga/impresión.
+  - Soporte multi-resolución (1366x768, 1920x1080, móviles y tablets) con cálculo automático de escala `alto / 1.414` y swipe táctil.
+  - Componentes: `CajonVisorA4.tsx`, `CajonVisorA4Client.tsx` y `PDFSwipeViewer.tsx`.
+- **Portadas y Catálogo OTEC**:
+  - 14 imágenes de portada HD estandarizadas en `/images/cursos/[slug].jpg` y subidas a Sanity CDN.
+  - Catálogo interactivo en `/cursos-otec` y `/cursos` con badges de duración y modalidad.
+- **Sincronización Total con Sanity CDN**:
+  - 60/60 PDFs técnicos alojados y distribuidos globalmente en `https://cdn.sanity.io/files/mwwotgjc/production/`.
+- **Auditoría y Actualización Legal de Manuales**:
+  - Incorporados recuadros normativos de la **Ley Karin (Ley N° 21.643)** en cursos de Liderazgo Efectivo (`M3`, `M5`, `M6`).
+  - Incorporada la norma **NCh382:2021** y el **Sistema Globalmente Armonizado (SGA / GHS / D.S. 57)** en Manejo de Sustancias Peligrosas (`M1`, `M4`).
+  - Conservada la paginación y diseño original de cada manual.
+- **Generación de Manuales A4 Oficiales para Nuevos Cursos**:
+  - *Guardia, Nochero, Rondín y Portero*: `PROGRAMA_CURSO.pdf`, `M1` (Ley 21.659 / SPD), `M2` (Control de Accesos y Libro de Novedades), `M3` (Rondas y Emergencias).
+  - *Electricidad Básica Industrial*: `PROGRAMA_CURSO.pdf`, `M1` (Magnitudes y Ley de Ohm), `M2` (Conductores y Tableros RIC SEC), `M3` (Protecciones y 5 Reglas de Oro).
+- **Evaluaciones y Cuestionarios OTEC**:
+  - Banco de preguntas en `web/src/lib/questionBanks/otec.ts` con retroalimentación inmediata, notas al 80% y confeti.
+- **Blindaje de Enrutamiento y Compilación**:
+  - 64/64 rutas estáticas y dinámicas compiladas exitosamente con `next build` (0 errores).
+
+## Sesión 2026-09-02 · Ambientación de Fiestas Patrias (18 de Septiembre), Sistema Reactivo Firestore, Corrección Protocolar y Ajustes Visuales
+- **Sistema de Control Global en Tiempo Real (`web/src/lib/fiestasPatrias.ts`)**:
+  - Hook reactivo `useFiestasPatrias()` con listener `onSnapshot` conectado a la colección Firestore `configuracion/fiestasPatrias`.
+  - Sincronización instantánea de la ambientación dieciochera para todos los visitantes y alumnos en tiempo real sin recargar la página.
+  - Caché local en `localStorage` (`aprecap_modo_18_global_cached`) y atributo `data-modo-18` en `<html>` para evitar parpadeos visuales (FOUC).
+  - Función administrativa `setModoFiestasPatrias(enabled, updatedBy)` con registro de auditoría de fecha y usuario.
+- **Pestaña en Panel Administrativo (`web/src/components/admin/AdminFiestasPatriasTab.tsx` y `page.tsx`)**:
+  - Pestaña *"Modo Fiestas Patrias"* en el sidebar de administración (`/panel/admin`) bajo el grupo *Gestión*.
+  - Switch interactivo para activar o desactivar la temática en 1 clic.
+  - Badge dinámico `ON` en la barra lateral cuando la ambientación está activa.
+  - Tarjetas informativas de los elementos visuales habilitados.
+- **Guirnalda Dieciochera Modular y Protocolar (`web/src/components/fiestas-patrias/GuirnaldaDieciochera.tsx`)**:
+  - Resuelto problema de estiramiento horizontal en pantallas anchas: reescrita con módulos fijos de 400px calculados dinámicamente según el viewport (`window.innerWidth`), garantizando que las banderas mantengan siempre sus proporciones nítidas sin deformarse.
+  - **Ajuste protocolar estricto (Decreto Supremo N° 1.534 del Ministerio del Interior)**: Orientación oficial de bandera chilena vertical: cantón azul con estrella blanca solitaria arriba a la izquierda del observador, franja izquierda blanca y mitad derecha roja.
+  - Cuerda rústica tricolor con nudos y animación de brisa suave (`dieciochoSway`).
+- **Hero de la Portada con Bandera y Cordillera (`web/src/components/fiestas-patrias/HeroBackgroundFlag.tsx`)**:
+  - Generada e incorporada imagen de alta definición (`/images/bandera-chilena-cordillera.jpg`) con la Bandera Chilena flameando al viento sobre la cumbre con la imponente Cordillera de los Andes nevada de fondo.
+  - Filtro y overlay azul marino APRECAP traslúcido para asegurar contraste y legibilidad impecable de los textos principales del Hero.
+- **Sombreros Huasos en Logo y WhatsApp Flotante**:
+  - Componente `ChupallaHuasa.tsx`: Sombrero huaso chileno con copa recta, ala ancha, cinta tricolor oficial (azul, blanco, rojo) y estrella solitaria.
+  - **Logo APRECAP (`Logo.tsx`)**: Posicionado con estilos explícitos en la esquina superior de la tarjeta blanca (`top: -13px, left: -5px, transform: rotate(-12deg)`), descansando sobre el borde superior sin invadir ni tapar el monograma "AC" ni los textos institucionales.
+  - **Botón Flotante WhatsApp (`Buttons.tsx`)**: Fijado con `position: fixed; bottom: 24px; right: 24px; z-index: 9999` y sombrero dieciochero inclinado en el borde superior derecho (`top: -12px, right: -2px, transform: rotate(8deg)`), manteniendo el círculo verde y el ícono blanco del teléfono 100% despejados y visibles.
+- **Insignia Patria en Tarjetas de Cursos (`web/src/components/fiestas-patrias/VolantinBadge.tsx`)**:
+  - Volantín chileno tradicional tricolor con cruz de tirantes, cola ondeante e insignia *"¡Especial 18!"* en la esquina superior de cada tarjeta de curso.
+- **Limpieza Tipográfica y de Identidad Visual**:
+  - **Eliminación Total de "CL"**: Erradicación de todos los emojis `🇨🇱` en el código fuente que los navegadores en Windows descomponían y mostraban como las letras de texto plano `CL`.
+  - **Paleta Oficial APRECAP**: Eliminado el exceso de color amarillo en botones y barras; la plataforma respeta estrictamente los colores institucionales: Azul marino profundo (`#002159` / `#0e2a47`), Rojo (`#d52b1e` / `#ff1212`) y Blanco puro.
+  - **Banner de Convocatoria Original**: Restaurado el banner original de inicio con la convocatoria al 15 de Septiembre del 2026, con sus botones proporcionados y llamados claros a inscripción y WhatsApp.
+- **Verificación Técnica**:
+  - `npx tsc --noEmit` completado con 0 errores de TypeScript.
+  - Servidor de desarrollo Next.js funcionando de forma fluida en `http://localhost:3000`.
+
+---
+
+## 📌 Próxima Sesión:
+1. ⚙️ **Módulos Interactivos y Simuladores Técnicos en Cursos OTEC**:
+   - Desarrollar simuladores interactivos directamente en el navegador:
+     - **Operador de Calderas y Generadores de Vapor (D.S. N° 10)**: Manómetro interactivo (bar/psi), nivel de agua en tubo de vidrio, purgas de fondo y prueba de válvula de seguridad.
+     - **Grúa Horquilla**: Checklist de inspección pre-operacional interactivo y cálculo de centro de carga.
+     - **Trabajo en Altura (NCh1258)**: Inspección visual de arnés de cuerpo completo (puntos de impacto y costuras).
+     - **Sustancias Peligrosas (NCh382 / SGA)**: Matriz interactiva de incompatibilidad química en bodega.
+2. 💳 **Pasarela de Pagos (WebPay / Transbank)**:
+   - Reactivación y configuración de tarifas una vez aprobadas por la administración.
+
+
 
 
 

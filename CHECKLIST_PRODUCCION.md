@@ -31,6 +31,8 @@
 
 ### 🎓 3. Flujo de Cursos, Evaluaciones y Accesos (100% Completado):
 - [x] **Restricción de Accesos / Bloqueo de Cursos en el Panel del Alumno:** 100% activo en `courseAccess.ts`, `panel/alumno/page.tsx` y `materiales/[slug]/page.tsx` (exige matrícula o aprobación de solicitud en Firestore para alumnos).
+- [x] **Catálogo y Visor Universal OTEC A4:** Integrado visor sin barras nativas con Canvas HTML5 (`react-pdf`) y 60 manuales técnicos alojados en Sanity CDN.
+- [x] **Evaluaciones y Cuestionarios Interactivos OTEC:** 100% operativos con retroalimentación inmediata, nota al 80% y confeti.
 - [x] **Quitar herramientas internas del navbar:** El botón "🧪 Vista previa exámenes" y botones de demo fueron completamente removidos del `Header.tsx`.
 - [x] **Modo Demo eliminado:** Se removieron los bypasses y botones de prueba; rigen las evaluaciones reales con umbrales oficiales.
 - [x] **Certificación diferenciada:** OS-10 y Bastón indican retiro presencial en sede física tras completar horas prácticas y examen de Carabineros; CCTV y Supervisor mantienen emisión digital.

@@ -28,7 +28,7 @@ import { cuestionariosGuardiaOS10 } from "./cuestionarios-os10";
 export const cuestionariosPorCurso: Record<string, CursoCuestionarios> = {
   "guardia-de-seguridad": {
     slug: "guardia-de-seguridad",
-    titulo: "Curso de Guardia de Seguridad (OS-10)",
+    titulo: "Curso de Guardia de Seguridad (SPD)",
     cuestionarios: cuestionariosGuardiaOS10,
   },
 };

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import VolantinBadge from "./fiestas-patrias/VolantinBadge";
 
 export function CursoCard({
   slug,
@@ -20,9 +21,12 @@ export function CursoCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg relative"
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-apre-blue">
+        {/* Detalle Dieciochero en la esquina */}
+        <VolantinBadge />
+
         {image ? (
           <img
             src={image}
@@ -35,8 +39,8 @@ export function CursoCard({
           </div>
         )}
         {acreditado && (
-          <span className="absolute left-3 top-3 rounded-full bg-apre-red px-3 py-1 text-xs font-bold text-white">
-            OS-10
+          <span className="absolute left-3 top-3 rounded-full bg-apre-red px-3 py-1 text-xs font-bold text-white shadow-xs">
+            SPD
           </span>
         )}
       </div>

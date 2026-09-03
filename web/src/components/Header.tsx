@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { NAV_LINKS } from "@/data/site";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFiestasPatrias } from "@/lib/fiestasPatrias";
+import GuirnaldaDieciochera from "./fiestas-patrias/GuirnaldaDieciochera";
 import { Logo } from "./Logo";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { userData, loading, signOut } = useAuth();
+  const { isActive: isModo18, isClient } = useFiestasPatrias();
   const router = useRouter();
   const sesionActiva = !loading && !!userData;
 
@@ -18,13 +21,38 @@ export default function Header() {
     router.push("/login");
   };
 
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      const headerEl = document.getElementById("site-header");
+      if (headerEl) {
+        const height = Math.round(headerEl.getBoundingClientRect().height);
+        document.documentElement.style.setProperty("--header-total-height", `${height}px`);
+      }
+    };
+
+    updateHeaderHeight();
+
+    const headerEl = document.getElementById("site-header");
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && headerEl) {
+      ro = new ResizeObserver(updateHeaderHeight);
+      ro.observe(headerEl);
+    }
+
+    window.addEventListener("resize", updateHeaderHeight);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", updateHeaderHeight);
+    };
+  }, [isModo18, isClient, open]);
+
   const loginBtn = (
     <>
       {sesionActiva ? (
         <div className="flex items-center gap-2">
           <Link
             href="/panel"
-            className="flex items-center gap-1.5 rounded-lg bg-apre-blue px-3.5 py-2 text-sm font-bold text-white transition hover:bg-apre-blue-light shadow-sm"
+            className="flex items-center gap-1.5 rounded-lg bg-apre-blue px-3.5 py-2 text-sm font-bold text-white transition hover:bg-apre-blue-light shadow-sm whitespace-nowrap"
           >
             <span>👤</span>
             <span>Mi Panel</span>
@@ -54,25 +82,41 @@ export default function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur print:hidden">
-      {/* Barra de Anuncio Superior: Próximo Inicio 15 de Septiembre 2026 */}
-      <div className="bg-gradient-to-r from-apre-red via-red-600 to-apre-blue text-white py-2 px-4 text-xs font-bold shadow-xs">
+    <header id="site-header" className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur print:hidden">
+      {/* Barra de Anuncio Superior */}
+      <div
+        className="text-white py-2 px-4 text-xs font-bold shadow-md"
+        style={{
+          background:
+            isClient && isModo18
+              ? "linear-gradient(90deg, #002b66 0%, #004b99 30%, #d52b1e 70%, #990000 100%)"
+              : "linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #0e2a47 100%)",
+        }}
+      >
         <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-center sm:justify-between gap-2 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-yellow-300 animate-ping" />
-            <span className="rounded-md bg-black/25 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-yellow-300 border border-yellow-300/40">
-              PRÓXIMO INICIO
+            <span className="flex h-2 w-2 rounded-full bg-white animate-ping shrink-0" />
+            <span className="rounded-md bg-black/30 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-white border border-white/30 flex items-center gap-1 shrink-0">
+              <span>{isClient && isModo18 ? "ESPECIAL FIESTAS PATRIAS" : "PRÓXIMO INICIO"}</span>
             </span>
-            <span>
-              ¡Nuevo Curso Comienza el <strong className="underline decoration-yellow-300 decoration-2 font-black">15 de Septiembre del 2026</strong>!
+            <span className="text-white font-medium">
+              {isClient && isModo18 ? (
+                <>
+                  ¡Matrículas de Septiembre con <strong className="underline decoration-white decoration-2 font-black">Beneficio Dieciochero</strong>!
+                </>
+              ) : (
+                <>
+                  ¡Nuevo Curso Comienza el <strong className="underline decoration-white decoration-2 font-black">15 de Septiembre del 2026</strong>!
+                </>
+              )}
             </span>
-            <span className="hidden md:inline text-white/80 font-normal">
-              · Cupos Limitados (OS-10, CCTV y Supervisor)
+            <span className="hidden md:inline text-white/90 font-normal">
+              · Cupos Limitados (SPD, CCTV, Supervisor y Jefe de Seguridad)
             </span>
           </div>
           <Link
             href="/solicitar-acceso"
-            className="inline-flex items-center gap-1 rounded-full bg-white text-apre-red px-3 py-1 text-[11px] font-black hover:bg-yellow-300 hover:text-black transition shadow-xs"
+            className="inline-flex items-center gap-1 rounded-full bg-white text-apre-red px-3.5 py-1 text-[11px] font-black hover:bg-red-50 hover:text-red-700 transition shadow-sm"
           >
             <span>Inscribirme Ahora</span>
             <span>➔</span>
@@ -170,6 +214,9 @@ export default function Header() {
           </div>
         </nav>
       )}
+
+      {/* Guirnalda Dieciochera de Fiestas Patrias colgada bajo la barra */}
+      <GuirnaldaDieciochera />
     </header>
   );
 }

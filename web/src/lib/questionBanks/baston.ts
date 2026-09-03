@@ -395,16 +395,16 @@ export const BASTON_QUESTION_BANK: ExamQuestion[] = [
   {
     id: "b3_05",
     moduleTitle: "Módulo 3 — Uso de la Fuerza y Marco Legal",
-    question: "La autoridad fiscalizadora de la seguridad privada en Chile es:",
+    question: "El órgano rector y la autoridad fiscalizadora de la seguridad privada en Chile son:",
     options: [
-      "La PDI",
-      "La Prefectura de Seguridad Privada de Carabineros (OS-10)",
-      "El Ministerio del Trabajo",
-      "Los municipios",
+      "La PDI y el Ministerio Público",
+      "La Subsecretaría de Prevención del Delito (SPD) y Carabineros de Chile",
+      "El Ministerio del Trabajo y SENCE",
+      "Las municipalidades",
     ],
-    correctAnswer: "La Prefectura de Seguridad Privada de Carabineros (OS-10)",
+    correctAnswer: "La Subsecretaría de Prevención del Delito (SPD) y Carabineros de Chile",
     explicacion:
-      "La Ley N° 21.659 establece que la autoridad fiscalizadora de la seguridad privada es la Prefectura de Seguridad Privada de Carabineros de Chile (OS-10), con participación de la Subsecretaría de Prevención del Delito. La PDI cumple funciones de investigación penal, el Ministerio del Trabajo fiscaliza materias laborales y los municipios no tienen facultades de fiscalización sobre empresas y agentes de seguridad privada.",
+      "La Ley N° 21.659 establece a la Subsecretaría de Prevención del Delito (SPD) como órgano rector encargado de acreditar, autorizar y regular, y a Carabineros de Chile como la autoridad encargada de la fiscalización operativa en terreno y la toma de exámenes.",
   },
   {
     id: "b3_06",

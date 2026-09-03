@@ -119,17 +119,17 @@ export const bancoModulo12: BancoModulo = {
     {
       id: "m12_a9",
       pregunta:
-        "¿Cuál es el instrumento rector del evento y cómo se integran las directivas OS-10?",
+        "¿Cuál es el instrumento rector del evento y cómo se integran las directivas de funcionamiento?",
       opciones: [
-        "El Plan de Seguridad; las directivas de funcionamiento OS-10 se incluyen como anexos",
+        "El Plan de Seguridad; las directivas de funcionamiento se incluyen como anexos",
         "El contrato de arriendo del recinto",
         "El reglamento interno de la empresa de seguridad",
         "La autorización municipal",
       ],
       respuestaCorrecta:
-        "El Plan de Seguridad; las directivas de funcionamiento OS-10 se incluyen como anexos",
+        "El Plan de Seguridad; las directivas de funcionamiento se incluyen como anexos",
       explicacion:
-        "El Plan de Seguridad es el instrumento rector del evento, y las directivas de funcionamiento y autorizaciones OS-10 se incluyen como ANEXOS de ese plan. El contrato de arriendo, el reglamento interno de la empresa o la autorización municipal no cumplen esa función rectora.",
+        "El Plan de Seguridad es el instrumento rector del evento, y las directivas de funcionamiento y autorizaciones se incluyen como ANEXOS de ese plan conforme a la Ley 21.659. El contrato de arriendo, el reglamento interno de la empresa o la autorización municipal no cumplen esa función rectora.",
     },
     {
       id: "m12_a10",
@@ -255,10 +255,10 @@ export const bancoModulo12: BancoModulo = {
     {
       id: "m12_vf14",
       afirmacion:
-        "Las directivas de funcionamiento OS-10 se incluyen como anexos dentro del Plan de Seguridad.",
+        "Las directivas de funcionamiento autorizadas se incluyen como anexos dentro del Plan de Seguridad.",
       respuestaCorrecta: true,
       explicacion:
-        "Es VERDADERA: las directivas de funcionamiento y las autorizaciones OS-10 se incluyen como ANEXOS dentro del Plan de Seguridad.",
+        "Es VERDADERA: las directivas de funcionamiento y las autorizaciones de seguridad privada se incluyen como ANEXOS dentro del Plan de Seguridad.",
     },
     {
       id: "m12_vf15",

@@ -42,6 +42,8 @@ import {
   getMeetingIdAndPwd,
   getZoomCredentials,
 } from "@/lib/zoomWeb";
+import { useFiestasPatrias } from "@/lib/fiestasPatrias";
+import AdminFiestasPatriasTab from "@/components/admin/AdminFiestasPatriasTab";
 
 type Tab =
   | "pendientes"
@@ -61,20 +63,32 @@ type Tab =
   | "reportes"
   | "pagos"
   | "contacto"
-  | "auditoria";
+  | "auditoria"
+  | "fiestasPatrias"
+  | `curso:${string}`;
 
-const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: string }[] }[] = [
+const NAV_GROUPS: {
+  section: string;
+  items: { id: Tab; label: string; emoji: string; slug?: string }[];
+}[] = [
   {
-    section: "Solicitudes",
+    section: "SOLICITUDES",
     items: [
-      { id: "pendientes", label: "Pendientes por Curso", emoji: "📋" },
-      { id: "historial", label: "Historial", emoji: "📁" },
+      { id: "pendientes", label: "Nuevos Registros (Global)", emoji: "📋" },
+      { id: "historial", label: "Historial de Solicitudes", emoji: "📁" },
     ],
   },
   {
-    section: "Cursos y Convocatorias",
+    section: "USUARIOS",
     items: [
-      { id: "cohortes", label: "Grupos por Fecha (Convocatorias)", emoji: "🗓️" },
+      { id: "alumnos", label: "Todos los Alumnos", emoji: "👨‍🎓" },
+      { id: "profesores", label: "Profesores", emoji: "🧑‍🏫" },
+    ],
+  },
+  {
+    section: "CURSOS Y CONVOCATORIAS",
+    items: [
+      { id: "cohortes", label: "Grupos por Fecha (Convocatorias)", emoji: "📅" },
       { id: "seguimiento", label: "Seguimiento y Días", emoji: "⏱️" },
       { id: "aprobados", label: "Alumnos Aprobados", emoji: "🎓" },
       { id: "cursos-gestion", label: "Gestión y Matrículas", emoji: "📚" },
@@ -83,34 +97,142 @@ const NAV_GROUPS: { section: string; items: { id: Tab; label: string; emoji: str
     ],
   },
   {
-    section: "Usuarios",
+    section: "CLASES ZOOM",
     items: [
-      { id: "alumnos", label: "Todos los Alumnos", emoji: "👨‍🎓" },
-      { id: "profesores", label: "Profesores", emoji: "👔" },
-    ],
-  },
-  {
-    section: "Clases y Grabaciones",
-    items: [
-      { id: "clases", label: "Clases en Vivo (Admin)", emoji: "🔴" },
+      { id: "clases", label: "Clases en Vivo", emoji: "🔴" },
+      { id: "clases-grabadas", label: "Historial Grabaciones", emoji: "📚" },
       { id: "reuniones", label: "Reuniones Zoom (API)", emoji: "🔁" },
       { id: "zoom-grabaciones", label: "Grabaciones Zoom (Nube)", emoji: "📥" },
-      { id: "clases-grabadas", label: "Clases Grabadas (YouTube)", emoji: "📹" },
     ],
   },
   {
-    section: "Reportes",
-    items: [{ id: "reportes", label: "Notas y Evaluaciones", emoji: "📊" }],
+    section: "CURSO: GUARDIA DE SEGURIDAD (OS-10)",
+    items: [
+      { id: "curso:guardia-de-seguridad:pendientes", label: "Solicitudes OS-10", emoji: "📝", slug: "guardia-de-seguridad" },
+      { id: "curso:guardia-de-seguridad:cursando", label: "Alumnos Cursando OS-10", emoji: "🛡️", slug: "guardia-de-seguridad" },
+      { id: "curso:guardia-de-seguridad:titulados", label: "Aprobados OS-10", emoji: "🎓", slug: "guardia-de-seguridad" },
+    ],
   },
   {
-    section: "Gestión",
+    section: "CURSO: OPERADOR CCTV Y ALARMAS",
     items: [
-      { id: "contacto", label: "Contacto", emoji: "✉️" },
-      { id: "auditoria", label: "Auditoría", emoji: "🛡️" },
+      { id: "curso:operador-cctv-y-alarmas:pendientes", label: "Solicitudes CCTV", emoji: "📝", slug: "operador-cctv-y-alarmas" },
+      { id: "curso:operador-cctv-y-alarmas:cursando", label: "Progreso CCTV", emoji: "🎥", slug: "operador-cctv-y-alarmas" },
+      { id: "curso:operador-cctv-y-alarmas:titulados", label: "Aprobados CCTV", emoji: "🎓", slug: "operador-cctv-y-alarmas" },
+    ],
+  },
+  {
+    section: "CURSO: BASTÓN Y ESPOSAS (10 HRS)",
+    items: [
+      { id: "curso:baston-y-esposas:pendientes", label: "Solicitudes Bastón", emoji: "📝", slug: "baston-y-esposas" },
+      { id: "curso:baston-y-esposas:cursando", label: "Progreso Bastón", emoji: "🥋", slug: "baston-y-esposas" },
+      { id: "curso:baston-y-esposas:titulados", label: "Pauta Bastón (Aprobados)", emoji: "📋", slug: "baston-y-esposas" },
+    ],
+  },
+  {
+    section: "CURSO: SUPERVISOR DE SEGURIDAD",
+    items: [
+      { id: "curso:supervisor-de-seguridad:pendientes", label: "Solicitudes Supervisor", emoji: "📝", slug: "supervisor-de-seguridad" },
+      { id: "curso:supervisor-de-seguridad:cursando", label: "Progreso Supervisor", emoji: "🎖️", slug: "supervisor-de-seguridad" },
+      { id: "curso:supervisor-de-seguridad:titulados", label: "Aprobados Supervisor", emoji: "🎓", slug: "supervisor-de-seguridad" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: GRÚA HORQUILLA",
+    items: [
+      { id: "curso:grua-horquilla:pendientes", label: "Solicitudes Grúa Horquilla", emoji: "📝", slug: "grua-horquilla" },
+      { id: "curso:grua-horquilla:cursando", label: "Progreso Grúa Horquilla", emoji: "🚜", slug: "grua-horquilla" },
+      { id: "curso:grua-horquilla:titulados", label: "Aprobados Grúa Horquilla", emoji: "🎓", slug: "grua-horquilla" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: TRABAJO EN ALTURA",
+    items: [
+      { id: "curso:trabajo-en-altura:pendientes", label: "Solicitudes Trabajo Altura", emoji: "📝", slug: "trabajo-en-altura" },
+      { id: "curso:trabajo-en-altura:cursando", label: "Progreso Trabajo Altura", emoji: "🪜", slug: "trabajo-en-altura" },
+      { id: "curso:trabajo-en-altura:titulados", label: "Aprobados Trabajo Altura", emoji: "🎓", slug: "trabajo-en-altura" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: SUSTANCIAS PELIGROSAS",
+    items: [
+      { id: "curso:manejo-de-sustancias-peligrosas:pendientes", label: "Solicitudes Sust. Peligrosas", emoji: "📝", slug: "manejo-de-sustancias-peligrosas" },
+      { id: "curso:manejo-de-sustancias-peligrosas:cursando", label: "Progreso Sust. Peligrosas", emoji: "☣️", slug: "manejo-de-sustancias-peligrosas" },
+      { id: "curso:manejo-de-sustancias-peligrosas:titulados", label: "Aprobados Sust. Peligrosas", emoji: "🎓", slug: "manejo-de-sustancias-peligrosas" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: ALFABETIZACIÓN DIGITAL",
+    items: [
+      { id: "curso:alfabetizacion-digital:pendientes", label: "Solicitudes Alf. Digital", emoji: "📝", slug: "alfabetizacion-digital" },
+      { id: "curso:alfabetizacion-digital:cursando", label: "Progreso Alf. Digital", emoji: "💻", slug: "alfabetizacion-digital" },
+      { id: "curso:alfabetizacion-digital:titulados", label: "Aprobados Alf. Digital", emoji: "🎓", slug: "alfabetizacion-digital" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: AUTOCUIDADO Y ESTRÉS",
+    items: [
+      { id: "curso:tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia:pendientes", label: "Solicitudes Autocuidado", emoji: "📝", slug: "tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia" },
+      { id: "curso:tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia:cursando", label: "Progreso Autocuidado", emoji: "🧘", slug: "tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia" },
+      { id: "curso:tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia:titulados", label: "Aprobados Autocuidado", emoji: "🎓", slug: "tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: LIDERAZGO EFECTIVO",
+    items: [
+      { id: "curso:tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas:pendientes", label: "Solicitudes Liderazgo", emoji: "📝", slug: "tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas" },
+      { id: "curso:tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas:cursando", label: "Progreso Liderazgo", emoji: "🤝", slug: "tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas" },
+      { id: "curso:tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas:titulados", label: "Aprobados Liderazgo", emoji: "🎓", slug: "tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: ESPACIOS CONFINADOS",
+    items: [
+      { id: "curso:trabajo-en-espacios-confinados:pendientes", label: "Solicitudes Espacios Confinados", emoji: "📝", slug: "trabajo-en-espacios-confinados" },
+      { id: "curso:trabajo-en-espacios-confinados:cursando", label: "Progreso Espacios Confinados", emoji: "🕳️", slug: "trabajo-en-espacios-confinados" },
+      { id: "curso:trabajo-en-espacios-confinados:titulados", label: "Aprobados Espacios Confinados", emoji: "🎓", slug: "trabajo-en-espacios-confinados" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: BUEN TRATO LABORAL",
+    items: [
+      { id: "curso:gestion-y-promocion-del-buen-trato:pendientes", label: "Solicitudes Buen Trato", emoji: "📝", slug: "gestion-y-promocion-del-buen-trato" },
+      { id: "curso:gestion-y-promocion-del-buen-trato:cursando", label: "Progreso Buen Trato", emoji: "🏢", slug: "gestion-y-promocion-del-buen-trato" },
+      { id: "curso:gestion-y-promocion-del-buen-trato:titulados", label: "Aprobados Buen Trato", emoji: "🎓", slug: "gestion-y-promocion-del-buen-trato" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: CALDERAS DE VAPOR",
+    items: [
+      { id: "curso:operador-de-calderas-y-generadores-de-vapor:pendientes", label: "Solicitudes Calderas", emoji: "📝", slug: "operador-de-calderas-y-generadores-de-vapor" },
+      { id: "curso:operador-de-calderas-y-generadores-de-vapor:cursando", label: "Progreso Calderas", emoji: "🔥", slug: "operador-de-calderas-y-generadores-de-vapor" },
+      { id: "curso:operador-de-calderas-y-generadores-de-vapor:titulados", label: "Aprobados Calderas", emoji: "🎓", slug: "operador-de-calderas-y-generadores-de-vapor" },
+    ],
+  },
+  {
+    section: "CURSO OTEC: NOCHERO Y RONDÍN",
+    items: [
+      { id: "curso:guardia-nochero-rondin-portero:pendientes", label: "Solicitudes Nochero y Rondín", emoji: "📝", slug: "guardia-nochero-rondin-portero" },
+      { id: "curso:guardia-nochero-rondin-portero:cursando", label: "Progreso Nochero y Rondín", emoji: "🚪", slug: "guardia-nochero-rondin-portero" },
+      { id: "curso:guardia-nochero-rondin-portero:titulados", label: "Aprobados Nochero y Rondín", emoji: "🎓", slug: "guardia-nochero-rondin-portero" },
+    ],
+  },
+  {
+    section: "REPORTES & CALIFICACIONES",
+    items: [
+      { id: "reportes", label: "Reportes Asistencia y Notas", emoji: "📊" },
+      { id: "seguimiento", label: "Descargar Notas y % (Excel)", emoji: "📈" },
+    ],
+  },
+  {
+    section: "HERRAMIENTAS APRECAP",
+    items: [
+      { id: "diplomas", label: "Generar Certificados y Diplomas", emoji: "🎓" },
+      { id: "contacto", label: "Contacto y Consultas", emoji: "✉️" },
+      { id: "fiestasPatrias", label: "Modo Fiestas Patrias", emoji: "🎏" },
     ],
   },
 ];
-
 
 const CURSOS_PLATAFORMA = cursosOtec.filter((c) =>
   [
@@ -143,8 +265,9 @@ function useCount(coleccion: string, campo?: string, valor?: string) {
 
 export default function PanelAdmin() {
   const { userData, loading, signOut } = useAuth();
+  const { isActive: isModo18 } = useFiestasPatrias();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("pendientes");
+  const [tab, setTab] = useState<Tab>("curso:guardia-de-seguridad:cursando");
   const [diplomaPreselect, setDiplomaPreselect] = useState<{
     uid?: string;
     nombre?: string;
@@ -155,6 +278,30 @@ export default function PanelAdmin() {
     titulo?: string;
     fecha?: string;
   } | null>(null);
+  const [menuMobileAbierto, setMenuMobileAbierto] = useState(false);
+
+  const [solicitudesPendientes, setSolicitudesPendientes] = useState<any[]>([]);
+  const [usuariosPendientes, setUsuariosPendientes] = useState<any[]>([]);
+  const [enrollmentsList, setEnrollmentsList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const db = getFirestoreDb();
+    if (!db) return;
+    const un1 = onSnapshot(query(collection(db, "solicitudes"), where("estado", "==", "pendiente")), (snap) => {
+      setSolicitudesPendientes(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    const un2 = onSnapshot(query(collection(db, "usuarios"), where("rol", "==", "alumno")), (snap) => {
+      setUsuariosPendientes(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    const un3 = onSnapshot(collection(db, "enrollments"), (snap) => {
+      setEnrollmentsList(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => {
+      un1();
+      un2();
+      un3();
+    };
+  }, []);
 
   const pendientesCount = useCount("solicitudes", "estado", "pendiente");
   const alumnosCount = useCount("usuarios", "rol", "alumno");
@@ -175,25 +322,91 @@ export default function PanelAdmin() {
 
   if (loading || !userData) return <p className="p-8 text-center text-gray-500">Cargando…</p>;
 
-  const badgeDe = (id: Tab): number | null => {
+  const badgeDe = (id: Tab): { val: number | string; variant: "yellow" | "blue" | "red" } | null => {
+    if (id.startsWith("curso:")) {
+      const parts = id.split(":");
+      const slug = parts[1];
+      const sub = parts[2] || "cursando";
+
+      if (sub === "pendientes") {
+        const countSol = solicitudesPendientes.filter(
+          (s) =>
+            s.cursoDeseado === slug ||
+            (Array.isArray(s.cursosDeseados) && s.cursosDeseados.includes(slug))
+        ).length;
+        const fieldKey = getCourseFieldKey(slug);
+        const userEmailsInSol = new Set(
+          solicitudesPendientes
+            .filter(
+              (s) =>
+                s.cursoDeseado === slug ||
+                (Array.isArray(s.cursosDeseados) && s.cursosDeseados.includes(slug))
+            )
+            .map((s) => (s.email || "").toLowerCase())
+        );
+        const extraUsers = usuariosPendientes.filter(
+          (u) => u[fieldKey] === "pendiente" && !userEmailsInSol.has((u.email || "").toLowerCase())
+        ).length;
+        const total = countSol + extraUsers;
+        return total > 0 ? { val: total, variant: "yellow" } : null;
+      }
+
+      if (sub === "cursando") {
+        const fieldKey = getCourseFieldKey(slug);
+        const enrolledUids = new Set(
+          enrollmentsList.filter((e) => e.courseSlug === slug).map((e) => e.uid)
+        );
+        usuariosPendientes.forEach((u) => {
+          if (u[fieldKey] === "aceptado") {
+            enrolledUids.add(u.id || u.uid);
+          }
+        });
+        const total = enrolledUids.size;
+        return total > 0 ? { val: total, variant: "blue" } : null;
+      }
+
+      return null;
+    }
+
     switch (id) {
       case "pendientes":
-        return pendientesCount;
+        return pendientesCount ? { val: pendientesCount, variant: "yellow" } : null;
       case "alumnos":
-        return alumnosCount;
+        return alumnosCount ? { val: alumnosCount, variant: "blue" } : null;
       case "profesores":
-        return profesoresCount;
+        return profesoresCount ? { val: profesoresCount, variant: "blue" } : null;
       case "clases":
-        return clasesActivasCount;
+        return clasesActivasCount ? { val: clasesActivasCount, variant: "red" } : null;
       case "clases-grabadas":
-        return clasesGrabadasCount;
+        return clasesGrabadasCount ? { val: clasesGrabadasCount, variant: "blue" } : null;
+      case "fiestasPatrias":
+        return isModo18 ? { val: "ON", variant: "red" } : null;
       default:
         return null;
     }
   };
 
-
-  const tituloTab = NAV_GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
+  const tituloTab =
+    NAV_GROUPS.flatMap((g) => g.items).find((i) => i.id === tab) ||
+    (tab.startsWith("curso:")
+      ? (() => {
+          const parts = tab.split(":");
+          const slug = parts[1];
+          const sub = parts[2];
+          const c = CURSOS_LISTA.find((x) => x.slug === slug);
+          const subLabel =
+            sub === "pendientes"
+              ? "Solicitudes Pendientes"
+              : sub === "titulados"
+              ? "Aprobados y Evaluaciones"
+              : "Alumnos Cursando y Progreso";
+          return {
+            id: tab,
+            label: c ? `${c.nombre} · ${subLabel}` : "Gestión de Curso",
+            emoji: c ? c.icono : "📚",
+          };
+        })()
+      : { id: tab, label: "Panel de Control", emoji: "🛡️" });
 
   const irADiplomaAprobado = (datos: { uid: string; nombre: string; rut: string; cursoSlug: string }) => {
     setDiplomaPreselect(datos);
@@ -203,20 +416,163 @@ export default function PanelAdmin() {
   return (
     <>
       <div className="flex min-h-screen flex-col lg:flex-row">
-        {/* Sidebar izquierda estilo sarmat */}
-        <aside className="w-full shrink-0 border-b border-apre-blue-light bg-apre-blue lg:fixed lg:bottom-0 lg:left-0 lg:top-20 lg:z-40 lg:flex lg:w-[280px] lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r print:hidden">
-          <div className="border-b border-white/10 p-4">
-            <p className="text-sm font-black text-white">🛡️ Panel de Administración</p>
-            <p className="text-xs text-white/60">OTEC APRECAP</p>
+        {/* Barra Rápida Móvil (Celulares y Tablets) */}
+        <div className="sticky top-[var(--header-total-height,130px)] z-20 flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-2.5 shadow-xs lg:hidden print:hidden">
+          <button
+            type="button"
+            onClick={() => setMenuMobileAbierto(true)}
+            className="flex items-center gap-2 rounded-xl bg-apre-blue px-3.5 py-2 text-xs font-black text-white shadow-xs active:scale-95 transition cursor-pointer"
+          >
+            <span>☰</span>
+            <span>Ver Secciones y Cursos</span>
+            <span className="rounded-full bg-apre-red px-1.5 py-0.2 text-[10px] font-black text-white">
+              {NAV_GROUPS.reduce((acc, g) => acc + g.items.length, 0)}
+            </span>
+          </button>
+          <div className="flex items-center gap-1.5 truncate text-xs font-extrabold text-apre-blue max-w-[50%]">
+            <span className="shrink-0">{tituloTab?.emoji}</span>
+            <span className="truncate">{tituloTab?.label}</span>
+          </div>
+        </div>
+
+        {/* Drawer Lateral Off-Canvas para Celulares */}
+        {menuMobileAbierto && (
+          <div className="fixed inset-0 z-50 flex lg:hidden print:hidden">
+            {/* Backdrop oscuro */}
+            <div
+              className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity"
+              onClick={() => setMenuMobileAbierto(false)}
+            />
+
+            {/* Panel Deslizable */}
+            <div className="relative z-10 flex w-[320px] max-w-[85vw] flex-col bg-apre-blue shadow-2xl animate-in slide-in-from-left duration-200">
+              <div className="flex items-center justify-between border-b border-white/10 p-4 bg-[#00223a] shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🛡️</span>
+                  <div>
+                    <p className="text-sm font-black text-white">Panel de Administración</p>
+                    <p className="text-xs text-white/60 font-medium">OTEC APRECAP</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMenuMobileAbierto(false)}
+                  className="rounded-lg p-2 text-white/80 hover:bg-white/10 hover:text-white text-lg font-bold cursor-pointer"
+                  aria-label="Cerrar menú"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Lista con scroll táctil en móvil */}
+              <nav
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "rgba(255,255,255,0.4) rgba(0,0,0,0.2)",
+                }}
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 space-y-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-white/30"
+              >
+                {NAV_GROUPS.map((g) => (
+                  <div key={g.section} className="border-b border-white/5 pb-2.5 last:border-b-0">
+                    <p className="px-3 pt-2 pb-1 text-[10.5px] font-black uppercase tracking-wider text-white/60">
+                      {g.section}
+                    </p>
+                    <div className="space-y-0.5">
+                      {g.items.map((i) => {
+                        const active = tab === i.id;
+                        const badge = badgeDe(i.id);
+                        return (
+                          <button
+                            key={i.id}
+                            onClick={() => {
+                              setTab(i.id);
+                              setMenuMobileAbierto(false);
+                            }}
+                            className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-semibold transition cursor-pointer ${
+                              active
+                                ? "bg-white/15 text-white font-black border-l-4 border-apre-red shadow-xs"
+                                : "border-l-4 border-transparent text-white/80 hover:bg-white/10 hover:text-white"
+                            }`}
+                          >
+                            <span className="truncate flex items-center gap-2">
+                              <span className="text-base shrink-0">{i.emoji}</span>
+                              <span className="truncate">{i.label}</span>
+                            </span>
+                            {badge !== null && (
+                              <span
+                                className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-black min-w-[20px] text-center shadow-xs ${
+                                  badge.variant === "yellow"
+                                    ? "bg-amber-400 text-slate-950 font-black"
+                                    : badge.variant === "red"
+                                    ? "bg-apre-red text-white animate-pulse"
+                                    : "bg-white/20 text-white font-bold border border-white/20"
+                                }`}
+                              >
+                                {badge.val}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </nav>
+
+              <div className="border-t border-white/10 p-3.5 bg-[#00223a] shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{userData.rol === "superadmin" ? "👑" : "🛡️"}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-bold text-white">{userData.nombre}</p>
+                    <p className="truncate text-[11px] text-white/60">{userData.email}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-xl bg-red-600/90 px-3 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-600 cursor-pointer"
+                >
+                  <span>🚪</span>
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sidebar Desktop fijo con deslizador/scrollbar siempre visible y operable */}
+        <aside
+          style={{
+            top: "var(--header-total-height, 130px)",
+            height: "calc(100vh - var(--header-total-height, 130px))",
+          }}
+          className="hidden lg:flex lg:w-[280px] shrink-0 border-r border-white/10 bg-apre-blue lg:fixed lg:left-0 lg:z-30 flex-col print:hidden shadow-md"
+        >
+          {/* Header fijo del sidebar */}
+          <div className="border-b border-white/10 p-4 shrink-0 bg-[#00223a]">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🛡️</span>
+              <div>
+                <p className="text-sm font-black text-white">Panel de Administración</p>
+                <p className="text-xs text-white/60 font-medium">OTEC APRECAP</p>
+              </div>
+            </div>
           </div>
 
-          <nav className="flex-1 space-y-5 p-3">
+          {/* Lista de navegación con deslizador/scrollbar nativo y estilizado */}
+          <nav
+            style={{
+              scrollbarWidth: "thin",
+              scrollbarColor: "rgba(255,255,255,0.45) rgba(0,0,0,0.25)",
+            }}
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-2.5 space-y-4 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-white/35 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/60"
+          >
             {NAV_GROUPS.map((g) => (
-              <div key={g.section}>
-                <p className="px-3 pb-1 text-[10px] font-black uppercase tracking-widest text-white/40">
+              <div key={g.section} className="border-b border-white/5 pb-2.5 last:border-b-0">
+                <p className="px-3 pt-2 pb-1 text-[10.5px] font-black uppercase tracking-wider text-white/60">
                   {g.section}
                 </p>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {g.items.map((i) => {
                     const active = tab === i.id;
                     const badge = badgeDe(i.id);
@@ -224,18 +580,27 @@ export default function PanelAdmin() {
                       <button
                         key={i.id}
                         onClick={() => setTab(i.id)}
-                        className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
+                        className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold transition cursor-pointer ${
                           active
-                            ? "border-l-4 border-[#c9a227] bg-white/10 text-white"
-                            : "border-l-4 border-transparent text-white/75 hover:bg-white/10 hover:text-white"
+                            ? "bg-white/15 text-white font-black border-l-4 border-apre-red shadow-xs"
+                            : "border-l-4 border-transparent text-white/80 hover:bg-white/10 hover:text-white"
                         }`}
                       >
-                        <span className="truncate">
-                          {i.emoji} {i.label}
+                        <span className="truncate flex items-center gap-2">
+                          <span className="text-sm shrink-0">{i.emoji}</span>
+                          <span className="truncate">{i.label}</span>
                         </span>
                         {badge !== null && (
-                          <span className="shrink-0 rounded-full bg-[#c9a227] px-2 py-0.5 text-[10px] font-black text-apre-blue">
-                            {badge}
+                          <span
+                            className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-black min-w-[22px] text-center shadow-xs ${
+                              badge.variant === "yellow"
+                                ? "bg-amber-400 text-slate-950 font-black"
+                                : badge.variant === "red"
+                                ? "bg-apre-red text-white animate-pulse"
+                                : "bg-white/20 text-white font-bold border border-white/20"
+                            }`}
+                          >
+                            {badge.val}
                           </span>
                         )}
                       </button>
@@ -246,7 +611,8 @@ export default function PanelAdmin() {
             ))}
           </nav>
 
-          <div className="border-t border-white/10 p-4">
+          {/* Footer fijo del sidebar */}
+          <div className="border-t border-white/10 p-3.5 shrink-0 bg-[#00223a]">
             <div className="flex items-center gap-2">
               <span className="text-xl">{userData.rol === "superadmin" ? "👑" : "🛡️"}</span>
               <div className="min-w-0 flex-1">
@@ -260,7 +626,7 @@ export default function PanelAdmin() {
             <button
               type="button"
               onClick={handleLogout}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-red-600/90 px-3 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-600 hover:shadow"
+              className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-xl bg-red-600/90 px-3 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-600 hover:shadow cursor-pointer"
             >
               <span>🚪</span>
               <span>Cerrar Sesión</span>
@@ -300,9 +666,23 @@ export default function PanelAdmin() {
             {tab === "historial" && <HistorialTab />}
             {tab === "cohortes" && <CohortesTab />}
             {tab === "seguimiento" && <SeguimientoTab onEmitirDiploma={irADiplomaAprobado} />}
-            {tab === "aprobados" && <AprobadosTab onEmitirDiploma={irADiplomaAprobado} />}
-            {tab === "cursos-explorar" && <CursosExplorarTab onIrAGestion={() => setTab("cursos-gestion")} />}
-            {tab === "cursos-gestion" && <CursosGestionTab onEmitirDiploma={irADiplomaAprobado} />}
+            {tab === "cursos-explorar" && (
+              <CursosExplorarTab
+                onIrAGestion={(slug) => (slug ? setTab(`curso:${slug}:cursando`) : setTab("cursos-gestion"))}
+              />
+            )}
+            {(tab.startsWith("curso:") || tab === "cursos-gestion") && (
+              <CursosGestionTab
+                cursoInicialSlug={tab.startsWith("curso:") ? tab.split(":")[1] : undefined}
+                subTabInicial={
+                  tab.startsWith("curso:") && tab.split(":")[2]
+                    ? (tab.split(":")[2] as "cursando" | "pendientes" | "titulados")
+                    : undefined
+                }
+                onEmitirDiploma={irADiplomaAprobado}
+                onSeleccionarCurso={(slug) => setTab(`curso:${slug}:cursando`)}
+              />
+            )}
             {tab === "alumnos" && <UsuariosTab filtroRol="alumno" />}
             {tab === "profesores" && <UsuariosTab filtroRol="profesor" />}
             {tab === "clases" && (
@@ -328,6 +708,7 @@ export default function PanelAdmin() {
             {tab === "pagos" && <PagosTab />}
             {tab === "contacto" && <ContactoTab />}
             {tab === "auditoria" && <AuditoriaTab />}
+            {tab === "fiestasPatrias" && <AdminFiestasPatriasTab />}
 
           </div>
         </main>
@@ -1465,17 +1846,35 @@ function ControlCuestionariosOS10Card() {
 }
 
 /* ---------- Explorar Cursos Desbloqueados (Vista Administrador) ---------- */
-function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
-  const cursosDetallados = [
+function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: (slug?: string) => void }) {
+  const [filtroCategoria, setFiltroCategoria] = useState<"todos" | "seguridad" | "otec">("todos");
+  const [busqueda, setBusqueda] = useState<string>("");
+
+  const cursosDetallados: {
+    slug: string;
+    nombre: string;
+    shortName: string;
+    horas: string;
+    icono: string;
+    categoria: "seguridad" | "otec";
+    descripcion: string;
+    subTextoModulos: string;
+    aulaUrl: string;
+    examenUrl?: string | null;
+    examenNombre?: string;
+    cuestionariosUrl?: string | null;
+  }[] = [
+    // --- Seguridad Privada (SPD) ---
     {
       slug: "guardia-de-seguridad",
       nombre: "Curso Guardia de Seguridad (OS-10)",
       shortName: "Guardia OS-10",
       horas: "90 hrs",
       icono: "🛡️",
-      descripcion: "Formación integral para guardias de seguridad privada acreditados ante Carabineros de Chile (OS-10). Incluye 14 módulos teóricos, videos temáticos y cuestionarios.",
-      modulosCount: 14,
+      categoria: "seguridad",
+      descripcion: "Formación integral para guardias de seguridad privada acreditados ante Carabineros de Chile (OS-10). Incluye 14 módulos teóricos, videos temáticos y cuestionarios oficiales.",
       subTextoModulos: "14 Módulos interactivos",
+      aulaUrl: "/materiales/guardia-de-seguridad",
       examenUrl: "/evaluaciones/guardia-de-seguridad",
       examenNombre: "📝 Examen Final OS-10 (140 V/F)",
       cuestionariosUrl: "/cuestionarios/guardia-de-seguridad",
@@ -1486,9 +1885,10 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
       shortName: "Operador CCTV",
       horas: "40 hrs",
       icono: "📹",
+      categoria: "seguridad",
       descripcion: "Capacitación en software de monitoreo, videograbación, protocolos ante incidentes y normativa legal para centrales de monitoreo CCTV y alarmas.",
-      modulosCount: 8,
       subTextoModulos: "8 Módulos interactivos",
+      aulaUrl: "/materiales/operador-cctv-y-alarmas",
       examenUrl: "/evaluaciones/operador-cctv-y-alarmas",
       examenNombre: "📝 Examen Final CCTV (60 Preguntas)",
       cuestionariosUrl: null,
@@ -1497,11 +1897,12 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
       slug: "baston-y-esposas",
       nombre: "Curso Bastón y Esposas",
       shortName: "Bastón y Esposas",
-      horas: "8 hrs",
+      horas: "10 hrs",
       icono: "🥋",
+      categoria: "seguridad",
       descripcion: "Técnicas de defensa personal policial, comunicación persuasiva, palancas, torsiones, uso legal de la fuerza, bastón retráctil y grilletes de seguridad.",
-      modulosCount: 4,
       subTextoModulos: "11 Submódulos temáticos",
+      aulaUrl: "/materiales/baston-y-esposas",
       examenUrl: "/evaluaciones/baston-y-esposas",
       examenNombre: "📝 Examen Final Bastón (20 Preguntas)",
       cuestionariosUrl: null,
@@ -1512,14 +1913,170 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
       shortName: "Supervisor de Seguridad",
       horas: "140 hrs",
       icono: "⭐",
-      descripcion: "Especialización para jefaturas de turno y supervisores. Gestión de riesgos, legislación laboral y de seguridad privada, liderazgo de equipos e informes.",
-      modulosCount: 6,
+      categoria: "seguridad",
+      descripcion: "Especialización para jefaturas de turno y supervisores. Gestión de riesgos, legislación laboral y de seguridad privada, liderazgo de equipos e informes de novedades.",
       subTextoModulos: "6 Módulos interactivos",
+      aulaUrl: "/materiales/supervisor-de-seguridad",
       examenUrl: "/evaluaciones/supervisor-de-seguridad",
       examenNombre: "📝 Examen Final Supervisor (60 Preguntas)",
       cuestionariosUrl: null,
     },
+
+    // --- Cursos OTEC (Capacitación Laboral) ---
+    {
+      slug: "grua-horquilla",
+      nombre: "Operación Segura de Grúa Horquilla",
+      shortName: "Grúa Horquilla",
+      horas: "30 hrs",
+      icono: "🚜",
+      categoria: "otec",
+      descripcion: "Procedimientos operacionales, mantención preventiva, inspección pre-uso, conducción segura y prevención de riesgos laborales con maquinaria de carga.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/grua-horquilla",
+      examenUrl: "/cursos-otec/grua-horquilla#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Grúa Horquilla",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "trabajo-en-altura",
+      nombre: "Técnicas de Trabajo Seguro en Altura",
+      shortName: "Trabajo en Altura",
+      horas: "24 hrs",
+      icono: "🪜",
+      categoria: "otec",
+      descripcion: "Uso de sistemas personales de detención de caídas (SPDC), arnés de cuerpo completo, líneas de vida, anclajes estructurales y protocolos de rescate.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/trabajo-en-altura",
+      examenUrl: "/cursos-otec/trabajo-en-altura#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Trabajo en Altura",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "manejo-de-sustancias-peligrosas",
+      nombre: "Manejo Seguro de Sustancias Peligrosas (SUSPEL)",
+      shortName: "Sustancias Peligrosas",
+      horas: "30 hrs",
+      icono: "☣️",
+      categoria: "otec",
+      descripcion: "Clasificación de productos químicos según DS 43 y NCh 382, hojas de datos de seguridad (HDS), almacenamiento seguro, etiquetado y respuesta ante derrames.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/manejo-de-sustancias-peligrosas",
+      examenUrl: "/cursos-otec/manejo-de-sustancias-peligrosas#evaluacion",
+      examenNombre: "📝 Evaluación Oficial SUSPEL",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "alfabetizacion-digital",
+      nombre: "Alfabetización Digital y Ofimática Laboral",
+      shortName: "Alfabetización Digital",
+      horas: "40 hrs",
+      icono: "💻",
+      categoria: "otec",
+      descripcion: "Dominio de herramientas informáticas, procesadores de texto, hojas de cálculo, correo electrónico y navegación segura en entornos laborales.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/alfabetizacion-digital",
+      examenUrl: "/cursos-otec/alfabetizacion-digital#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Alfabetización Digital",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia",
+      nombre: "Técnicas de Autocuidado y Manejo de Estrés",
+      shortName: "Autocuidado y Estrés",
+      horas: "20 hrs",
+      icono: "🧘",
+      categoria: "otec",
+      descripcion: "Estrategias de regulación emocional, prevención del burnout, respiración y resiliencia en puestos de trabajo de alta demanda operativa.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia",
+      examenUrl: "/cursos-otec/tecnicas-de-autocuidado-y-manejo-de-estres-en-contextos-laborales-de-alta-exigencia#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Autocuidado",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas",
+      nombre: "Técnicas de Liderazgo Efectivo y Trabajo en Equipo",
+      shortName: "Liderazgo Efectivo",
+      horas: "24 hrs",
+      icono: "🤝",
+      categoria: "otec",
+      descripcion: "Desarrollo de habilidades directivas, comunicación asertiva, motivación, resolución de conflictos y coordinación de equipos de alto rendimiento.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas",
+      examenUrl: "/cursos-otec/tecnicas-de-liderazgo-efectivo-para-el-trabajo-en-equipo-y-gestion-de-personas#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Liderazgo",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "trabajo-en-espacios-confinados",
+      nombre: "Seguridad y Trabajo en Espacios Confinados",
+      shortName: "Espacios Confinados",
+      horas: "16 hrs",
+      icono: "🕳️",
+      categoria: "otec",
+      descripcion: "Reconocimiento de atmósferas peligrosas, medición de oxígeno y gases tóxicos, ventilación forzada, permisos de trabajo y planes de evacuación.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/trabajo-en-espacios-confinados",
+      examenUrl: "/cursos-otec/trabajo-en-espacios-confinados#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Espacios Confinados",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "gestion-y-promocion-del-buen-trato",
+      nombre: "Gestión y Promoción del Buen Trato Laboral",
+      shortName: "Buen Trato Laboral",
+      horas: "16 hrs",
+      icono: "🏢",
+      categoria: "otec",
+      descripcion: "Aplicación del marco de la Ley Karin, protocolos de prevención frente al acoso laboral y sexual, fomento del clima organizacional saludable y respeto interpersonal.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/gestion-y-promocion-del-buen-trato",
+      examenUrl: "/cursos-otec/gestion-y-promocion-del-buen-trato#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Buen Trato",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "operador-de-calderas-y-generadores-de-vapor",
+      nombre: "Operador de Calderas y Generadores de Vapor",
+      shortName: "Calderas de Vapor",
+      horas: "40 hrs",
+      icono: "🔥",
+      categoria: "otec",
+      descripcion: "Principios termodinámicos, operación de calderas según DS 10, control de presiones, purgas, mantenimiento preventivo e inspecciones de seguridad reglamentarias.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/operador-de-calderas-y-generadores-de-vapor",
+      examenUrl: "/cursos-otec/operador-de-calderas-y-generadores-de-vapor#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Calderas",
+      cuestionariosUrl: null,
+    },
+    {
+      slug: "guardia-nochero-rondin-portero",
+      nombre: "Curso Guardia, Nochero, Rondín y Portero",
+      shortName: "Nochero y Rondín",
+      horas: "30 hrs",
+      icono: "🚪",
+      categoria: "otec",
+      descripcion: "Control de accesos peatonales y vehiculares, rondas nocturnas perimetrales, registro de novedades en bitácora, atención de conserjería y protocolos ante incidentes.",
+      subTextoModulos: "4 Módulos interactivos con visor A4 y videos",
+      aulaUrl: "/cursos-otec/guardia-nochero-rondin-portero",
+      examenUrl: "/cursos-otec/guardia-nochero-rondin-portero#evaluacion",
+      examenNombre: "📝 Evaluación Oficial Nochero y Rondín",
+      cuestionariosUrl: null,
+    },
   ];
+
+  const filtrados = cursosDetallados.filter((c) => {
+    if (filtroCategoria !== "todos" && c.categoria !== filtroCategoria) return false;
+    if (busqueda.trim()) {
+      const q = busqueda.toLowerCase().trim();
+      return (
+        c.nombre.toLowerCase().includes(q) ||
+        c.shortName.toLowerCase().includes(q) ||
+        c.descripcion.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
 
   return (
     <div className="space-y-6">
@@ -1530,21 +2087,70 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
       <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-apre-blue to-slate-900 p-6 text-white shadow-md">
         <div className="flex items-center gap-2">
           <span className="rounded-full bg-cyan-400 text-slate-950 px-2.5 py-0.5 text-xs font-black uppercase tracking-wider">
-            👁️ Modo Auditoría y Clientes
+            👁️ Modo Auditoría y Administradores
           </span>
-          <span className="text-xs font-bold text-cyan-300">Todo 100% Desbloqueado</span>
+          <span className="text-xs font-bold text-cyan-300">14 Cursos 100% Desbloqueados</span>
         </div>
         <h2 className="mt-2 text-xl md:text-2xl font-black text-white">
           Explorador de Cursos y Evaluaciones APRECAP
         </h2>
         <p className="mt-1 text-xs text-slate-200 leading-relaxed max-w-3xl">
-          Como administrador o cliente, al ingresar a cualquiera de estos cursos tendrás <strong>todos los módulos, videos, diapositivas, manuales oficiales en PDF, mini-quizzes y exámenes finales 100% desbloqueados</strong>. Puedes navegar libremente por cualquier parte del contenido sin esperar tiempos de video ni tener que aprobar pasos anteriores.
+          Como administrador o supervisor, al ingresar a cualquiera de estos cursos tendrás <strong>todos los módulos, videos, diapositivas, manuales oficiales en PDF, mini-quizzes y exámenes finales 100% desbloqueados</strong>. Puedes navegar libremente por cualquier aula y material interactivo.
         </p>
+      </div>
+
+      {/* Filtros y Buscador */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap items-center gap-1.5 bg-gray-100 p-1 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setFiltroCategoria("todos")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+              filtroCategoria === "todos"
+                ? "bg-white text-apre-blue shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Todos ({cursosDetallados.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setFiltroCategoria("seguridad")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+              filtroCategoria === "seguridad"
+                ? "bg-white text-apre-blue shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            🛡️ Seguridad Privada (4)
+          </button>
+          <button
+            type="button"
+            onClick={() => setFiltroCategoria("otec")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+              filtroCategoria === "otec"
+                ? "bg-white text-apre-blue shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            🎓 Capacitación Laboral OTEC (10)
+          </button>
+        </div>
+
+        <div className="min-w-[240px] flex-1 max-w-md">
+          <input
+            type="text"
+            placeholder="🔍 Buscar curso por nombre o contenido..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-2 text-xs text-gray-800 placeholder-gray-400 focus:border-apre-blue focus:bg-white focus:outline-none"
+          />
+        </div>
       </div>
 
       {/* Grid de Cursos */}
       <div className="grid gap-6 md:grid-cols-2">
-        {cursosDetallados.map((c) => (
+        {filtrados.map((c) => (
           <div
             key={c.slug}
             className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-xs hover:shadow-md transition"
@@ -1552,16 +2158,32 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
             <div>
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">{c.icono}</span>
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-2xl shadow-xs">
+                    {c.icono}
+                  </span>
                   <div>
-                    <h3 className="font-extrabold text-apre-blue text-lg leading-snug">{c.nombre}</h3>
-                    <p className="text-xs font-bold text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-extrabold text-apre-blue text-base leading-snug">{c.nombre}</h3>
+                    </div>
+                    <p className="text-xs font-bold text-gray-500 mt-0.5">
                       {c.horas} oficial · {c.subTextoModulos}
                     </p>
                   </div>
                 </div>
-                <span className="rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-[10px] font-black uppercase">
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase shrink-0 ${
+                    c.categoria === "otec"
+                      ? "bg-blue-100 text-blue-900 border border-blue-200"
+                      : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                  }`}
+                >
                   ✓ Desbloqueado
+                </span>
+              </div>
+
+              <div className="mt-2">
+                <span className="rounded-md bg-slate-100 text-slate-700 text-[10px] font-black uppercase px-2 py-0.5 border border-slate-200">
+                  {c.categoria === "otec" ? "Capacitación Laboral OTEC" : "Seguridad Privada (SPD)"}
                 </span>
               </div>
 
@@ -1571,38 +2193,45 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
             <div className="mt-5 space-y-2 pt-4 border-t border-gray-100">
               {/* Botón Principal: Entrar al Aula */}
               <Link
-                href={`/materiales/${c.slug}`}
+                href={c.aulaUrl}
+                target="_blank"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-apre-blue px-4 py-3 text-xs font-black text-white transition hover:bg-apre-blue-dark shadow-sm"
               >
                 <span>👁️ Entrar al Aula Virtual (Todo Desbloqueado)</span>
-                <span>→</span>
+                <span>↗</span>
               </Link>
 
               {/* Botones Secundarios */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <Link
-                  href={c.examenUrl}
-                  className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50/80 px-3 py-2 text-center text-[11px] font-bold text-apre-red transition hover:bg-red-100 hover:border-red-300"
-                >
-                  <span>{c.examenNombre}</span>
-                </Link>
+                {c.examenUrl && (
+                  <Link
+                    href={c.examenUrl}
+                    target="_blank"
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50/80 px-3 py-2 text-center text-[11px] font-bold text-apre-red transition hover:bg-red-100 hover:border-red-300"
+                  >
+                    <span>{c.examenNombre || "📝 Ver Evaluación"}</span>
+                  </Link>
+                )}
 
-                {c.cuestionariosUrl ? (
+                {c.cuestionariosUrl && (
                   <Link
                     href={c.cuestionariosUrl}
+                    target="_blank"
                     className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-center text-[11px] font-bold text-slate-700 transition hover:bg-slate-100"
                   >
                     <span>📋 Cuestionarios Oficiales</span>
                   </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={onIrAGestion}
-                    className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center text-[11px] font-bold text-gray-600 transition hover:bg-gray-100"
-                  >
-                    <span>👥 Ver Matrículas del Curso</span>
-                  </button>
                 )}
+
+                <button
+                  type="button"
+                  onClick={() => onIrAGestion(c.slug)}
+                  className={`flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-center text-[11px] font-bold text-gray-600 transition hover:bg-gray-100 cursor-pointer ${
+                    !c.cuestionariosUrl && !c.examenUrl ? "sm:col-span-2" : ""
+                  }`}
+                >
+                  <span>👥 Ver Matrículas del Curso</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1612,18 +2241,47 @@ function CursosExplorarTab({ onIrAGestion }: { onIrAGestion: () => void }) {
   );
 }
 
-/* ---------- Gestión por Cursos y Alumnos (Estilo SARMAT) ---------- */
+/* ---------- Gestión por Cursos y Alumnos (Oficial APRECAP) ---------- */
+/* ---------- Gestión por Cursos y Alumnos (Secciones por Curso: Pendientes, Cursando, Titulados) ---------- */
 function CursosGestionTab({
+  cursoInicialSlug,
+  subTabInicial,
   onEmitirDiploma,
+  onSeleccionarCurso,
 }: {
+  cursoInicialSlug?: string;
+  subTabInicial?: "cursando" | "pendientes" | "titulados";
   onEmitirDiploma: (datos: { uid: string; nombre: string; rut: string; cursoSlug: string }) => void;
+  onSeleccionarCurso?: (slug: string) => void;
 }) {
   const db = getFirestoreDb();
-  const [cursoActivoSlug, setCursoActivoSlug] = useState<string>(CURSOS_LISTA[0].slug);
+  const [cursoActivoSlug, setCursoActivoSlug] = useState<string>(
+    cursoInicialSlug && CURSOS_LISTA.some((c) => c.slug === cursoInicialSlug)
+      ? cursoInicialSlug
+      : CURSOS_LISTA[0].slug
+  );
+  const [subTab, setSubTab] = useState<"cursando" | "pendientes" | "titulados">(
+    subTabInicial || "cursando"
+  );
+  const [categoriaFiltro, setCategoriaFiltro] = useState<"todos" | "seguridad" | "otec">("todos");
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [enrolls, setEnrolls] = useState<any[]>([]);
   const [evaluaciones, setEvaluaciones] = useState<any[]>([]);
+  const [solicitudes, setSolicitudes] = useState<any[]>([]);
   const [nuevoMatriculaUid, setNuevoMatriculaUid] = useState<string>("");
+  const [busqueda, setBusqueda] = useState<string>("");
+
+  useEffect(() => {
+    if (cursoInicialSlug && CURSOS_LISTA.some((c) => c.slug === cursoInicialSlug)) {
+      setCursoActivoSlug(cursoInicialSlug);
+    }
+  }, [cursoInicialSlug]);
+
+  useEffect(() => {
+    if (subTabInicial) {
+      setSubTab(subTabInicial);
+    }
+  }, [subTabInicial]);
 
   useEffect(() => {
     if (!db) return;
@@ -1636,36 +2294,56 @@ function CursosGestionTab({
     const un3 = onSnapshot(collection(db, "resultados_evaluaciones"), (snap) =>
       setEvaluaciones(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
+    const un4 = onSnapshot(query(collection(db, "solicitudes"), where("estado", "==", "pendiente")), (snap) =>
+      setSolicitudes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
     return () => {
       un1();
       un2();
       un3();
+      un4();
     };
   }, [db]);
 
   const cursoInfo = CURSOS_LISTA.find((c) => c.slug === cursoActivoSlug) || CURSOS_LISTA[0];
   const fieldKey = cursoInfo.fieldKey;
 
-  // Alumnos matriculados en este curso
+  // 1. Alumnos matriculados en este curso
   const matriculadosEnEsteCurso = enrolls
     .filter((e) => e.courseSlug === cursoActivoSlug)
     .map((e) => {
       const u = usuarios.find((x) => x.id === e.uid || x.uid === e.uid);
+      const rawFecha = e.fecha || u?.fechaRegistro;
+      const sinRestriccion = Boolean(e.sinRestriccionTiempo);
+      const timing = getAlumnoSeguimientoTiming(cursoActivoSlug, rawFecha, sinRestriccion);
+
+      const nombreReal = u?.nombre?.trim()
+        ? u.nombre.trim()
+        : u?.nombres?.trim()
+        ? `${u.nombres} ${u.apellidoPaterno || ""} ${u.apellidoMaterno || ""}`.trim()
+        : "";
+
+      const esEmailOId = !nombreReal || nombreReal.toLowerCase() === (u?.email || e.uid).toLowerCase();
+      const esLegacySinDatos = esEmailOId;
+      const emailFinal = u?.email || (e.uid.includes("@") ? e.uid : "—");
+      const rutFinal = u?.rut && u.rut.trim() && u.rut !== "—" ? u.rut.trim() : "Sin RUT (Legacy)";
+
       return {
         enrollId: e.id,
         uid: e.uid,
-        nombre: u?.nombre || e.uid,
-        email: u?.email || "—",
-        rut: u?.rut || "—",
+        nombre: esLegacySinDatos ? "Alumno Legacy (Sin nombre registrado)" : nombreReal,
+        email: emailFinal,
+        rut: rutFinal,
+        telefono: u?.telefono || "—",
         modulosCompletados: e.modulosCompletados || [],
-        fecha: e.fecha,
+        fecha: rawFecha,
+        sinRestriccionTiempo: sinRestriccion,
+        timing,
+        esLegacySinDatos,
       };
     });
 
-  // Solicitudes de acceso pendientes para este curso
-  const pendientesEsteCurso = usuarios.filter((u) => u.rol === "alumno" && u[fieldKey] === "pendiente");
-
-  // Alumnos que han aprobado el examen final de este curso (Examen Oficial de Egreso)
+  // 2. Alumnos que han aprobado el examen final de este curso (Titulados de este curso)
   const aprobadosEsteCurso = evaluaciones.filter((ev) => {
     if (!ev.aprobado) return false;
     const esFinal = Boolean(
@@ -1685,24 +2363,115 @@ function CursosGestionTab({
     return false;
   });
 
-  const aprobarSolicitudCurso = async (u: any) => {
+  const uIdsAprobados = new Set(aprobadosEsteCurso.map((ap) => ap.userId));
+
+  // 3. Alumnos Cursando: matriculados que aún NO han completado/aprobado el examen de este curso
+  const cursandoEsteCurso = matriculadosEnEsteCurso.filter((m) => !uIdsAprobados.has(m.uid));
+
+  // 4. Solicitudes de acceso pendientes para este curso específico (unificando solicitudes y usuarios)
+  const solicitudesMap = new Map<string, any>();
+
+  solicitudes
+    .filter(
+      (s) =>
+        (s.cursoDeseado === cursoActivoSlug ||
+          (Array.isArray(s.cursosDeseados) && s.cursosDeseados.includes(cursoActivoSlug))) &&
+        s.estado === "pendiente"
+    )
+    .forEach((s) => {
+      const emailKey = (s.email || "").toLowerCase();
+      solicitudesMap.set(emailKey, {
+        solicitudId: s.id,
+        uid: s.uid || s.id,
+        nombre: [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ") || s.nombres || s.email,
+        email: s.email,
+        rut: s.rut || "",
+        telefono: s.telefono || "",
+        fecha: s.fechaSolicitud || s.fecha,
+      });
+    });
+
+  usuarios
+    .filter((u) => u.rol === "alumno" && u[fieldKey] === "pendiente")
+    .forEach((u) => {
+      const emailKey = (u.email || "").toLowerCase();
+      if (!solicitudesMap.has(emailKey)) {
+        solicitudesMap.set(emailKey, {
+          solicitudId: u.solicitudId || null,
+          uid: u.id || u.uid,
+          nombre: u.nombre || u.email,
+          email: u.email,
+          rut: u.rut || "",
+          telefono: u.telefono || "",
+          fecha: u.fechaRegistro,
+        });
+      }
+    });
+
+  const pendientesEsteCurso = Array.from(solicitudesMap.values());
+
+  // Acciones
+  const aprobarSolicitud = async (s: any) => {
     if (!db) return;
-    await updateDoc(doc(db, "usuarios", u.id), {
-      [fieldKey]: "aceptado",
-    });
-    await setDoc(doc(collection(db, "enrollments"), `${u.id}_${cursoActivoSlug}`), {
-      uid: u.id,
-      courseSlug: cursoActivoSlug,
-      modulosCompletados: [],
-      fecha: serverTimestamp(),
-    });
+    const uid = s.uid || s.email?.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+    const nombreFinal = s.nombre || [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ") || undefined;
+    await setDoc(
+      doc(db, "usuarios", uid),
+      {
+        [fieldKey]: "aceptado",
+        activo: true,
+        ...(nombreFinal ? { nombre: nombreFinal } : {}),
+        ...(s.nombres ? { nombres: s.nombres } : {}),
+        ...(s.apellidoPaterno ? { apellidoPaterno: s.apellidoPaterno } : {}),
+        ...(s.apellidoMaterno ? { apellidoMaterno: s.apellidoMaterno } : {}),
+        ...(s.rut ? { rut: s.rut } : {}),
+        ...(s.telefono ? { telefono: s.telefono } : {}),
+        ...(s.email ? { email: s.email } : {}),
+      },
+      { merge: true }
+    );
+    await setDoc(
+      doc(collection(db, "enrollments"), `${uid}_${cursoActivoSlug}`),
+      {
+        uid,
+        courseSlug: cursoActivoSlug,
+        modulosCompletados: [],
+        sinRestriccionTiempo: false,
+        fecha: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    if (s.solicitudId) {
+      await updateDoc(doc(db, "solicitudes", s.solicitudId), {
+        estado: "aprobada",
+        fechaRevision: serverTimestamp(),
+      });
+    }
   };
 
-  const rechazarSolicitudCurso = async (u: any) => {
-    if (!db) return;
-    await updateDoc(doc(db, "usuarios", u.id), {
+  const rechazarSolicitud = async (s: any) => {
+    if (!db || !confirm(`¿Rechazar solicitud de ${s.nombre}?`)) return;
+    const uid = s.uid || s.email?.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+    await updateDoc(doc(db, "usuarios", uid), {
       [fieldKey]: "rechazado",
     });
+    if (s.solicitudId) {
+      await updateDoc(doc(db, "solicitudes", s.solicitudId), {
+        estado: "rechazada",
+        fechaRevision: serverTimestamp(),
+      });
+    }
+  };
+
+  const toggleBypassTiempo = async (enrollId: string, actual: boolean) => {
+    if (!db) return;
+    try {
+      await updateDoc(doc(db, "enrollments", enrollId), {
+        sinRestriccionTiempo: !actual,
+      });
+    } catch (err) {
+      console.error("Error al actualizar bypass de tiempo:", err);
+    }
   };
 
   const matricularAlumnoManual = async () => {
@@ -1710,12 +2479,17 @@ function CursosGestionTab({
     await updateDoc(doc(db, "usuarios", nuevoMatriculaUid), {
       [fieldKey]: "aceptado",
     });
-    await setDoc(doc(collection(db, "enrollments"), `${nuevoMatriculaUid}_${cursoActivoSlug}`), {
-      uid: nuevoMatriculaUid,
-      courseSlug: cursoActivoSlug,
-      modulosCompletados: [],
-      fecha: serverTimestamp(),
-    });
+    await setDoc(
+      doc(collection(db, "enrollments"), `${nuevoMatriculaUid}_${cursoActivoSlug}`),
+      {
+        uid: nuevoMatriculaUid,
+        courseSlug: cursoActivoSlug,
+        modulosCompletados: [],
+        sinRestriccionTiempo: false,
+        fecha: serverTimestamp(),
+      },
+      { merge: true }
+    );
     setNuevoMatriculaUid("");
   };
 
@@ -1727,296 +2501,445 @@ function CursosGestionTab({
     });
   };
 
+  const cambiarCurso = (slug: string) => {
+    setCursoActivoSlug(slug);
+    onSeleccionarCurso?.(slug);
+  };
+
+  const aulaUrl = cursoInfo.categoria === "otec" ? `/cursos-otec/${cursoInfo.slug}` : `/materiales/${cursoInfo.slug}`;
+
+  // Filtros de búsqueda
+  const q = busqueda.toLowerCase().trim();
+  const pendientesFiltrados = pendientesEsteCurso.filter((p) => {
+    if (!q) return true;
+    return (
+      (p.nombre || "").toLowerCase().includes(q) ||
+      (p.email || "").toLowerCase().includes(q) ||
+      (p.rut || "").toLowerCase().includes(q)
+    );
+  });
+
+  const cursandoFiltrados = cursandoEsteCurso.filter((m) => {
+    if (!q) return true;
+    return (
+      (m.nombre || "").toLowerCase().includes(q) ||
+      (m.email || "").toLowerCase().includes(q) ||
+      (m.rut || "").toLowerCase().includes(q)
+    );
+  });
+
+  const aprobadosFiltrados = aprobadosEsteCurso.filter((ap) => {
+    if (!q) return true;
+    const u = usuarios.find((x) => x.id === ap.userId || x.uid === ap.userId);
+    const nom = (u?.nombre || ap.nombreUsuario || "").toLowerCase();
+    const em = (u?.email || ap.userEmail || "").toLowerCase();
+    const r = (u?.rut || ap.userRut || "").toLowerCase();
+    return nom.includes(q) || em.includes(q) || r.includes(q);
+  });
+
   return (
     <div className="space-y-6">
-      {/* Selector de Cursos por Pestañas */}
-      <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
-        {CURSOS_LISTA.map((c) => {
-          const active = cursoActivoSlug === c.slug;
-          const matriculadosCount = enrolls.filter((e) => e.courseSlug === c.slug).length;
-          const pendCount = usuarios.filter((u) => u.rol === "alumno" && u[c.fieldKey] === "pendiente").length;
-
-          return (
-            <button
-              key={c.slug}
-              onClick={() => setCursoActivoSlug(c.slug)}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-black transition ${
-                active
-                  ? "bg-apre-blue text-white shadow-sm"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              <span>{c.icono}</span>
-              <span>{c.shortName}</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[10px] ${
-                  active ? "bg-white/20 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                {matriculadosCount}
-              </span>
-              {pendCount > 0 && (
-                <span className="rounded-full bg-amber-400 px-1.5 py-0.2 text-[9px] font-black text-slate-950 animate-pulse">
-                  +{pendCount}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
 
       {/* Resumen del Curso Seleccionado */}
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{cursoInfo.icono}</span>
-            <h2 className="text-xl font-extrabold text-apre-blue">{cursoInfo.nombre}</h2>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            Duración oficial: {cursoInfo.horas} horas · Clave de permiso Firestore:{" "}
-            <code className="font-mono text-apre-red font-bold">{cursoInfo.fieldKey}</code>
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-2 text-center">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Matriculados</p>
-            <p className="text-lg font-black text-emerald-900">{matriculadosEnEsteCurso.length}</p>
-          </div>
-          <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-2 text-center">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700">Pendientes</p>
-            <p className="text-lg font-black text-amber-900">{pendientesEsteCurso.length}</p>
-          </div>
-          <div className="rounded-xl bg-cyan-50 border border-cyan-200 px-4 py-2 text-center">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-700">Aprobados</p>
-            <p className="text-lg font-black text-cyan-900">{aprobadosEsteCurso.length}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Botón destacado para entrar al aula de este curso como Admin */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-cyan-950/20 border border-cyan-500/30 rounded-2xl p-4 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <span className="text-2xl">👁️</span>
-          <div>
-            <p className="text-xs font-black text-cyan-900">Vista Previa Desbloqueada de este Curso</p>
-            <p className="text-[11px] text-gray-600">Entra al aula con todos los videos, manuales y cuestionarios listos para revisión.</p>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href={`/materiales/${cursoInfo.slug}`}
-            className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark text-white px-4 py-2 text-xs font-black transition shadow-xs flex items-center gap-1.5"
-          >
-            <span>Entrar al Aula (Todo Desbloqueado)</span>
-            <span>→</span>
-          </Link>
-          <Link
-            href={
-              cursoInfo.slug === "guardia-de-seguridad"
-                ? "/evaluaciones/guardia-de-seguridad"
-                : cursoInfo.slug === "operador-cctv-y-alarmas"
-                  ? "/evaluaciones/operador-cctv-y-alarmas"
-                  : cursoInfo.slug === "baston-y-esposas"
-                    ? "/evaluaciones/baston-y-esposas"
-                    : "/evaluaciones/supervisor-de-seguridad"
-            }
-            className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-3.5 py-2 text-xs font-bold transition shadow-xs"
-          >
-            📝 Ver Examen
-          </Link>
-        </div>
-      </div>
-
-      {/* Solicitudes Pendientes para este Curso */}
-      {pendientesEsteCurso.length > 0 && (
-        <div className="rounded-2xl border-2 border-amber-300 bg-amber-50/40 p-6 space-y-3 shadow-xs">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">⏳</span>
-            <h3 className="font-extrabold text-amber-900 text-sm uppercase tracking-wide">
-              Solicitudes de Acceso Pendientes para {cursoInfo.shortName} ({pendientesEsteCurso.length})
-            </h3>
-          </div>
-          <div className="divide-y divide-amber-200/60 bg-white rounded-xl border border-amber-200 p-2">
-            {pendientesEsteCurso.map((u) => (
-              <div key={u.id} className="flex flex-wrap items-center justify-between gap-3 p-3">
-                <div>
-                  <p className="font-bold text-apre-blue text-sm">{u.nombre}</p>
-                  <p className="text-xs text-gray-600">
-                    {u.email} {u.rut ? `· RUT: ${formatRut(u.rut)}` : ""}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => aprobarSolicitudCurso(u)}
-                    className="rounded-lg bg-whatsapp px-3.5 py-1.5 text-xs font-bold text-white hover:brightness-105 shadow-xs"
-                  >
-                    ✓ Aprobar Acceso al Curso
-                  </button>
-                  <button
-                    onClick={() => rechazarSolicitudCurso(u)}
-                    className="rounded-lg bg-gray-200 px-3 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
-                  >
-                    ✕ Rechazar
-                  </button>
-                </div>
+            <span className="text-3xl">{cursoInfo.icono}</span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-extrabold text-apre-blue">{cursoInfo.nombre}</h2>
+                <span className="rounded-md bg-blue-50 text-blue-800 text-[10px] font-black uppercase px-2 py-0.5 border border-blue-200">
+                  {cursoInfo.categoria === "otec" ? "Capacitación OTEC" : "Seguridad Privada (SPD)"}
+                </span>
               </div>
-            ))}
+              <p className="text-xs text-gray-500 mt-0.5">
+                Duración: {cursoInfo.horas} horas pedagógicas · Clave de permiso:{" "}
+                <code className="font-mono text-apre-red font-bold text-[11px]">{cursoInfo.fieldKey}</code>
+              </p>
+            </div>
           </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            href={aulaUrl}
+            target="_blank"
+            className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark text-white px-4 py-2.5 text-xs font-black transition shadow-xs flex items-center gap-1.5"
+          >
+            <span>👁️ Entrar al Aula</span>
+            <span>↗</span>
+          </Link>
+          {["guardia-de-seguridad", "operador-cctv-y-alarmas", "supervisor-de-seguridad", "baston-y-esposas"].includes(cursoInfo.slug) && (
+            <Link
+              href={`/evaluaciones/${cursoInfo.slug}`}
+              target="_blank"
+              className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-3.5 py-2.5 text-xs font-bold transition shadow-xs"
+            >
+              📝 Ver Examen
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Navegación por Subsecciones del Curso (Pendientes, Cursando, Titulados) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            onClick={() => setSubTab("pendientes")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black transition ${
+              subTab === "pendientes"
+                ? "bg-amber-500 text-white shadow-xs"
+                : "text-gray-700 hover:bg-amber-50"
+            }`}
+          >
+            <span>📋</span>
+            <span>1. Pendientes de Aprobación</span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] ${
+                subTab === "pendientes" ? "bg-white/20 text-white" : "bg-amber-100 text-amber-900 font-bold"
+              }`}
+            >
+              {pendientesEsteCurso.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSubTab("cursando")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black transition ${
+              subTab === "cursando"
+                ? "bg-apre-blue text-white shadow-xs"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            <span>👨‍🎓</span>
+            <span>2. Alumnos Cursando</span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] ${
+                subTab === "cursando" ? "bg-white/20 text-white" : "bg-gray-200 text-gray-700 font-bold"
+              }`}
+            >
+              {cursandoEsteCurso.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSubTab("titulados")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black transition ${
+              subTab === "titulados"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "text-gray-700 hover:bg-emerald-50"
+            }`}
+          >
+            <span>🎓</span>
+            <span>3. Alumnos Titulados / Aprobados</span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] ${
+                subTab === "titulados" ? "bg-white/20 text-white" : "bg-emerald-100 text-emerald-900 font-bold"
+              }`}
+            >
+              {aprobadosEsteCurso.length}
+            </span>
+          </button>
+        </div>
+
+        {/* Buscador dentro del curso */}
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar en este curso…"
+            className="w-full rounded-xl border border-gray-200 px-3 py-1.5 text-xs focus:border-apre-blue focus:outline-hidden"
+          />
+        </div>
+      </div>
+
+      {/* CONTENIDO 1: PENDIENTES DE APROBACIÓN */}
+      {subTab === "pendientes" && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50/40 p-6 space-y-4 shadow-xs">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-amber-200/60 pb-3">
+            <div>
+              <h3 className="font-extrabold text-amber-950 text-base flex items-center gap-2">
+                <span>⏳</span> Solicitudes Pendientes para {cursoInfo.nombre}
+              </h3>
+              <p className="text-xs text-amber-800">
+                Alumnos que han solicitado ingresar a este curso. Al aprobar, ingresarán de inmediato a la sección de Cursando.
+              </p>
+            </div>
+            <span className="rounded-full bg-amber-200 text-amber-900 font-black text-xs px-3 py-1">
+              {pendientesFiltrados.length} pendientes
+            </span>
+          </div>
+
+          {pendientesFiltrados.length === 0 ? (
+            <div className="p-8 text-center bg-white rounded-xl border border-amber-200/60 text-gray-500 text-xs italic">
+              No hay solicitudes pendientes de aprobación para este curso en este momento.
+            </div>
+          ) : (
+            <div className="divide-y divide-amber-200/60 bg-white rounded-xl border border-amber-200 overflow-hidden shadow-2xs">
+              {pendientesFiltrados.map((s) => (
+                <div key={s.solicitudId || s.uid} className="flex flex-wrap items-center justify-between gap-3 p-4 hover:bg-amber-50/30 transition">
+                  <div>
+                    <p className="font-black text-apre-blue text-sm">{s.nombre}</p>
+                    <p className="text-xs text-gray-600">
+                      {s.email} {s.rut ? `· RUT: ${formatRut(s.rut)}` : ""} {s.telefono ? `· Tel: ${s.telefono}` : ""}
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">
+                      Fecha de solicitud:{" "}
+                      {s.fecha?.toDate
+                        ? s.fecha.toDate().toLocaleDateString("es-CL", { hour: "2-digit", minute: "2-digit" })
+                        : "Reciente"}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => aprobarSolicitud(s)}
+                      className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-extrabold text-white hover:brightness-105 transition shadow-xs flex items-center gap-1.5"
+                    >
+                      <span>✓</span>
+                      <span>Aprobar Ingreso al Curso</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => rechazarSolicitud(s)}
+                      className="rounded-xl bg-gray-200 px-3 py-2 text-xs font-bold text-gray-700 hover:bg-gray-300 transition"
+                    >
+                      ✕ Rechazar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Alumnos Aprobados en este Curso (Egresados con Diploma Listo) */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
-          <div>
-            <h3 className="text-base font-extrabold text-apre-blue flex items-center gap-2">
-              <span>🎓</span> Alumnos que Han Aprobado el Examen Final
-            </h3>
-            <p className="text-xs text-gray-500">
-              Egresados listos para emisión e impresión de su Certificado Oficial APRECAP.
-            </p>
-          </div>
-          <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
-            {aprobadosEsteCurso.length} {aprobadosEsteCurso.length === 1 ? "aprobado" : "aprobados"}
-          </span>
-        </div>
+      {/* CONTENIDO 2: ALUMNOS CURSANDO (CON BOTÓN PARA SALTAR ESPERA DE DÍAS) */}
+      {subTab === "cursando" && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+            <div>
+              <h3 className="text-base font-extrabold text-apre-blue flex items-center gap-2">
+                <span>👨‍🎓</span> Alumnos Cursando Actualmente {cursoInfo.shortName}
+              </h3>
+              <p className="text-xs text-gray-500">
+                Estudiantes activos en formación que aún no han rendido o aprobado el examen final de este curso.
+              </p>
+            </div>
 
-        {aprobadosEsteCurso.length === 0 ? (
-          <p className="text-xs text-gray-500 italic p-4 bg-gray-50 rounded-xl text-center">
-            Aún no hay alumnos con examen final aprobado registrado en este curso.
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider">
-                <tr>
-                  <th className="p-3">Alumno</th>
-                  <th className="p-3">RUT</th>
-                  <th className="p-3">Porcentaje</th>
-                  <th className="p-3">Fecha</th>
-                  <th className="p-3 text-right">Acción</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {aprobadosEsteCurso.map((ap) => {
-                  const u = usuarios.find((x) => x.id === ap.userId || x.uid === ap.userId);
-                  const nombre = u?.nombre || ap.nombreUsuario || "Estudiante";
-                  const rut = u?.rut || ap.userRut || "—";
-                  return (
-                    <tr key={ap.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold text-apre-blue">{nombre}</td>
-                      <td className="p-3 font-mono">{formatRut(rut)}</td>
-                      <td className="p-3 font-black text-emerald-700">{ap.porcentaje}%</td>
-                      <td className="p-3 text-gray-500">
-                        {ap.fecha?.toDate ? ap.fecha.toDate().toLocaleDateString("es-CL") : "Reciente"}
+            {/* Formulario para matricular alumno manual */}
+            <div className="flex items-center gap-2">
+              <select
+                value={nuevoMatriculaUid}
+                onChange={(e) => setNuevoMatriculaUid(e.target.value)}
+                className="rounded-xl border border-gray-300 px-3 py-2 text-xs"
+              >
+                <option value="">+ Matricular alumno registrado…</option>
+                {usuarios
+                  .filter(
+                    (u) =>
+                      u.rol === "alumno" &&
+                      !matriculadosEnEsteCurso.some((m) => m.uid === u.id || m.uid === u.uid)
+                  )
+                  .map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.nombre} ({u.email})
+                    </option>
+                  ))}
+              </select>
+              <button
+                type="button"
+                onClick={matricularAlumnoManual}
+                disabled={!nuevoMatriculaUid}
+                className="rounded-xl bg-apre-blue px-4 py-2 text-xs font-bold text-white transition hover:bg-apre-blue-light disabled:opacity-40"
+              >
+                Matricular
+              </button>
+            </div>
+          </div>
+
+          {cursandoFiltrados.length === 0 ? (
+            <p className="text-xs text-gray-500 italic p-6 bg-gray-50 rounded-xl text-center">
+              No hay alumnos cursando activamente en este momento. Usa el selector arriba para matricular a un estudiante o aprueba solicitudes pendientes.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider">
+                  <tr>
+                    <th className="p-3">Alumno</th>
+                    <th className="p-3">RUT</th>
+                    <th className="p-3">Jornada / Días</th>
+                    <th className="p-3">Avance Módulos</th>
+                    <th className="p-3">Restricción de Tiempo (Drip)</th>
+                    <th className="p-3 text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {cursandoFiltrados.map((m) => (
+                    <tr key={m.enrollId} className="hover:bg-slate-50 transition">
+                      <td className="p-3">
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-bold text-apre-blue">{m.nombre}</p>
+                          {m.esLegacySinDatos && (
+                            <span className="rounded-md bg-amber-100 px-1.5 py-0.5 text-[9.5px] font-black text-amber-800 border border-amber-300 shrink-0">
+                              Legacy
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-gray-500 text-[11px]">{m.email}</p>
+                      </td>
+                      <td className="p-3 font-mono">
+                        {m.rut.includes("Legacy") ? (
+                          <span className="text-amber-700/80 italic text-[11px] bg-amber-50 px-2 py-0.5 rounded border border-amber-200 inline-block">
+                            Sin RUT (Legacy)
+                          </span>
+                        ) : (
+                          <span className="font-semibold text-slate-800">{formatRut(m.rut)}</span>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <div className="flex flex-col gap-1">
+                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-black text-apre-blue border border-blue-200 w-fit">
+                            <span>⏱️</span>
+                            <span>{m.timing.esCursoConTiempo ? `Día ${m.timing.diaActual}/${m.timing.totalDiasCurso} días` : "Acceso Inmediato"}</span>
+                          </span>
+                          <span className="text-[10.5px] text-gray-500 font-medium">
+                            {m.timing.etiquetaProgreso}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-3 font-bold text-gray-700">
+                        {m.modulosCompletados.length} módulos
+                      </td>
+                      {/* BOTÓN REVOLUCIONARIO DE SALTO DE TIEMPO / BYPASS */}
+                      <td className="p-3">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {m.sinRestriccionTiempo ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-black border border-emerald-300">
+                              <span>⚡</span>
+                              <span>Sin espera (Modo Libre)</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[10px] font-bold border border-amber-300">
+                              <span>⏱️</span>
+                              <span>Espera activa</span>
+                            </span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => toggleBypassTiempo(m.enrollId, m.sinRestriccionTiempo)}
+                            className={`rounded-lg px-2.5 py-1 text-[10px] font-black transition shadow-2xs ${
+                              m.sinRestriccionTiempo
+                                ? "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                                : "bg-emerald-600 text-white hover:bg-emerald-700 animate-pulse"
+                            }`}
+                            title={
+                              m.sinRestriccionTiempo
+                                ? "Restablecer espera programada"
+                                : "Permitir que el alumno complete todo el curso en 1 día"
+                            }
+                          >
+                            {m.sinRestriccionTiempo
+                              ? "⏱️ Restablecer espera"
+                              : "⚡ Saltar espera (Habilitar todo en 1 día)"}
+                          </button>
+                        </div>
                       </td>
                       <td className="p-3 text-right">
                         <button
-                          onClick={() =>
-                            onEmitirDiploma({
-                              uid: ap.userId,
-                              nombre,
-                              rut,
-                              cursoSlug: cursoActivoSlug,
-                            })
-                          }
-                          className="rounded-lg bg-apre-red px-3 py-1.5 text-xs font-black text-white hover:bg-apre-red-dark shadow-xs"
+                          type="button"
+                          onClick={() => desmatricularAlumno(m.enrollId, m.uid)}
+                          className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-bold text-apre-red hover:bg-red-100"
                         >
-                          📜 Generar Diploma
+                          Quitar acceso
                         </button>
                       </td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Alumnos Matriculados en este Curso */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
-          <div>
-            <h3 className="text-base font-extrabold text-apre-blue flex items-center gap-2">
-              <span>👨‍🎓</span> Alumnos Matriculados en {cursoInfo.shortName}
-            </h3>
-            <p className="text-xs text-gray-500">
-              Listado de estudiantes con acceso activo a las clases, materiales y cuestionarios de este curso.
-            </p>
-          </div>
-
-          {/* Formulario rápido para matricular nuevo alumno */}
-          <div className="flex items-center gap-2">
-            <select
-              value={nuevoMatriculaUid}
-              onChange={(e) => setNuevoMatriculaUid(e.target.value)}
-              className="rounded-xl border border-gray-300 px-3 py-2 text-xs"
-            >
-              <option value="">+ Matricular alumno registrado…</option>
-              {usuarios
-                .filter(
-                  (u) =>
-                    u.rol === "alumno" &&
-                    !matriculadosEnEsteCurso.some((m) => m.uid === u.id || m.uid === u.uid)
-                )
-                .map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.nombre} ({u.email})
-                  </option>
-                ))}
-            </select>
-            <button
-              onClick={matricularAlumnoManual}
-              disabled={!nuevoMatriculaUid}
-              className="rounded-xl bg-apre-blue px-4 py-2 text-xs font-bold text-white transition hover:bg-apre-blue-light disabled:opacity-40"
-            >
-              Matricular
-            </button>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
+      )}
 
-        {matriculadosEnEsteCurso.length === 0 ? (
-          <p className="text-xs text-gray-500 italic p-4 bg-gray-50 rounded-xl text-center">
-            No hay alumnos matriculados en este curso todavía. Usa el selector arriba para matricular a un estudiante.
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider">
-                <tr>
-                  <th className="p-3">Alumno</th>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">RUT</th>
-                  <th className="p-3">Avance Módulos</th>
-                  <th className="p-3 text-right">Acción</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {matriculadosEnEsteCurso.map((m) => (
-                  <tr key={m.enrollId} className="hover:bg-slate-50">
-                    <td className="p-3 font-bold text-apre-blue">{m.nombre}</td>
-                    <td className="p-3 text-gray-600">{m.email}</td>
-                    <td className="p-3 font-mono">{formatRut(m.rut)}</td>
-                    <td className="p-3 font-bold text-gray-700">
-                      {m.modulosCompletados.length} módulos
-                    </td>
-                    <td className="p-3 text-right">
-                      <button
-                        onClick={() => desmatricularAlumno(m.enrollId, m.uid)}
-                        className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-bold text-apre-red hover:bg-red-100"
-                      >
-                        Quitar acceso
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* CONTENIDO 3: ALUMNOS TITULADOS / APROBADOS EN ESTE CURSO */}
+      {subTab === "titulados" && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+            <div>
+              <h3 className="text-base font-extrabold text-apre-blue flex items-center gap-2">
+                <span>🎓</span> Alumnos Titulados / Egresados en {cursoInfo.nombre}
+              </h3>
+              <p className="text-xs text-gray-500">
+                Alumnos que han aprobado oficialmente la evaluación final de este curso. Listos para generación de Diploma APRECAP.
+              </p>
+            </div>
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+              {aprobadosFiltrados.length} {aprobadosFiltrados.length === 1 ? "titulado" : "titulados"}
+            </span>
           </div>
-        )}
-      </div>
+
+          {aprobadosFiltrados.length === 0 ? (
+            <p className="text-xs text-gray-500 italic p-6 bg-gray-50 rounded-xl text-center">
+              Aún no hay alumnos con examen final aprobado registrado en este curso.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-gray-50 text-gray-700 font-bold uppercase tracking-wider">
+                  <tr>
+                    <th className="p-3">Alumno</th>
+                    <th className="p-3">RUT</th>
+                    <th className="p-3">Nota Examen Final</th>
+                    <th className="p-3">Fecha de Aprobación</th>
+                    <th className="p-3 text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {aprobadosFiltrados.map((ap) => {
+                    const u = usuarios.find((x) => x.id === ap.userId || x.uid === ap.userId);
+                    const nombre = u?.nombre || ap.nombreUsuario || "Estudiante";
+                    const rut = u?.rut || ap.userRut || "—";
+                    return (
+                      <tr key={ap.id} className="hover:bg-slate-50 transition">
+                        <td className="p-3 font-bold text-apre-blue">{nombre}</td>
+                        <td className="p-3 font-mono">{formatRut(rut)}</td>
+                        <td className="p-3 font-black text-emerald-700">{ap.porcentaje}%</td>
+                        <td className="p-3 text-gray-500">
+                          {ap.fecha?.toDate ? ap.fecha.toDate().toLocaleDateString("es-CL") : "Reciente"}
+                        </td>
+                        <td className="p-3 text-right">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              onEmitirDiploma({
+                                uid: ap.userId,
+                                nombre,
+                                rut,
+                                cursoSlug: cursoActivoSlug,
+                              })
+                            }
+                            className="rounded-lg bg-apre-red px-3.5 py-1.5 text-xs font-black text-white hover:bg-apre-red-dark shadow-xs flex items-center gap-1.5 ml-auto"
+                          >
+                            <span>📜</span>
+                            <span>Generar Diploma</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -2075,7 +2998,8 @@ function SeguimientoTab({
       };
 
       const rawFecha = e.fecha || u?.fechaRegistro;
-      const timing = getAlumnoSeguimientoTiming(e.courseSlug, rawFecha);
+      const sinRestriccion = Boolean(e.sinRestriccionTiempo);
+      const timing = getAlumnoSeguimientoTiming(e.courseSlug, rawFecha, sinRestriccion);
 
       const uEmail = (u.email || "").toLowerCase().trim();
       const uRut = (u.rut || "").replace(/[^0-9kK]/g, "").toLowerCase();
@@ -2140,6 +3064,7 @@ function SeguimientoTab({
         telefono: u.telefono || "—",
         accesoOnline,
         habilitadoMaterialOS10,
+        sinRestriccionTiempo: sinRestriccion,
         courseSlug: e.courseSlug,
         cursoInfo,
         fechaMatricula: rawFecha,
@@ -2150,6 +3075,17 @@ function SeguimientoTab({
       };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  const toggleBypassTiempoSeguimiento = async (enrollId: string, actual: boolean) => {
+    if (!db) return;
+    try {
+      await updateDoc(doc(db, "enrollments", enrollId), {
+        sinRestriccionTiempo: !actual,
+      });
+    } catch (err) {
+      console.error("Error al actualizar restricción de tiempo en seguimiento:", err);
+    }
+  };
 
   const toggleOnlineAlumno = async (uid: string, actual: boolean) => {
     if (!db) return;
@@ -2456,6 +3392,21 @@ function SeguimientoTab({
                               width: `${Math.min(100, (timing.diaActual / timing.totalDiasCurso) * 100)}%`,
                             }}
                           />
+                        </div>
+                        {/* Botón para alternar restricción de días (Drip) */}
+                        <div className="pt-1">
+                          <button
+                            type="button"
+                            onClick={() => toggleBypassTiempoSeguimiento(item.enrollId, item.sinRestriccionTiempo)}
+                            className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-black border transition ${
+                              item.sinRestriccionTiempo
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                                : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
+                            }`}
+                            title={item.sinRestriccionTiempo ? "Restablecer espera de días" : "Saltar todos los días y habilitar curso completo en 1 día"}
+                          >
+                            <span>{item.sinRestriccionTiempo ? "⚡ Sin espera (1 día)" : "⏱️ Saltar días"}</span>
+                          </button>
                         </div>
                       </div>
                     ) : (
@@ -4705,7 +5656,7 @@ function ClasesTab({
   );
 }
 
-/* ---------- Reportes: Notas y Evaluaciones (Estilo SARMAT) ---------- */
+/* ---------- Reportes: Notas y Evaluaciones (Oficial APRECAP) ---------- */
 function ReportesTab() {
   const db = getFirestoreDb();
   const [resultados, setResultados] = useState<any[]>([]);
@@ -4847,22 +5798,22 @@ function ReportesTab() {
 
   return (
     <div className="space-y-6">
-      {/* Banner Principal con Botones de Descarga Excel estilo SARMAT */}
-      <div className="rounded-2xl border border-indigo-200 bg-linear-to-r from-slate-900 via-blue-950 to-indigo-950 p-6 text-white shadow-md">
+      {/* Banner Principal con Botones de Descarga Excel APRECAP */}
+      <div className="rounded-2xl border border-blue-900 bg-linear-to-r from-apre-blue via-[#0d3b66] to-apre-blue p-6 text-white shadow-md">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-400/20 px-3 py-1 text-xs font-black uppercase tracking-wider text-cyan-300 border border-cyan-400/30">
-              <span>📊</span> Sistema de Calificaciones SARMAT
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-white border border-white/20">
+              <span>📊</span> Sistema Oficial de Calificaciones APRECAP
             </div>
             <h2 className="text-xl font-extrabold text-white mt-2">
               Reportes de Notas, Mini-Quizzes y Exámenes Finales
             </h2>
-            <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+            <p className="mt-1 text-xs text-white/80 leading-relaxed">
               Exporta planillas oficiales en Excel con desglose por módulo, preguntas acertadas y porcentajes de aprobación de todos los alumnos.
             </p>
           </div>
 
-          {/* Grupo de 3 Botones de Descarga Excel estilo SARMAT */}
+          {/* Grupo de Botones de Descarga Excel */}
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => exportarCsv("todos")}

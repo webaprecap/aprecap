@@ -18,7 +18,7 @@ interface CursoPreview {
 const CURSOS_PREVIEW: CursoPreview[] = [
   {
     slug: "guardia-de-seguridad",
-    titulo: "Curso de Guardia de Seguridad (OS-10)",
+    titulo: "Curso de Guardia de Seguridad (SPD)",
     emoji: "🛡️",
     totalPreguntas: 140,
     score: 128,
@@ -29,7 +29,7 @@ const CURSOS_PREVIEW: CursoPreview[] = [
   {
     slug: "supervisor-de-seguridad",
     titulo: "Curso de Supervisor de Seguridad Privada",
-    emoji: "👔",
+    emoji: "⭐",
     totalPreguntas: 60,
     score: 54,
     pct: 90,
