@@ -17,21 +17,16 @@ export default function LoginPage() {
   const [smsSent, setSmsSent] = useState(false);
 
   useEffect(() => {
-    if (!loading) {
-      if (userData) {
-        const target =
-          userData.rol === "admin" || userData.rol === "superadmin"
-            ? "/panel/admin"
-            : userData.rol === "profesor"
-            ? "/panel/profesor"
-            : "/panel/alumno";
-        router.push(target);
-      } else if (user) {
-        // Autenticado en Google pero sin ficha de registro: redirigir a formulario obligatorio
-        router.push("/solicitar-acceso");
-      }
+    if (!loading && userData) {
+      const target =
+        userData.rol === "admin" || userData.rol === "superadmin"
+          ? "/panel/admin"
+          : userData.rol === "profesor"
+          ? "/panel/profesor"
+          : "/panel/alumno";
+      router.push(target);
     }
-  }, [userData, user, loading, router]);
+  }, [userData, loading, router]);
 
   const handleGoogle = async () => {
     try {

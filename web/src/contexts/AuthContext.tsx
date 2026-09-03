@@ -134,9 +134,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ? ({ ...userDocSnap.data(), uid: u.uid } as UserData)
         : null;
 
-      // 2. Si no existe por u.uid directo, buscar por email para vincular fichas creadas por el admin o solicitudes previas
+      // 2. Si no existe por u.uid directo, buscar por email o por ID temporal del admin para vincular fichas
       if (!found) {
-        const foundByEmail = await findUserByEmail(email, u.uid);
+        let foundByEmail = await findUserByEmail(email, u.uid);
+
+        // Si no lo encontró por query, buscar directamente por el ID temporal sanitizado que genera el admin
+        if (!foundByEmail) {
+          const uidTemp = email.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+          const tempSnap = await getDoc(doc(db, "usuarios", uidTemp));
+          if (tempSnap.exists()) {
+            foundByEmail = { ...(tempSnap.data() as UserData), uid: u.uid };
+          }
+        }
+
         if (foundByEmail) {
           found = { ...foundByEmail, uid: u.uid };
           // Guardar bajo u.uid oficial con merge para consolidar
@@ -166,32 +176,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (!found) {
-        // Auto-registro por email especial (admin/superadmin) o rechazo
-        const rol = roleForEmail(email);
-        if (rol) {
-          const uid = u.uid;
-          await setDoc(doc(db, "usuarios", uid), {
-            uid,
-            email,
-            nombre: u.displayName || email.split("@")[0],
-            rol,
-            activo: true,
+        // Si no existe, crear ficha de usuario/alumno de forma automática
+        const rolEspecial = roleForEmail(email);
+        const rolFinal: UserRole = rolEspecial || "alumno";
+        const defaultNombre = u.displayName || email.split("@")[0] || "Estudiante";
+
+        const nuevoUsuario: UserData = {
+          uid: u.uid,
+          email,
+          nombre: defaultNombre,
+          rol: rolFinal,
+          activo: true,
+        };
+
+        await setDoc(
+          userDocRef,
+          {
+            ...nuevoUsuario,
             fechaRegistro: serverTimestamp(),
-          });
-          found = {
-            uid,
-            email,
-            nombre: u.displayName || email.split("@")[0],
-            rol,
-            activo: true,
-          };
-        } else {
-          // Alumno nuevo (sin doc en `usuarios` todavía): se mantiene la
-          // sesión con userData = null para poder completar /solicitar-acceso.
-          setUserData(null);
-          setError(null);
-          return;
-        }
+          },
+          { merge: true }
+        ).catch(() => {});
+
+        found = nuevoUsuario;
       }
 
       // Si el email tiene un rol administrativo por configuración y su doc no lo tenía, actualizar

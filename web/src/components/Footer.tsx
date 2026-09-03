@@ -128,7 +128,16 @@ export default function Footer() {
         ·{" "}
         <Link href="/terminos" className="hover:text-white">
           Términos y Condiciones
-        </Link>
+        </Link>{" "}
+        ·{" "}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent("open-cookie-banner"))}
+          className="hover:text-white transition underline cursor-pointer inline-flex items-center gap-1"
+        >
+          <span>🍪</span>
+          <span>Preferencias de Cookies</span>
+        </button>
       </div>
     </footer>
   );

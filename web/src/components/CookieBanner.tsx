@@ -17,9 +17,18 @@ export default function CookieBanner() {
   useEffect(() => {
     const saved = localStorage.getItem(COOKIE_KEY);
     if (!saved) {
-      const timer = setTimeout(() => setVisible(true), 1000);
+      const timer = setTimeout(() => setVisible(true), 300);
       return () => clearTimeout(timer);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleOpen = () => {
+      setShowConfig(true);
+      setVisible(true);
+    };
+    window.addEventListener("open-cookie-banner", handleOpen);
+    return () => window.removeEventListener("open-cookie-banner", handleOpen);
   }, []);
 
   const savePrefs = (cookiePrefs: CookiePrefs) => {
@@ -76,12 +85,20 @@ export default function CookieBanner() {
                 </span>
               </div>
             </label>
-            <button
-              onClick={saveCustom}
-              className="w-full rounded-xl bg-apre-blue py-2.5 text-sm font-bold text-white transition hover:bg-apre-blue-light"
-            >
-              Guardar Preferencias
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={saveCustom}
+                className="flex-1 rounded-xl bg-apre-blue py-2.5 text-sm font-bold text-white transition hover:bg-apre-blue-light"
+              >
+                Guardar Preferencias
+              </button>
+              <button
+                onClick={() => setVisible(false)}
+                className="rounded-xl px-4 py-2.5 text-sm font-bold text-gray-500 transition hover:bg-gray-100"
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         ) : (
           <div className="mt-4 flex flex-wrap gap-2">
