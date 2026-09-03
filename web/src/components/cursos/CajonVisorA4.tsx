@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useSwipeable } from "react-swipeable";
@@ -8,6 +10,15 @@ import "react-pdf/dist/Page/TextLayer.css";
 // Configuración local del worker de PDF.js
 if (typeof window !== "undefined" && pdfjs) {
   pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+}
+
+// Resolver URLs de Sanity vía proxy local para evitar bloqueos CORS
+function resolverUrlPdf(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("https://cdn.sanity.io/files/")) {
+    return `/api/pdf?url=${encodeURIComponent(url)}`;
+  }
+  return url;
 }
 
 interface CajonVisorA4Props {
@@ -277,8 +288,9 @@ export default function CajonVisorA4({
           }`}
         >
           <Document
-            file={docActivo.archivo}
+            file={resolverUrlPdf(docActivo.archivo)}
             onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={(err) => console.error("Error al cargar PDF en Visor A4:", err)}
             loading={
               <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-apre-blue border-t-transparent" />
@@ -286,21 +298,33 @@ export default function CajonVisorA4({
               </div>
             }
             error={
-              <div className="text-center p-8 text-red-400 text-xs">
-                Error al renderizar el documento.
+              <div className="text-center p-8 text-slate-300 text-xs space-y-3">
+                <p className="text-red-400 font-bold">Error al previsualizar el documento en el visor.</p>
+                <div>
+                  <a
+                    href={docActivo.archivo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-apre-blue hover:bg-apre-blue-light px-4 py-2 text-xs font-bold text-white shadow-md transition"
+                  >
+                    <span>📥</span> Abrir o descargar documento oficial
+                  </a>
+                </div>
               </div>
             }
           >
-            {/* Hoja A4 con contorno limpio y sombra suave */}
-            <div className="shadow-2xl rounded-sm border border-slate-200/40 bg-white overflow-hidden transition-all duration-200">
-              <Page
-                pageNumber={pageNumber}
-                width={effectiveWidth}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-                className="block"
-              />
-            </div>
+            {/* Hoja A4 con contorno limpio y sombra suave solo cuando el PDF ya cargó */}
+            {numPages > 0 && (
+              <div className="shadow-2xl rounded-sm border border-slate-200/40 bg-white overflow-hidden transition-all duration-200">
+                <Page
+                  pageNumber={pageNumber}
+                  width={effectiveWidth}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  className="block"
+                />
+              </div>
+            )}
           </Document>
         </div>
 
