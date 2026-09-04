@@ -185,6 +185,15 @@
 103. **Obligatoriedad de Datos Personales y Ficha de Alumno**: Validación estricta de Nombres, Apellidos, RUT chileno válido y Teléfono. Regularización de alumnos legacy con banner y modal interactivo en `/panel/alumno`.
 104. **Persistencia Definitiva en Firestore y Limpieza de Duplicados**: Eliminada la sobreescritura de perfiles por documentos temporales; `AuthContext.tsx` prioriza `u.uid` oficial y limpia temporales; `firestore.rules` permite borrado seguro de temporales con el mismo email y actualización flexible.
 105. **Desvío en Login Eliminado y Preferencias de Cookies en Footer**: Removida la redirección apresurada hacia `/solicitar-acceso`; los alumnos van directo a `/panel/alumno`. Añadido botón `[ 🍪 Preferencias de Cookies ]` en el footer mediante evento `open-cookie-banner`.
+106. **Gestión Integral de Grupos por Fecha (Convocatorias) y Ficha de Alumno**:
+   - **Corrección de Aprobación por Curso (`CursosGestionTab`)**: Al aprobar alumnos desde secciones específicas de cursos (ej. "Solicitudes OS-10"), ahora se asigna de forma estricta y garantizada el campo `rol: "alumno"`, evitando que el alumno quede invisible.
+   - **Selector Directo de Convocatoria al Aprobar**: Se agregó modal y selector para asignar al estudiante a la convocatoria correspondiente (ej. Septiembre) en el momento exacto de la aprobación, tanto en la vista global como en la vista de curso.
+   - **Asignación Rápida desde Historial de Solicitudes**: Cada solicitud aprobada en `HistorialTab` cuenta con el botón `[🗓️ Asignar / Cambiar Grupo por Fecha]` con lista desplegable de cohortes activas para vincular al alumno con un clic en cualquier momento.
+   - **Selector de Grupo en Tabla de Alumnos Cursando**: En la tabla de alumnos activos de cada curso, se agregó una columna con selector dinámico para cambiar o asignar el grupo por fecha directamente.
+   - **Buscador en Modal de Convocatorias**: El drawer de gestión de alumnos de cada grupo por fecha ahora incluye un buscador en tiempo real para filtrar la lista por nombre, RUT o email antes de asignar.
+   - **Botón de Auto-Reparación y Sincronización**: Implementado botón `[🔄 Sincronizar y Reparar Alumnos]` en "Historial" y en "Todos los Alumnos" para reparar automáticamente fichas históricas sin rol explícito.
+   - **Carga Tolerante en Cohortes**: `CohortesTab` y `UsuariosTab` ahora cargan y muestran a todos los estudiantes matriculados o aprobados sin depender exclusivamente de índices estrictos de Firestore.
+107. **Estructura de Auditoría de Cursos (Logs de Actividad)**: Implementado módulo de auditoría de estado para cada curso OTEC y de seguridad: registros de fecha de aprobación, cambios de grupo por cohorte y auditoría de documentos descargados (PDFs) para cumplir con las exigencias de fiscalización de Carabineros y SENCE.
 
 ---
 

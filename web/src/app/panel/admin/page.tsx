@@ -9,6 +9,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -1194,6 +1195,7 @@ function CohortesTab() {
   const [filtroCurso, setFiltroCurso] = useState<string>("todos");
   const [busqueda, setBusqueda] = useState<string>("");
   const [alumnoParaAgregar, setAlumnoParaAgregar] = useState<string>("");
+  const [filtroModal, setFiltroModal] = useState<string>("");
   const [guardando, setGuardando] = useState(false);
 
   const [form, setForm] = useState({
@@ -1209,9 +1211,13 @@ function CohortesTab() {
     const un1 = onSnapshot(collection(db, "cohortes"), (snap) =>
       setCohortes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
-    const un2 = onSnapshot(query(collection(db, "usuarios"), where("rol", "==", "alumno")), (snap) =>
-      setUsuarios(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    );
+    const un2 = onSnapshot(collection(db, "usuarios"), (snap) => {
+      const all = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const alumnos = all.filter(
+        (u: any) => u.rol === "alumno" || (!u.rol && u.rol !== "profesor" && u.rol !== "admin" && u.rol !== "superadmin")
+      );
+      setUsuarios(alumnos);
+    });
     return () => {
       un1();
       un2();
@@ -1283,6 +1289,7 @@ function CohortesTab() {
     if (!u) return;
 
     await updateDoc(doc(db, "usuarios", uid), {
+      rol: "alumno",
       cohorteId: cohorte.id,
       cohorteNombre: cohorte.nombre,
       ...(cohorte.cursoSlug === "guardia-de-seguridad"
@@ -1720,9 +1727,18 @@ function CohortesTab() {
 
             {/* Asignar Alumno Existente a este grupo */}
             <div className="rounded-xl border border-gray-200 p-3 bg-white space-y-2">
-              <label className="text-xs font-bold text-gray-700 block">
-                + Agregar Alumno a este Grupo:
-              </label>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <label className="text-xs font-bold text-gray-700 block">
+                  + Agregar Alumno a este Grupo:
+                </label>
+                <input
+                  type="text"
+                  value={filtroModal}
+                  onChange={(e) => setFiltroModal(e.target.value)}
+                  placeholder="🔍 Filtrar por nombre, RUT o email…"
+                  className="rounded-lg border border-gray-300 px-2 py-1 text-[11px] w-full sm:w-56 focus:border-apre-blue focus:outline-hidden"
+                />
+              </div>
               <div className="flex gap-2">
                 <select
                   value={alumnoParaAgregar}
@@ -1732,6 +1748,14 @@ function CohortesTab() {
                   <option value="">Selecciona un alumno registrado…</option>
                   {usuarios
                     .filter((u) => u.cohorteId !== modalAlumnos.id)
+                    .filter((u) => {
+                      if (!filtroModal.trim()) return true;
+                      const q = filtroModal.toLowerCase().trim();
+                      const n = (u.nombre || "").toLowerCase();
+                      const em = (u.email || "").toLowerCase();
+                      const r = (u.rut || "").toLowerCase();
+                      return n.includes(q) || em.includes(q) || r.includes(q);
+                    })
                     .map((u) => (
                       <option key={u.id} value={u.id}>
                         {u.nombre} ({u.email}) {u.rut ? `· RUT: ${formatRut(u.rut)}` : ""} {u.cohorteNombre ? `[Actualmente en: ${u.cohorteNombre}]` : "[Sin grupo]"}
@@ -1740,9 +1764,12 @@ function CohortesTab() {
                 </select>
                 <button
                   type="button"
-                  onClick={() => asignarAlumnoACohorte(alumnoParaAgregar, modalAlumnos)}
+                  onClick={() => {
+                    asignarAlumnoACohorte(alumnoParaAgregar, modalAlumnos);
+                    setFiltroModal("");
+                  }}
                   disabled={!alumnoParaAgregar}
-                  className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark px-4 py-2 text-xs font-bold text-white transition disabled:opacity-50"
+                  className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark px-4 py-2 text-xs font-bold text-white transition disabled:opacity-50 shrink-0"
                 >
                   Asignar
                 </button>
@@ -1793,45 +1820,361 @@ function CohortesTab() {
 function HistorialTab() {
   const db = getFirestoreDb();
   const [items, setItems] = useState<any[]>([]);
+  const [cohortes, setCohortes] = useState<any[]>([]);
+  const [busqueda, setBusqueda] = useState<string>("");
+  const [modalAsignar, setModalAsignar] = useState<any | null>(null);
+  const [cohorteSel, setCohorteSel] = useState<string>("");
+  const [guardando, setGuardando] = useState<boolean>(false);
+  const [reparando, setReparando] = useState<boolean>(false);
+  const [msgFeedback, setMsgFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     if (!db) return;
-    const q = query(collection(db, "solicitudes"), where("estado", "!=", "pendiente"));
-    return onSnapshot(q, (snap) =>
+    const un1 = onSnapshot(query(collection(db, "solicitudes"), where("estado", "!=", "pendiente")), (snap) =>
       setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
+    const un2 = onSnapshot(collection(db, "cohortes"), (snap) =>
+      setCohortes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
+    return () => {
+      un1();
+      un2();
+    };
   }, [db]);
 
-  if (items.length === 0) return <p className="text-gray-500">Sin solicitudes revisadas.</p>;
+  const repararAlumnos = async () => {
+    if (!db) return;
+    setReparando(true);
+    setMsgFeedback(null);
+    try {
+      let reparados = 0;
+      // 1. Revisar usuarios existentes sin rol explícito
+      const usuariosSnap = await getDocs(collection(db, "usuarios"));
+      for (const uDoc of usuariosSnap.docs) {
+        const uData = uDoc.data();
+        if (
+          !uData.rol ||
+          (uData.rol !== "alumno" && uData.rol !== "profesor" && uData.rol !== "admin" && uData.rol !== "superadmin")
+        ) {
+          await updateDoc(doc(db, "usuarios", uDoc.id), {
+            rol: "alumno",
+            activo: true,
+          }).catch(() => {});
+          reparados++;
+        }
+      }
+
+      // 2. Revisar solicitudes aprobadas y asegurar su ficha en usuarios
+      const aprobadas = items.filter((s) => s.estado === "aprobada");
+      for (const s of aprobadas) {
+        const uid = s.uid || s.email?.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+        if (!uid) continue;
+        const nombreCompleto = [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ").trim();
+        const cursoSlug = s.cursoDeseado || "guardia-de-seguridad";
+        const fieldKey = getCourseFieldKey(cursoSlug);
+
+        await setDoc(
+          doc(db, "usuarios", uid),
+          {
+            uid,
+            email: s.email,
+            nombre: nombreCompleto || s.nombres || s.email,
+            rut: s.rut || "",
+            rol: "alumno",
+            activo: true,
+            solicitudId: s.id,
+            [fieldKey]: "aceptado",
+            ...(s.cohorteId ? { cohorteId: s.cohorteId, cohorteNombre: s.cohorteNombre } : {}),
+          },
+          { merge: true }
+        ).catch(() => {});
+      }
+
+      setMsgFeedback(`✓ ¡Sincronización completada! Se verificaron ${items.length} solicitudes. Todos los alumnos quedaron con rol activo.`);
+      setTimeout(() => setMsgFeedback(null), 6000);
+    } catch (err: any) {
+      console.error(err);
+      alert("Error al sincronizar alumnos: " + err.message);
+    } finally {
+      setReparando(false);
+    }
+  };
+
+  const asignarCohorteASolicitud = async (s: any, targetCohorteId: string) => {
+    if (!db) return;
+    setGuardando(true);
+    try {
+      const cohorteObj = cohortes.find((c) => c.id === targetCohorteId);
+      const cohorteId = cohorteObj?.id || null;
+      const cohorteNombre = cohorteObj?.nombre || null;
+      const materialHabilitado = Boolean(cohorteObj?.materialHabilitado);
+      const cursoSlug = s.cursoDeseado || cohorteObj?.cursoSlug || "guardia-de-seguridad";
+      const fieldKey = getCourseFieldKey(cursoSlug);
+      const uid = s.uid || s.email?.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+      const nombreCompleto = [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ").trim();
+
+      // 1. Actualizar solicitud
+      await updateDoc(doc(db, "solicitudes", s.id), {
+        cohorteId,
+        cohorteNombre,
+      });
+
+      // 2. Actualizar/Crear usuario garantizando rol: 'alumno'
+      await setDoc(
+        doc(db, "usuarios", uid),
+        {
+          uid,
+          email: s.email,
+          nombre: nombreCompleto || s.nombres || s.email,
+          rut: s.rut || "",
+          rol: "alumno",
+          activo: true,
+          solicitudId: s.id,
+          cursoDeseado: cursoSlug,
+          cohorteId,
+          cohorteNombre,
+          [fieldKey]: "aceptado",
+          ...(cursoSlug === "guardia-de-seguridad" && cohorteId
+            ? {
+                habilitadoMaterialOS10: materialHabilitado,
+                materialOS10Habilitado: materialHabilitado,
+              }
+            : {}),
+        },
+        { merge: true }
+      );
+
+      // 3. Actualizar enrollment
+      const enrollId = `${uid}_${cursoSlug}`;
+      await setDoc(
+        doc(db, "enrollments", enrollId),
+        {
+          uid,
+          courseSlug: cursoSlug,
+          cohorteId,
+          cohorteNombre,
+          modulosCompletados: [],
+          fecha: serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+      setModalAsignar(null);
+      setCohorteSel("");
+      setMsgFeedback(`✓ Alumno "${nombreCompleto || s.email}" asignado exitosamente a: ${cohorteNombre || "Sin grupo"}`);
+      setTimeout(() => setMsgFeedback(null), 5000);
+    } catch (err: any) {
+      console.error("Error al asignar cohorte:", err);
+      alert("Error al asignar cohorte: " + err.message);
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  const itemsFiltrados = items.filter((s) => {
+    if (!busqueda.trim()) return true;
+    const q = busqueda.toLowerCase().trim();
+    const nom = [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ").toLowerCase();
+    const email = (s.email || "").toLowerCase();
+    const rut = (s.rut || "").toLowerCase();
+    const grupo = (s.cohorteNombre || "").toLowerCase();
+    const curso = (cursoNombreDe(s.cursoDeseado) || "").toLowerCase();
+    return nom.includes(q) || email.includes(q) || rut.includes(q) || grupo.includes(q) || curso.includes(q);
+  });
+
   return (
-    <div className="space-y-3">
-      {items.map((s) => (
-        <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <p className="font-extrabold text-apre-blue">
-                {[s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ")}
-              </p>
-              {s.rut && <p className="text-xs font-mono text-gray-600">RUT: {formatRut(s.rut)}</p>}
-            </div>
-            <span
-              className={`rounded-full px-2.5 py-0.5 text-xs font-bold text-white ${
-                s.estado === "aprobada" ? "bg-whatsapp" : "bg-apre-red"
-              }`}
-            >
-              {s.estado === "aprobada" ? "✅ Aprobada" : "❌ Rechazada"}
-            </span>
-          </div>
-          <p className="text-sm text-gray-600">
-            {s.email} · {s.tipoSolicitud === "profesor" ? "Profesor" : "Alumno"}
+    <div className="space-y-4">
+      {/* Barra superior de herramientas y buscador */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <div>
+          <h3 className="text-base font-extrabold text-apre-blue flex items-center gap-2">
+            <span>📁</span> Historial de Solicitudes Revisadas
+          </h3>
+          <p className="text-xs text-gray-500">
+            Consulta solicitudes aprobadas y asigna alumnos a grupos por fecha (convocatorias) en cualquier momento.
           </p>
-          {s.fechaRevision?.toDate && (
-            <p className="mt-1 text-xs text-gray-400">
-              Revisada: {s.fechaRevision.toDate().toLocaleString("es-CL")}
-            </p>
-          )}
         </div>
-      ))}
+
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="🔍 Buscar por nombre, RUT o email…"
+            className="rounded-xl border border-gray-300 px-3 py-1.5 text-xs focus:border-apre-blue focus:outline-hidden w-full sm:w-64"
+          />
+          <button
+            type="button"
+            onClick={repararAlumnos}
+            disabled={reparando}
+            className="rounded-xl bg-blue-50 hover:bg-blue-100 text-apre-blue border border-blue-200 px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 disabled:opacity-50"
+            title="Sincroniza alumnos que hayan quedado sin rol explícito"
+          >
+            <span>🔄</span>
+            <span>{reparando ? "Sincronizando..." : "Sincronizar y Reparar Alumnos"}</span>
+          </button>
+        </div>
+      </div>
+
+      {msgFeedback && (
+        <div className="rounded-xl bg-emerald-50 border border-emerald-300 p-3 text-xs font-bold text-emerald-800 shadow-2xs animate-fade-in">
+          {msgFeedback}
+        </div>
+      )}
+
+      {itemsFiltrados.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
+          <p className="text-gray-500 text-xs">
+            {busqueda.trim() ? "No se encontraron solicitudes con ese criterio de búsqueda." : "Sin solicitudes revisadas aún."}
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {itemsFiltrados.map((s) => (
+            <div key={s.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs hover:border-gray-300 transition">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="font-extrabold text-apre-blue text-base">
+                    {[s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ") || s.email}
+                  </p>
+                  {s.rut && <p className="text-xs font-mono font-bold text-gray-700">RUT: {formatRut(s.rut)}</p>}
+                </div>
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-bold text-white ${
+                    s.estado === "aprobada" ? "bg-whatsapp" : "bg-apre-red"
+                  }`}
+                >
+                  {s.estado === "aprobada" ? "✅ Aprobada" : "❌ Rechazada"}
+                </span>
+              </div>
+
+              <div className="mt-2 text-xs text-gray-600 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>✉️ {s.email}</span>
+                {s.telefono && <span>📞 {s.telefono}</span>}
+                <span className="rounded-md bg-blue-50 px-2 py-0.5 font-bold text-blue-700 border border-blue-200">
+                  {cursoNombreDe(s.cursoDeseado || "guardia-de-seguridad")}
+                </span>
+                {s.fechaRevision?.toDate && (
+                  <span className="text-gray-400">
+                    · Revisada: {s.fechaRevision.toDate().toLocaleString("es-CL")}
+                  </span>
+                )}
+              </div>
+
+              {/* Si es una solicitud aprobada de alumno, mostrar información de grupo y selector */}
+              {s.estado === "aprobada" && s.tipoSolicitud !== "profesor" && (
+                <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 bg-slate-50/70 p-2.5 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold border ${
+                        s.cohorteNombre
+                          ? "bg-indigo-50 text-indigo-900 border-indigo-200"
+                          : "bg-amber-50 text-amber-900 border-amber-300"
+                      }`}
+                    >
+                      <span>🗓️</span>
+                      <span>
+                        {s.cohorteNombre ? (
+                          <>Grupo asignado: <strong>{s.cohorteNombre}</strong></>
+                        ) : (
+                          <strong className="text-amber-800">⚠️ Sin grupo por fecha asignado</strong>
+                        )}
+                      </span>
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModalAsignar(s);
+                      setCohorteSel(s.cohorteId || "");
+                    }}
+                    className="rounded-xl bg-apre-blue hover:bg-apre-blue-dark text-white px-3.5 py-1.5 text-xs font-black transition shadow-2xs flex items-center gap-1.5"
+                  >
+                    <span>🗓️</span>
+                    <span>{s.cohorteNombre ? "Cambiar Grupo por Fecha" : "+ Asignar a Grupo por Fecha"}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Modal para Asignar / Cambiar Convocatoria por Fecha desde el Historial */}
+      {modalAsignar && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-gray-200 space-y-4">
+            <div className="flex items-start justify-between border-b border-gray-100 pb-3">
+              <div>
+                <h3 className="text-base font-extrabold text-apre-blue">
+                  Asignar a Grupo / Convocatoria por Fecha
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Alumno: <strong>{[modalAsignar.nombres, modalAsignar.apellidoPaterno].filter(Boolean).join(" ") || modalAsignar.email}</strong>
+                </p>
+                <p className="text-[11px] text-gray-400">
+                  Curso: <strong>{cursoNombreDe(modalAsignar.cursoDeseado || "guardia-de-seguridad")}</strong>
+                </p>
+              </div>
+              <button
+                onClick={() => setModalAsignar(null)}
+                className="rounded-full bg-gray-100 p-1.5 text-gray-500 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">
+                Selecciona la Convocatoria por Fecha (ej. Septiembre):
+              </label>
+              <select
+                value={cohorteSel}
+                onChange={(e) => setCohorteSel(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+              >
+                <option value="">-- Sin grupo específico (Dejar libre) --</option>
+                {cohortes
+                  .filter((c) => !modalAsignar.cursoDeseado || c.cursoSlug === modalAsignar.cursoDeseado)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nombre} (Inicio: {c.fechaInicio || "Por definir"}) · {c.modalidad === "online" ? "Online" : "Presencial"}
+                    </option>
+                  ))}
+                {cohortes.filter((c) => !modalAsignar.cursoDeseado || c.cursoSlug === modalAsignar.cursoDeseado).length === 0 && (
+                  cohortes.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      [{cursoNombreDe(c.cursoSlug)}] {c.nombre} (Inicio: {c.fechaInicio || "—"})
+                    </option>
+                  ))
+                )}
+              </select>
+              <p className="text-[11px] text-gray-400">
+                Al confirmar, el alumno quedará vinculado a esta convocatoria, aparecerá en la nómina del grupo y se asegurará su rol de alumno en la plataforma.
+              </p>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => asignarCohorteASolicitud(modalAsignar, cohorteSel)}
+                disabled={guardando}
+                className="flex-1 rounded-xl bg-whatsapp py-2.5 text-xs font-black text-white hover:brightness-105 shadow-sm disabled:opacity-50"
+              >
+                {guardando ? "Guardando..." : "✓ Confirmar y Asignar"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalAsignar(null)}
+                className="rounded-xl bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2370,6 +2713,9 @@ function CursosGestionTab({
   const [enrolls, setEnrolls] = useState<any[]>([]);
   const [evaluaciones, setEvaluaciones] = useState<any[]>([]);
   const [solicitudes, setSolicitudes] = useState<any[]>([]);
+  const [cohortes, setCohortes] = useState<any[]>([]);
+  const [modalAprobarConCohorte, setModalAprobarConCohorte] = useState<any | null>(null);
+  const [cohorteSelCurso, setCohorteSelCurso] = useState<string>("");
   const [nuevoMatriculaUid, setNuevoMatriculaUid] = useState<string>("");
   const [busqueda, setBusqueda] = useState<string>("");
 
@@ -2399,11 +2745,15 @@ function CursosGestionTab({
     const un4 = onSnapshot(query(collection(db, "solicitudes"), where("estado", "==", "pendiente")), (snap) =>
       setSolicitudes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
+    const un5 = onSnapshot(collection(db, "cohortes"), (snap) =>
+      setCohortes(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    );
     return () => {
       un1();
       un2();
       un3();
       un4();
+      un5();
     };
   }, [db]);
 
@@ -2437,6 +2787,8 @@ function CursosGestionTab({
         email: emailFinal,
         rut: rutFinal,
         telefono: u?.telefono || "—",
+        cohorteId: e.cohorteId || u?.cohorteId || null,
+        cohorteNombre: e.cohorteNombre || u?.cohorteNombre || null,
         modulosCompletados: e.modulosCompletados || [],
         fecha: rawFecha,
         sinRestriccionTiempo: sinRestriccion,
@@ -2513,15 +2865,29 @@ function CursosGestionTab({
   const pendientesEsteCurso = Array.from(solicitudesMap.values());
 
   // Acciones
-  const aprobarSolicitud = async (s: any) => {
+  const aprobarSolicitud = async (s: any, cohorteIdElegida?: string) => {
     if (!db) return;
     const uid = s.uid || s.email?.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
     const nombreFinal = s.nombre || [s.nombres, s.apellidoPaterno, s.apellidoMaterno].filter(Boolean).join(" ") || undefined;
+    const targetCohorte = cohortes.find((c) => c.id === cohorteIdElegida);
+    const cohorteId = targetCohorte?.id || null;
+    const cohorteNombre = targetCohorte?.nombre || null;
+    const materialHabilitado = Boolean(targetCohorte?.materialHabilitado);
+
     await setDoc(
       doc(db, "usuarios", uid),
       {
         [fieldKey]: "aceptado",
+        rol: "alumno",
         activo: true,
+        cohorteId,
+        cohorteNombre,
+        ...(cursoActivoSlug === "guardia-de-seguridad" && cohorteId
+          ? {
+              habilitadoMaterialOS10: materialHabilitado,
+              materialOS10Habilitado: materialHabilitado,
+            }
+          : {}),
         ...(nombreFinal ? { nombre: nombreFinal } : {}),
         ...(s.nombres ? { nombres: s.nombres } : {}),
         ...(s.apellidoPaterno ? { apellidoPaterno: s.apellidoPaterno } : {}),
@@ -2537,6 +2903,8 @@ function CursosGestionTab({
       {
         uid,
         courseSlug: cursoActivoSlug,
+        cohorteId,
+        cohorteNombre,
         modulosCompletados: [],
         sinRestriccionTiempo: false,
         fecha: serverTimestamp(),
@@ -2546,9 +2914,46 @@ function CursosGestionTab({
     if (s.solicitudId) {
       await updateDoc(doc(db, "solicitudes", s.solicitudId), {
         estado: "aprobada",
+        cohorteId,
+        cohorteNombre,
         fechaRevision: serverTimestamp(),
       });
     }
+    setModalAprobarConCohorte(null);
+    setCohorteSelCurso("");
+  };
+
+  const asignarGrupoDesdeCurso = async (uid: string, targetCohorteId: string) => {
+    if (!db || !uid) return;
+    const cohorteObj = cohortes.find((c) => c.id === targetCohorteId);
+    const cohorteId = cohorteObj?.id || null;
+    const cohorteNombre = cohorteObj?.nombre || null;
+    const materialHabilitado = Boolean(cohorteObj?.materialHabilitado);
+
+    await updateDoc(doc(db, "usuarios", uid), {
+      rol: "alumno",
+      cohorteId,
+      cohorteNombre,
+      ...(cursoActivoSlug === "guardia-de-seguridad" && cohorteId
+        ? {
+            habilitadoMaterialOS10: materialHabilitado,
+            materialOS10Habilitado: materialHabilitado,
+          }
+        : {}),
+    }).catch(() => {});
+
+    const enrollId = `${uid}_${cursoActivoSlug}`;
+    await setDoc(
+      doc(db, "enrollments", enrollId),
+      {
+        uid,
+        courseSlug: cursoActivoSlug,
+        cohorteId,
+        cohorteNombre,
+        fecha: serverTimestamp(),
+      },
+      { merge: true }
+    );
   };
 
   const rechazarSolicitud = async (s: any) => {
@@ -2796,15 +3201,40 @@ function CursosGestionTab({
                         : "Reciente"}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => aprobarSolicitud(s)}
-                      className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-extrabold text-white hover:brightness-105 transition shadow-xs flex items-center gap-1.5"
-                    >
-                      <span>✓</span>
-                      <span>Aprobar Ingreso al Curso</span>
-                    </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {cohortes.filter((c) => c.cursoSlug === cursoActivoSlug).length > 0 ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const avail = cohortes.filter((c) => c.cursoSlug === cursoActivoSlug);
+                            setModalAprobarConCohorte(s);
+                            setCohorteSelCurso(avail[0]?.id || "");
+                          }}
+                          className="rounded-xl bg-whatsapp px-3.5 py-2 text-xs font-extrabold text-white hover:brightness-105 transition shadow-xs flex items-center gap-1.5"
+                        >
+                          <span>✓</span>
+                          <span>Aprobar y Asignar a Convocatoria ({cohortes.filter((c) => c.cursoSlug === cursoActivoSlug).length})</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => aprobarSolicitud(s)}
+                          className="rounded-xl bg-emerald-700 hover:bg-emerald-800 px-3 py-2 text-xs font-bold text-white transition shadow-xs"
+                          title="Aprobar sin asignar grupo por fecha"
+                        >
+                          Aprobar Directo
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => aprobarSolicitud(s)}
+                        className="rounded-xl bg-whatsapp px-4 py-2 text-xs font-extrabold text-white hover:brightness-105 transition shadow-xs flex items-center gap-1.5"
+                      >
+                        <span>✓</span>
+                        <span>Aprobar Ingreso al Curso</span>
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => rechazarSolicitud(s)}
@@ -2815,6 +3245,71 @@ function CursosGestionTab({
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Modal para Elegir Convocatoria al Aprobar en Gestión de Curso */}
+          {modalAprobarConCohorte && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+              <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-gray-200 space-y-4">
+                <div className="flex items-start justify-between border-b border-gray-100 pb-3">
+                  <div>
+                    <h3 className="text-base font-extrabold text-apre-blue">
+                      Asignar a Convocatoria / Grupo por Fecha
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Alumno: <strong>{modalAprobarConCohorte.nombre || modalAprobarConCohorte.email}</strong>
+                    </p>
+                    <p className="text-[11px] text-gray-400">
+                      Curso: <strong>{cursoInfo.nombre}</strong>
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setModalAprobarConCohorte(null)}
+                    className="rounded-full bg-gray-100 p-1.5 text-gray-500 font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-700 block">
+                    Selecciona la Convocatoria por Fecha:
+                  </label>
+                  <select
+                    value={cohorteSelCurso}
+                    onChange={(e) => setCohorteSelCurso(e.target.value)}
+                    className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs font-medium focus:border-apre-blue focus:outline-hidden"
+                  >
+                    <option value="">-- Sin grupo específico (Matrícula libre) --</option>
+                    {cohortes
+                      .filter((c) => c.cursoSlug === cursoActivoSlug)
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.nombre} (Inicio: {c.fechaInicio || "Por definir"}) · {c.modalidad === "online" ? "Online" : "Presencial"}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => aprobarSolicitud(modalAprobarConCohorte, cohorteSelCurso)}
+                    className="flex-1 rounded-xl bg-whatsapp py-2.5 text-xs font-black text-white hover:brightness-105 shadow-sm"
+                  >
+                    ✓ Confirmar y Matricular
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModalAprobarConCohorte(null)}
+                    className="rounded-xl bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-300"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -2875,6 +3370,7 @@ function CursosGestionTab({
                   <tr>
                     <th className="p-3">Alumno</th>
                     <th className="p-3">RUT</th>
+                    <th className="p-3">Grupo / Convocatoria</th>
                     <th className="p-3">Jornada / Días</th>
                     <th className="p-3">Avance Módulos</th>
                     <th className="p-3">Restricción de Tiempo (Drip)</th>
@@ -2903,6 +3399,22 @@ function CursosGestionTab({
                         ) : (
                           <span className="font-semibold text-slate-800">{formatRut(m.rut)}</span>
                         )}
+                      </td>
+                      <td className="p-3">
+                        <select
+                          value={m.cohorteId || ""}
+                          onChange={(e) => asignarGrupoDesdeCurso(m.uid, e.target.value)}
+                          className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] text-gray-700 font-medium focus:border-apre-blue focus:outline-hidden max-w-[170px]"
+                        >
+                          <option value="">-- Sin grupo asignado --</option>
+                          {cohortes
+                            .filter((c) => c.cursoSlug === cursoActivoSlug)
+                            .map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {c.nombre}
+                              </option>
+                            ))}
+                        </select>
                       </td>
                       <td className="p-3">
                         <div className="flex flex-col gap-1">
@@ -4177,7 +4689,12 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
     };
   }, [db]);
 
-  const lista = usuarios.filter((u) => u.rol === filtroRol);
+  const lista = usuarios.filter((u) => {
+    if (filtroRol === "alumno") {
+      return u.rol === "alumno" || (!u.rol && u.rol !== "profesor" && u.rol !== "admin" && u.rol !== "superadmin");
+    }
+    return u.rol === filtroRol;
+  });
 
   const toggleActivo = async (u: any) => {
     if (!db) return;
@@ -4293,14 +4810,35 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
 
       {/* Buscador de Usuarios */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
-        <div className="w-full sm:w-80">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto flex-1">
           <input
             type="text"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder={`🔍 Buscar ${filtroRol === "profesor" ? "profesor" : "alumno"} por nombre, RUT o email…`}
-            className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
+            className="w-full sm:w-80 rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
           />
+          {filtroRol === "alumno" && (
+            <button
+              type="button"
+              onClick={async () => {
+                if (!db) return;
+                let c = 0;
+                for (const u of usuarios) {
+                  if (!u.rol || (u.rol !== "alumno" && u.rol !== "profesor" && u.rol !== "admin" && u.rol !== "superadmin")) {
+                    await updateDoc(doc(db, "usuarios", u.id), { rol: "alumno", activo: true }).catch(() => {});
+                    c++;
+                  }
+                }
+                alert(`✓ Sincronización finalizada. Se actualizaron ${c} registros de alumnos.`);
+              }}
+              className="rounded-xl bg-blue-50 hover:bg-blue-100 text-apre-blue border border-blue-200 px-3 py-2 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              title="Sincroniza y repara alumnos que hayan quedado sin rol explícito"
+            >
+              <span>🔄</span>
+              <span>Sincronizar y Reparar Alumnos</span>
+            </button>
+          )}
         </div>
         <p className="text-xs font-bold text-gray-500">
           Mostrando {listaFiltrada.length} de {lista.length} {filtroRol === "profesor" ? "profesores" : "alumnos"}
@@ -4436,7 +4974,7 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
                 )}
 
                 {/* Asignación de Grupo / Convocatoria para Alumnos */}
-                {u.rol === "alumno" && (
+                {(u.rol === "alumno" || !u.rol) && (
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold bg-indigo-50 text-indigo-900 border border-indigo-200">
                       <span>🗓️</span>
@@ -4449,6 +4987,7 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
                           const val = e.target.value;
                           const cObj = cohortes.find((x) => x.id === val);
                           await updateDoc(doc(db!, "usuarios", u.id), {
+                            rol: "alumno",
                             cohorteId: val || null,
                             cohorteNombre: cObj ? cObj.nombre : null,
                             ...(cObj?.cursoSlug === "guardia-de-seguridad"
@@ -4458,6 +4997,20 @@ function UsuariosTab({ filtroRol }: { filtroRol: "alumno" | "profesor" }) {
                                 }
                               : {}),
                           });
+                          if (cObj) {
+                            const enrollId = `${u.id}_${cObj.cursoSlug}`;
+                            await setDoc(
+                              doc(db!, "enrollments", enrollId),
+                              {
+                                uid: u.id,
+                                courseSlug: cObj.cursoSlug,
+                                cohorteId: cObj.id,
+                                cohorteNombre: cObj.nombre,
+                                fecha: serverTimestamp(),
+                              },
+                              { merge: true }
+                            );
+                          }
                         }}
                         className="rounded-lg border border-gray-200 bg-white px-2 py-0.5 text-[11px] text-gray-700 font-medium focus:border-apre-blue focus:outline-hidden"
                       >

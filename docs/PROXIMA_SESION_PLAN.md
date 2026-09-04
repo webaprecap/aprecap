@@ -34,6 +34,18 @@
 
 ---
 
+## 🗓️ 2.1. Gestión de Convocatorias y Cohortes por Fecha — ✅ COMPLETADO
+* **Estado:** 100% resuelto y operativo.
+* **Mejoras:**
+  - Garantía del campo `rol: "alumno"` en cualquier punto de aprobación de solicitudes.
+  - Asignación de grupo por fecha al momento de aprobar en secciones específicas de curso (ej. "Solicitudes OS-10").
+  - Botón directo `[🗓️ Asignar / Cambiar Grupo por Fecha]` con selector desplegable en el **Historial de Solicitudes**.
+  - Selector dinámico de cohorte en la tabla de **Alumnos Cursando** para cambio inmediato de grupo.
+  - Buscador en tiempo real de alumnos en el modal de gestión de cada convocatoria.
+  - Botón de **Sincronización y Auto-Reparación de Alumnos** en Historial y Todos los Alumnos.
+
+---
+
 ## 💳 3. WebPay y Pasarela de Pagos (Pausado a la espera de confirmación)
 * **Estado actual:** A la espera de que la administración confirme tarifas definitivas y flujo de cobro con Transbank.
 
