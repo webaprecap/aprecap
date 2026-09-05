@@ -153,7 +153,14 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // 11. CONFIGURACIÓN DEL SISTEMA (MATERIALES OS-10 Y GENERAL)
+    // 11. CONFIGURACIÓN DEL SISTEMA
+    // Modo Fiestas Patrias (Ambientación visual pública para toda la web y visitantes)
+    match /configuracion/fiestasPatrias {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Configuraciones internas del sistema (Materiales OS-10 y general)
     match /configuracion/{docId} {
       allow read: if isSignedIn();
       allow write: if isAdmin();
