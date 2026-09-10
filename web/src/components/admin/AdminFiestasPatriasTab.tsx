@@ -205,7 +205,7 @@ export default function AdminFiestasPatriasTab() {
               <h5>Banner de Convocatoria 18</h5>
             </div>
             <p className="text-xs text-gray-600 leading-relaxed">
-              Banner con fondo tricolor profundo, botones dorados de alto contraste y llamado festivo a las matrículas de septiembre.
+              Banner con fondo tricolor profundo, botones dorados de alto contraste y llamado festivo a las nuevas convocatorias y matrículas.
             </p>
           </div>
         </div>

@@ -38,9 +38,15 @@ import {
 } from "@/lib/firebase";
 import { roleForEmail, type UserRole } from "@/lib/roles";
 
-/** MFA exigido solo si se activa el flag (por defecto desactivado para pruebas). */
-export function mfaRequired() {
-  return process.env.NEXT_PUBLIC_MFA_REQUIRED === "true";
+/**
+ * MFA exigido para roles administrativos por defecto (Ley N° 21.663).
+ * En entornos de desarrollo puede desactivarse explícitamente con NEXT_PUBLIC_MFA_REQUIRED="false".
+ */
+export function mfaRequired(role?: UserRole | string | null): boolean {
+  if (process.env.NEXT_PUBLIC_MFA_REQUIRED === "false") return false;
+  if (process.env.NEXT_PUBLIC_MFA_REQUIRED === "true") return true;
+  // Por defecto en producción: obligatorio para roles con privilegios administrativos
+  return role === "admin" || role === "superadmin";
 }
 
 export interface UserData {
@@ -239,9 +245,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       const result = await signInWithPopup(auth, provider);
-      if (mfaRequired() && multiFactor(result.user).enrolledFactors.length === 0) {
+      const rolePorEmail = roleForEmail(result.user.email ?? "");
+      let roleToCheck: UserRole | string | null | undefined = rolePorEmail;
+      if (!roleToCheck) {
         const d = await findUserByEmail(result.user.email?.toLowerCase() ?? "");
-        if (d && (d.rol === "admin" || d.rol === "superadmin" || d.rol === "profesor")) {
+        roleToCheck = d?.rol;
+      }
+      if (mfaRequired(roleToCheck) && multiFactor(result.user).enrolledFactors.length === 0) {
+        if (roleToCheck === "admin" || roleToCheck === "superadmin" || roleToCheck === "profesor") {
           setRequiresMfaEnrollment(true);
         }
       }

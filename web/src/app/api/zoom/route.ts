@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { createMeeting, deleteMeeting, getZoomHostKey, listMeetings, zoomEnabled } from "@/lib/zoom";
 import { logAuditAction } from "@/lib/auditLogger";
+import { verificarDocenteOAdmin } from "@/lib/auth-server";
 
 // Reuniones Zoom (server-side, requiere credenciales Server-to-Server en .env).
-export async function GET() {
+export async function GET(req: Request) {
+  const auth = await verificarDocenteOAdmin(req);
+  if (!auth.autorizado) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   if (!zoomEnabled()) {
     return NextResponse.json(
       { error: "Zoom no configurado (faltan ZOOM_ACCOUNT_ID / ZOOM_CLIENT_ID / ZOOM_CLIENT_SECRET)" },
@@ -40,6 +46,11 @@ function formatToSantiagoLocal(dateInput?: string | Date): string {
 }
 
 export async function POST(req: Request) {
+  const auth = await verificarDocenteOAdmin(req);
+  if (!auth.autorizado) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   if (!zoomEnabled()) {
     return NextResponse.json(
       { error: "Zoom no configurado (faltan ZOOM_ACCOUNT_ID / ZOOM_CLIENT_ID / ZOOM_CLIENT_SECRET)" },
@@ -73,6 +84,11 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const auth = await verificarDocenteOAdmin(req);
+  if (!auth.autorizado) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   if (!zoomEnabled()) {
     return NextResponse.json(
       { error: "Zoom no configurado" },

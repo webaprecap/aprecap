@@ -102,11 +102,11 @@ export default function Header() {
             <span className="text-white font-medium">
               {isClient && isModo18 ? (
                 <>
-                  ¡Matrículas de Septiembre con <strong className="underline decoration-white decoration-2 font-black">Beneficio Dieciochero</strong>!
+                  ¡Próximos Cursos <strong className="underline decoration-white decoration-2 font-black">Muy Pronto</strong>! · ¡Contáctanos para conocer la nueva fecha!
                 </>
               ) : (
                 <>
-                  ¡Nuevo Curso Comienza el <strong className="underline decoration-white decoration-2 font-black">15 de Septiembre del 2026</strong>!
+                  ¡Nuevo Curso Comienza <strong className="underline decoration-white decoration-2 font-black">Muy Pronto</strong>! · ¡Contáctanos para conocer la nueva fecha!
                 </>
               )}
             </span>
@@ -118,7 +118,7 @@ export default function Header() {
             href="/solicitar-acceso"
             className="inline-flex items-center gap-1 rounded-full bg-white text-apre-red px-3.5 py-1 text-[11px] font-black hover:bg-red-50 hover:text-red-700 transition shadow-sm"
           >
-            <span>Inscribirme Ahora</span>
+            <span>Consultar Fecha</span>
             <span>➔</span>
           </Link>
         </div>

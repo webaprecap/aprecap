@@ -9,13 +9,22 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Zoom no configurado" }, { status: 503 });
   }
 
-  // Verificamos si la ruta está siendo llamada por el cron de Vercel (opcional pero recomendado por seguridad)
-  // const authHeader = req.headers.get('authorization');
-  // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-  //   return new Response('Unauthorized', { status: 401 });
-  // }
-  // Como esto solo hace limpieza y no expone datos, podemos dejarlo abierto o usar una key simple, pero Vercel lo protege si usamos CRON_SECRET. 
-  // Por ahora, solo ejecutamos la lógica.
+  // Validación de seguridad para Cron Jobs (VULN-APR-07)
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = req.headers.get("authorization");
+  const xCronSecret = req.headers.get("x-cron-secret");
+  const urlSecret = new URL(req.url).searchParams.get("secret");
+
+  const providedToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7).trim()
+    : (xCronSecret || urlSecret || "");
+
+  if (!cronSecret || providedToken !== cronSecret) {
+    return NextResponse.json(
+      { error: "No autorizado. Token de cron inválido o no configurado." },
+      { status: 401 }
+    );
+  }
 
   try {
     // 1. Obtener todas las reuniones que actualmente están EN VIVO

@@ -4,7 +4,9 @@ import {
   firestoreGetDoc,
   firestoreSetDoc,
   firestorePatchDoc,
+  firestoreQuery,
 } from "./firebase-rest";
+import { getCourseFieldKey } from "./courseAccess";
 
 export type PagoDoc = {
   buyOrder: string;
@@ -88,5 +90,73 @@ export async function guardarConsentimiento(params: {
   } catch (e) {
     console.error("Error guardarConsentimiento REST:", e);
     return null;
+  }
+}
+
+/**
+ * Matricula y desbloquea el curso automáticamente tras un pago exitoso en WebPay.
+ * Escribe en "enrollments" y actualiza los accesos del documento en "usuarios".
+ */
+export async function matricularPorPago(pago: PagoDoc): Promise<{ success: boolean; uid?: string; error?: string }> {
+  try {
+    const email = (pago.email || "").toLowerCase().trim();
+    if (!email) {
+      console.warn(`[webpay] No se puede matricular sin email. buyOrder: ${pago.buyOrder}`);
+      return { success: false, error: "Email no proporcionado" };
+    }
+
+    let uid = pago.uidUsuario;
+
+    // Si no vino el UID en la orden de pago, buscar si ya existe un usuario con este email
+    if (!uid) {
+      const usuarios = await firestoreQuery("usuarios", "email", email);
+      if (usuarios.length > 0) {
+        uid = usuarios[0].id || (usuarios[0].data?.uid as string | undefined);
+      }
+    }
+
+    const fieldKey = getCourseFieldKey(pago.cursoSlug);
+
+    // Si el usuario no existe aún en Firestore, creamos una ficha preliminar con su curso activo
+    if (!uid) {
+      uid = email.replace(/[^a-z0-9@._-]/gi, "-").toLowerCase();
+      await firestoreSetDoc("usuarios", uid, {
+        uid,
+        email,
+        nombre: pago.nombreUsuario || email.split("@")[0] || "Estudiante",
+        rol: "alumno",
+        activo: true,
+        [fieldKey]: "aprobado",
+        fechaRegistro: new Date().toISOString(),
+        origenRegistro: "webpay",
+      });
+    } else {
+      // Si el usuario ya existe, actualizamos su acceso y garantizamos activo: true
+      await firestorePatchDoc("usuarios", uid, {
+        [fieldKey]: "aprobado",
+        activo: true,
+      });
+    }
+
+    // Registrar formalmente la matrícula en la colección enrollments
+    const enrollId = `${uid}_${pago.cursoSlug}`;
+    await firestoreSetDoc("enrollments", enrollId, {
+      uid,
+      courseSlug: pago.cursoSlug,
+      email,
+      nombre: pago.nombreUsuario || "",
+      modulosCompletados: [],
+      fecha: new Date().toISOString(),
+      buyOrder: pago.buyOrder,
+      monto: pago.monto,
+      origen: "webpay",
+      estado: "activo",
+    });
+
+    console.info(`[webpay] Matrícula automática completada: ${enrollId} (email: ${email})`);
+    return { success: true, uid };
+  } catch (err) {
+    console.error("[webpay] Error en matricularPorPago REST:", err);
+    return { success: false, error: String(err) };
   }
 }

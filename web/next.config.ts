@@ -15,6 +15,28 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ["jose"],
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-XSS-Protection", value: "1; mode=block" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains; preload" },
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'self'; frame-src 'self' blob: https://cdn.sanity.io https://*.zoom.us https://app.zoom.us https://www.youtube.com https://www.youtube-nocookie.com;",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(self \"https://*.zoom.us\" \"https://app.zoom.us\"), microphone=(self \"https://*.zoom.us\" \"https://app.zoom.us\"), display-capture=(self \"https://*.zoom.us\" \"https://app.zoom.us\")",
+          },
+        ],
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (isServer && process.env.NODE_ENV === "production") {
       const emptyModule = resolve(process.cwd(), "src/lib/empty-module.js");

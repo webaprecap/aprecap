@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { endMeeting, zoomEnabled } from "@/lib/zoom";
 import { logAuditAction } from "@/lib/auditLogger";
+import { verificarDocenteOAdmin } from "@/lib/auth-server";
 
 export async function POST(req: Request) {
+  const auth = await verificarDocenteOAdmin(req);
+  if (!auth.autorizado) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   if (!zoomEnabled()) {
     return NextResponse.json(
       { error: "Zoom no configurado" },

@@ -6,9 +6,15 @@ import {
   zoomEnabled,
 } from "@/lib/zoom";
 import { logAuditAction } from "@/lib/auditLogger";
+import { verificarAdmin } from "@/lib/auth-server";
 
 // API para consultar y gestionar grabaciones de Zoom en la nube (server-side, admin only)
 export async function GET(req: Request) {
+  const auth = await verificarAdmin(req);
+  if (!auth.autorizado) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   if (!zoomEnabled()) {
     return NextResponse.json(
       { error: "Zoom no configurado (faltan credenciales en variables de entorno)" },
@@ -54,6 +60,11 @@ export async function GET(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const auth = await verificarAdmin(req);
+  if (!auth.autorizado) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   if (!zoomEnabled()) {
     return NextResponse.json({ error: "Zoom no configurado" }, { status: 503 });
   }

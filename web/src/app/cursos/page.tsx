@@ -28,18 +28,29 @@ export default function CursosPage() {
           <div className="mt-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 flex flex-wrap items-center justify-between gap-4">
             <div>
               <span className="text-[11px] font-black uppercase text-yellow-300 tracking-wider">
-                ⚡ Convocatoria Abierta
+                ⚡ Próxima Convocatoria
               </span>
               <p className="text-base sm:text-lg font-black text-white mt-0.5">
-                Próximo Inicio de Cursos: 15 de Septiembre de 2026
+                Próximo Inicio de Cursos: Muy pronto · Contáctanos para conocer la nueva fecha
               </p>
             </div>
-            <a
-              href="/solicitar-acceso"
-              className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-5 py-2.5 text-xs font-black shadow-md transition"
-            >
-              Matricularme Ahora ➔
-            </a>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="https://wa.me/56930825313?text=Hola,%20quisiera%20consultar%20por%20la%20pr%C3%B3xima%20fecha%20de%20inicio%20de%20cursos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-whatsapp hover:brightness-105 text-white px-4 py-2.5 text-xs font-bold shadow-md transition flex items-center gap-1.5"
+              >
+                <span>💬</span>
+                <span>Consultar por WhatsApp</span>
+              </a>
+              <a
+                href="/solicitar-acceso"
+                className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-5 py-2.5 text-xs font-black shadow-md transition"
+              >
+                Reservar Matrícula ➔
+              </a>
+            </div>
           </div>
         </div>
       </section>

@@ -120,24 +120,37 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
-        © {new Date().getFullYear()} {SITE_NAME}. Todos los derechos reservados ·{" "}
-        <Link href="/privacidad" className="hover:text-white">
-          Política de Privacidad
-        </Link>{" "}
-        ·{" "}
-        <Link href="/terminos" className="hover:text-white">
-          Términos y Condiciones
-        </Link>{" "}
-        ·{" "}
-        <button
-          type="button"
-          onClick={() => window.dispatchEvent(new CustomEvent("open-cookie-banner"))}
-          className="hover:text-white transition underline cursor-pointer inline-flex items-center gap-1"
-        >
-          <span>🍪</span>
-          <span>Preferencias de Cookies</span>
-        </button>
+      <div className="border-t border-white/10 py-4 text-center text-xs text-white/50 space-y-2">
+        <div>
+          © {new Date().getFullYear()} {SITE_NAME}. Todos los derechos reservados ·{" "}
+          <Link href="/privacidad" className="hover:text-white transition">
+            Política de Privacidad
+          </Link>{" "}
+          ·{" "}
+          <Link href="/terminos" className="hover:text-white transition">
+            Términos y Condiciones
+          </Link>{" "}
+          ·{" "}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("open-cookie-banner"))}
+            className="hover:text-white transition underline cursor-pointer inline-flex items-center gap-1"
+          >
+            <span>🍪</span>
+            <span>Preferencias de Cookies</span>
+          </button>
+        </div>
+        <div className="text-[11px] text-white/40">
+          Sitio creado por{" "}
+          <a
+            href="https://digitalupsolutions.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-white/70 hover:text-white hover:underline transition"
+          >
+            Digital Up Solutions
+          </a>
+        </div>
       </div>
     </footer>
   );

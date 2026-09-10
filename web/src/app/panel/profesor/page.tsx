@@ -106,6 +106,7 @@ export default function PanelProfesor() {
 
 /* ---------- Clases en vivo iniciadas por el admin ---------- */
 function ReunionesProfesor() {
+  const { user } = useAuth();
   const db = getFirestoreDb();
   const [clases, setClases] = useState<any[]>([]);
   const [zoomHostKey, setZoomHostKey] = useState<string>("");
@@ -120,13 +121,21 @@ function ReunionesProfesor() {
   };
 
   useEffect(() => {
-    fetch("/api/zoom", { method: "GET" })
-      .then((res) => res.json())
+    if (!user) return;
+    user
+      .getIdToken()
+      .then((token) =>
+        fetch("/api/zoom", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      )
+      .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data.hostKey) setZoomHostKey(data.hostKey);
+        if (data?.hostKey) setZoomHostKey(data.hostKey);
       })
       .catch(() => {});
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!db) return;

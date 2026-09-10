@@ -20,6 +20,7 @@ scripts/*.json
 .env
 .env.local
 .env.*.local
+service-account*.json
 docs/GUIA_DESPLIEGUE_DOMINIO_CLOUDFLARE.md
 
 # Contenido rescatado y videos (respaldo local del cliente, no se sube)

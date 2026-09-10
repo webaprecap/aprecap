@@ -1391,7 +1391,7 @@ function CohortesTab() {
               Grupos de Estudio y Convocatorias por Fecha
             </h2>
             <p className="mt-1 text-xs text-slate-300 leading-relaxed">
-              Crea grupos específicos (ej. <em>Curso 2 de Septiembre</em>, <em>Curso 15 de Septiembre</em>) y asigna a los alumnos.
+              Crea grupos específicos (ej. <em>Convocatoria 1</em>, <em>Convocatoria 2</em>) y asigna a los alumnos.
               Cuando concluya la fase presencial de un grupo, habilita el material digital <strong>exclusivamente para los alumnos de esa fecha</strong> sin afectar a los nuevos matriculados.
             </p>
           </div>
@@ -1451,7 +1451,7 @@ function CohortesTab() {
           <div className="text-3xl mb-2">🗓️</div>
           <h3 className="text-sm font-bold text-apre-blue">No hay grupos o convocatorias registradas</h3>
           <p className="text-xs text-gray-500 max-w-md mx-auto mt-1">
-            Haz clic en "Crear Nueva Convocatoria / Grupo" para registrar el grupo de fecha (ej. Curso 2 de Septiembre o 15 de Septiembre).
+            Haz clic en "Crear Nueva Convocatoria / Grupo" para registrar el grupo de fecha (ej. Convocatoria Matutina o Vespertina).
           </p>
         </div>
       ) : (
@@ -1570,7 +1570,7 @@ function CohortesTab() {
               <div>
                 <h3 className="text-lg font-extrabold text-apre-blue">Crear Convocatoria / Grupo por Fecha</h3>
                 <p className="text-xs text-gray-500">
-                  Organiza a los alumnos según la fecha de inicio del curso (ej. 2 de Septiembre o 15 de Septiembre).
+                  Organiza a los alumnos según la fecha de inicio del curso.
                 </p>
               </div>
               <button
@@ -1591,7 +1591,7 @@ function CohortesTab() {
                   required
                   value={form.nombre}
                   onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                  placeholder="ej. Curso Guardia OS-10 - 2 de Septiembre 2026"
+                  placeholder="ej. Curso Guardia OS-10 - Próximo Grupo 2026"
                   className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-xs focus:border-apre-blue focus:outline-hidden"
                 />
               </div>
@@ -2127,7 +2127,7 @@ function HistorialTab() {
 
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-700 block">
-                Selecciona la Convocatoria por Fecha (ej. Septiembre):
+                Selecciona la Convocatoria por Fecha:
               </label>
               <select
                 value={cohorteSel}
@@ -5382,7 +5382,7 @@ function ClasesTab({
   onPublicarGrabada?: (datos: { titulo: string; cursoSlug: string; descripcion: string }) => void;
 }) {
   const db = getFirestoreDb();
-  const { userData } = useAuth();
+  const { user, userData } = useAuth();
   const [clases, setClases] = useState<any[]>([]);
 
   const getTodayDateStr = () => {
@@ -5474,18 +5474,26 @@ function ClasesTab({
 
   // Cargar reuniones de Zoom API si está configurado
   useEffect(() => {
-    fetch("/api/zoom", { method: "GET" })
-      .then((res) => res.json())
+    if (!user) return;
+    user
+      .getIdToken()
+      .then((token) =>
+        fetch("/api/zoom", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      )
+      .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data.meetings && Array.isArray(data.meetings)) {
+        if (data?.meetings && Array.isArray(data.meetings)) {
           setZoomMeetings(data.meetings);
         }
-        if (data.hostKey) {
+        if (data?.hostKey) {
           setZoomHostKey(data.hostKey);
         }
       })
       .catch(() => {});
-  }, []);
+  }, [user]);
 
   const getDiasPermitidosArray = (tipo: string) => {
     if (tipo === "lunes_a_viernes") return [1, 2, 3, 4, 5];
@@ -5519,9 +5527,13 @@ function ClasesTab({
         startTime = new Date(fechaInicioProg).toISOString();
       }
 
+      const token = await user?.getIdToken();
       const res = await fetch("/api/zoom", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           topic: form.nombre.trim(),
           start_time: startTime,
@@ -6669,6 +6681,7 @@ function ReportesTab() {
 
 /* ---------- Reuniones Zoom API ---------- */
 function ReunionesTab() {
+  const { user } = useAuth();
   const [meetings, setMeetings] = useState<any[]>([]);
   const [form, setForm] = useState({ topic: "", start_time: "", duration: "60" });
   const [msg, setMsg] = useState("");
@@ -6683,15 +6696,20 @@ function ReunionesTab() {
     });
   };
 
-  const cargar = useCallback(() => {
-    fetch("/api/zoom", { method: "GET" })
-      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
-      .then(({ ok, data }) => {
-        if (ok) setMeetings(data.meetings ?? []);
-        else setMsg(data.error || "Error al listar reuniones");
-      })
-      .catch(() => setMsg("Zoom no configurado aún (falta la app Server-to-Server)."));
-  }, []);
+  const cargar = useCallback(async () => {
+    try {
+      const token = await user?.getIdToken();
+      const res = await fetch("/api/zoom", {
+        method: "GET",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      if (res.ok) setMeetings(data.meetings ?? []);
+      else setMsg(data.error || "Error al listar reuniones");
+    } catch {
+      setMsg("Zoom no configurado aún (falta la app Server-to-Server).");
+    }
+  }, [user]);
 
   useEffect(() => {
     cargar();
@@ -6701,9 +6719,13 @@ function ReunionesTab() {
     setBusy(true);
     setMsg("");
     try {
+      const token = await user?.getIdToken();
       const res = await fetch("/api/zoom", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(form),
       });
       const data = await res.json();
@@ -6724,7 +6746,11 @@ function ReunionesTab() {
   const eliminarReunionZoom = async (meetingId: number | string) => {
     if (!confirm("¿Deseas eliminar esta reunión?")) return;
     try {
-      const res = await fetch(`/api/zoom?id=${meetingId}`, { method: "DELETE" });
+      const token = await user?.getIdToken();
+      const res = await fetch(`/api/zoom?id=${meetingId}`, {
+        method: "DELETE",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const d = await res.json();
       if (res.ok && d.ok) {
         setMeetings((prev) => prev.filter((m) => String(m.id) !== String(meetingId)));
@@ -6744,9 +6770,13 @@ function ReunionesTab() {
   const forzarCierreZoom = async (meetingId: number | string) => {
     if (!confirm("¿Seguro que deseas forzar el cierre de esta sala? Esto expulsará a todos y cortará la grabación.")) return;
     try {
+      const token = await user?.getIdToken();
       const res = await fetch("/api/zoom/end", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ id: meetingId }),
       });
       const d = await res.json();
@@ -6901,6 +6931,7 @@ function ZoomGrabacionesTab({
 }: {
   onPublicar?: (datos: { titulo: string; fecha: string }) => void;
 }) {
+  const { user } = useAuth();
   const [recordings, setRecordings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -6910,7 +6941,11 @@ function ZoomGrabacionesTab({
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/zoom/recordings", { method: "GET" });
+      const token = await user?.getIdToken();
+      const res = await fetch("/api/zoom/recordings", {
+        method: "GET",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const data = await res.json();
       if (res.ok) {
         setRecordings(data.meetings || []);
@@ -6922,7 +6957,7 @@ function ZoomGrabacionesTab({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     cargar();
@@ -6939,8 +6974,10 @@ function ZoomGrabacionesTab({
 
     setDeletingId(meetingId);
     try {
+      const token = await user?.getIdToken();
       const res = await fetch(`/api/zoom/recordings?id=${meetingId}&action=trash`, {
         method: "DELETE",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const data = await res.json();
       if (res.ok && data.ok) {

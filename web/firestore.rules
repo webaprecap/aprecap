@@ -33,7 +33,8 @@ service cloud.firestore {
         isAdmin() ||
         isTeacher()
       );
-      allow list: if isSignedIn();
+      // Blindaje contra exfiltración masiva: solo admins/profesores o consulta acotada al propio email
+      allow list: if isAdmin() || isTeacher() || (isSignedIn() && resource.data.email == request.auth.token.email);
       allow create: if isSignedIn() && (
         isAdmin() ||
         (

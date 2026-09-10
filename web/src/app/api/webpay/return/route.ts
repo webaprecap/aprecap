@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { webpayTransaction } from "@/lib/webpay";
-import { actualizarPago, obtenerPago } from "@/lib/admin-firebase";
-import { metodoPagoDe } from "@/lib/webpay";
+import { webpayTransaction, metodoPagoDe } from "@/lib/webpay";
+import { actualizarPago, obtenerPago, matricularPorPago } from "@/lib/admin-firebase";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -35,6 +34,20 @@ export async function GET(req: Request) {
           buyOrderTbk: res.buy_order || String(res.buyOrder || ""),
           fechaPago: new Date(),
         });
+
+        // VULN-APR-05: Si el pago fue aprobado, matricular automáticamente al usuario
+        if (estado === "aprobado") {
+          try {
+            await matricularPorPago({
+              ...existente.data,
+              estado: "aprobado",
+              buyOrder,
+              fechaPago: new Date(),
+            });
+          } catch (enrollErr) {
+            console.error("[webpay] Error en matricularPorPago:", enrollErr);
+          }
+        }
       } else {
         console.warn("[webpay] buyOrder desconocido en commit:", buyOrder);
       }
@@ -48,4 +61,8 @@ export async function GET(req: Request) {
       `${resultUrl}?estado=1&detalle=${encodeURIComponent("No se pudo confirmar el pago.")}`
     );
   }
+}
+
+export async function POST(req: Request) {
+  return GET(req);
 }
