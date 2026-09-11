@@ -45,6 +45,8 @@ import {
 } from "@/lib/zoomWeb";
 import { useFiestasPatrias } from "@/lib/fiestasPatrias";
 import AdminFiestasPatriasTab from "@/components/admin/AdminFiestasPatriasTab";
+import AdminGlobalSearch, { type StudentProfileData } from "@/components/admin/AdminGlobalSearch";
+import AdminHojaDeVidaModal from "@/components/admin/AdminHojaDeVidaModal";
 
 type Tab =
   | "pendientes"
@@ -290,6 +292,8 @@ export default function PanelAdmin() {
   const [solicitudesPendientes, setSolicitudesPendientes] = useState<any[]>([]);
   const [usuariosPendientes, setUsuariosPendientes] = useState<any[]>([]);
   const [enrollmentsList, setEnrollmentsList] = useState<any[]>([]);
+  const [evaluacionesList, setEvaluacionesList] = useState<any[]>([]);
+  const [alumnoHojaDeVida, setAlumnoHojaDeVida] = useState<StudentProfileData | null>(null);
 
   useEffect(() => {
     const db = getFirestoreDb();
@@ -303,10 +307,14 @@ export default function PanelAdmin() {
     const un3 = onSnapshot(collection(db, "enrollments"), (snap) => {
       setEnrollmentsList(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     });
+    const un4 = onSnapshot(collection(db, "resultados_evaluaciones"), (snap) => {
+      setEvaluacionesList(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
     return () => {
       un1();
       un2();
       un3();
+      un4();
     };
   }, []);
 
@@ -723,6 +731,26 @@ export default function PanelAdmin() {
         {/* Contenido */}
         <main className="flex-1 lg:pl-[280px] print:pl-0 print:p-0 print:m-0">
           <div className="px-4 py-6 md:px-8 print:p-0 print:m-0">
+            {/* Buscador Global Omni-presente para todas las pestañas */}
+            <div className="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-gradient-to-r from-apre-blue/5 via-sky-50/40 to-slate-50 border border-apre-blue/15 rounded-2xl p-3 md:p-3.5 shadow-2xs print:hidden">
+              <div className="flex-1 max-w-xl">
+                <AdminGlobalSearch
+                  usuarios={usuariosPendientes}
+                  enrollments={enrollmentsList}
+                  solicitudes={solicitudesPendientes}
+                  evaluaciones={evaluacionesList}
+                  onSelectStudent={(st) => setAlumnoHojaDeVida(st)}
+                />
+              </div>
+              <div className="flex items-center gap-2 text-xs font-bold text-gray-500 shrink-0">
+                <span className="hidden sm:inline">💡 Atajo:</span>
+                <kbd className="rounded-lg border border-gray-300 bg-white px-2 py-0.5 text-[11px] font-mono text-gray-700 shadow-2xs">
+                  Ctrl + K
+                </kbd>
+                <span className="text-[11px] text-gray-500">Expediente 360° con 1 clic</span>
+              </div>
+            </div>
+
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4 print:hidden">
               <div>
                 <h1 className="text-2xl font-extrabold text-apre-blue">
@@ -817,6 +845,14 @@ export default function PanelAdmin() {
         </main>
       </div>
       <ConsentModal />
+      {alumnoHojaDeVida && (
+        <AdminHojaDeVidaModal
+          student={alumnoHojaDeVida}
+          onClose={() => setAlumnoHojaDeVida(null)}
+          onIrAGestionCurso={(slug) => setTab(`curso:${slug}:cursando` as Tab)}
+          onEmitirDiploma={irADiplomaAprobado}
+        />
+      )}
     </>
   );
 }

@@ -79,14 +79,47 @@ export function normalizarFechaMatricula(rawFecha?: unknown): Date {
 }
 
 /**
- * Calcula el día actual en el que se encuentra el alumno dentro de su curso (1-indexed)
+ * Trunca una fecha a las 00:00:00.000 locales para comparación precisa por días calendario
+ */
+export function toStartOfDay(d: Date): Date {
+  const copy = new Date(d);
+  copy.setHours(0, 0, 0, 0);
+  return copy;
+}
+
+/**
+ * Calcula la fecha y hora exacta de desbloqueo (00:00:00 medianoche) para un día requerido (1-indexed).
+ * - Día 1: Medianoche del día en que se matriculó.
+ * - Día 2: 00:00:00 del día siguiente al de matrícula.
+ * - Día N: 00:00:00 del (N - 1) día calendario tras la matrícula.
+ */
+export function getFechaDesbloqueoDia(fechaMatricula: Date, diaRequerido: number): Date {
+  const fechaInicio = toStartOfDay(fechaMatricula);
+  const target = new Date(fechaInicio);
+  target.setDate(target.getDate() + Math.max(0, diaRequerido - 1));
+  target.setHours(0, 0, 0, 0);
+  return target;
+}
+
+/**
+ * Calcula el día actual en el que se encuentra el alumno dentro de su curso (1-indexed).
+ * Se rige estrictamente por DÍAS CALENDARIO (medianoche 00:00:00):
+ * - El día en que se inscribe es el Día 1.
+ * - Al llegar las 00:00:01 del día siguiente (la medianoche), pasa automáticamente al Día 2.
  */
 export function getDiaActualCurso(fechaMatricula?: unknown): number {
   const fecha = normalizarFechaMatricula(fechaMatricula);
-  const now = Date.now();
-  const diffMs = Math.max(0, now - fecha.getTime());
-  const dias = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
-  return dias;
+  const startMatricula = toStartOfDay(fecha);
+  const startNow = toStartOfDay(new Date());
+
+  const diffMs = startNow.getTime() - startMatricula.getTime();
+  if (diffMs <= 0) {
+    return 1;
+  }
+
+  // Math.round previene desajustes por cambios estacionales de horario (DST en Chile)
+  const diffDias = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  return Math.max(1, diffDias + 1);
 }
 
 /**
@@ -119,7 +152,7 @@ export function getModuleUnlockStatus(
   const fecha = normalizarFechaMatricula(fechaMatricula);
   const diaActual = getDiaActualCurso(fechaMatricula);
 
-  // Si ya pasaron los días requeridos
+  // Si ya pasaron los días requeridos (por día calendario)
   if (diaActual >= diaRequerido) {
     return {
       isUnlocked: true,
@@ -133,10 +166,8 @@ export function getModuleUnlockStatus(
     };
   }
 
-  // Calcular fecha y horas exactas de desbloqueo
-  // El día 2 se desbloquea tras 24h (1 día completo), día 3 tras 48h (2 días), etc.
-  const msRequeridos = (diaRequerido - 1) * 24 * 60 * 60 * 1000;
-  const fechaDesbloqueo = new Date(fecha.getTime() + msRequeridos);
+  // Calcular fecha y horas exactas de desbloqueo: medianoche (00:00:00) del día requerido
+  const fechaDesbloqueo = getFechaDesbloqueoDia(fecha, diaRequerido);
   const diffRestanteMs = Math.max(0, fechaDesbloqueo.getTime() - Date.now());
 
   const horasRestantes = Math.floor(diffRestanteMs / (1000 * 60 * 60));
@@ -146,8 +177,6 @@ export function getModuleUnlockStatus(
     weekday: "long",
     day: "numeric",
     month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
   });
 
   return {
@@ -158,7 +187,7 @@ export function getModuleUnlockStatus(
     fechaDesbloqueo,
     horasRestantes,
     minutosRestantes,
-    mensajeBloqueo: `Este módulo se habilitará automáticamente el ${fechaFormateada} (Día ${diaRequerido} de tu curso).`,
+    mensajeBloqueo: `Este módulo se habilitará automáticamente el ${fechaFormateada} a las 00:00 hrs (Día ${diaRequerido} de tu curso).`,
     esCursoConTiempo: true,
   };
 }
@@ -205,8 +234,8 @@ export function getExamUnlockStatus(
     };
   }
 
-  const msRequeridos = (diaRequerido - 1) * 24 * 60 * 60 * 1000;
-  const fechaDesbloqueo = new Date(fecha.getTime() + msRequeridos);
+  // Desbloqueo a las 00:00:00 del día calendario requerido
+  const fechaDesbloqueo = getFechaDesbloqueoDia(fecha, diaRequerido);
   const diffRestanteMs = Math.max(0, fechaDesbloqueo.getTime() - Date.now());
 
   const horasRestantes = Math.floor(diffRestanteMs / (1000 * 60 * 60));
@@ -216,8 +245,6 @@ export function getExamUnlockStatus(
     weekday: "long",
     day: "numeric",
     month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
   });
 
   return {
@@ -228,7 +255,7 @@ export function getExamUnlockStatus(
     fechaDesbloqueo,
     horasRestantes,
     minutosRestantes,
-    mensajeBloqueo: `El Examen Final se habilitará el ${fechaFormateada} tras completar el periodo formativo de ${diaRequerido} días.`,
+    mensajeBloqueo: `El Examen Final se habilitará el ${fechaFormateada} a las 00:00 hrs tras completar el periodo formativo de ${diaRequerido} días.`,
     esCursoConTiempo: true,
   };
 }
@@ -284,8 +311,7 @@ export function getAlumnoSeguimientoTiming(
 
   const diaRequerido = config.examenFinalDia;
   const isUnlocked = diaActual >= diaRequerido;
-  const msRequeridos = (diaRequerido - 1) * 24 * 60 * 60 * 1000;
-  const fechaDesbloqueo = new Date(fecha.getTime() + msRequeridos);
+  const fechaDesbloqueo = getFechaDesbloqueoDia(fecha, diaRequerido);
   const diffRestanteMs = Math.max(0, fechaDesbloqueo.getTime() - Date.now());
   const horasRestantes = Math.floor(diffRestanteMs / (1000 * 60 * 60));
   const diasRestantes = isUnlocked ? 0 : Math.max(1, Math.ceil(diffRestanteMs / (1000 * 60 * 60 * 24)));
