@@ -257,12 +257,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
       return result.user;
-    } catch (e) {
-      if ((e as { code?: string })?.code === "auth/multi-factor-auth-required") {
+    } catch (e: unknown) {
+      console.error("[AuthContext] Error detallado en signInGoogle:", e);
+      const authError = e as { code?: string; message?: string };
+      if (authError?.code === "auth/multi-factor-auth-required") {
         setMfaResolver(getMultiFactorResolver(auth, e as never));
         setError("Se requiere verificación de segundo factor.");
+      } else if (authError?.code === "auth/popup-closed-by-user") {
+        setError("La ventana de inicio de sesión fue cerrada antes de completarse.");
+      } else if (authError?.code === "auth/unauthorized-domain") {
+        setError("Dominio no autorizado en Firebase Authentication. Agrega este dominio a 'Authorized Domains' en la consola de Firebase.");
+      } else if (authError?.code === "auth/popup-blocked") {
+        setError("El navegador bloqueó la ventana emergente. Habilita las ventanas emergentes (popups) para continuar.");
       } else {
-        setError("No se pudo iniciar sesión.");
+        const detalle = authError?.message || authError?.code || "Error desconocido";
+        setError(`No se pudo iniciar sesión: ${detalle}`);
       }
       return null;
     }

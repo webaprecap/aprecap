@@ -27,11 +27,15 @@ const nextConfig: NextConfig = {
           { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains; preload" },
           {
             key: "Content-Security-Policy",
-            value: "frame-ancestors 'self'; frame-src 'self' blob: https://cdn.sanity.io https://*.zoom.us https://app.zoom.us https://www.youtube.com https://www.youtube-nocookie.com;",
+            value: "frame-ancestors 'self'; frame-src 'self' blob: https://cdn.sanity.io https://*.zoom.us https://app.zoom.us https://www.youtube.com https://www.youtube-nocookie.com https://*.firebaseapp.com https://accounts.google.com https://*.google.com;",
           },
           {
             key: "Permissions-Policy",
             value: "camera=(self \"https://*.zoom.us\" \"https://app.zoom.us\"), microphone=(self \"https://*.zoom.us\" \"https://app.zoom.us\"), display-capture=(self \"https://*.zoom.us\" \"https://app.zoom.us\")",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
           },
         ],
       },
