@@ -4,6 +4,8 @@ import Markdown from "@/components/Markdown";
 import { paginas } from "@/data/pages";
 import { CONTACTO } from "@/data/site";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Asesorías en Seguridad Privada — OTEC APRECAP",
   description:

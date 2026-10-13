@@ -3,6 +3,8 @@ import Link from "next/link";
 import { CURSOS_OTEC_LABORALES } from "@/data/cursos-otec-laborales";
 import { CONTACTO } from "@/data/site";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Cursos Laborales y Técnicos — OTEC APRECAP",
   description:

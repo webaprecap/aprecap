@@ -52,6 +52,7 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <Link
             href="/panel"
+            prefetch={false}
             className="flex items-center gap-1.5 rounded-lg bg-apre-blue px-3.5 py-2 text-sm font-bold text-white transition hover:bg-apre-blue-light shadow-sm whitespace-nowrap"
           >
             <span>👤</span>
@@ -73,6 +74,7 @@ export default function Header() {
       ) : (
         <Link
           href="/login"
+          prefetch={false}
           className="rounded-lg border-2 border-apre-blue px-4 py-2 text-sm font-bold text-apre-blue transition hover:bg-apre-blue hover:text-white"
         >
           Ingresar
@@ -102,11 +104,11 @@ export default function Header() {
             <span className="text-white font-medium">
               {isClient && isModo18 ? (
                 <>
-                  ¡Próximos Cursos <strong className="underline decoration-white decoration-2 font-black">Muy Pronto</strong>! · ¡Contáctanos para conocer la nueva fecha!
+                  ¡Próximos Cursos Comienzan el <strong className="underline decoration-white decoration-2 font-black">3 de Noviembre</strong>! · ¡Cupos Limitados!
                 </>
               ) : (
                 <>
-                  ¡Nuevo Curso Comienza <strong className="underline decoration-white decoration-2 font-black">Muy Pronto</strong>! · ¡Contáctanos para conocer la nueva fecha!
+                  ¡Nuevo Curso Comienza el <strong className="underline decoration-white decoration-2 font-black">3 de Noviembre del 2026</strong>!
                 </>
               )}
             </span>
@@ -116,9 +118,10 @@ export default function Header() {
           </div>
           <Link
             href="/solicitar-acceso"
+            prefetch={false}
             className="inline-flex items-center gap-1 rounded-full bg-white text-apre-red px-3.5 py-1 text-[11px] font-black hover:bg-red-50 hover:text-red-700 transition shadow-sm"
           >
-            <span>Consultar Fecha</span>
+            <span>Inscribirme Ahora</span>
             <span>➔</span>
           </Link>
         </div>
@@ -132,6 +135,7 @@ export default function Header() {
             <Link
               key={l.href}
               href={l.href}
+              prefetch={false}
               className="text-sm font-semibold text-apre-blue transition hover:text-apre-red"
             >
               {l.label}
@@ -139,6 +143,7 @@ export default function Header() {
           ))}
           <Link
             href="/solicitar-acceso"
+            prefetch={false}
             className="rounded-lg bg-apre-red px-4 py-2 text-sm font-bold text-white transition hover:bg-apre-red-dark"
           >
             Inscribirme
@@ -168,6 +173,7 @@ export default function Header() {
             <Link
               key={l.href}
               href={l.href}
+              prefetch={false}
               onClick={() => setOpen(false)}
               className="block border-b border-gray-100 py-3 text-sm font-semibold text-apre-blue"
             >
@@ -177,6 +183,7 @@ export default function Header() {
           <div className="mt-3 grid gap-2">
             <Link
               href="/solicitar-acceso"
+              prefetch={false}
               onClick={() => setOpen(false)}
               className="block rounded-lg bg-apre-red px-4 py-2 text-center text-sm font-bold text-white"
             >
@@ -186,6 +193,7 @@ export default function Header() {
               <>
                 <Link
                   href="/panel"
+                  prefetch={false}
                   onClick={() => setOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-lg bg-apre-blue px-4 py-2.5 text-center text-sm font-bold text-white"
                 >
@@ -205,6 +213,7 @@ export default function Header() {
             ) : (
               <Link
                 href="/login"
+                prefetch={false}
                 onClick={() => setOpen(false)}
                 className="block rounded-lg border-2 border-apre-blue px-4 py-2 text-center text-sm font-bold text-apre-blue"
               >

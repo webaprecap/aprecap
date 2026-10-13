@@ -69,27 +69,27 @@ export default function Home() {
                 CONVOCATORIA Y MATRÍCULAS 2026
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1.5">
-                ¡Próximo Curso: <span className="text-yellow-300">Muy Pronto</span>!
+                ¡Próximo Curso Comienza el <span className="text-yellow-300">3 de Noviembre del 2026</span>!
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
-                ¡Nueva fecha por confirmar! Contáctanos directamente para asegurar tu cupo e informarte del próximo inicio en Guardia OS-10, CCTV o Supervisor.
+                Asegura tu cupo en Guardia de Seguridad OS-10, Operador CCTV o Supervisor. Modalidades Presencial y Online.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a
-                href="https://wa.me/56930825313?text=Hola,%20quisiera%20consultar%20por%20la%20pr%C3%B3xima%20fecha%20de%20inicio%20de%20cursos"
+                href="https://wa.me/56930825313?text=Hola,%20quisiera%20inscribirme%20al%20curso%20del%203%20de%20Noviembre%202026"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-whatsapp hover:brightness-105 text-white px-4 py-3 text-xs sm:text-sm font-bold shadow-md transition flex items-center gap-1.5"
               >
                 <span>💬</span>
-                <span>Consultar Nueva Fecha</span>
+                <span>Consultar por WhatsApp</span>
               </a>
               <a
                 href="/solicitar-acceso"
                 className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-5 py-3 text-xs sm:text-sm font-black shadow-lg transition transform hover:-translate-y-0.5"
               >
-                📝 Reservar Cupo / Matricularme
+                📝 Inscribirme al Curso
               </a>
             </div>
           </div>

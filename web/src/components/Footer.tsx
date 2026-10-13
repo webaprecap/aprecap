@@ -78,7 +78,7 @@ export default function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-white/80 transition hover:text-white">
+                <Link href={l.href} prefetch={false} className="text-white/80 transition hover:text-white">
                   {l.label}
                 </Link>
               </li>
@@ -123,11 +123,11 @@ export default function Footer() {
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50 space-y-2">
         <div>
           © {new Date().getFullYear()} {SITE_NAME}. Todos los derechos reservados ·{" "}
-          <Link href="/privacidad" className="hover:text-white transition">
+          <Link href="/privacidad" prefetch={false} className="hover:text-white transition">
             Política de Privacidad
           </Link>{" "}
           ·{" "}
-          <Link href="/terminos" className="hover:text-white transition">
+          <Link href="/terminos" prefetch={false} className="hover:text-white transition">
             Términos y Condiciones
           </Link>{" "}
           ·{" "}

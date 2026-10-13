@@ -45,3 +45,7 @@ pnpm-debug.log*
 
 # Media del curso OS-10 (videos/PDFs del cliente, respaldo local; se subirán a Sanity)
 web/public/materiales/
+
+# Antigravity Agent Config (local, no subir a git)
+.agents/
+

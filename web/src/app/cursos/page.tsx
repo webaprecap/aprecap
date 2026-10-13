@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CursoCard } from "@/components/CursoCard";
 import { CURSOS_PRESENCIAL_ONLINE, CURSOS_ONLINE, CURSOS_LABORALES } from "@/data/cursos-home";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Cursos y Capacitación — OTEC APRECAP",
   description:
@@ -28,15 +30,15 @@ export default function CursosPage() {
           <div className="mt-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 flex flex-wrap items-center justify-between gap-4">
             <div>
               <span className="text-[11px] font-black uppercase text-yellow-300 tracking-wider">
-                ⚡ Próxima Convocatoria
+                ⚡ Convocatoria Abierta
               </span>
               <p className="text-base sm:text-lg font-black text-white mt-0.5">
-                Próximo Inicio de Cursos: Muy pronto · Contáctanos para conocer la nueva fecha
+                Próximo Inicio de Cursos: 3 de Noviembre de 2026
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a
-                href="https://wa.me/56930825313?text=Hola,%20quisiera%20consultar%20por%20la%20pr%C3%B3xima%20fecha%20de%20inicio%20de%20cursos"
+                href="https://wa.me/56930825313?text=Hola,%20quisiera%20consultar%20por%20el%20inicio%20de%20cursos%20del%203%20de%20Noviembre"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-whatsapp hover:brightness-105 text-white px-4 py-2.5 text-xs font-bold shadow-md transition flex items-center gap-1.5"
@@ -48,7 +50,7 @@ export default function CursosPage() {
                 href="/solicitar-acceso"
                 className="rounded-xl bg-apre-red hover:bg-apre-red-dark text-white px-5 py-2.5 text-xs font-black shadow-md transition"
               >
-                Reservar Matrícula ➔
+                Matricularme Ahora ➔
               </a>
             </div>
           </div>

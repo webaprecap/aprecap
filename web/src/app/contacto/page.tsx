@@ -3,6 +3,8 @@ import { Boton, WhatsAppButton } from "@/components/Buttons";
 import ContactoForm from "@/components/ContactoForm";
 import { CONTACTO } from "@/data/site";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Contacto — OTEC APRECAP",
   description:

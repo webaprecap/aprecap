@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Boton, WhatsAppButton } from "@/components/Buttons";
 import NuestraEsenciaCards from "@/components/NuestraEsenciaCards";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Carta del Director — OTEC APRECAP",
   description:

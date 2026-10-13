@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { CONTACTO } from "@/data/site";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Términos y Condiciones — OTEC APRECAP",
 };
